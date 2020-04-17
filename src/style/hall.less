@@ -1,0 +1,47 @@
+@import "./base/variable/color";
+.scroll-view {
+  .list-card {
+    margin-top: 30rpx;
+  }
+ }
+.list-card-row {
+  position: relative;
+  .list-card-header {
+    width:60rpx;
+    height:60rpx;
+    border-radius: 8rpx;
+    margin-top: 16rpx;
+  }
+  .list-card-content {
+    margin-left: 30rpx;
+    width: 86%;
+   .card-col-1 {
+     .name {
+        flex: 1;
+        padding-right: 40rpx;
+        font-size: 28rpx;
+      }
+    }
+    .weui-btn_cell {
+      &.weui-btn_primary_plain {
+        border-radius: 50rpx;
+      }
+    }
+    .card-item  {
+      margin-top: 6rpx;
+    }
+  }
+  .online {
+    position: absolute;
+    right: -30rpx;
+    top: -10rpx;
+    width: 84rpx;
+    height: 36rpx;
+    background: @weuiColorPrimary;
+    border-radius: 20rpx 0px 0px 20rpx;
+    color: @weuiTextColorWhite;
+    font-size: 20rpx;
+    text-align: center;
+    line-height: 35rpx;
+  }
+}

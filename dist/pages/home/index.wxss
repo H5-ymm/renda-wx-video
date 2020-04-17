@@ -1,4 +1,4 @@
 @import "./../../components/actionSheet.wxss";
 @import "./../../components/banner.wxss";
 @import "./../../components/search.wxss";
-.page-home{height:100%;overflow:hidden}.page-home .section{padding-bottom:20rpx}.page-home .section .job-box .job-title{height:88rpx;font-size:30rpx;color:#111111;padding:0 30rpx;font-weight:500}.page-home .section .job-box .job-search .job-search-query{padding:26rpx 0;margin:0 30rpx}.page-home .section .job-box .job-search .job-search-item{font-size:24rpx;color:rgba(17,17,17,0.6)}
+.page-home{height:100%;overflow:hidden}.page-home .section{padding-bottom:20rpx}.page-home .section .job-box .job-title{height:88rpx;font-size:30rpx;color:#111111;padding:0 30rpx;font-weight:500}.page-home .section .job-box .job-search .job-search-query{padding:26rpx 0;margin:0 30rpx}.page-home .section .job-box .job-search .job-search-item{font-size:24rpx;color:rgba(17,17,17,0.6)}.page-home .section .job-box .job-search .job-search-item .card-item{padding:4rpx 16rpx;font-size:23rpx;margin-right:60rpx}

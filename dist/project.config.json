@@ -28,8 +28,8 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.10.1",
-	"appid": "wxe3fe658afdf7ace6",
-	"projectname": "miniprogram-1",
+	"appid": "wx5db3a0b4b8d7ea4c",
+	"projectname": "dist",
 	"cloudfunctionTemplateRoot": "",
 	"watchOptions": {
 		"ignore": []

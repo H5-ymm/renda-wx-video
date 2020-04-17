@@ -156,22 +156,7 @@
     </view>
   </view>
 
-      
-  <view class="add-view" wx:if="{{stepActive==2&&!isInput}}">
-    <view class="home-view-box">
-      <view class="page_card">
-        <view class="page_card_row">
-          <view class="weui-flex center wrap">
-            <view class="card-text"> 点击开始识别正面（照片面）</view>
-            <image bindtap="$scanIdCard$uploadImg" src="https://a.rsd123.com/image/images/cardIcon.png" class="idCard-bg" mode="scaleToFill"/>
-            <!-- <image bindtap="uploadImg" src="{{infoImg}}" wx:else class="idCard-bg" mode="aspectFit" /> -->
-          </view>
-        </view>
-      </view>
-    </view>
-    <canvas canvas-id="canvas" style="width:{{$scanIdCard$cWidth}}px;height:{{$scanIdCard$cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
-  </view>
-
+      <!-- <scanIdCard wx:if="{{stepActive==2&&!isInput}}" bindsubmitForm="submitForm"></scanIdCard> -->
       
   <view class="add-view" wx:if="{{stepActive==3}}">
     <view class="home-view-box">

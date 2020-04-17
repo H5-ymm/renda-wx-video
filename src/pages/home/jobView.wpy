@@ -1,21 +1,12 @@
 <style lang="less">
-@import "../../style/hall.less";
-@import "../../style/switch.less";
+@import "../../style/list.less";
+.scroll-view {
+  margin-bottom: 30rpx;
+}
 </style>
 <template>
-  <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
-    <jobFairItemHall :item.sync="jobFairInfo" :isShowBtn.sync="isShowBtn"></jobFairItemHall>
-    <view class="hall-switch weui-flex between shadow">
-      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView('1')">招聘大厅</view>
-      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView('2')">求职大厅</view>
-    </view>
-    <view class="job-title weui-flex start page_margin">
-    <image src="../../images/radio.png" class="page_card_icon" mode="scaleToFill" />
-    在线企业(18)
-    </view>
-    <searchHall></searchHall>
-    <hallList :list.sync="list"></hallList>
-    <!-- <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet> -->
+  <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" >
+    <jobList :list.sync="list" class="scroll-view"></jobList>
   </scroll-view>
 </template>
 <script>
@@ -23,16 +14,10 @@ import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
 import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
-import jobFairItem from '@/components/jobFairItem'
-import actionSheet from '@/components/actionSheet'
-import search from '@/components/search'
-import hallList from '@/components/hallList'
-export default class hall extends wepy.page {
+import jobList from '@/components/jobList'
+export default class jobView extends wepy.page {
   components = {
-    jobFairItemHall: jobFairItem,
-    hallList: hallList,
-    actionSheet: actionSheet,
-    searchHall: search
+    jobList: jobList,
   }
   data = {
     rendaUserTeamType: 0,
@@ -53,7 +38,7 @@ export default class hall extends wepy.page {
     hallType: 1
   }
   config = {
-    navigationBarTitleText: '人事达网络招聘会'
+    navigationBarTitleText: '职位列表'
   }
   methods = {
     viewInfo (item) {

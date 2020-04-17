@@ -53,7 +53,6 @@
     <view class="weui-cell_btn weui-flex between page_margin">
       <button class="weui-btn_cell weui-btn_primary" @tap="outLogin">退出登录</button>
     </view>
-    <tabBarBottom :usertype.sync="usertype" :tabBarIndex.sync="tabBarIndex"></tabBarBottom>
     <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
   </view>
 </template>

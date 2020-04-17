@@ -39,7 +39,7 @@
 	<view>
 	  <block  wx:for="{{$jobFairList$list}}" wx:key="index" wx:if="{{$jobFairList$list.length}}">
       
-  <view class="list-card shadow" bindtap="$jobFairList$jobFairItem$viewDetail" data-com-index="{{$jobFairList$undefined}}" data-wpyviewdetail-a="{{$jobFairList$item}}">
+  <view class="list-card shadow" bindtap="$jobFairList$jobFairItem$routerHall" data-com-index="{{$jobFairList$undefined}}" data-wpyrouterhall-a="{{$jobFairList$item}}">
     <view class="weui-flex start card-col-1">    
       <button class="weui-btn_cell weui-btn_primary {{$jobFairList$item.status==1 ? '' : 'weui-btn_warn'}}"  wx:if="{{$jobFairList$jobFairItem$isShowBtn}}">
         {{$jobFairList$item.money==1?'进行中':'待举办'}}

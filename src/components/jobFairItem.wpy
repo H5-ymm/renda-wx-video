@@ -1,6 +1,6 @@
 
 <template>
-  <view class="list-card shadow" @tap="viewDetail({{item}})">
+  <view class="list-card shadow" @tap="routerHall({{item}})">
     <view class="weui-flex start card-col-1">    
       <button class="weui-btn_cell weui-btn_primary {{item.status==1 ? '' : 'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
         {{item.money==1?'进行中':'待举办'}}

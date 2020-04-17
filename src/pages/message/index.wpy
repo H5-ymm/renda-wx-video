@@ -72,7 +72,7 @@
 				<view class="page_noData_text">暂无消息！</view>
 		   </view>
 		</view>
-		<tabBarBottom :tabBarIndex.sync="tabBarIndex" :usertype.sync="usertype" wx:if="{{usertype==1}}"></tabBarBottom>
+		<!-- <tabBarBottom :tabBarIndex.sync="tabBarIndex" :usertype.sync="usertype" wx:if="{{usertype==1}}"></tabBarBottom> -->
 	</view>
 </template>
 <script>

@@ -51,19 +51,6 @@
       <button class="weui-btn_cell weui-btn_primary" bindtap="outLogin">退出登录</button>
     </view>
     
-	<view class="tabBarBox weui-flex center">
-		<!-- 首页 -->
-		<block  wx:for="{{$tabBarBottom$tabBarList.list}}" wx:key="index">
-			<navigator class="itemView  weui-flex__item" url="{{item.pagePath}}" open-type="redirect" hover-class="none">
-				<image class="item_icon" src="{{item.selected ? item.selectedIconPath : item.iconPath}}"/>
-				<view class="item_text {{item.selected ? 'c-y' : 'c-gray'}}">
-					{{item.text}}
-				</view>
-			</navigator>
-		</block>
-	</view>
-
-    
   <view hidden="{{$modal$isScaleModal}}">
     <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
     <view class="modal_box transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modal$height}}rpx">

@@ -20,6 +20,11 @@
           .job-search-item {
             font-size:24rpx;
             color:rgba(17,17,17,.6);
+            .card-item {
+              padding: 4rpx 16rpx;
+              font-size: 23rpx;
+              margin-right: 60rpx;
+            }
           }
         }
       }

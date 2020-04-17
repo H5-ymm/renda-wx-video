@@ -108,7 +108,7 @@
       </view>
       <addBaseInfo wx:if="{{stepActive==1}}" :resumeType="resumeType" :baseInfo="baseInfo" @showActionSheet="showActionSheet" @submit="submit"></addBaseInfo>
       <addResume wx:if="{{stepActive==2&&isInput}}" @submit="submit"></addResume>
-      <scanIdCard wx:if="{{stepActive==2&&!isInput}}" @submitForm="submitForm"></scanIdCard>
+      <!-- <scanIdCard wx:if="{{stepActive==2&&!isInput}}" @submitForm="submitForm"></scanIdCard> -->
       <addResume wx:if="{{stepActive==3}}" :resumeInfo.sync="resumeInfo"></addResume>
     </view>
     <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" @handleClose="showActionSheet">
@@ -135,7 +135,7 @@
 import wepy from 'wepy'
 import addBaseInfo from '@/components/addBaseInfo'
 import addResume from '@/components/addResume'
-import scanIdCard from '@/components/scanIdCard'
+// import scanIdCard from '@/components/scanIdCard'
 import actionSheet from '@/components/actionSheet'
 import modal from '@/components/modal'
 import { $http } from '@/http.js'
@@ -147,7 +147,7 @@ export default class addInfo extends wepy.page {
   components = {
     addBaseInfo: addBaseInfo,
     addResume: addResume,
-    scanIdCard: scanIdCard,
+    // scanIdCard: scanIdCard,
     actionSheet: actionSheet,
     modal: modal
   }

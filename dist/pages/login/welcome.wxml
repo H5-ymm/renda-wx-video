@@ -49,44 +49,5 @@
   </view>
 
 
-    
-  <view hidden="{{$modalogin$isScaleModal}}">
-    <view bindtap="$modalogin$ handleClose"  wx:if="{{$modalogin$isShow}}" class="modal_mask"/>
-    <view class="modal_box transition3s {{ $modalogin$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modalogin$height}}rpx">
-      <view class="modal-content"  wx:if="{{!$modalogin$type}}">
-        <view class="home-view-box weui-flex between wrap">
-          <view class="modal-title ">请选择团队性质</view>
-          <block wx:for="{{$modalogin$menus}}" wx:key="index">
-            <view class="card-item weui-flex between wrap" bindtap="$modalogin$selectType" data-wpyselecttype-a="{{index}}">
-              <image src="{{item.icon}}" alt="" mode="aspectFill" class="menu-icon"/>
-              <view class="card-item-title">{{item.title}}</view>
-              <text class="card-item-content" decode="{{$modalogin$true}}">{{item.content}}</text>
-              <image src="https://a.rsd123.com/image/images/user/radio2.png" alt="" mode="aspectFill" wx:if="{{index==$modalogin$activeIndex}}" class="radio-icon"/>
-              <image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else alt="" mode="aspectFill" class="radio-icon"/>
-            </view>
-          </block>
-        </view>
-        <view class="weui-cell_btn weui-flex center user-btn">
-          <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modalogin$handleOk">确定</button>
-        </view>
-      </view>
-      <view class="modal-content" wx:if="{{$modalogin$type}}">
-        <view class="home-view-box weui-flex between wrap">
-          <view class="modal-title">{{!$modalogin$isInviteUser?'请选择登录/注册方式':'微信授权登录'}}</view>
-          <view class="weui-cell_btn weui-flex center wrap login-way {{$modalogin$isInviteUser?'login-way-add':''}}">
-            <button class="weui-btn_cell weui-flex center weui-btn_cell-gradient" bindgetphonenumber="$modalogin$bindgetphonenumber" open-type="getPhoneNumber">
-              <image src="https://a.rsd123.com/image/images/welcome/wx-active.png" alt="" class="login-icon"/>
-              <text>微信登录/注册 </text>
-            </button>
-            <button class="weui-btn_cell weui-flex center" wx:if="{{!$modalogin$isInviteUser}}" bindtap="$modalogin$handleOk">
-              <image src="https://a.rsd123.com/image/images/welcome/phone.png" alt="" class="login-icon"/>
-              <text>手机号登录/注册</text>
-            </button>
-          </view>
-        </view>
-      </view>
-      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modalogin$handleClose" class="close-icon"/>
-    </view>
-  </view>
-
+    <!-- <modalogin v-bind:isScaleModal.sync="isLoginModal" v-bind:type.sync="type" bindhandleClose="handleClose" bindhandleOkLogin="handleOkLogin" v-bind:height.sync="modalLoginHeight"></modalogin> -->
   </view>

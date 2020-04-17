@@ -1,7 +1,7 @@
 
   <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
     
-  <view class="list-card shadow" bindtap="$jobFairItemHall$viewDetail" data-wpyviewdetail-a="{{$jobFairItemHall$item}}">
+  <view class="list-card shadow" bindtap="$jobFairItemHall$routerHall" data-wpyrouterhall-a="{{$jobFairItemHall$item}}">
     <view class="weui-flex start card-col-1">    
       <button class="weui-btn_cell weui-btn_primary {{$jobFairItemHall$item.status==1 ? '' : 'weui-btn_warn'}}"  wx:if="{{$jobFairItemHall$isShowBtn}}">
         {{$jobFairItemHall$item.money==1?'进行中':'待举办'}}
@@ -41,24 +41,24 @@
 	<view>
 	  <block  wx:for="{{$hallList$list}}" wx:key="index" wx:if="{{$hallList$list.length}}">
       
-  <view class="list-card shadow" bindtap="$hallList$hallItem$routerHall" data-com-index="{{$hallList$undefined}}" data-wpyrouterhall-a="{{$hallList$item}}">
+  <view class="list-card shadow" bindtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$undefined}}" data-wpyrouterjob-a="{{$hallList$item}}">
     <view class="weui-flex start-start list-card-row">
       <image src="../../images/head.png" class="list-card-header" mode="scaleToFill"/>
       <view class="list-card-content">
         <view class="weui-flex start card-col-1">    
-          <text class="name {{$hallList$hallItem$isShowBtn?'text-line':''}}">陕西省2020届精准就业大型网络招聘会</text>
+          <text class="name {{$hallList$hallItem$isShowBtn?'text-line':''}}">仁达网络科技</text>
         </view>
         <view class="card-col-2">    
           <view class="weui-flex start text-line">
             <view class="card-item weui-flex center">业绩提成</view>
           </view>
-          <view><text class="name">储蓄店长</text></view>
-          <view class="card-text">共有10个职位在招聘</view>
-        </view>
-        <view class="card-col-3">
-          <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$hallList$hallItem$routerHall" data-com-index="{{$hallList$undefined}}" data-wpyrouterhall-a="{{$hallList$item}}">
-            投递简历
-          </button>
+          <view class="text-line"><text class="name">储蓄店长</text><text class="name">储蓄店长</text><text class="name">储蓄店长</text></view>
+          <view class="weui-flex between">
+            <view class="card-text weui-flex__item">共有10个职位在招聘</view>
+            <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$undefined}}" data-wpyrouterjob-a="{{$hallList$item}}">
+              投递简历
+            </button>
+          </view>
         </view>
       </view>
       <view class="online">在线</view>

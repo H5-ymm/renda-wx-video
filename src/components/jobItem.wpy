@@ -1,0 +1,37 @@
+
+<template>
+  <view class="list-row" @tap="routerHall({{item}})">
+    <view class="weui-flex between list-col-1">    
+      <text class="page__title text-line">前端开发</text>
+      <view class="number">8k</view>
+    </view>
+    <view class="page__desc">IT | 互联网 | 教育培训</view>
+    <view class="weui-flex start text-line">
+      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">业绩提成</view><view class="card-item weui-flex center">业绩提成</view></view>
+      <button class="weui-btn_cell weui-btn_primary">
+        投递简历
+      </button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+export default class jobItem extends wepy.component {
+	props = {
+    item: Object,
+    isShowBtn: {
+			type: Boolean,
+			default: true
+		},
+	}
+	data = {
+	
+	}
+	methods = {
+    routerHall() {
+      wxNavigateTo('/pages/home/hall')
+    }
+	}
+}
+</script>

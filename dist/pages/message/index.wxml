@@ -26,17 +26,5 @@
 				<view class="page_noData_text">暂无消息！</view>
 		   </view>
 		</view>
-		
-	<view class="tabBarBox weui-flex center" wx:if="{{usertype==1}}">
-		<!-- 首页 -->
-		<block  wx:for="{{$tabBarBottom$tabBarList.list}}" wx:key="index">
-			<navigator class="itemView  weui-flex__item" url="{{item.pagePath}}" open-type="redirect" hover-class="none">
-				<image class="item_icon" src="{{item.selected ? item.selectedIconPath : item.iconPath}}"/>
-				<view class="item_text {{item.selected ? 'c-y' : 'c-gray'}}">
-					{{item.text}}
-				</view>
-			</navigator>
-		</block>
-	</view>
-
+		<!-- <tabBarBottom v-bind:tabBarIndex.sync="tabBarIndex" v-bind:usertype.sync="usertype" wx:if="{{usertype==1}}"></tabBarBottom> -->
 	</view>

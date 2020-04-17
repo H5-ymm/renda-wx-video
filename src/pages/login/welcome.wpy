@@ -21,13 +21,13 @@
       </view>
     </view>
     <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
-    <modalogin :isScaleModal.sync="isLoginModal" :type.sync="type" @handleClose="handleClose" @handleOkLogin="handleOkLogin" :height.sync="modalLoginHeight"></modalogin>
+    <!-- <modalogin :isScaleModal.sync="isLoginModal" :type.sync="type" @handleClose="handleClose" @handleOkLogin="handleOkLogin" :height.sync="modalLoginHeight"></modalogin> -->
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import modal from '@/components/modal'
-import modalUser from '@/components/modalUser'
+// import modalUser from '@/components/modalUser'
 import { $http } from '@/http.js'
 import { wxToast, wxReLaunch, wxNavigateTo, getErrorTip } from '@/util.js'
 import { getStore } from 'wepy-redux'
@@ -41,7 +41,7 @@ const store = getStore()
 export default class Welcome extends wepy.page {
   components = {
     modal: modal,
-    modalogin: modalUser
+    // modalogin: modalUser
   }
   data = {
     userInfo: null,

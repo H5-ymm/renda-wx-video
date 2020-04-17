@@ -1,0 +1,28 @@
+
+  <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" style="height:100%">
+    
+	<view class="scroll-view">
+	  <block  wx:for="{{$jobList$list}}" wx:key="index" wx:if="{{$jobList$list.length}}">
+      
+  <view class="list-row" bindtap="$jobList$jobItem$routerHall" data-com-index="{{$jobList$undefined}}" data-wpyrouterhall-a="{{$jobList$item}}">
+    <view class="weui-flex between list-col-1">    
+      <text class="page__title text-line">前端开发</text>
+      <view class="number">8k</view>
+    </view>
+    <view class="page__desc">IT | 互联网 | 教育培训</view>
+    <view class="weui-flex start text-line">
+      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">业绩提成</view><view class="card-item weui-flex center">业绩提成</view></view>
+      <button class="weui-btn_cell weui-btn_primary">
+        投递简历
+      </button>
+    </view>
+  </view>
+
+    </block>
+		<view  wx:if="{{!$jobList$list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+  </scroll-view>
