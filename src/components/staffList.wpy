@@ -1,0 +1,46 @@
+
+
+<template>
+  <view>
+    <repeat for="{{list}}" key="index">
+      <view class="page_card" wx:if="{{list.length}}" @tap="viewDetail({{item}})">
+        <view class="page_card_row weui-flex between">
+          <view class="weui-flex__item">
+            <view class="weui-flex between">
+              <view class="page_card_name">{{item.name}}</view>
+              <view class="page_card_receipt_status {{item.entry_status==1?'page_card_receipt_status1':'page_card_receipt_status3'}}">{{item.entry_status==1?'在职':'离职'}}</view>
+            </view>
+            <view class="weui-flex between">
+              <view class="page_card_col1 text-line">{{item.post?item.post:'-'}}</view>
+              <view class="page_card_time">{{wxs.dateFormat(item.addtime,'yyyy-MM-dd')}}</view>
+            </view>
+          </view>
+          <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon" />
+        </view>
+      </view>
+    </repeat>
+    <view wx:if="{{!list.length}}" class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import wxs from '../filterWxs/dateFilter.wxs'
+export default class staffList extends wepy.component {
+  wxs = { wxs }
+  props = {
+    list: Array
+  }
+  data = {}
+  methods = {
+    viewDetail (item) {
+      wx.navigateTo({
+        url: '/pages/companyView/addStaff?query=' + item.id
+      })
+    }
+  }
+}
+</script>

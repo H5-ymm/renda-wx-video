@@ -1,0 +1,163 @@
+<template>
+  <picker mode="multiSelector" @cancel="cancelPickerChange" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view wx:if="{{options.length}}">
+          {{multiArray[0][multiIndex[0]]}}
+          {{multiArray[1][multiIndex[1]]}}
+          {{disabled?multiArray[2][multiIndex[2]]:''}}
+       </view>
+      <view wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png"  class="page_down_icon" />
+    </view>
+  </picker>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+let lock = false
+export default class districtSelet extends wepy.component {
+  props = {
+    address: Array,
+    disabled: Boolean
+  }
+  data = {
+    options: [],
+    multiArray: [],
+    multiIndex: [0, 0, 0],
+    codeList: [],
+    province: []
+  }
+  getCode(list) {
+    return list.map(item => {
+      return item.code || item.provinceid
+    })
+  }
+  getList(list) {
+    return list.map(item => {
+      return item.name || item.province
+    })
+  }
+  getRegion(value) {
+    $http('/Wxresume/getProvincesList')
+      .then(res => {
+        let arr = this.getList(res.data)
+        this.codeList[0] = this.getCode(res.data)
+        this.multiArray[0] = arr
+        this.getCityList(value)
+      })
+      .catch(error => {
+        if (error) {
+          this.$message.warning(error.status.remind)
+        }
+      })
+  }
+  getCityList(value) {
+    let code = ''
+    if (!value.length) {
+      code = '110000'
+    } else {
+      code = value[0]
+    }
+    $http('/Wxresume/getCitysList', { code }).then(res => {
+      let arr = this.getList(res.data)
+      this.codeList[1] = this.getCode(res.data)
+      this.multiArray[1] = arr
+      if (this.disabled) {
+        this.getAreaList(value)
+      }
+      if (lock && (this.address && this.address.length && !this.address[2])) {
+        lock = false
+        this.multiIndex = this.codeList.map((val, ind) => {
+          let flag = val.indexOf(this.address[ind])
+          return flag === -1 ? 0 : val.indexOf(this.address[ind])
+        })
+      }
+      this.$apply()
+    })
+  }
+  getAreaList(value) {
+    let code = ''
+    if (!value[1]) {
+      code = this.codeList[1][0]
+    } else {
+      code = value[1]
+    }
+    $http('/Wxresume/getAreasList', { code }).then(res => {
+      let arr = this.getList(res.data)
+      this.codeList[2] = this.getCode(res.data)
+      this.multiArray[2] = arr
+      if (lock && (this.address && this.address.length)) {
+        lock = false
+        this.multiIndex = this.codeList.map((val, ind) => {
+          let flag = val.indexOf(this.address[ind])
+          return flag === -1 ? 0 : val.indexOf(this.address[ind])
+        })
+      }
+      this.$apply()
+    })
+  }
+  onLoad() {
+    if (!this.address || (this.address && this.address.length == 0)) {
+      this.getRegion([])
+    }
+  }
+  watch = {
+    address(val) {
+      if (val && val[0] != 0) {
+        this.options = val
+        lock = true
+        this.$apply()
+        this.getRegion(val)
+      }
+    }
+  }
+  methods = {
+    bindMultiPickerChange(e) {
+      this.multiIndex = e.detail.value
+      this.codeList.forEach((item, index) => {
+        this.options[index] = item[this.multiIndex[index]]
+          ? item[this.multiIndex[index]]
+          : 0
+      })
+      if (this.options.length) {
+        this.$emit('selectCity', this.options)
+        if (this.multiArray[2]) {
+          let addressValue = this.multiArray[0][this.multiIndex[0]] + '/' + this.multiArray[1][this.multiIndex[1]] + '/'
+          + this.multiArray[2][this.multiIndex[2]]
+          console.log(addressValue)
+          this.$emit('selectCityText', addressValue)
+        }
+      }
+    },
+    bindMultiPickerColumnChange(e) {
+      this.multiIndex[e.detail.column] = e.detail.value
+      let cityid = this.codeList[0][this.multiIndex[0]]
+      if (e.detail.column == 0) {
+        this.getCityList([cityid, 0])
+        this.multiIndex = [e.detail.value, 0, 0]
+      } else if (e.detail.column == 1) {
+        this.multiIndex[1] = e.detail.value
+        if (this.disabled) {
+          let threid = this.codeList[1][this.multiIndex[1]]
+          this.getAreaList([cityid, threid])
+        }
+      }
+      else {
+        this.multiIndex[2] = e.detail.value
+      }
+      this.$apply()
+    },
+    cancelPickerChange(e) {
+      if (!this.address || (this.address && this.address.length === 0)) {
+        this.multiIndex = [0, 0, 0]
+        this.options = []
+        this.$apply()
+        this.getRegion([])
+      } else {
+        lock = true
+        this.getRegion(this.address)
+      }
+    }
+  }
+}
+</script>

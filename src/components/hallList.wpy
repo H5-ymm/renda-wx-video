@@ -1,0 +1,33 @@
+
+<template>
+	<view>
+	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
+      <hallItem :item.sync="item"></hallItem>
+    </repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+import hallItem from './hallItem'
+export default class hallList extends wepy.component {
+  components = {
+    hallItem: hallItem
+  }
+	props = {
+		list: Array
+	}
+	data = {
+	
+	}
+	methods = {
+    routerHall() {
+      wxNavigateTo('/pages/home/hall')
+    }
+	}
+}
+</script>

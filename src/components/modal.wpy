@@ -1,0 +1,206 @@
+<style lang="less">
+.transition3s {
+  transition: 0.3s;
+  transform: scale(0);
+  &.g_scale1 {
+    transform: scale(1);
+  }
+}
+.modal_mask {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.2s;
+}
+.modal_box {
+  position: fixed;
+  z-index: 1001;
+  right: 0;
+  bottom: 20%;
+  top: 0;
+  left: 0;
+  width: 76%;
+  margin: auto;
+  background: #fff;
+  border-radius: 10rpx;
+}
+.close-icon {
+  position: absolute;
+  z-index: 1002;
+  right: 0;
+  bottom: -80rpx;
+  left: 46%;
+  width: 40rpx;
+  height: 40rpx;
+}
+.modal-content {
+  width: 86%;
+  margin: 10rpx auto;
+  line-height: 40rpx;
+  .modal-bg {
+    width: 86%;
+    height: 237rpx;
+    position: relative;
+    text-align: center;
+    margin: 10rpx auto;
+    .modal-img-bg {
+      width: 100%;
+      height: 277rpx;
+      margin: -40rpx auto 0;
+    }
+  }
+  .modal-title {
+    text-align: center;
+    font-size: 36rpx;
+    color: #000000;
+    margin-bottom: 10rpx;
+  }
+  .modal-subTitle {
+    text-align: center;
+    color: #999999;
+    font-size: 26rpx;
+    margin: 24rpx 0;
+    display: inline-block;
+  }
+  .weui-cell_btn {
+    width: 80%;
+    margin: 0 auto;
+  }
+  .navigator {
+    width: 100%;
+    display: inline-block;
+  }
+}
+.modal-content-qrcode {
+  text-align: center;
+}
+.qrcode-img {
+  width: 300rpx;
+  height: 300rpx;
+  margin: 30rpx auto;
+}
+</style>
+<template>
+  <view hidden='{{isScaleModal}}'>
+    <view @tap="handleOk" wx:if="{{isShow}}" class="modal_mask"></view>
+    <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+      <view class="modal-content" wx:if="{{!type}}">
+        <view class="modal-bg">
+          <image src="{{modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg" />
+        </view>
+        <view class="modal-title">
+          {{modalObj.title}}
+        </view>
+        <text selectable='true' decode="{{true}}" class="modal-subTitle" wx:if="{{modalObj.subTitle}}">{{modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{openType}}" wx:if="{{openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" @tap="handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" @tap="handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{imgUrl}}" @longpress="saveImg" class="qrcode-img" />
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" @tap="handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" @tap="handleOk" class="close-icon" />
+    </view>
+  </view>
+
+</template>
+<script>
+import wepy from 'wepy'
+export default class actionSheet extends wepy.component {
+  props = {
+    isScaleModal: Boolean,
+    height: Number,
+    modalObj: Object,
+    type: {
+      type: Number,
+      default: 0
+    },
+    imgUrl: String,
+    openType: {
+      type: String,
+      default: ''
+    }
+  }
+  data = {
+    isShow: false
+  }
+  saveImgUrl (url) {
+    wx.getImageInfo({
+      src: url,
+      success: res => {
+        let path = res.path;
+        wx.saveImageToPhotosAlbum({
+          filePath: path,
+          success: (res) => {
+            console.log(res);
+            wxToast('保存成功')
+          },
+          fail: (res) => {
+            console.log(res);
+            wxToast('保存失败')
+          }
+        })
+      },
+      fail: (res) => {
+        console.log(res);
+      }
+    })
+  }
+  methods = {
+    // 长按保存图片
+    saveImg () {
+      //用户需要授权
+      let that = this
+      wx.getSetting({
+        success: (res) => {
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            wx.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: () => {
+                // 同意授权
+                this.saveImgUrl(this.imgUrl);
+              },
+              fail: (res) => {
+                console.log(res)
+              }
+            })
+          } else {
+            // 已经授权了
+            this.saveImgUrl(this.imgUrl);
+          }
+        },
+        fail: (res) => {
+          console.log(res);
+        }
+      })
+    },
+    handleOk () {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleOk', this.imgUrl)
+    }
+  }
+  watch = {
+    isScaleModal (val) {
+      if (!val) {
+        this.isShow = true
+      } else {
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+}
+</script>

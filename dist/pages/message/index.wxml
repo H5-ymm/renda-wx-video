@@ -1,0 +1,42 @@
+
+	<view class="detail-view message-view">
+		<view class="page_margin view-content">
+			<scroll-view scroll-y="true" style="height:100%"  wx:if="{{list.length}}" bindscrolltolower="searchScrollLower">
+				<block wx:for="{{list}}" wx:key="index">
+					<view class="weui-flex start message-row" bindtap="viewMessage" data-wpyviewmessage-a="{{item}}">
+						<view class="message-col-1">
+							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.header_img&&usertype==1}}"/>
+							<image mode="scaleToFill" src="{{item.header_img}}" class="message-col-header" wx-if="{{item.header_img}}"/>
+							<image mode="scaleToFill" src="{{item.logo_url}}" class="message-col-header" wx:if="{{item.logo_url}}"/>
+							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="message-col-header" wx:if="{{!item.logo_url&&usertype!=1}}"/>
+							<view class="bage" wx:if="{{item.person_read==1||item.com_read==1}}"/>
+						</view>
+						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
+							<view>
+								<view>{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
+								<view class="message-col-small">{{item.job_name}}</view>
+							</view>
+							<view class="message-col-small message-col-time">{{item.view_time}}</view>
+						</view>
+					</view>
+				</block>
+			</scroll-view>
+			<view  wx:else class="page_list">
+				<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+				<view class="page_noData_text">暂无消息！</view>
+		   </view>
+		</view>
+		
+	<view class="tabBarBox weui-flex center" wx:if="{{usertype==1}}">
+		<!-- 首页 -->
+		<block  wx:for="{{$tabBarBottom$tabBarList.list}}" wx:key="index">
+			<navigator class="itemView  weui-flex__item" url="{{item.pagePath}}" open-type="redirect" hover-class="none">
+				<image class="item_icon" src="{{item.selected ? item.selectedIconPath : item.iconPath}}"/>
+				<view class="item_text {{item.selected ? 'c-y' : 'c-gray'}}">
+					{{item.text}}
+				</view>
+			</navigator>
+		</block>
+	</view>
+
+	</view>

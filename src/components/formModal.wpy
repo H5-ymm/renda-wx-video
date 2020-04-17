@@ -1,0 +1,130 @@
+<style lang="less">
+@import "../style/modal.less";
+@import "../style/form.less";
+.modal-select_box {
+  .modal-content {
+    padding: 0 40rpx;
+  }
+  .modal-row {
+    margin-bottom: 16rpx;
+    .modal-col {
+      border: 1px solid #eee;
+      border-radius: 5rpx;
+      padding: 16rpx 24rpx;
+      margin-top: 10rpx;
+      font-size: 26rpx;
+      &.modal-col-input {
+        padding: 14rpx 24rpx;
+        margin-top: 10rpx;
+      }
+      .weui-input {
+        text-align: left;
+      }
+    }
+  }
+  .modal-view-box {
+    margin: 20rpx 0 50rpx;
+  }
+}
+</style>
+<template>
+  <view hidden='{{isScaleModal}}'>
+    <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+    <view class="modal_box modal-select_box transition3s {{ isShow ? 'g_scale1': ''}}" style="height:{{height}}rpx">
+      <view class="modal-content">
+				<view class="modal-title">添加部门</view>
+        <view class="modal-view-box">
+					<view class="modal-row">
+					  <text>部门名称</text>
+						<view class="modal-col modal-col-input">
+							<input class="weui-input" placeholder-class="placeholder" data-name="depart_name" value="{{form.depart_name}}" @input="changeInput" placeholder="请输入部门名称" />
+						</view>
+					</view>
+					<view class="modal-row">
+					  <text>部门经理</text>	
+						<view class="modal-col" >
+							<picker @change="bindPickerChange" data-name="user_id" 
+             value="{{depIndex}}" range-key="user_name" range="{{userList}}">
+								<view class="my-text-right weui-flex between">
+									<view class="{{form.user_id!=''?'':'placeholder'}}">
+										{{form.user_id!=''?userList[depIndex].user_name:'请选择部门经理'}}
+									</view>
+									<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+								</view>
+					  	</picker>
+						</view>
+					</view>
+		    </view>
+        <view class="weui-cell_btn weui-flex between">
+					 <button class="weui-btn_cell weui-btn_cell-gradient" @tap="handleOk">确定</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" @tap="handleClose" class="close-icon" />
+    </view>
+  </view>
+
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+export default class formModal extends wepy.component {
+	props = {
+		isScaleModal: Boolean,
+		height: {
+			type: Number,
+			default: 550
+		},
+		title: String
+	}
+	data = {
+		isShow: false,
+		form: {
+			user_id: '',
+			depart_name: ''
+		},
+		userList: [],
+		depIndex: 0
+	}
+	getUserList() {
+		let uid = wx.getStorageSync('rendaUid')
+		$http('/team/teamListUser', { uid }).then(res => {
+			console.log(res.data)
+			this.userList = res.data || []
+			this.$apply()
+		})
+	}
+	onLoad() {
+		this.getUserList()
+	}
+	methods = {
+		changeInput(e) {
+			let key = e.currentTarget.dataset.name
+			this.form[key] = e.detail.value
+		},
+		bindPickerChange(e) {
+			let key = e.currentTarget.dataset.name
+			this.form[key] = this.userList[e.detail.value].uid
+		},
+		handleClose() {
+			this.isShow = false
+			this.$apply()
+			this.$emit('handleClose')
+		},
+		handleOk() {
+			this.isShow = false
+			this.$apply()
+			this.$emit('handleOk', this.form)
+		}
+	}
+	watch = {
+		isScaleModal(val) {
+			if (!val) {
+				this.isShow = true
+			} else {
+				this.isShow = false
+			}
+			this.$apply()
+		}
+	}
+}
+</script>

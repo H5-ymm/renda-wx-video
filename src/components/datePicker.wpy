@@ -1,0 +1,104 @@
+
+<style lang="less">
+.picker-col {
+  width: 38%;
+}
+</style>
+<template>
+	<view class="weui-cell weui-flex between">
+		<picker mode="date" value="{{dateValue}}" start="{{startValue}}" @change="bindDateChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!params.date?'placeholder':''}}">{{dateValue}}</view>
+					<image src="https://a.rsd123.com/image/images/orderTaking/date.png" class="dateIcon" />
+				</view>
+			</view>
+		</picker>
+		<picker mode="time" value="{{timeValue}}" start="09:00" end="21:00" @change="timeChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!params.time?'placeholder':''}}">{{timeValue}}</view>
+					<image src="https://a.rsd123.com/image/images/orderTaking/time.png" class="dateIcon" />
+				</view>
+			</view>
+		</picker>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import $moment from 'moment'
+import { wxToast } from '@/util.js'
+export default class datePicker extends wepy.component {
+	props = {
+		date: String
+	}
+	data = {
+		dateValue: '请选择日期',
+		timeValue: '请选择时间',
+		startValue: '',
+		params: {
+			date: '',
+			time: ''
+		},
+		viewType: 1
+	}
+	watch = {
+		params (val) {
+			if (val.date !== '' && val.time !== '') {
+				let newDate = val.date + ' ' + val.time
+				newDate = newDate + ''
+				let date = $moment(newDate).valueOf() + ''
+				console.log(date + 'kkkkk')
+				if (this.viewType == 2 && date - new Date().getTime() < 0) {
+					return wxToast('不能选择小于当前的时间')
+				}
+				date = date.substr(0, 10)
+				this.$emit('setDate', date)
+				this.viewType = 1
+				this.$apply()
+			} 
+		},
+		date(val) {
+			if(val) {
+				this.dateValue = $moment(val).format('YYYY-MM-DD')
+				this.timeValue = $moment(val).format('HH:ss')
+				this.$apply()
+			}
+		}
+	}
+	onLoad () {
+		this.viewType = wx.getStorageSync('rendaViewType')
+		if (this.viewType == 1) {
+			this.dateValue = $moment().add(1, 'days').format('YYYY-MM-DD')
+		} else {
+			this.dateValue = $moment().format('YYYY-MM-DD')
+		}
+		this.params.date = this.dateValue
+		this.startValue = this.dateValue
+		this.$apply()
+	}
+	methods = {
+		bindDateChange (e) {
+			let date = e.detail.value
+			if (this.viewType == 1 && $moment(date).valueOf() - $moment(this.startValue).valueOf() <= 0) {
+				this.dateValue = this.startValue
+				this.params.date = this.startValue
+				return wxToast('请选择大于当天的时间')
+			}
+			if (this.viewType == 2 && $moment(date).valueOf() - $moment(this.startValue).valueOf() < 0) {
+				this.dateValue = this.startValue
+				this.params.date = this.startValue
+				return wxToast('不能选择小于当天的时间')
+			}
+			this.dateValue = date
+			this.params.date = date
+			this.$apply()
+		},
+		timeChange (e) {
+			this.timeValue = e.detail.value
+			this.params.time = e.detail.value
+			this.$apply()
+		}
+	}
+}
+</script>

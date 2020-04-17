@@ -1,0 +1,153 @@
+<style lang="less">
+@import "../../style/switch.less";
+ .scroll-view {
+   margin-top: 30rpx;
+ }
+</style>
+<template>
+  <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
+    <jobFairItemHall :item.sync="jobFairInfo" :isShowBtn.sync="isShowBtn"></jobFairItemHall>
+    <view class="hall-switch weui-flex between shadow">
+      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView('1')">招聘大厅</view>
+      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView('2')">求职大厅</view>
+    </view>
+    <view class="job-title weui-flex start page_margin">
+    <image src="../../images/radio.png" class="page_card_icon" mode="scaleToFill" />
+    在线企业(18)
+    </view>
+    <searchHall></searchHall>
+    <hallList :list.sync="list"></hallList>
+    <!-- <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet> -->
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
+import jobFairItem from '@/components/jobFairItem'
+import actionSheet from '@/components/actionSheet'
+import search from '@/components/search'
+import hallList from '@/components/hallList'
+export default class hall extends wepy.page {
+  components = {
+    jobFairItemHall: jobFairItem,
+    hallList: hallList,
+    actionSheet: actionSheet,
+    searchHall: search
+  }
+  data = {
+    rendaUserTeamType: 0,
+    params: {
+			uid: '',
+			page: 1,
+      limit: 10,
+      required_number: '',
+      sex: ''
+    },
+    list: [],
+    height: 200,
+    isScaleModal: true,
+    count: 0,
+    activeIndex: 0,
+    jobFairInfo: {
+
+    },
+    isShowBtn: false,
+    hallType: 1
+  }
+  config = {
+    navigationBarTitleText: '首页'
+  }
+  methods = {
+    viewInfo (item) {
+      wx.navigateTo({
+        url: item.url
+      })
+    },
+    switchView(index) {
+      this.hallType = index
+      this.$apply()
+    },
+    viewDetail(item) {
+      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+    },
+    searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getReceiptList()
+			}
+    },
+    showModal(index){
+      this.activeIndex = index
+      this.$apply()
+    },
+    applyRecepit(item) {
+      let params = {
+        job_id: item.id,
+        uid: this.params.uid
+      }
+      this.setReceipt(params)
+    }
+  }
+  setReceipt(params) {
+    $http('/apply/add_apply', params).then(res => {
+      if(res.data) {
+        wxToast('接单成功')
+        wx.setStorageSync('receiptType', 0)
+        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
+      } else {
+        wxToast('接单失败')
+      }
+    })
+  }
+  getReceiptList (uid) {
+    $http('/receipt/receiptList', this.params).then(res => {
+      let arr = []
+      arr = res.data.data ? res.data.data.data : []
+      arr.forEach(item=>{
+        if(item.utime - $moment().valueOf() > 0) {
+          item.utime = $moment.unix(item.utime).format('HH:ss')
+        } else {
+          item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
+        }
+      })
+      this.list = arr
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getTeamInfoAPi (uid) {
+    $http('/Userinfo/getteaminfo', { uid }).then(res => {
+      this.rendaUserTeamType = res.data.grade_num
+      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
+      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
+      wx.setStorageSync('rendaDradeId', res.data.grade_id)
+      this.$apply()
+    })
+  }
+  saveUser(uid) {
+    let userinfo = wx.getStorageSync('wxInfo')
+    let params = {
+      uid,
+      head_img: userinfo.head_img
+    }
+    $http('/userinfo/editUserInfo', params).then(res => {
+      console.log(res)
+    })
+  }
+  onLoad(options) {
+    this.isScaleModal = false
+    this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.$apply()
+    this.getTeamInfoAPi(this.params.uid)
+  }
+  onShow () {
+    this.getReceiptList()
+    let userInfo = wx.getStorageSync('userInfo') || ''
+		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
+      this.saveUser()
+    }
+  }
+}
+</script>

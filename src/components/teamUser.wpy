@@ -1,0 +1,51 @@
+
+<template>
+	<view>
+		<view wx:if="{{list.length}}">
+			<repeat for="{{list}}" key="index">
+				<view class="page_card" @tap="viewDetail({{item}})">
+					<view class="page_card_row weui-flex between">
+						<view class="weui-flex__item">
+							<view class="weui-flex between">
+								<view class="page_card_name">{{item.user_name||userName}}</view>
+								<view class="page_card_col1">{{item.grade_name||'-'}}</view>
+							</view>
+							<view class="weui-flex between">
+								<view class="text-line weui-flex start">{{item.mobile}}</view>
+								<view class="page_card_col1">{{item.depart_name||'-'}}</view>
+							</view>
+						</view>
+						<image mode="scaleToFill" class="weui-flex__item" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon" />
+					</view>
+				</view>
+			</repeat>
+		</view>
+		<view wx:else class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxToast, wxReLaunch, wxNavigateTo, wxRedirectTo } from '@/util.js'
+export default class teamUser extends wepy.component {
+	props = {
+		list: Array
+	}
+	data = {
+		userName: ''
+	}
+	onLoad () {
+		let name = wx.getStorageSync('wxInfo')
+			? JSON.parse(wx.getStorageSync('wxInfo')).user_name
+			: ''
+		this.userName = name
+	}
+	methods = {
+		viewDetail (item) {
+			wxRedirectTo('/pages/teamView/userInfo?query=' + item.id + '&uid=' + item.uid)
+		}
+	}
+}
+</script>

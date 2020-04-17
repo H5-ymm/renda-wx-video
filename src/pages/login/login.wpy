@@ -1,0 +1,202 @@
+<style lang="less">
+@import '../../style/login.less';
+</style>
+<template>
+  <view class="login_page page_bottom">
+    <view class="login-view">
+      <image src="https://a.rsd123.com/image/images/loginBg.png" mode="widthFix" class="login-view-bg" />
+      <view class="login-view-box">
+        <view class="login-title">
+          <view>您好，</view>
+          <view class="login-title-col">欢迎使用人事达</view>
+        </view>
+        <view class="login-view-form">
+          <view class="weui-cell weui-flex start weui-cell_input page_bottom">
+            <view class="weui-cell_label weui-flex between">
+              +86<label class="weui-cell_line">|</label>
+            </view>
+            <input class="weui-input" value="{{form.tel}}" @input="changeInput" data-name="tel" placeholder="输入您的手机号" />
+          </view>
+          <view class="weui-cell weui-flex start weui-cell_input page_bottom">
+            <view class="weui-cell_label weui-flex between">
+              验证码<label class="weui-cell_line">|</label>
+            </view>
+            <input class="weui-input" value="{{form.code}}" @input="changeInput" data-name="code" placeholder="输入验证码" />
+            <text class="code-btn" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
+          </view>
+          <view class="weui-cell_btn weui-flex center login-btn">
+            <button disabled="{{!checked}}" class="weui-btn_cell weui-btn_cell-gradient {{!checked?'weui-btn_cell-disabled':''}}" @tap="getUserInfo">登录</button>
+          </view>
+        </view>
+      </view>
+    </view>
+    <modal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import modal from '@/components/modal'
+import { $http } from '@/http.js'
+import { wxToast, checkMobile, getErrorTip, wxReLaunch } from '@/util.js'
+import { getStore } from 'wepy-redux'
+import { GETALLUSER } from '@/store/types/user.js'
+import { getAllContant } from '@/store/actions/contant.js'
+const store = getStore()
+export default class Login extends wepy.page {
+  components = {
+    modal: modal
+  }
+  data = {
+    isModal: true,
+    modalHeight: 640,
+    modalObj: {
+      title: '',
+      subTitle: '',
+      imgBg: 'https://a.rsd123.com/image/images/modalIcon.png'
+    },
+    form: {
+      tel: '',
+      code: '',
+      token: ''
+    },
+    auth_time: 60, // 倒计时
+    sendAuthCode: true, // 控制
+    auth_timetimer: null,
+    openid: ''
+  }
+  computed = {
+    checked () {
+      return this.form.tel && this.form.code
+    }
+  }
+  getCodeApi () {
+    $http('/Login/sendVerification', { mobile: this.form.tel })
+      .then(res => {
+        this.form.token = res.data.token || ''
+      })
+  }
+  checkRouterView (res) {
+    if (res && res.uid) {
+      this.$parent.globalData.uid = res.uid
+      // userType 1 企业 2 团队
+      this.$apply()
+      wx.setStorageSync('rendaUserType', res.usertype)
+      wx.setStorageSync('rendaUid', res.uid)
+      if (!res.usertype) {
+        wxReLaunch('/pages/register/selectUser')
+      } else if (res.usertype === 2) {
+        if (res.is_team !== '0') {
+          wxReLaunch('/pages/teamView/index')
+        } else {
+          wxReLaunch('/pages/register/selectUser?query=1')
+        }
+      } else if (Number(res.usertype) === 1) {
+        if (Number(res.is_company) !== 0) {
+          wxReLaunch('/pages/companyView/index')
+        } else {
+          wxReLaunch('/pages/register/companyForm')
+        }
+      } else {
+        wxReLaunch('/pages/message/index')
+      }
+      store.dispatch(getAllContant())
+    }
+  }
+  login () {
+    wx.removeStorageSync('auth_time')
+    wx.removeStorageSync('sendAuthCode')
+    let params = Object.assign(this.form, { openid: this.openid })
+    $http('/login/is_register_manu', params).then(res => {
+      this.checkRouterView(res.data)
+    }).catch(error => {
+      if (error && error.status) {
+        let obj = getErrorTip(error.status.code)
+        if (error.status.code === 6001 || error.status.code === 6008) {
+          this.modalHeight = 640
+        } else {
+          this.modalHeight = 560
+        }
+        this.modalObj.title = obj.title
+        this.modalObj.subTitle = obj.subTitle
+        this.isModal = false
+        this.$apply()
+      }
+    })
+  }
+  onLoad (options) {
+    if (wx.getStorageSync('sendAuthCode')) {
+      this.auth_time = wx.getStorageSync('auth_time') - 3
+      clearInterval(this.auth_timetimer)
+      this.getTime()
+    }
+    this.openid = this.$parent.getOpenId()
+    this.$apply()
+  }
+  onShow () {
+    if (!this.isRead) {
+      this.checked = false
+      if (wx.getStorageSync('sendAuthCode')) {
+        this.auth_time = wx.getStorageSync('auth_time') - 3
+        clearInterval(this.auth_timetimer)
+        this.getTime()
+      }
+      this.$apply()
+    }
+  }
+  events = {
+    handleOk: () => {
+      this.isModal = true
+      this.$apply()
+    }
+  }
+  getTime () {
+    if (!this.sendAuthCode) return
+    this.sendAuthCode = false
+    this.auth_timetimer = setInterval(() => {
+      this.auth_time--
+      this.$apply()
+      wx.setStorageSync('auth_time', this.auth_time)
+      wx.setStorageSync('sendAuthCode', true)
+      if (this.auth_time <= 0) {
+        this.sendAuthCode = true
+        this.auth_time = 60
+        clearInterval(this.auth_timetimer)
+      }
+    }, 1000)
+    this.$apply()
+  }
+  onHide () {
+    clearInterval(this.auth_timetimer)
+  }
+  onUnload () {
+    clearInterval(this.auth_timetimer)
+  }
+  methods = {
+    changeInput (e) {
+      let key = e.target.dataset.name
+      this.form[key] = e.detail.value
+    },
+    getCode () {
+      if (!this.form.tel) {
+        wxToast('请输入手机号码')
+      } else if (!checkMobile(this.form.tel)) {
+        wxToast('请输入正确的手机号码')
+      } else {
+        this.getCodeApi()
+        this.getTime()
+      }
+    },
+    getUserInfo () {
+      if (!this.form.tel) {
+        wxToast('请输入手机号码')
+      } else if (!checkMobile(this.form.tel)) {
+        wxToast('请输入正确的手机号码')
+      } else if (!this.form.code) {
+        wxToast('请输入验证码')
+      } else {
+        this.login()
+      }
+    }
+  }
+}
+</script>

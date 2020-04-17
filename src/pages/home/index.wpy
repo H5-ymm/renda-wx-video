@@ -1,0 +1,190 @@
+<style lang="less">
+  .page-home {
+    height: 100%;
+    overflow: hidden;
+    .section {
+      padding-bottom: 20rpx;
+     .job-box {
+        .job-title {
+          height: 88rpx;
+          font-size: 30rpx;
+          color: #111111;
+          padding: 0 30rpx;
+          font-weight:500;
+        }
+        .job-search {
+          .job-search-query {
+            padding: 26rpx 0;
+            margin: 0 30rpx;
+          }
+          .job-search-item {
+            font-size:24rpx;
+            color:rgba(17,17,17,.6);
+          }
+        }
+      }
+    }
+  }
+</style>
+<template>
+  <view class="page-home">
+    <search @searchValue="searchValue"></search>
+    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content">
+      <banner></banner>
+      <view class="section">
+        <view class="job-box">
+          <view class="job-title weui-flex start">
+            视频招聘会(10)
+          </view>
+          <view class="job-search">
+            <view class="job-search-query weui-flex start">
+              <view class="weui-flex around job-search-item">
+                <repeat wx:for="{{statusList}}" wx:key="index">
+                  <view class="card-item weui-flex center  {{index == activeIndex ? 'active': ''}}" @tap="showModal({{index}})">{{item}}</view>
+                </repeat>
+              </view>
+            </view>
+          </view>
+          <jobFairList :list.sync="list"></jobFairList>
+        </view>
+      </view>
+    </scroll-view>
+    <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
+import search from '@/components/search'
+import banner from '@/components/banner'
+import actionSheet from '@/components/actionSheet'
+import jobFairList from '@/components/jobFairList'
+
+export default class teamView extends wepy.page {
+  components = {
+    search: search,
+    banner: banner,
+    jobFairList:jobFairList,
+    actionSheet: actionSheet
+  }
+  data = {
+    rendaUserTeamType: 0,
+    params: {
+			uid: '',
+			page: 1,
+      limit: 10,
+      required_number: '',
+      sex: ''
+    },
+    list: [{
+      status: 1
+    },
+    {
+      status: 2
+    }],
+    height: 200,
+    isScaleModal: true,
+    count: 0,
+    activeIndex: 0,
+    statusList: ['全部', '进行中','待举办']
+  }
+  config = {
+    navigationBarTitleText: '首页'
+  }
+  events = {
+    handleClose: () => {
+      wx.showTabBar()
+      this.$apply()
+    }
+  }
+  methods = {
+    viewInfo (item) {
+      wx.navigateTo({
+        url: item.url
+      })
+    },
+    viewDetail(item) {
+      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+    },
+    searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getReceiptList()
+			}
+    },
+    showModal(index){
+      this.activeIndex = index
+      this.$apply()
+    },
+    applyRecepit(item) {
+      let params = {
+        job_id: item.id,
+        uid: this.params.uid
+      }
+      this.setReceipt(params)
+    }
+  }
+  setReceipt(params) {
+    $http('/apply/add_apply', params).then(res => {
+      if(res.data) {
+        wxToast('接单成功')
+        wx.setStorageSync('receiptType', 0)
+        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
+      } else {
+        wxToast('接单失败')
+      }
+    })
+  }
+  getReceiptList (uid) {
+    $http('/receipt/receiptList', this.params).then(res => {
+      // let arr = []
+      // arr = res.data.data ? res.data.data.data : []
+      // arr.forEach(item=>{
+      //   if(item.utime - $moment().valueOf() > 0) {
+      //     item.utime = $moment.unix(item.utime).format('HH:ss')
+      //   } else {
+      //     item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
+      //   }
+      // })
+      // this.list = arr
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getTeamInfoAPi (uid) {
+    $http('/Userinfo/getteaminfo', { uid }).then(res => {
+      this.rendaUserTeamType = res.data.grade_num
+      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
+      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
+      wx.setStorageSync('rendaDradeId', res.data.grade_id)
+      this.$apply()
+    })
+  }
+  saveUser(uid) {
+    let userinfo = wx.getStorageSync('wxInfo')
+    let params = {
+      uid,
+      head_img: userinfo.head_img
+    }
+    $http('/userinfo/editUserInfo', params).then(res => {
+      console.log(res)
+    })
+  }
+  onLoad(options) {
+    // this.isScaleModal = false
+    // wx.hideTabBar();
+    this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.$apply()
+    this.getTeamInfoAPi(this.params.uid)
+  }
+  onShow () {
+    this.getReceiptList()
+    let userInfo = wx.getStorageSync('userInfo') || ''
+		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
+      this.saveUser()
+    }
+  }
+}
+</script>

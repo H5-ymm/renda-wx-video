@@ -1,0 +1,51 @@
+
+<template>
+  <view>
+    <repeat wx:for="{{list}}" wx:key="index">
+      <view class="page_card" wx:if="{{list.length}}" @tap="viewDetail({{item}})">
+        <view class="page_card_row weui-flex between">
+          <view class="weui-flex__item">
+            <view class="weui-flex between">
+              <view class="page_card_name">{{item.team_name}}</view> 
+              <view wx:if="{{item.job_status==1}}"
+                  class="page_card_receipt_status {{'page_card_receipt_status'+(item.status+1)}}" >
+                  {{wxs.statusTeamText(item.status)}}
+                </view>
+                <view class="page_card_receipt_status page_card_receipt_status4" wx:else>
+                  已下架
+                </view>
+            </view>
+            <view class="weui-flex between">
+              <view class="weui-flex start weui-flex__item">{{item.name}}</view>
+              <view class="page_card_time">{{item.addtime}}</view>
+            </view>  
+          </view>
+          <image mode="scaleToFill" class="weui-flex__item" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon"/>
+        </view>
+      </view>
+    </repeat>
+    <view wx:if="{{!list.length}}" class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import wxs from '../filterWxs/receiptFilter.wxs'
+export default class checkTeamtList extends wepy.component {
+  wxs = { wxs }
+  props = {
+    list: Array
+  }
+  data = {}
+  methods = {
+    viewDetail(item) {
+      wx.navigateTo({
+        url: '/pages/companyView/teamDetail?query=' + JSON.stringify(item)
+      })
+    }
+  }
+}
+</script>

@@ -1,0 +1,111 @@
+<style lang="less">
+@import '../../style/home.less';
+</style>
+<template>
+  <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="home-view page page_bottom">
+    <view class="page_margin page">
+      <view class="home-view-box">
+        <repeat wx:for="{{list}}" wx:key="index">
+          <view class="page_card  {{activeIndex==index? 'page_card_active': ''}}" wx:if="{{list.length}}" @tap="selectJob({{index}},{{item}})">
+            <view class="page_card_row">
+              <view class="weui-flex between">
+                <view class="page_card_name">{{item.job_name}}</view>
+                <view class="page_card_num" wx:if="{{resumeType == '团队接单'}}">需求人数：{{item.required_number}}人</view>
+                <view class="page_card_num" wx:else>需求人数：{{item.number}}人</view>
+              </view>
+              <view class="weui-flex between">
+                <view class="text-line weui-flex start">
+                  <view class="page_card_col1" wx:if="{{resumeType == '团队接单'}}">{{item.com_name}}</view>
+                  <view class="page_card_col1" wx:else>{{item.company_name}}</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </repeat>
+        <view wx:if="{{!list.length}}" class="page_list">
+          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+          <view class="page_noData_text">暂无数据！</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+export default class list extends wepy.page {
+  data = {
+    list: [],
+    activeIndex: 0,
+    resumeType: '',
+    params: {
+      uid: '',
+      page: 1,
+      limit: 10
+    },
+    count: 0
+  }
+  config = {
+    navigationBarTitleText: this.resumeType
+  }
+  getGeportOrderList () {
+    $http('/Wxresume/reportOrderList', this.params).then(res => {
+      this.list = res.data.data || []
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getInternalInvoiceList () {
+    $http('/Wxresume/internalInvoiceList', this.params).then(res => {
+      this.list = res.data.data || []
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  methods = {
+    selectJob (index, item) {
+      this.activeIndex = index
+      let params = {}
+      if (this.resumeType == '团队接单') {
+        params = {
+          name: item.job_name,
+          companyName: item.com_name,
+          resumeType: this.resumeType,
+          id: item.job_id
+        }
+      } else {
+        params = {
+          name: item.job_name,
+          companyName: item.company_name,
+          resumeType: this.resumeType,
+          id: item.id
+        }
+      }
+      let query = JSON.stringify(params)
+      wx.setStorageSync('query', query)
+      wx.redirectTo({
+        url: '/pages/home/addInfo?query=' + query // 页面 A
+      })
+    },
+    searchScrollLower () {
+      if (this.count > this.params.limit && this.count > this.list.length) {
+        this.params.limit = this.params.limit + 10
+        this.getList()
+      }
+    }
+  }
+  getList () {
+    if (this.resumeType == '团队接单') {
+      this.getGeportOrderList()
+    } else {
+      this.getInternalInvoiceList()
+    }
+  }
+  onShow () {
+    this.params.uid =
+      wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.resumeType = wx.getStorageSync('resumeType')
+    this.getList()
+  }
+}
+</script>

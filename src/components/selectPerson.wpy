@@ -1,0 +1,95 @@
+
+<style lang="less">
+.page_card {
+  .page_card_row {
+    .page_card_name {
+      font-weight: normal;
+    }
+  }
+}
+.radio-icon {
+  width: 30rpx;
+  height: 30rpx;
+}
+</style>
+<template>
+  <view>
+    <repeat wx:for="{{personList}}" wx:key="index">
+      <view class="page_card" wx:if="{{personList.length}}">
+        <view class="page_card_row weui-flex between">
+          <view class="weui-flex__item">
+            <view class="page_card_name">{{item.user_name || '-'}}</view>
+            <view class="text-line">
+              {{item.departname || item.depart_name || '-'}} {{item.grade_name||'-'}}
+            </view>
+            <view class="page_card_time">{{item.addtime}}</view>
+          </view>
+          <image src="https://a.rsd123.com/image/images/user/radio2.png" alt="" mode="aspectFill" class="radio-icon" @tap="selectUser({{item}},{{index}})" wx:if="{{item.disabled}}" />
+          <image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else @tap="selectUser({{item}},{{index}})" mode="aspectFill" class="radio-icon" />
+        </view>
+      </view>
+    </repeat>
+    <view wx:if="{{!personList.length}}" class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+export default class selectPerson extends wepy.component {
+  props = {
+    list: Array,
+    distributionnum: Number,
+    activeIndex: Number
+  }
+  data = {
+    idList: [],
+    personList: []
+  }
+  watch = {
+    list (val) {
+      if (val) {
+        this.personList = val
+        console.log( this.personList)
+        this.$apply()
+      }
+    }
+  }
+  onLoad () {
+    this.personList = this.list
+    console.log( this.personList)
+    this.$apply()
+  }
+  methods = {
+    selectUser (item, index) {
+      let flag = this.idList.indexOf(item.uid)
+      if (item.disabled && this.distributionnum && flag === -1 && !this.activeIndex) return
+      this.personList[index].disabled = !item.disabled
+      this.$apply()
+      if (!this.activeIndex) {
+        if (this.idList.indexOf(item.uid) === -1) {
+        this.idList.push(item.uid)
+      } else {
+        let ret = this.idList.findIndex(v => {
+          return v === item.uid
+        })
+        this.idList.splice(ret, 1)
+       }
+      } else {   
+        if (this.idList.indexOf(item.id) === -1) {
+        this.idList.push(item.id)
+        } else {
+          let ret = this.idList.findIndex(v => {
+            return v === item.id
+          })
+          this.idList.splice(ret, 1)
+        }
+      }
+      console.log(this.idList)
+      this.$emit('selectUser', Array.from(new Set(this.idList)))
+    }
+  }
+}
+</script>

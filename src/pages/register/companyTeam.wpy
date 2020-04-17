@@ -1,0 +1,191 @@
+<style lang="less">
+@import "../../style/home.less";
+@import "../../style/form.less";
+</style>
+<template>
+  <view class="home-view register-view page_margin page__bd">
+    <view>
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{label}}名称：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="team_name" value="{{form.team_name}}" @input="changeInput" placeholder="请输入姓名" />
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{label}}logo：</view>
+            <image @tap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head"  wx:if="{{infoImg}}" />
+						<image @tap="uploadImg" src="https://a.rsd123.com/image/images/default1.png" mode="scaleToFill" class="my-head" 
+            wx:else/>
+						<image mode="scaleToFill" @tap="uploadImg"  src="https://a.rsd123.com/image/images/right.png"  class="page_down_icon" />
+          </view>
+        </view>
+    	  <teamCompany @submit="submit"></teamCompany>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{nameLabel}}：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="user_name" 
+						value="{{form.user_name}}" @input="changeInput" placeholder="请输入{{nameLabel}}" />
+          </view>
+        </view>
+				<view class="page_card_row" wx:if="{{registerType==2}}">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">申请人身份证号：</view>
+            <input class="weui-input" data-name="id_card" placeholder-class="placeholder" 
+						value="{{form.id_card}}" @input="changeInput" placeholder="请输入申请人身份证号码" />
+          </view>
+        </view>
+         <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{label}}介绍：</view>
+          </view>
+					 <textarea data-name="introduction" placeholder-class="placeholder"
+						disable-default-padding="true"
+						 class="weui-input weui-textarea" value="{{form.introduction}}" @input="changeInput"
+						 placeholder="请输入团队介绍" maxlength="-1"/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center register-btn">
+      <button class="weui-btn_cell weui-btn_primary" @tap="save">完成注册</button>
+    </view>
+		 <teamCompanyModal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight" :modalObj.sync="modalObj"></teamCompanyModal>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import company from '@/components/company'
+import { wxToast, getImgUrl, validateIdCard, compressImg, getErrorTip } from '@/util.js'
+import modal from '@/components/modal'
+import { $http, uploadFile } from '@/http.js'
+export default class companyForm extends wepy.page {
+	components = {
+		teamCompany: company,
+		teamCompanyModal: modal
+	}
+	data = {
+		form: {
+			team_name: '',
+			user_name: '',
+			address: '',
+			provinceid: '',
+			cityid: '',
+			three_cityid: '',
+			id_card: '',
+			type: 1,
+			log: '',
+			license_img: '',
+			business_licence: '',
+			industry: '',
+			enterprise: '',
+			scale: '',
+			introduction: '',
+			uid: wx.getStorageSync('rendaUid')
+		},
+		infoImg: '',
+		registerType: 1,
+		modalHeight: 560,
+		modalObj: {
+			title: '',
+			subTitle: '',
+			imgBg: 'https://a.rsd123.com/image/images/modalIcon.png'
+		},
+		isModal: true
+	}
+	onLoad(options) {
+		this.registerType = options.query || 2
+		this.$apply()
+	}
+	config = {
+		navigationBarTitleText: '注册企业团队'
+	}
+	computed = {
+		label() {
+			return this.registerType === 1 ? '企业' : '团队'
+		},
+		nameLabel() {
+			return this.registerType === 1 ? '联系人' : '申请人姓名'
+		}
+	}
+	events = {
+		submit: data => {
+			for (let key in data) {
+				for (let val in this.form) {
+					if (val === key) {
+						this.form[val] = data[key]
+					}
+				}
+			}
+			this.form.license_img = data.logo
+			this.form.industry = data.job_id
+			this.form.enterprise = data.com_type
+			this.form.scale = data.com_scale
+			if (data.phone && data.phoneEnd) {
+				this.form.landline = data.phone + '-' + data.phoneEnd
+			}
+		},
+		handleOk() {
+			this.isModal = true
+			this.$apply()
+			wxReLaunch('/pages/login/welcome')
+		}
+	}
+	getImg(tempFilePaths) {
+		uploadFile(tempFilePaths).then(res => {
+			if (res.data && res.data.url) {
+				this.infoImg = getImgUrl(res.data.url)
+				this.form.log = res.data.url
+				this.$apply()
+			} else {
+				wxToast('图片获取失败')
+			}
+		})
+	}
+	registerTeam() {
+		this.form.uid = wx.getStorageSync('rendaUid')
+		$http('/login/teamRegister', this.form).then(res => {
+			if (res.data) {
+				let obj = getErrorTip(6006)
+				this.modalObj.title = obj.title
+				this.modalObj.subTitle = obj.subTitle
+				this.isModal = false
+				this.$apply()
+			} else {
+				wxToast('注册失败')
+			}
+		})
+	}
+	methods = {
+		uploadImg() {
+			wx.chooseImage({
+				sizeType: ['compressed'],
+				success: res => {
+					compressImg(res.tempFilePaths[0]).then(res => {
+						this.getImg([res.url])
+					})
+				}
+			})
+		},
+		changeInput(e) {
+			let key = e.currentTarget.dataset.name
+			this.form[key] = e.detail.value
+		},
+		save() {
+			if (!this.form.team_name) {
+				wxToast('请输入团队名称')
+			} else if (!this.form.user_name) {
+				wxToast('请输入姓名')
+			} else if (!this.form.id_card) {
+				wxToast('请输入身份证号码')
+			} else if (!validateIdCard(this.form.id_card)) {
+				wxToast('请输入正确的身份证')
+			} else if (!this.form.introduction) {
+				wxToast('请输入团队介绍')
+			} else {
+				this.registerTeam()
+			}
+		}
+	}
+}
+</script>

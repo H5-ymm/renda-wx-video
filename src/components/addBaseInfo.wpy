@@ -1,0 +1,125 @@
+<style lang="less">
+@import "../style/home.less";
+@height: 40;
+.weui-input {
+  text-align: right;
+}
+.add-view {
+  height: 76%;
+}
+.home-view-box {
+  height: 100%;
+}
+</style>
+<template>
+  <view class="add-view">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">简历录入位置：</view>
+            <view class="weui-flex between" @tap="selectType">
+              <view class="my-text-right">{{resumeType}}</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_right-icon" />
+            </view>
+          </view>
+        </view>
+        <view class="page_card_row" wx:if="{{resumeType&&resumeType!='简历管理'}}" @tap="viewList">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__auto my-text-require">{{resumeType}}</view>
+            <view class="weui-flex between">
+              <view class="my-text-right">{{jobName?jobName:'请选择岗位名称'}}</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_right-icon" />
+            </view>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__auto">
+              谁送给我：
+            </view>
+            <input class="weui-input" placeholder-class="placeholder" placeholder="请输入送给人" value="{{form.from_user}}" data-name="from_user" @input="changeInput" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__auto">
+              我送给谁：
+            </view>
+            <input placeholder-class="placeholder" disabled="{{resumeType&&resumeType!='简历管理'&&form.to_user!=''}}" value="{{form.to_user}}" data-name="to_user" @input="changeInput" class="weui-input my-text-right weui-flex__auto" placeholder="请输入公司" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" @tap="submit">下一步</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class addBaseInfo extends wepy.component {
+  //可用于页面模板绑定的数据
+  props = {
+    resumeType: String,
+    baseInfo: Object
+  }
+  data = {
+    form: {
+      name: '',
+      to_user: '',
+      from_user: ''
+    },
+    jobName: ''
+  }
+  events = {
+    save: val => {
+      this.resumeType = val
+    },
+    getBaseInfo: val => {
+      this.jobName = val.name
+      // this.form.from_user = val.name
+      this.form.to_user = val.companyName
+      this.form.job_id = val.id
+      this.resumeType = val.resumeType
+    }
+  }
+  // 事件处理函数(集中保存在methods对象中)
+  methods = {
+    selectType() {
+      this.$emit('showActionSheet')
+      this.jobName = ''
+      this.form = {
+        name: '',
+        to_user: '',
+        from_user: ''
+      }
+    },
+    viewList() {
+      wx.navigateTo({
+        url: '/pages/home/list' // 页面 A
+      })
+    },
+    changeInput(e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+    },
+    submit() {
+      if (this.resumeType != '简历管理' && !this.form.to_user) {
+        return wx.showToast({
+          title: '请选择岗位名称',
+          icon: 'none',
+          duration: 2000
+        })
+      }
+      if (this.resumeType == '团队接单') {
+        this.form = Object.assign(this.form, { job_type: 1 })
+      }
+      if (this.resumeType == '内部发单') {
+        this.form = Object.assign(this.form, { job_type: 2 })
+      }
+      this.$emit('submit', this.form)
+    }
+  }
+}
+</script>

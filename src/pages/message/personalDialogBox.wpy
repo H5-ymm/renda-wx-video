@@ -1,0 +1,275 @@
+<style lang="less">
+@import '../../style/resume.less';
+.detail-view {
+  &.dialogBox-view {
+    .register-btn {
+      margin: 0 24rpx;
+      .weui-btn_cell {
+        margin: 0 10rpx;
+      }
+    }
+  }
+  .dialogBox-row {
+    color: #333;
+    text-align: center;
+    .dialogBox-row-time {
+      font-size: 22rpx;
+    }
+  }
+  .dialogBox-col-header {
+    width: 94rpx;
+    height: 94rpx;
+    border-radius: 50%;
+    // background: #1890ff;
+    position: relative;
+  }
+  .dialogBox-col {
+    padding: 12rpx 0;
+    margin: 12rpx 0;
+    .dialogBox-content {
+      // flex: 1;
+      margin-right: 30rpx;
+      background: rgba(24, 144, 255, 0.3);
+      border-radius: 12rpx;
+      font-size: 24rpx;
+      padding: 18rpx 24rpx;
+      color: #000;
+      position: relative;
+      &.dialogBox-content-right {
+        margin-left: 0;
+        &::before {
+          content: '';
+          width: 0px;
+          height: 0px;
+          position: absolute;
+          right: -30rpx;
+          top: 25%;
+          border-top: 16rpx solid rgba(0, 0, 0, 0);
+          border-right: 16rpx solid rgba(0, 0, 0, 0);
+          border-bottom: 16rpx solid rgba(0, 0, 0, 0);
+          border-left: 16rpx solid rgba(24, 144, 255, 0.3);
+        }
+      }
+      &.dialogBox-content-left {
+        text-align: left;
+        background: #fff;
+        margin-right: 0;
+        margin-left: 30rpx;
+        &::before {
+          content: '';
+          width: 0px;
+          height: 0px;
+          position: absolute;
+          left: -30rpx;
+          top: 25%;
+          border-top: 16rpx solid rgba(0, 0, 0, 0);
+          border-right: 16rpx solid #fff;
+          border-bottom: 16rpx solid rgba(0, 0, 0, 0);
+          border-left: 16rpx solid rgba(0, 0, 0, 0);
+        }
+	  }
+	   &.dialogBox-content-left1 {
+		width: 70%;
+		 &::before {
+			top: 48%;
+		 }
+	  }
+    }
+    .message-col-small {
+      font-size: 26rpx;
+      color: #888888;
+    }
+    .dialogBox_icon {
+      width: 40rpx;
+      height: 22rpx;
+      margin-right: 20rpx;
+    }
+  }
+  .dialogBox-btn {
+    width: 46%;
+    margin-bottom: 30rpx;
+    margin-left: 120rpx;
+    .weui-btn_cell {
+      border-radius: 5rpx;
+      font-size: 24rpx;
+      padding: 24rpx 0 21rpx;
+      margin: 0 10rpx;
+      &.weui-btn_primary {
+        border: 1px solid #1890ff;
+      }
+      &.weui-btn_default {
+        background: #ccc;
+        color: #fff;
+      }
+    }
+  }
+}
+</style>
+<template>
+	<view class="detail-view dialogBox-view">
+		<view class="page_margin view-content">
+			<scroll-view scroll-y="true" style="height:100%" @scrolltolower="searchScrollLower">
+				<view class="dialogBox-row">
+					<view>
+						<view class="dialogBox-row-time">{{messageDetail.addtime}}</view>
+						<view class="weui-flex start dialogBox-col weui-flex__item">
+							<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header" wx:if="{{messageDetail.header_img}}"/>
+							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+							<view class="dialogBox-content dialogBox-content-left dialogBox-content-left1">
+								<text decode="{{true}}">公司：{{messageDetail.com_name}}\n您好，你已预约视频面试，通知：{{messageDetail.content}},\n面试职位:{{messageDetail.job_name}}\n面试时间 {{messageDetail.view_time}}\n</text><text @tap="concat">联系电话：一键拨打</text>
+							</view>
+						</view>
+						<view class="dialogBox-btn weui-flex between">
+							<button class="weui-btn_cell weui-btn_primary" @tap="recommend">职位详情</button>
+							<button class="weui-btn_cell weui-btn_default" @tap="videoView">进入面试</button>
+						</view>
+					</view>
+					<view wx:if="{{isView || messageDetail.status}}">
+						<view class="weui-flex start dialogBox-col weui-flex__item">
+							<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header" wx:if="{{messageDetail.header_img}}"/>
+							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+							<view class="dialogBox-content dialogBox-content-left">您已退出面试</view>
+						</view>
+						<view class="dialogBox-btn weui-flex between" wx:if="{{isView || messageDetail.status}}">
+							<button class="weui-btn_cell weui-btn_primary" @tap="videoView">重新进入</button>
+							<button class="weui-btn_cell weui-btn_primary_plain">已完成面试</button>
+						</view>
+					</view>
+					<view class="weui-flex end wrap dialogBox-col weui-flex__item" wx:if="{{isView}}">
+						<view class="dialogBox-content dialogBox-content-right">已完成面试</view>
+						<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header" wx:if="{{messageDetail.logo_url}}"/>
+						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+		<view class="weui-cell_btn weui-flex between register-btn" wx:if="{{!isView || messageDetail.status}}">
+			<button class="weui-btn_cell weui-flex__item weui-btn_primary" @tap="videoView">视频面试</button>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxShowModal, wxNavigateTo } from '@/util.js'
+import tabBarBottom from '@/components/tabBarBottom'
+export default class personalDialogBox extends wepy.page {
+	components = {
+		tabBarBottom: tabBarBottom
+	}
+	data = {
+		teamData: {},
+		usertype: 1,
+		tabBarIndex: 2,
+		rendaUserTeamType: 0,
+		params: {
+			uid: '',
+			id: ''
+		},
+		list: [],
+		messageDetail: {},
+		count: 0,
+		isView: false,
+		id: ''
+	}
+	config = {
+		navigationBarTitleText: '消息'
+	}
+	onLoad (options) {
+		wx.setStorageSync('isView', false)
+		this.params.uid = options.query
+		this.params.id = options.query
+	}
+	onShow () {
+		if (wx.getStorageSync('isView')) {
+			this.isView = true
+		} else {
+			this.isView = false
+		}
+		console.log(this.isView)
+		this.$apply()
+		this.getMsgDetail()
+	}
+	getuserSig (params) {
+		$http('/Tencentcloud/createQuanjian', { name: params.room_name }).then(res => {
+			params.userSig = res.data
+			console.log(params.userSig)
+			wx.setStorageSync('viewList', '')
+			this.routerView(params)
+		})
+	}
+	routerView (params) {
+		console.log(params)
+		const url = `/pages/room/room?roomID=${params.room_num}` +
+			`&userSig=${params.userSig}` +
+			`&template=grid&debugMode=false&cloudenv=PRO` +
+			`&localVideo=true` +
+			`&localAudio=true` +
+			`&enableEarMonitor=false` +
+			`&enableAutoFocus=true` +
+			`&localMirror=auto` +
+			`&enableAgc=true` +
+			`&enableAns=true` +
+			`&encsmall=true` +
+			`&frontCamera=front` +
+			`&videoWidth=360` +
+			`&videoHeight=640` +
+			`&scene=rtc` +
+			`&userID=${params.room_name}` +
+			`&minBitrate=600&maxBitrate=900`
+		wx.navigateTo({
+			url: url
+		})
+	}
+	getMsgDetail () {
+		$http('/personinfo/getperson_msgdetail', this.params).then(res => {
+			this.messageDetail = res.data
+			if (this.messageDetail.logo_url) {
+        if (this.messageDetail.logo_url.indexOf('http')==-1) {
+          this.messageDetail.logo_url = getImgUrl(this.messageDetail.logo_url)
+				}
+			}
+			this.messageDetail.view_time = $moment.unix(this.messageDetail.view_time).format('YYYY/MM/DD HH:mm')
+			this.messageDetail.addtime = $moment.unix(this.messageDetail.addtime).format('YYYY-MM-DD HH:mm')
+			this.$apply()
+		})
+	}
+	methods = {
+		videoView () {
+			let params = {
+				room_name: wx.getStorageSync('phone'),
+				room_num: this.messageDetail.room_num
+			}
+			console.log(wx.getStorageSync('phone') + '手机号')
+			wxShowModal('视频面试', `请确认已与企业电话沟通时间，未沟通可能造成视频面试失败?`).then(res => {
+				this.getuserSig(params)
+			}).catch(() => {
+				console.log('取消')
+			})
+			// this.isView = true
+			// this.$apply()
+		},
+		recommend() {
+			wx.navigateTo ({
+				url: '/pages/companyView/viewJob?query=' + this.messageDetail.job_id + '&room_num=' + this.messageDetail.room_num
+			})
+		},
+		concat() {
+			let _this = this
+			wx.showActionSheet({
+				// itemList: [`拨打${this.messageDetail.link_tel}`],
+				itemList: [`拨打企业电话`],
+				success: res => {
+					wx.makePhoneCall({
+						phoneNumber: _this.messageDetail.link_tel
+					})
+				},
+				fail(res) {
+					console.log(res.errMsg)
+				}
+			})
+		}
+	}
+}
+</script>

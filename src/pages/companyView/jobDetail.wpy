@@ -1,0 +1,382 @@
+<style lang="less">
+@import "../../style/home.less";
+@import "../../style/form.less";
+.input-text-end {
+  margin-left: 10rpx;
+}
+</style>
+<template>
+  <view class="home-view register-view page_margin">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">职位名称：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="name" 
+						value="{{form.name}}" @input="changeInput" placeholder="请输入职位名称" />
+          </view>
+        </view>
+				 <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">职位类别：
+						</view>
+						<picker @change="bindPickerChange" data-name="job_type" value="{{jobIndex}}" 
+							range="{{job_array}}">
+							<view class="my-text-right weui-flex between">
+								<view class="{{form.job_type?'':'placeholder'}}">
+									{{form.job_type?job_array[jobIndex]:'请选择职位类别'}}
+								</view>
+								<image mode="scaleToFill" 
+								src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">招聘人数：</view>
+            <input class="weui-input" data-name="required_number" 
+						type="number" placeholder-class="placeholder" 
+						value="{{form.required_number}}" @input="changeInput" placeholder="请输入招聘人数" />
+						<view>人</view>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">所在地区：</view>
+            <districtSelet @selectCity="selectCity" :address.sync="address"
+            :disabled.sync="disabled"></districtSelet>
+          </view>
+        </view>
+				<view class="page_card_row">
+					<view class="weui-flex end">
+						<input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{form.address}}" @input="changeInput" placeholder="请输入详细地址" />
+					</view>
+	      </view>
+      </view>
+			<view class="page_card">
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">年龄：</view>
+						<picker mode="multiSelector" data-name="ageIndex" 
+             value="{{ageIndex}}" @cancel="cancelPickerChange" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" range="{{ageArray}}">
+							<view class="my-text-right weui-flex between">
+								<view wx:if="{{form.min_age!=''}}">
+									{{ageArray[0][ageIndex[0]]}}岁 -
+									{{ageArray[1][ageIndex[1]]}}岁
+								</view>
+								<view class="placeholder" wx:else>请选择</view>
+								<image mode="scaleToFill"
+								 src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">性别：</view>
+            <picker @change="bindPickerChange" value="{{index}}"
+              data-name="sex"  range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'':'placeholder'}}">
+									{{array[index]?array[index]:'请选择性别'}}
+								</view>
+                <image mode="scaleToFill"
+								 src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">学历：</view>
+            <picker @change="bindPickerChange" data-name="education"  
+            value="{{eduIndex}}" range="{{edu_type}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{form.education?'':'placeholder'}}"> 
+                  {{form.education?edu_type[eduIndex]:'请选择'}}</view>
+                <image mode="scaleToFill" 
+								src="https://a.rsd123.com/image/images/down.png"  class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+			<view class="page_card">
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">薪资类型：</view>
+						<picker 
+							@change="bindPickerChange" data-name="money_type" 
+							value="{{moneyTypeIndex}}" range="{{moneyTypeList}}" range-key="label">
+							<view class="my-text-right weui-flex between">
+								<view 
+								  class="{{form.money_type!=''?'':'placeholder'}}">
+									{{form.money_type!=''?
+									moneyTypeList[moneyTypeIndex].label:'请选择薪资类型'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">薪资金额：</view>
+            <picker @change="bindPickerChange" 
+						  value="{{moneyIndex}}"
+							wx:if="{{!form.money_type || form.money_type==1}}"
+              data-name="money"  range="{{money_array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{form.money!=''?'':'placeholder'}}">
+									{{form.money!=''?money_array[moneyIndex]:'请选择薪资金额'}}
+								</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+						<input class="weui-input" wx:if="{{form.money_type>1}}"
+						placeholder-class="placeholder" data-name="money" value="{{form.money}}" @input="changeInput" placeholder="请输入金额" />
+						<view wx:if="{{form.money_type>1}}" class="input-text-end">元/人/{{form.money_type==2?'日':'时'}}</view>
+          </view>
+        </view>
+         <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">职位描述：</view>
+          </view>
+          <textarea data-name="job_content" placeholder-class="placeholder"
+						disable-default-padding="true"
+						 class="weui-input weui-textarea" value="{{form.job_content}}" @input="changeInput"
+						 placeholder="请具体描述工作内容，职位要求等信息；至少输入30个字" maxlength="1000"/>
+        </view>
+      </view>
+    </view>
+		<updateForm :typeBtn.sync="typeBtn" @submit="submit" @prePage="prePage"></updateForm>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import districtSelet from '@/components/districtSelet'
+import createForm from '@/components/createForm'
+import { $http } from '@/http.js'
+import { wxToast, wxReLaunch, wxNavigateTo, ageList } from '@/util.js'
+import { moneyTypeList } from '@/base/base.js'
+import { connect, getStore } from 'wepy-redux'
+const store = getStore()
+@connect({
+	list: (state) => state.contant.list
+})
+export default class jobDetail extends wepy.page {
+	components = {
+		districtSelet: districtSelet,
+		updateForm: createForm
+	}
+	data = {
+		array: ['男', '女', '男女不限'],
+		ageArray: [],
+		moneyTypeList,
+		index: 2,
+		eduIndex: 0,
+		ageIndex: [0, 0],
+		moneyIndex: 0,
+		moneyTypeIndex: 0,
+		jobIndex: 0,
+		form: {
+			name: '',
+			required_number: 2,
+			address: '',
+			education: 0,
+			sex: 3,
+			provinceid: '',
+			cityid: '',
+			three_cityid: '',
+			job_content: '',
+			money_type: '',
+			money: '',
+			min_age: '',
+			max_age: '',
+			job_type: '',
+			uid: wx.getStorageSync('rendaUid')
+		},
+		disabled: true,
+		money_array: [],
+		job_array: [],
+		edu_type: [],
+		typeBtn: 2,
+		address: [],
+		id: ''
+	}
+	config = {
+		navigationBarTitleText: '基本信息'
+	}
+	onLoad(options) {
+		this.id = options.query
+		let allData = store.getState().contant.list
+		for (let key in allData) {
+			this[key] = allData[key]
+		}
+		this.typeBtn = 2
+		this.ageArray = [ageList(), ageList()]
+		this.getInvoiceDetail()
+		this.$apply()
+	}
+	events = {
+		selectCity: data => {
+			this.form.provinceid = data[0] ? data[0] : 0
+			this.form.cityid = data[1] ? data[1] : 0
+			this.form.three_cityid = data[2] ? data[2] : 0
+		},
+		submit: data => {
+			this.form = Object.assign(this.form, data)
+			this.save()
+		},
+		deleteInvice: ()=>{
+			let params = {
+				uid: this.form.uid,
+				id: this.form.id
+			}
+			wxShowModal('', '确定删除团队申请记录', '确定').then(res => {
+				this.deleteReceiptShelf(params)
+			}).catch(() => {
+				console.log('取消')
+			})
+		}
+	}
+ deleteReceiptShelf(params) {
+		$http('/company/delReceiptShelf', params).then(res => {
+			wxToast('删除成功')
+			wx.setStorageSync('receiptType', 0)
+			wxNavigateTo('/pages/companyView/checkReceipt')
+		})
+	}
+	getInvoiceDetail() {
+		$http('/enterpriseinvoice/selectInvoiceInfo', { id: this.id }).then(res => {
+			this.form = res.data
+			this.$broadcast('getInvoiceDetail', this.form)
+			this.form.job_content = this.form.job_content.replace('/<br>/g', '')
+			this.jobIndex = this.form.job_type - 1
+			let arr = ageList()
+			arr.forEach((item, i) => {
+				if (item == this.form.min_age) {
+					this.ageIndex[0] = i
+				}
+				if (item == this.form.max_age) {
+					this.ageIndex[1] = i
+				}
+			})
+			if (this.form.money_type == 1) {
+				this.moneyIndex = this.form.money ? this.form.money - 1 : 0
+			} else {
+				this.form.money = this.form.money
+			}
+			this.moneyTypeIndex = this.form.money_type ? this.form.money_type - 1 : 0
+			if (this.form.provinceid) {
+				this.address = [
+					this.form.provinceid + '',
+					this.form.cityid + '',
+					this.form.three_cityid + ''
+				]
+			}
+			this.$apply()
+		})
+	}
+	// 修改发单接口
+	updateInvoice(params) {
+		$http('/enterpriseinvoice/updateInvoice', params).then(res => {
+			if (res.data) {
+				wx.setStorageSync('receiptType', 0)
+			  wxNavigateTo('/pages/companyView/checkReceipt')
+			} else {
+				wxToast('修改失败')
+			}
+		})
+	}
+	save() {
+		if (!this.form.name) {
+			wxToast('请输入职位名称')
+		} else if (this.form.job_type === '') {
+			wxToast('请选择职位类别')
+		} else if (!this.form.required_number) {
+			wxToast('请输入需求人数')
+		} else if (!this.form.provinceid) {
+			wxToast('请选择地区')
+		} else if (!this.form.min_age && !this.form.max_age) {
+			wxToast('请选择年龄')
+		} else if (!this.form.money_type) {
+			wxToast('请选择薪资类型')
+		} else if (this.form.money === '') {
+			wxToast('请设置薪资')
+		} else if (!this.form.job_content) {
+			wxToast('请输入职位描述')
+		} else if (this.form.job_content.length < 30) {
+			wxToast('职位描述不少于30个字')
+		} else {
+			this.form.uid = wx.getStorageSync('rendaUid')
+			this.updateInvoice(this.form)
+		}
+	}
+	methods = {
+		bindPickerChange(e) {
+			let key = e.currentTarget.dataset.name
+			let value = e.detail.value
+			if (key === 'job_type') {
+				this.jobIndex = value
+				this.form[key] = Number(value) + 1
+			} else if (key === 'money_type') {
+				this.moneyTypeIndex = value
+				this.form[key] = Number(value) + 1
+			} else if (key === 'sex') {
+				this.index = value
+				this.form[key] = Number(this.index) + 1
+			} else if (key === 'age') {
+				this.ageIndex = value
+				this.form[key] = this.ageList[this.ageIndex]
+			} else if (key === 'money_type') {
+				this.moneyTypeIndex = value
+				this.form.money = ''
+				this.form[key] = this.moneyTypeList[this.moneyTypeIndex].value
+			} else if (key === 'money') {
+				if (this.form.money_type === 0) {
+					return wxToast('请选择薪资类型')
+				}
+				this.moneyIndex = value
+				this.form[key] = Number(value) + 1
+			} else {
+				this.eduIndex = value
+				this.form[key] = value
+			}
+			this.$apply()
+		},
+		bindMultiPickerChange(e) {
+			this.ageIndex = e.detail.value
+			let minAge = this.ageArray[0][this.ageIndex[0]]
+			let maxAge = this.ageArray[1][this.ageIndex[1]]
+			if (Number(minAge) > Number(maxAge)) {
+				this.ageIndex = [0, 0]
+				return wxToast('最大值不能小于最小值')
+			}
+			this.form.min_age = minAge
+			this.form.max_age = maxAge
+			this.$apply()
+		},
+		bindMultiPickerColumnChange(e) {
+			this.ageIndex[e.detail.column] = e.detail.value
+			if (e.detail.column === 0) {
+				this.ageIndex = [e.detail.value, 0, 0]
+			} else {
+				this.ageIndex[1] = e.detail.value
+			}
+			this.$apply()
+		},
+		cancelPickerChange(e) {
+			this.ageIndex = [0, 0]
+			this.form.min_age = ''
+			this.form.max_age = ''
+			this.$apply()
+		},
+		changeInput(e) {
+			let key = e.currentTarget.dataset.name
+			this.form[key] = e.detail.value
+		}
+	}
+}
+</script>

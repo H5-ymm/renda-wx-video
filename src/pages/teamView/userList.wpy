@@ -1,0 +1,159 @@
+<style lang="less">
+@import '../../style/home.less';
+page {
+  overflow: hidden;
+}
+.detail-view {
+  height: 100%;
+  overflow: hidden;
+  .page_margin {
+    margin: 24rpx 24rpx 0;
+  }
+  .header-box-team {
+    margin: -24rpx 24rpx 0;
+  }
+  .view-team {
+    height: calc(100% - 168px);
+    overflow: auto;
+  }
+  .only-btn {
+    height: 120rpx;
+    .only-btn-item {
+      margin: 0 30rpx;
+    }
+  }
+}
+</style>
+<template>
+	<view class="detail-view home-view">
+		<view class="home-view-header"></view>
+		<view class="header-box-team">
+			<search class="weui-cell weui-flex start page_card" @searchValue="searchValue">
+			</search>
+		</view>
+		<view class="page_margin view-team">
+			<scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height: 100%;">
+				<teamUser :list.sync="list"></teamUser>
+			</scroll-view>
+		</view>
+		<view class="weui-flex between only-btn" wx:if="{{rendaUserTeamType==1||rendaUserTeamType==2}}">
+			<view class="weui-flex center weui-flex__item only-btn-item" @tap="addUser">
+				<button class="weui-btn_cell  weui-flex__item weui-btn_primary" >
+					添加成员
+				</button>
+			</view>
+		</view>
+	<!-- </view> -->
+	<modalAddUser :isScaleModal.sync="isModal" @handleClose="handleClose" @handleOk="handleOk" :title.sync="title" :height.sync="modalHeight" :type.sync="type" :imgUrl.sync="qrCode"></modalAddUser>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import search from '@/components/search'
+import teamUser from '@/components/teamUser'
+import modalAddUser from '@/components/modalAddUser'
+import { getList, wxNavigateTo, wxToast, wxReLaunch, getImgUrl } from '@/util'
+export default class userList extends wepy.page {
+	components = {
+		search: search,
+		teamUser: teamUser,
+		modalAddUser: modalAddUser
+	}
+	data = {
+		tabBarList: [],
+		list: [],
+		count: 0,
+		activeIndex: 0,
+		isSeachWidth: false,
+		modalHeight: 520,
+		isModal: true,
+		title: '请选择添加方式',
+		id: '',
+		params: {
+			uid: '',
+			page: 1,
+			limit: 10
+		},
+		qrCode: '',
+		type: 0,
+		teamId: '',
+		rendaUserTeamType: 1
+	}
+	config = {
+		navigationBarTitleText: '成员列表'
+	}
+	onLoad (options) {
+		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		this.rendaUserTeamType = Number(wx.getStorageSync('rendaUserTeamType'))
+		this.teamId = wx.getStorageSync('rendaUserTeamId')
+		this.$apply()
+	}
+	getUserList () {
+		$http('/userinfo/teamUserList', this.params).then(res => {
+			this.list = res.data.data || []
+			console.log(this.list)
+			this.count = res.data.count
+			this.$apply()
+		})
+	}
+	onShow () {
+		this.getUserList()
+	}
+	createQrcode () {
+		let params = {
+			scene: `${this.params.uid}&${this.teamId}`,
+			page: `pages/login/welcome`,
+			width: 300
+		}
+		this.isModal = false
+		$http('/login/get_qrcode', params).then(res => {
+			if (res.data) {
+				this.type = 1
+				// this.isModal = !this.isModal
+				wx.removeStorageSync('rendaUserTeamId')
+				this.qrCode = getImgUrl(res.data)
+				this.$apply()
+			}
+		})
+	}
+	events = {
+		searchValue: val => {
+			this.params = Object.assign(this.params, { keyword: val })
+			this.getUserList()
+		},
+		handleOk: data => {
+			if (data === 0) {
+				this.isModal = !this.isModal
+				wxNavigateTo('/pages/teamView/userInfo')
+			} else {
+				this.activeIndex = data
+				this.createQrcode()
+			}
+		},
+		handleClose: ()=>{
+			this.isModal = !this.isModal
+		}
+	}
+	onShareAppMessage (res) {
+		return {
+			title: '邀请成员加入团队',
+			imageUrl: this.qrCode,
+			path: `/pages/login/welcome?uid=${this.params.uid}&teamId=${this.teamId}`
+		}
+	}
+	methods = {
+		addUser () {
+			this.type = 0
+			this.isModal = !this.isModal
+			this.$apply()
+		},
+		searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getUserList()
+			}
+		}
+	}
+}
+</script>

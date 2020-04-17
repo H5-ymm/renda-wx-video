@@ -1,0 +1,1 @@
+function isPromise(o){return!!o&&("object"==typeof o||"function"==typeof o)&&"function"==typeof o.then}module.exports=isPromise;

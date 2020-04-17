@@ -1,0 +1,93 @@
+
+<template>
+	<view class="page_card_row weui-flex between">
+		<view class="weui-flex__item">
+			<view class="weui-flex between">
+				<view class="page_card_name">
+					<view>{{itemValue.job_name}}</view>
+					<view class="badgeNum badgeNum3" wx:if="{{!itemValue.team_isread&&receiptType<2}}">
+						New
+					</view>
+					<view wx:if="{{itemValue.msg_num&&receiptType>1}}">
+						<view class="badgeNum" wx:if="{{itemValue.msg_num<10}}">
+							{{itemValue.msg_num}}
+						</view>
+						<view class="badgeNum badgeNum1" wx:if="{{itemValue.msg_num>10&&itemValue.msg_num<100}}">{{itemValue.msg_num}}</view>
+						<view class="badgeNum badgeNum2" wx:if="{{itemValue.msg_num>10&&itemValue.msg_num>100}}">99+</view>
+					</view>
+				</view>
+				<view wx:if="{{!receiptType}}">
+					<view wx:if="{{itemValue.job_status==1}}" class="page_card_receipt_status {{'page_card_receipt_status'+itemValue.status}}">
+						{{wxs.statusTeamText(itemValue.status)}}
+					</view>
+					<view class="page_card_receipt_status" wx:else>
+						已下架
+					</view>
+				</view>
+				<view wx:if="{{receiptType==1}}">
+					<view class="page_card_receipt_status {{itemValue.distributionnum?'page_card_receipt_status1':''}}">
+						{{itemValue.distributionnum?'已分配':'未分配'}}
+					</view>
+				</view>
+				<view wx:if="{{receiptType>1}}">
+						<view wx:if="{{receiptType==2}}" class="page_card_receipt_status {{'page_card_receipt_status'+ (!itemValue.invoice_status?0:itemValue.invoice_status==1?1:2)}}">
+							{{!itemValue.invoice_status?'收集中':itemValue.invoice_status==1?'审核中':'审核结束'}}
+						</view>
+						<view wx:if="{{receiptType==3&&!itemValue.interview_status}}" class="page_card_receipt_status page_card_receipt_status4">
+							等待面试
+						</view>
+            <view wx:if="{{receiptType==3&&itemValue.interview_status}}" class="page_card_receipt_status {{'page_card_receipt_status'+ (itemValue.interview_status-1)}}">
+							{{itemValue.interview_status==4?'面试结束':itemValue.interview_status==3?'面试审核中':'面试开始'}}
+						</view>
+						<view wx:if="{{receiptType==4&&!itemValue.entry_status}}" class="page_card_receipt_status page_card_receipt_status4">
+						  等待入职
+					  </view>
+						<view wx:if="{{receiptType==4&&itemValue.entry_status}}" class="page_card_receipt_status {{'page_card_receipt_status'+ (itemValue.entry_status-1)}}">
+						 {{itemValue.entry_status==4?'入职结束':itemValue.entry_status==3?'入职审核中':'入职开始'}}
+				 	 </view>
+				</view>
+			</view>
+			<view class="weui-flex between">
+				<view class="weui-flex start weui-flex__item">
+					{{itemValue.com_name}}
+				</view>
+				<view class="page_card_time" wx:if="{{receiptType<2}}">{{itemValue.addtime||itemValue.ctime}}</view>
+				<view class="page_card_receipt_status page_card_receipt_status3" wx:if="{{receiptType==2&&!itemValue.view_time}}">
+					未筛选简历
+				</view>
+				<view class="page_card_receipt_status page_card_receipt_status3" wx:elif="{{receiptType==3&&itemValue.interview_status<=1&&!itemValue.entry_time}}">
+					未设置入职时间
+				</view>
+				<view wx:else>
+					<view class="page_card_time" wx:if="{{receiptType==2}}">
+						筛选通过 :
+						{{itemValue.pass_num}}</view>
+					<view class="page_card_time" wx:if="{{receiptType==3}}">
+						{{itemValue.interview_status>2?'面试通过 : '+ itemValue.view_num:'筛选通过 : '+ itemValue.pass_num}}
+					</view>
+					<view class="page_card_time" wx:if="{{receiptType==4}}">
+						{{itemValue.entry_status>2?'入职通过 : '+ itemValue.entry_num:'面试通过 : '+ itemValue.view_num}}</view>
+				</view>
+			</view>
+		</view>
+		<image mode="scaleToFill" class="page_down_icon" src="https://a.rsd123.com/image/images/right.png" />
+	</view>
+	<!-- </view> -->
+</template>
+<script>
+import wepy from 'wepy'
+import wxs from '../filterWxs/receiptFilter.wxs'
+export default class teamReceiptItem extends wepy.component {
+	props = {
+		itemValue: Object
+	}
+	wxs = { wxs }
+	data = {
+		receiptType: 0
+	}
+	onLoad () {
+		this.receiptType = Number(wx.getStorageSync('receiptType'))
+		this.$apply()
+	}
+}
+</script>

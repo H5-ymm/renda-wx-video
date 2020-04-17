@@ -1,0 +1,1 @@
+.search-box{margin:30rpx}.search-box .weui-cell{border:1px solid rgba(151,151,151,0.3);border-radius:50rpx;padding-left:20rpx;margin-right:20rpx}.search-box .weui-cell .weui-input.search-input{padding:10rpx 20rpx;text-align:left}.search-box .weui-cell .searchIcon{width:44rpx;height:44rpx}.search-box text{color:#111111}

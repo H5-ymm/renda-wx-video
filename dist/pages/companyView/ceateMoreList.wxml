@@ -1,0 +1,191 @@
+
+	<view class="home-view register-view page_margin">
+		<wxs src="../../filterWxs/rewaryFilter.wxs" module="wxs"/>
+
+  <view>
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">缴纳五金：</view>
+            <picker bindchange="$createForm$bindPickerChange" data-name="is_five_risks" value="{{$createForm$index}}" range="{{$createForm$welfareList}}" range-key="label">
+							<view class="my-text-right weui-flex between">
+								<view class="{{$createForm$welfareList[$createForm$index]?'':'placeholder'}}">
+									{{$createForm$welfareList[$createForm$index]?$createForm$welfareList[$createForm$index].label:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+							</view>
+						</picker>
+          </view>
+        </view>
+				 <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">缴纳公积金：
+						</view>
+						<picker bindchange="$createForm$bindPickerChange" data-name="is_fund" value="{{$createForm$fundIndex}}" range="{{$createForm$welfareList}}" range-key="label">
+							<view class="my-text-right weui-flex between">
+								<view class="{{$createForm$welfareList[$createForm$fundIndex]?'':'placeholder'}}">
+									{{$createForm$welfareList[$createForm$fundIndex]?$createForm$welfareList[$createForm$fundIndex].label:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+							</view>
+						</picker>
+          </view>
+        </view>
+      </view>
+			<view class="page_card">
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">返利模式：</view>
+						<picker bindchange="$createForm$bindPickerChange" data-name="reward_type" value="{{$createForm$rewardIndex}}" range-key="label" range="{{$createForm$rewardTypeList}}">
+							<view class="my-text-right weui-flex between">
+								<view class="{{$createForm$form.reward_type!=''?'':'placeholder'}}">
+									{{$createForm$form.reward_type!=''?$createForm$rewardTypeList[$createForm$rewardIndex].label:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+							</view>
+						</picker>
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">返利金额：</view>
+						 <input class="weui-input" data-name="reward_money" placeholder-class="placeholder" placeholder="请输入返利金额" value="{{$createForm$form.reward_money}}" bindinput="$createForm$changeInput"/>
+						<view class="input-text-end"  wx:if="{{$createForm$form.reward_type!=''}}">
+							{{wxs.rewardTypeText($createForm$form.reward_type)}}
+						</view>
+          </view>
+        </view>
+        <view class="page_card_row"  wx:if="{{$createForm$form.reward_type==1}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">返利日期：</view>
+						<view class="weui-flex end">
+							 <view class="input-text-end">次月</view>
+							 <input class="weui-input settlement_time_input" data-name="settlement_time" value="{{$createForm$form.settlement_time}}" placeholder="请输入" placeholder-class="placeholder" bindinput="$createForm$changeInput"/>
+							 <view class="input-text-end">号</view>
+				  	</view>    
+          </view>
+        </view>
+				<view class="page_card_row" wx:if="{{$createForm$form.reward_type&&$createForm$form.reward_type!=4}}">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">结算方式：</view>
+						<picker wx:if="{{$createForm$form.reward_type==1}}" bindchange="$createForm$bindPickerChange" data-name="reward_money_type" value="{{$createForm$rewardTypeIndex}}" range="{{$createForm$rewardMoneyType}}">
+							<view class="my-text-right weui-flex between">
+								<view class="{{$createForm$rewardMoneyType[$createForm$rewardTypeIndex]?'':'placeholder'}}">
+									{{$createForm$form['reward_money_type']!=''?$createForm$rewardMoneyType[$createForm$rewardTypeIndex]:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+							</view>
+						</picker>
+						<picker wx:if="{{$createForm$form.reward_type==2||$createForm$form.reward_type==3}}" mode="multiSelector" bindchange="$createForm$bindMultiPickerChange" bindcancel="$createForm$cancelPickerChange" bindcolumnchange="$createForm$bindMultiPickerColumnChange" range="{{$createForm$rewardMoneyTypeList}}" value="{{$createForm$moneyTypeIndex}}">
+							<view class="my-text-right weui-flex between">
+								<view wx:if="{{$createForm$form.reward_money_type!=''}}">
+									{{$createForm$rewardMoneyTypeList[0][$createForm$moneyTypeIndex[0]]}}
+									{{$createForm$rewardMoneyTypeList[1][$createForm$moneyTypeIndex[1]]}}
+									{{$createForm$rewardMoneyTypeList[2][$createForm$moneyTypeIndex[2]]}}
+								</view>
+								<view class="placeholder" wx:else>请选择</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+							</view>
+						</picker>
+          </view>
+       </view>
+			 <view class="page_card_row" wx:if="{{$createForm$rewardTypeIndex==1||($createForm$form.reward_type==2||$createForm$form.reward_type==3)}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">持续时长：</view>
+						<view class="weui-flex end">
+							 <input class="weui-input" placeholder-class="placeholder" placeholder="请输入持续时长" value="{{$createForm$form.duration_time}}" bindinput="$createForm$changeInput" data-name="duration_time"/>
+							  <view class="input-text-end" wx:if="{{$createForm$form.reward_money_type<4}}">
+							   {{	wxs.rewardTimeText($createForm$form.reward_money_type)}}
+								</view>
+								<view class="input-text-end" wx:else>天</view>
+								<image mode="scaleToFill" bindtap="$createForm$viewTip" src="https://a.rsd123.com/image/images/tip.png" class="page_down_icon" data-wpyviewtip-a="1"/>
+				  	</view>    
+          </view>
+        </view>
+			 <view class="page_card_row" wx:if="{{$createForm$form.reward_type>1}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">需入职：</view>
+						<view class="weui-flex end">
+							 <input class="weui-input" placeholder-class="placeholder" placeholder="请输入可返利的入职周期" value="{{$createForm$form.reward_needtime}}" bindinput="$createForm$changeInput" data-name="reward_needtime"/>
+							  <view class="input-text-end" wx:if="{{$createForm$form.reward_money_type<4}}">
+							   {{	wxs.rewardTimeText($createForm$form.reward_money_type)}}
+								</view>
+								<view class="input-text-end" wx:else>天	</view>
+							  <image mode="scaleToFill" bindtap="$createForm$viewTip" src="https://a.rsd123.com/image/images/tip.png" class="page_down_icon" data-wpyviewtip-a="2"/>
+				  	</view>    
+          </view>
+        </view>
+			</view>
+			<view class="page_card">
+				<view class="page_card_row">
+         <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">联系人：</view>
+            <input class="weui-input" data-name="link_name" placeholder-class="placeholder" value="{{$createForm$form.link_name}}" bindinput="$createForm$changeInput" placeholder="请输入联系人"/>
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">联系人电话：</view>
+            <input class="weui-input" data-name="tel" placeholder-class="placeholder" value="{{$createForm$form.tel}}" bindinput="$createForm$changeInput" placeholder="请输入联系人电话"/>
+          </view>
+        </view>
+      </view>
+			<view class="page_card">
+				<view class="page_card_row">
+         <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">邮箱：</view>
+            <input class="weui-input" data-name="email" placeholder-class="placeholder" value="{{$createForm$form.email}}" bindinput="$createForm$changeInput" placeholder="请输入邮箱"/>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex between register-btn create-btn" wx:if="{{$createForm$typeBtn==1}}">
+			<button class="weui-btn_cell weui-btn_primary" bindtap="$createForm$prePage">
+				上一步
+			</button>
+      <button class="weui-btn_cell weui-btn_primary" bindtap="$createForm$save">
+				发布
+			</button>
+    </view>
+		<view class="weui-cell_btn weui-flex between register-btn create-btn" wx:if="{{$createForm$typeBtn==2}}">
+			<button class="weui-btn_cell weui-btn_primary" bindtap="$createForm$save">
+				修改
+			</button>
+      <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$createForm$deleteInvice">取消发布</button>
+    </view>
+  </view>
+
+		
+  <view hidden="{{$teamModal$isScaleModal}}" class="orderModal">
+    <view bindtap="$teamModal$handleOk"  wx:if="{{$teamModal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $teamModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$teamModal$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$teamModal$type}}">
+        <view class="modal-bg">
+          <image src="{{$teamModal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
+        </view>
+        <view class="modal-title">
+          {{$teamModal$modalObj.title}}
+        </view>
+        <text selectable="true" decode="{{$teamModal$true}}" class="modal-subTitle" wx:if="{{$teamModal$modalObj.subTitle}}">{{$teamModal$modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{$teamModal$openType}}" wx:if="{{$teamModal$openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$teamModal$handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$teamModal$handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{$teamModal$imgUrl}}" bindlongpress="$teamModal$saveImg" class="qrcode-img"/>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$teamModal$handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$teamModal$handleOk" class="close-icon"/>
+    </view>
+  </view>
+
+
+	</view>

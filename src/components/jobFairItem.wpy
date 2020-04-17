@@ -1,0 +1,42 @@
+
+<template>
+  <view class="list-card shadow" @tap="viewDetail({{item}})">
+    <view class="weui-flex start card-col-1">    
+      <button class="weui-btn_cell weui-btn_primary {{item.status==1 ? '' : 'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
+        {{item.money==1?'进行中':'待举办'}}
+      </button>
+      <text class="name {{isShowBtn?'text-line':''}}"> {{item.name}}得到极大的打击打击打击打击打击打击打击急急急</text>
+    </view>
+    <view class="card-col-2">    
+      <view>时间：2020-03-21 11:00 至 2020-03-21 11:00</view>
+      <view>动态：<text>企业10家 | 岗位10家 | 求职者10人</text></view>
+      <view>规模：100家企业</view>
+    </view>
+    <view class="card-col-3">
+      <button class="weui-btn_cell weui-btn_primary {{isShowBtn?'':'weui-btn_primary_plain'}}">
+        {{isShowBtn?'进入会场':'详情'}}
+      </button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+export default class jobFairItem extends wepy.component {
+	props = {
+    item: Object,
+    isShowBtn: {
+			type: Boolean,
+			default: true
+		},
+	}
+	data = {
+	
+	}
+	methods = {
+    routerHall() {
+      wxNavigateTo('/pages/home/hall')
+    }
+	}
+}
+</script>

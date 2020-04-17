@@ -1,0 +1,61 @@
+{
+  "name": "wepy-renda",
+  "version": "1.0.4",
+  "description": "[WeUI](https://github.com/weui/weui-wxss) 是一套同微信原生视觉体验一致的基础样式库，由微信官方设计团队为微信内网页和微信小程序量身设计，令用户的使用感知更加统一。 这里是 WeUI 在 WePY 中的使用示例。",
+  "main": "dist/app.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev && wepy build --watch",
+    "build": "cross-env NODE_ENV=production && wepy build --no-cache",
+    "dev:web": "wepy build --output web",
+    "clean": "find ./dist -maxdepth 1 -not -name 'project.config.json' -not -name 'dist' | xargs rm -rf",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "babel-plugin-transform-node-env-inline": "^0.4.3",
+    "less": "^3.10.3",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "node-sass": "^4.13.1",
+    "redux": "^4.0.5",
+    "redux-actions": "^2.6.5",
+    "redux-promise": "^0.6.0",
+    "wepy": "^1.7.2",
+    "wepy-async-function": "^1.4.4",
+    "wepy-com-toast": "^1.0.1",
+    "wepy-redux": "^1.5.9"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.1",
+    "babel-plugin-global-define": "^1.0.3",
+    "babel-plugin-syntax-export-extensions": "^6.13.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-plugin-transform-export-extensions": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-stage-1": "^6.22.0",
+    "cross-env": "^3.2.4",
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-friendly-formatter": "^2.0.7",
+    "eslint-plugin-html": "^2.0.1",
+    "eslint-plugin-promise": "^2.0.1",
+    "eslint-plugin-standard": "^2.0.1",
+    "wepy-compiler-babel": "^1.5.1",
+    "wepy-compiler-less": "^1.3.10",
+    "wepy-eslint": "^1.5.2",
+    "wepy-plugin-imagemin": "^1.5.2",
+    "wepy-plugin-uglifyjs": "^1.3.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/H5-ymm/renda-wx.git"
+  },
+  "bugs": {
+    "url": "https://github.com/H5-ymm/renda-wx/issues"
+  },
+  "homepage": "https://github.com/H5-ymm/renda-wx#readme"
+}

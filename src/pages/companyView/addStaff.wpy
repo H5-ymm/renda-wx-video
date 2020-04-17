@@ -1,0 +1,310 @@
+<style lang="less">
+@import '../../style/home.less';
+.detail-view {
+  height: 100%;
+  overflow: hidden;
+  .home-view-box {
+    overflow: auto;
+  }
+  .modal-title {
+    margin-bottom: 20rpx;
+  }
+  .register-btn {
+    height: 100rpx;
+    margin-bottom: 80rpx;
+    .weui-btn_cell {
+      margin: 0 24rpx;
+    }
+  }
+}
+</style>
+<template>
+  <view class="detail-view">
+    <view class="home-view-box page_margin view-detail">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item {{form.entry_status!=2?'my-text-require':''}}">姓名</view>
+            <input class="weui-input" placeholder-class="placeholder" disabled="{{form.entry_status!=1&&id}}" data-name="name" value="{{form.name}}" @input="changeInput" placeholder="请输入姓名" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item {{form.entry_status!=2?'my-text-require':''}}">手机号码</view>
+            <input class="weui-input" data-name="mobile" placeholder-class="placeholder" disabled="{{form.entry_status!=1&&id}}" value="{{form.mobile}}" @input="changeInput" placeholder="请输入手机号码" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">年龄</view>
+            <input class="weui-input" placeholder-class="placeholder" disabled="{{form.entry_status!=1&&id}}" data-name="age" value="{{form.age}}" @input="changeInput" placeholder="请输入年龄" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">性别</view>
+            <view class="my-text-right weui-flex__item" wx:if="{{form.entry_status!=1&&id}}">{{array[index]}}</view>
+            <picker @change="bindPickerChange" value="{{index}}" range="{{array}}" wx:else>
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">学历</view>
+            <view class="my-text-right weui-flex__item" wx:if="{{form.entry_status!=1&&id}}">{{form.edu}}</view>
+            <picker @change="eduPickerChange" value="{{eduIndex}}" range="{{eduList}}" wx:else>
+              <view class="my-text-right weui-flex between">
+                <view class="{{form.education!=''?'':'placeholder'}}"> {{form.education!=''?eduList[eduIndex]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">工作地址</view>
+            <view class="my-text-right weui-flex__item" wx:if="{{form.entry_status!=1&&id}}">{{form.provinceName?form.provinceName:'-'}}{{form.cityName?form.cityName:''}}</view>
+            <districtSelet @selectCity="selectCity" :address.sync="[]" wx:else></districtSelet>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">详细地址</view>
+            <input class="weui-input" data-name="address" disabled="{{form.entry_status!=1&&id}}" placeholder-class="placeholder" value="{{form.address}}" @input="changeInput" placeholder="请输入详细住址" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">身份证号码</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="idcard" disabled="{{form.entry_status!=1&&id}}" value="{{form.idcard}}" @input="changeInput" placeholder="请输入身份证号码" />
+          </view>
+        </view>
+      </view>
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item {{form.entry_status!=2?'my-text-require':''}}">岗位名称</view>
+            <input class="weui-input" data-name="post" placeholder-class="placeholder" disabled="{{form.entry_status!=1&&id}}" value="{{form.post||form.jobName}}" @input="changeInput" placeholder="请输入岗位名称" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">入职时间</view>
+            <view class="weui-input" wx:if="{{form.entry_status!=1&&id}}">{{entry_time}}</view>
+            <picker mode="date" value="{{entry_time}}" data-name="entry_time" @change="bindTimeChange" wx:else>
+              <view class="my-text-right weui-flex between">
+                <view class="{{entry_time!=''?'':'placeholder'}}">{{entry_time?entry_time:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row" wx:if="{{id}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">当前状态</view>
+            <view class="my-text my-text-right weui-input">{{form.entry_status==1?'在职':'离职'}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex between register-btn">
+      <button class="weui-btn_cell weui-flex__item weui-btn_primary" @tap="save" wx:if="{{form.entry_status!=2}}">
+        {{id?'修改':'添加员工'}}
+      </button>
+      <button class="weui-btn_cell weui-flex__item {{form.entry_status==1?'weui-btn_primary_plain':' weui-btn_primary'}} " wx:if="{{id}}" @tap="deleteStaff">
+        {{form.entry_status==1?'离职':'删除'}}
+      </button>
+    </view>
+    <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" @handleOk="handleOk" :modalObj.sync="modalObj"></modal>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import districtSelet from '@/components/districtSelet'
+import modal from '@/components/modal'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+import { wxReLaunch, wxToast, wxShowModal, checkMobile, validateIdCard } from '@/util.js'
+let lock = false
+// 通过继承自wepy.page的类创建页面逻辑
+export default class addStaff extends wepy.page {
+  // 可用于页面模板绑定的数据
+  components = {
+    districtSelet: districtSelet,
+    modal: modal
+  }
+  data = {
+    isModal: true,
+    array: ['男', '女'],
+    eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
+    modalHeight: 460,
+    modalObj: {
+      title: '添加成功！',
+      subTitle: '',
+      imgBg: 'https://a.rsd123.com/image/images/success.png'
+    },
+    form: {
+      name: '',
+      idcard: '',
+      age: '',
+      mobile: '',
+      sex: 1,
+      education: 0,
+      post: '',
+      provinceid: '',
+      cityid: '',
+      entry_time: ''
+    },
+    index: 0,
+    eduIndex: 0,
+    id: '',
+    address: [],
+    entry_time: '',
+    uid: ''
+  }
+  events = {
+    handleOk: () => {
+      this.isModal = true
+      this.$apply()
+      wxReLaunch('/pages/companyView/staffManage')
+    },
+    selectCity: data => {
+      this.form.provinceid = data[0] ? data[0] : 0
+      this.form.cityid = data[1] ? data[1] : 0
+    }
+  }
+  onLoad (options) {
+    this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    if (options.query) {
+      this.id = options.query
+      this.staffDetail(this.id)
+    } else {
+      this.entry_time = $moment().format('YYYY-MM-DD')
+    }
+    console.log(this.id)
+    this.$apply()
+  }
+  // 添加简历接口
+  addStaff () {
+    lock = true
+    this.form.uid = this.uid
+    $http('/companyresume/addCompanyResume', this.form)
+      .then(res => {
+        lock = false
+        if (res.data) {
+          this.isModal = false
+          this.$apply()
+        } else {
+          wxToast('添加失败')
+        }
+      })
+      .catch(error => {
+        lock = false
+        wxToast(error.status.remind)
+      })
+    this.$apply()
+  }
+  updateStaff () {
+    this.form.uid = this.uid
+    $http('/companyresume/editCompanyResumeInfo', this.form)
+      .then(res => {
+        if (res.data) {
+          wxToast('修改成功')
+          wxReLaunch('/pages/companyView/staffManage')
+        } else {
+          wxToast('修改失败')
+        }
+      })
+      .catch(error => {
+        wxToast(error.status.remind)
+      })
+    this.$apply()
+  }
+  delStaff () {
+    let params = {
+      uid: this.uid,
+      id: this.id
+    }
+    let url = this.form.entry_status == 1 ? '/companyresume/doQuitCompanyResume' : '/companyresume/delCompanyResumeInfo'
+    $http(url, params)
+      .then(res => {
+        if (res.data) {
+          wxReLaunch('/pages/companyView/staffManage')
+        } else {
+          wxToast('操作失败')
+        }
+      })
+      .catch(error => {
+        wxToast(error.status.remind)
+      })
+    this.$apply()
+  }
+  staffDetail (id) {
+    let params = {
+      uid: this.uid,
+      id
+    }
+    $http('/companyresume/selectCompanyResumeInfo', params)
+      .then(res => {
+        this.form = res.data
+        this.form.address = this.form.address ? this.form.address : '-'
+        this.entry_time = this.form.entry_time ? $moment.unix(this.form.entry_time).format('YYYY-MM-DD') : ''
+        this.$apply()
+      })
+  }
+  // 事件处理函数(集中保存在methods对象中)
+  methods = {
+    bindPickerChange (e) {
+      this.index = e.detail.value
+      this.form.sex = Number(this.index) + 1
+    },
+    eduPickerChange (e) {
+      this.eduIndex = e.detail.value
+      this.form.education = this.eduIndex
+    },
+    bindTimeChange (e) {
+      let time = $moment(e.detail.value).valueOf()
+      this.form.entry_time = time.toString().substring(0, 10)
+      this.entry_time = e.detail.value
+    },
+    changeInput (e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+    },
+    deleteStaff () {
+      let text = this.form.entry_status == 1 ? '员工离职' : '删除员工'
+      wxShowModal('', `确定${text}吗?`, '确定').then(res => {
+        this.delStaff()
+      }).catch(() => {
+        console.log('取消')
+      })
+    },
+    save () {
+      if (!this.form.name) {
+        wxToast('请输入姓名')
+      } else if (!this.form.mobile) {
+        wxToast('请输入手机号码')
+      } else if (!checkMobile(this.form.mobile)) {
+        wxToast('请输入正确的手机号码')
+      } else if (this.form.idcard && !validateIdCard(this.form.idcard)) {
+        wxToast('请输入正确的身份证')
+      } else if (!this.form.post) {
+        wxToast('请输入岗位名称')
+      } else {
+        if (this.id) {
+          wxShowModal('', '确修改员工信息吗?', '确定').then(res => {
+            this.updateStaff()
+          }).catch(() => {
+          })
+        } else {
+          this.addStaff()
+        }
+      }
+    }
+  }
+}
+</script>

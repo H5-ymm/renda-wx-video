@@ -1,0 +1,94 @@
+<style lang="less">
+@import "../../style/user.less";
+</style>
+<template>
+  <view class="page_bottom page page_margin">
+    <view class="my-view">
+      <view class="my-view-box">
+        <view class="page_card">
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">头像</view>
+              <view class="weui-flex between">
+                <image src="{{head_img}}" wx:if="{{head_img}}" alt="" mode="aspectFill" class="my-head" />
+                <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFill" class="my-head" />
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_right-icon" />
+              </view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">姓名</view>
+              <view class="my-text-right"> {{userName?userName:'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">手机号码</view>
+              <view class="my-text-right">{{userInfo.mobile?userInfo.mobile:'--'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">邮箱</view>
+              <view class="my-text-right weui-flex__item">{{userInfo.email?userInfo.email:'无'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">住址</view>
+              <view class="my-text-right weui-flex__item">{{address?address:wxAddress}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { getImgUrl } from '@/util.js'
+export default class userInfo extends wepy.page {
+  config = {
+    navigationBarTitleText: '账户信息'
+  }
+  data = {
+    userInfo: {},
+    head_img: '',
+    wxAddress: ''
+  }
+  computed = {
+    userName() {
+      let name = wx.getStorageSync('wxInfo')
+        ? JSON.parse(wx.getStorageSync('wxInfo')).user_name
+        : ''
+      return this.userInfo.user_name ? this.userInfo.user_name : name
+    },
+    address() {
+      return (
+        (this.userInfo.provinceName ? this.userInfo.provinceName : '') +
+        (this.userInfo.cityName ? this.userInfo.cityName : '') +
+        (this.userInfo.address ? this.userInfo.address : '')
+      )
+    }
+  }
+  onLoad() {
+    if (wx.getStorageSync('userInfo')) {
+      this.userInfo = JSON.parse(wx.getStorageSync('userInfo'))
+      let wxUserinfo = wx.getStorageSync('wxInfo')
+      this.wxAddress = wxUserinfo ? JSON.parse(wxUserinfo).address : ''
+      if (this.userInfo.head_img) {
+        if (this.userInfo.head_img.indexOf('http') > -1) {
+          this.head_img = this.userInfo.head_img
+        } else {
+          this.head_img = getImgUrl(this.userInfo.head_img)
+        }    
+      } else {
+        this.head_img = wxUserinfo ? JSON.parse(this.wxUserinfo).head_img : ''
+      }
+      this.$apply()
+    }
+  }
+}
+</script>
+

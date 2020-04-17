@@ -1,0 +1,127 @@
+@import "./base/variable/color";
+
+.login_page {
+    &.welcome-page {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .login-view {
+        position: relative;
+        height: 94%;
+
+        &.welcome-view {
+            height: 100%;
+        }
+
+        .login-title {
+            padding: 170rpx 0 80rpx;
+            font-size: 48rpx;
+            width: 100%;
+            color: @weuiTextColorTitle;
+
+            .login-title-col {
+                font-size: 36rpx;
+                margin-top: 10rpx;
+            }
+        }
+
+        .login-view-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 90%;
+
+            &.welcome-view-bg {
+                height: 80%;
+            }
+        }
+
+        .weui-cell {
+            margin-bottom: 20px;
+            font-size: 28rpx;
+            position: relative;
+
+            .weui-cell_label {
+                color: @weuiTextColorDesc;
+                width: 130rpx;
+            }
+
+            .weui-input {
+                padding: 20rpx 0 16rpx;
+                text-align: left;
+            }
+
+            .weui-cell_line {
+                margin-right: 30rpx;
+            }
+
+            .code-btn {
+                position: absolute;
+                top: 20rpx;
+                right: 0;
+                color: @weuiColorPrimary;
+                font-size: 28rpx;
+            }
+        }
+    }
+
+    .login-view-box {
+        height: 85%;
+        width: 80%;
+        margin: 0 auto;
+
+        .login-view-form {
+            width: 100%;
+        }
+
+        &.welcome-view-box {
+            width: 86%;
+            position: absolute;
+            bottom: 20%;
+            height: 200rpx;
+            left: 7%;
+            z-index: 222;
+
+            .login-view-form {
+                height: 100%;
+
+                &.welcome-view-form {
+                    .login-btn {
+                        width: 50%;
+                        margin: 30rpx auto 0;
+                    }
+                }
+            }
+
+            .check-icon {
+                font-size: 18px;
+                width: 26rpx;
+                height: 26rpx;
+                margin-right: 10rpx;
+            }
+
+            .rule-view {
+                margin: 0 40rpx;
+                font-size: 26rpx;
+                color: @weuiTextColorDesc;
+
+                .text {
+                    color: @weuiColorPrimary;
+                }
+            }
+        }
+    }
+
+    .weui-cell_btn {
+        &.login-btn {
+            padding: 40rpx 0;
+        }
+
+        .weui-btn_cell-disabled {
+            color: @weuiBgColorWhite;
+            background: @weuiBgColorPrimary;
+        }
+    }
+}

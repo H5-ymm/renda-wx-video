@@ -1,0 +1,89 @@
+<style lang="less">
+@import "../../style/user.less";
+</style>
+<template>
+  <view class="page_bottom page page_margin">
+    <view class="my-view">
+      <view class="my-view-box">
+        <view class="page_card">
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">支付宝</view>
+              <view
+                class="page_card_status page_card_status2 {{!bindInfo.alipay_status? '': 'page_card_status1'}}"
+              >{{bindInfo.alipay_status? wxs.getCardNum(bindInfo.account_no):'未绑定'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">银行卡</view>
+              <view
+                class="my-text-right"
+                wx:if="{{bindInfo.bank_status}}"
+              >{{wxs.getCardNum(bindInfo.bank_account_no)}}</view>
+              <view class="page_card_status page_card_status2" wx:else>未绑定</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">手机号码</view>
+              <view class="my-text-right">{{bindInfo.mobile?bindInfo.mobile:'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">身份证</view>
+              <view
+                class="my-text-right"
+                wx:if="{{bindInfo.idcard_status}}"
+              >{{wxs.getCardNum(bindInfo.id_card)}}</view>
+              <view class="page_card_status page_card_status2" wx:else>未绑定</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">邮箱</view>
+              <view class="my-text-right" wx:if="{{bindInfo.email}}">{{bindInfo.email}}</view>
+              <view class="page_card_status page_card_status2" wx:else>未绑定</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import wxs from '../../filterWxs/dateFilter.wxs'
+export default class userBind extends wepy.page {
+  wxs = { wxs }
+  data = {
+    bindInfo: {},
+    usertype: '',
+    urlApi: ''
+  }
+  config = {
+    navigationBarTitleText: '账户绑定'
+  }
+  watch = {
+    usertype(val) {
+      if (val) {
+        this.urlApi = val == 1 ? '/company/companyBinkInfo' : '/Userinfo/userBinkInfo'
+        this.getBindInfo()
+      }
+    }
+  }
+  getBindInfo() {
+    let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    $http(this.urlApi, { uid }).then(res => {
+      this.bindInfo = res.data
+      this.$apply()
+    })
+  }
+  onLoad() {
+    this.usertype = wx.getStorageSync('rendaUserType')
+    this.$apply()
+  }
+}
+</script>

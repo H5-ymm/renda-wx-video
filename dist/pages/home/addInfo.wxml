@@ -1,0 +1,319 @@
+
+  <view class="home-view page">
+    <view class="home-view-header"/>
+    <view class="page page_margin">
+      <view class="weui-flex between">
+        <view class="weui-cell weui-cell-steps page_card">
+          <view class="steps weui-flex between">
+            <view class="step-item weui-flex__item {{stepActive>=1?'active': ''}}">1.基本信息</view>
+            <view class="step-item weui-flex__item {{stepActive>=2?'active': ''}}">2.{{isInput ?'简历信息': '扫描身份证'}}</view>
+            <view class="step-item weui-flex__item {{stepActive>=3?'active': ''}}">3.确认信息</view>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell-switch page_card weui-flex wrap center" bindtap="changeInput">
+          <image src="https://a.rsd123.com/image/images/change.png" class="step-icon"/>
+          <view class="step-text">更换方式</view>
+        </view>
+      </view>
+      
+  <view class="add-view" wx:if="{{stepActive==1}}">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">简历录入位置：</view>
+            <view class="weui-flex between" bindtap="$addBaseInfo$selectType">
+              <view class="my-text-right">{{$addBaseInfo$resumeType}}</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_right-icon"/>
+            </view>
+          </view>
+        </view>
+        <view class="page_card_row"  wx:if="{{$addBaseInfo$resumeType&&$addBaseInfo$resumeType!='简历管理'}}" bindtap="$addBaseInfo$viewList">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__auto my-text-require">{{$addBaseInfo$resumeType}}</view>
+            <view class="weui-flex between">
+              <view class="my-text-right">{{$addBaseInfo$jobName?$addBaseInfo$jobName:'请选择岗位名称'}}</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_right-icon"/>
+            </view>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__auto">
+              谁送给我：
+            </view>
+            <input class="weui-input" placeholder-class="placeholder" placeholder="请输入送给人" value="{{$addBaseInfo$form.from_user}}" data-name="from_user" bindinput="$addBaseInfo$changeInput"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__auto">
+              我送给谁：
+            </view>
+            <input placeholder-class="placeholder" disabled="{{$addBaseInfo$resumeType&&$addBaseInfo$resumeType!='简历管理'&&$addBaseInfo$form.to_user!=''}}" value="{{$addBaseInfo$form.to_user}}" data-name="to_user" bindinput="$addBaseInfo$changeInput" class="weui-input my-text-right weui-flex__auto" placeholder="请输入公司"/>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="$addBaseInfo$submit">下一步</button>
+    </view>
+  </view>
+
+      
+  <view class="add-view" wx:if="{{stepActive==2&&isInput}}">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require"> 姓名：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="name" value="{{$addResume$form.name}}" bindinput="$addResume$changeInput" placeholder="请输入姓名"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">身份证号码：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="id_card" value="{{$addResume$form.id_card}}" bindinput="$addResume$changeInput" placeholder="请输入身份证号码"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item my-text-require"> 手机号码：</view>
+            <input class="weui-input" data-name="mobile" placeholder-class="placeholder" value="{{$addResume$form.mobile}}" bindinput="$addResume$changeInput" placeholder="请输入手机号码"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">性别：</view>
+            <picker bindchange="$addResume$bindPickerChange" value="{{$addResume$index}}" range="{{$addResume$array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{$addResume$array[$addResume$index]?'':'placeholder'}}"> {{$addResume$array[$addResume$index]?$addResume$array[$addResume$index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item">户籍地址：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{$addResume$form.address}}" bindinput="$addResume$changeInput" placeholder="请输入住址"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">学历：</view>
+            <picker bindchange="$addResume$eduPickerChange" value="{{$addResume$eduIndex}}" range="{{$addResume$eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{$addResume$eduList[$addResume$eduIndex]?'':'placeholder'}}"> {{$addResume$eduList[$addResume$eduIndex]?$addResume$eduList[$addResume$eduIndex]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">年龄：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="age" value="{{$addResume$form.age}}" bindinput="$addResume$changeInput" placeholder="请输入年龄"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">期望岗位：</view>
+            <input class="weui-input" data-name="desired_position" placeholder-class="placeholder" value="{{$addResume$form.desired_position}}" bindinput="$addResume$changeInput" placeholder="请输入期望岗位"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">现住地址：</view>
+            
+  <picker mode="multiSelector" bindcancel="$addResume$districtSelet$cancelPickerChange" bindchange="$addResume$districtSelet$bindMultiPickerChange" bindcolumnchange="$addResume$districtSelet$bindMultiPickerColumnChange" value="{{$addResume$districtSelet$multiIndex}}" range="{{$addResume$districtSelet$multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$addResume$districtSelet$options.length}}">
+          {{$addResume$districtSelet$multiArray[0][$addResume$districtSelet$multiIndex[0]]}}
+          {{$addResume$districtSelet$multiArray[1][$addResume$districtSelet$multiIndex[1]]}}
+          {{$addResume$districtSelet$disabled?$addResume$districtSelet$multiArray[2][$addResume$districtSelet$multiIndex[2]]:''}}
+       </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+    </view>
+  </picker>
+
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item"/>
+            <input class="weui-input" data-name="household_address" placeholder-class="placeholder" value="{{$addResume$form.household_address}}" bindinput="$addResume$changeInput" placeholder="请输入详细住址"/>
+          </view>
+        </view>
+
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+
+      <button class="weui-btn_cell .weui-btn_primary" bindtap="$addResume$save">{{$addResume$step==1?'下一步':'保存'}}</button>
+
+    </view>
+  </view>
+
+      
+  <view class="add-view" wx:if="{{stepActive==2&&!isInput}}">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex center wrap">
+            <view class="card-text"> 点击开始识别正面（照片面）</view>
+            <image bindtap="$scanIdCard$uploadImg" src="https://a.rsd123.com/image/images/cardIcon.png" class="idCard-bg" mode="scaleToFill"/>
+            <!-- <image bindtap="uploadImg" src="{{infoImg}}" wx:else class="idCard-bg" mode="aspectFit" /> -->
+          </view>
+        </view>
+      </view>
+    </view>
+    <canvas canvas-id="canvas" style="width:{{$scanIdCard$cWidth}}px;height:{{$scanIdCard$cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
+  </view>
+
+      
+  <view class="add-view" wx:if="{{stepActive==3}}">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require"> 姓名：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="name" value="{{$addResume$form.name}}" bindinput="$addResume$changeInput" placeholder="请输入姓名"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">身份证号码：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="id_card" value="{{$addResume$form.id_card}}" bindinput="$addResume$changeInput" placeholder="请输入身份证号码"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item my-text-require"> 手机号码：</view>
+            <input class="weui-input" data-name="mobile" placeholder-class="placeholder" value="{{$addResume$form.mobile}}" bindinput="$addResume$changeInput" placeholder="请输入手机号码"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">性别：</view>
+            <picker bindchange="$addResume$bindPickerChange" value="{{$addResume$index}}" range="{{$addResume$array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{$addResume$array[$addResume$index]?'':'placeholder'}}"> {{$addResume$array[$addResume$index]?$addResume$array[$addResume$index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item">户籍地址：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{$addResume$form.address}}" bindinput="$addResume$changeInput" placeholder="请输入住址"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">学历：</view>
+            <picker bindchange="$addResume$eduPickerChange" value="{{$addResume$eduIndex}}" range="{{$addResume$eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{$addResume$eduList[$addResume$eduIndex]?'':'placeholder'}}"> {{$addResume$eduList[$addResume$eduIndex]?$addResume$eduList[$addResume$eduIndex]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">年龄：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="age" value="{{$addResume$form.age}}" bindinput="$addResume$changeInput" placeholder="请输入年龄"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">期望岗位：</view>
+            <input class="weui-input" data-name="desired_position" placeholder-class="placeholder" value="{{$addResume$form.desired_position}}" bindinput="$addResume$changeInput" placeholder="请输入期望岗位"/>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">现住地址：</view>
+            
+  <picker mode="multiSelector" bindcancel="$addResume$districtSelet$cancelPickerChange" bindchange="$addResume$districtSelet$bindMultiPickerChange" bindcolumnchange="$addResume$districtSelet$bindMultiPickerColumnChange" value="{{$addResume$districtSelet$multiIndex}}" range="{{$addResume$districtSelet$multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$addResume$districtSelet$options.length}}">
+          {{$addResume$districtSelet$multiArray[0][$addResume$districtSelet$multiIndex[0]]}}
+          {{$addResume$districtSelet$multiArray[1][$addResume$districtSelet$multiIndex[1]]}}
+          {{$addResume$districtSelet$disabled?$addResume$districtSelet$multiArray[2][$addResume$districtSelet$multiIndex[2]]:''}}
+       </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+    </view>
+  </picker>
+
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item"/>
+            <input class="weui-input" data-name="household_address" placeholder-class="placeholder" value="{{$addResume$form.household_address}}" bindinput="$addResume$changeInput" placeholder="请输入详细住址"/>
+          </view>
+        </view>
+
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+
+      <button class="weui-btn_cell .weui-btn_primary" bindtap="$addResume$save">{{$addResume$step==1?'下一步':'保存'}}</button>
+
+    </view>
+  </view>
+
+    </view>
+    
+  <view hidden="{{$actionSheet$isScaleModal}}">
+    <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
+    <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
+      <view class="modal-page_card">
+        <image mode="scaleToFill" src="../../images/close.png" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+        <view class="weui-flex around modal-btn">
+          <text class="weui-flex__item weui-flex center">取消</text>
+          <text class="active weui-flex__item weui-flex center">联系客服</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+    
+  <view hidden="{{$modal$isScaleModal}}">
+    <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modal$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$modal$type}}">
+        <view class="modal-bg">
+          <image src="{{$modal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
+        </view>
+        <view class="modal-title">
+          {{$modal$modalObj.title}}
+        </view>
+        <text selectable="true" decode="{{$modal$true}}" class="modal-subTitle" wx:if="{{$modal$modalObj.subTitle}}">{{$modal$modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{$modal$openType}}" wx:if="{{$modal$openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{$modal$imgUrl}}" bindlongpress="$modal$saveImg" class="qrcode-img"/>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modal$handleOk" class="close-icon"/>
+    </view>
+  </view>
+
+
+  </view>

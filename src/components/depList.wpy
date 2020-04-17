@@ -1,0 +1,68 @@
+
+<style lang="less">
+.page_card_status-item {
+  .weui-btn_cell {
+    border-radius: 5rpx;
+    font-size: 25rpx;
+    padding: 26rpx 12rpx 24rpx;
+    border: 1px solid #1890ff;
+    margin-left: 20rpx;
+  }
+}
+</style>
+<template>
+  <view>
+    <repeat for="{{list}}" key="index">
+      <view class="page_card" wx:if="{{list.length}}" @tap="viewDetail({{item}})">
+        <view class="page_card_row weui-flex between">
+          <view class="weui-flex__item">
+            <view class="weui-flex between">
+              <view class="page_card_name">{{item.depart_name}}</view>
+              <view class="page_card_status-item weui-flex between">
+                <button class="weui-btn_cell weui-flex__item weui-btn_primary" @tap.stop="settingUser({{item}})">
+                  人员调整
+                </button>
+                <button class="weui-btn_cell weui-flex__item weui-btn_primary_plain" @tap.stop="delDepartment({{item}})">
+                  删除部门
+                </button>
+              </view>
+            </view>
+            <view class="weui-flex between">
+              <view class="text-line weui-flex start">
+                部门人数：{{item.num}}
+              </view>
+            </view>
+            <view class="weui-flex between">
+              <view class="page_card_col1 text-line">部门经理：{{item.user_name}}</view>
+              <view class="page_card_time">联系电话：{{item.mobile}}</view>
+            </view>
+          </view>
+          <!-- <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon"/> -->
+        </view>
+      </view>
+    </repeat>
+    <view wx:if="{{!list.length}}" class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class depList extends wepy.component {
+  props = {
+    list: Array
+  }
+  data = {}
+  methods = {
+    delDepartment (item) {
+      this.$emit('delDepart', item)
+    },
+    settingUser (item) {
+      wx.navigateTo({
+        url: '/pages/teamView/department/userSetting?query=' + item.id
+      })
+    }
+  }
+}
+</script>

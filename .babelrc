@@ -1,0 +1,14 @@
+{
+    "presets": [
+        "es2015",
+        "stage-0",
+        "env"
+    ],
+    "plugins": [
+        "transform-decorators-legacy",
+        "transform-object-rest-spread",
+        "transform-export-extensions",
+        "syntax-export-extensions",
+        "transform-class-properties"
+    ]
+}

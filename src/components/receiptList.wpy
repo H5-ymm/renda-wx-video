@@ -1,0 +1,60 @@
+<template>
+  <view>
+    <view wx:if="{{list.length}}">
+      <repeat for="{{list}}" key="index" item="rItem">
+        <view class="page_card" @tap="viewDetail({{rItem}})">
+          <receiptItem :itemValue.sync="rItem"></receiptItem>
+        </view>
+      </repeat>
+    </view>
+    <view wx:else class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import receiptItem from './receiptItem'
+import { wxToast, wxNavigateTo } from '@/util.js'
+export default class receiptList extends wepy.component {
+  components = {
+    receiptItem: receiptItem
+  }
+  props = {
+    list: Array,
+    receiptType: {
+      type: Number,
+      default: 0
+    }
+  }
+  methods = {
+    viewDetail (item) {
+      if (!this.receiptType) {
+        if (item.status <= 1) {
+          wxNavigateTo('/pages/companyView/jobDetail?query=' + item.id)
+        } else {
+          wxNavigateTo('/pages/companyView/viewJob?query=' + item.id)
+        }
+      } else {
+        let obj = {
+          entry_status: item.entry_status,
+          invoice_status: item.invoice_status,
+          interview_status: item.interview_status,
+          view_time: item.view_time,
+          entry_time: item.entry_time,
+          is_video: item.is_video
+        }
+        wx.setStorageSync('statusObj', JSON.stringify(obj))
+        if ((!item.view_time && this.receiptType === 1) || (this.receiptType === 2 && item.interview_status <= 1 && !item.entry_time)) {
+          this.$emit('setTime', item.id)
+        } else {
+          wx.navigateTo({
+            url: '/pages/companyView/checkResumeList?query=' + this.receiptType + '&job_id=' + item.id
+          })
+        }
+      }
+    }
+  }
+}
+</script>

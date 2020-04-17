@@ -1,0 +1,1 @@
+.resume-list .page_card_row{line-height:40rpx}.page_card_end .page_card_time{width:100%;text-align:right;font-size:22rpx;color:#999}.page_card_end.view-page_card{flex:1}.page_card_end.view-page_card .page_card_status-resume{width:88%}.page_card_end.view-page_card .page_card_status-resume .weui-btn_cell{padding:23rpx 10rpx 21rpx;margin-bottom:10rpx}

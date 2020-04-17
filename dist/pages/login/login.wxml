@@ -1,0 +1,62 @@
+
+  <view class="login_page page_bottom">
+    <view class="login-view">
+      <image src="https://a.rsd123.com/image/images/loginBg.png" mode="widthFix" class="login-view-bg"/>
+      <view class="login-view-box">
+        <view class="login-title">
+          <view>您好，</view>
+          <view class="login-title-col">欢迎使用人事达</view>
+        </view>
+        <view class="login-view-form">
+          <view class="weui-cell weui-flex start weui-cell_input page_bottom">
+            <view class="weui-cell_label weui-flex between">
+              +86<label class="weui-cell_line">|</label>
+            </view>
+            <input class="weui-input" value="{{form.tel}}" bindinput="changeInput" data-name="tel" placeholder="输入您的手机号"/>
+          </view>
+          <view class="weui-cell weui-flex start weui-cell_input page_bottom">
+            <view class="weui-cell_label weui-flex between">
+              验证码<label class="weui-cell_line">|</label>
+            </view>
+            <input class="weui-input" value="{{form.code}}" bindinput="changeInput" data-name="code" placeholder="输入验证码"/>
+            <text class="code-btn" bindtap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
+          </view>
+          <view class="weui-cell_btn weui-flex center login-btn">
+            <button disabled="{{!checked}}" class="weui-btn_cell weui-btn_cell-gradient {{!checked?'weui-btn_cell-disabled':''}}" bindtap="getUserInfo">登录</button>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+  <view hidden="{{$modal$isScaleModal}}">
+    <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modal$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$modal$type}}">
+        <view class="modal-bg">
+          <image src="{{$modal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
+        </view>
+        <view class="modal-title">
+          {{$modal$modalObj.title}}
+        </view>
+        <text selectable="true" decode="{{$modal$true}}" class="modal-subTitle" wx:if="{{$modal$modalObj.subTitle}}">{{$modal$modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{$modal$openType}}" wx:if="{{$modal$openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{$modal$imgUrl}}" bindlongpress="$modal$saveImg" class="qrcode-img"/>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modal$handleOk" class="close-icon"/>
+    </view>
+  </view>
+
+
+  </view>

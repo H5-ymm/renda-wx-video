@@ -1,0 +1,247 @@
+
+	<view class="detail-view">
+		<view class="weui-flex between header-box">
+			
+  <view class="weui-flex around tabBar"  wx:if="{{!isSeachWidth}}">
+    <block wx:for="{{$tabBar$tabBarList}}" wx:key="index">
+      <view class="{{$tabBar$activeIndex==index?'tabBar_item-active':''}} weui-flex__item tabBar_item" bindtap="$tabBar$switchTab" data-wpyswitchtab-a="{{index}}">
+        <view>{{item.name}}</view>
+        <view wx:if="{{item.num!=-1}}">({{item.num}})</view>
+      </view>
+    </block>
+    <view class="tab-line {{'line'+$tabBar$activeIndex}}"/>
+  </view>
+
+			
+  <view class="weui-flex between search-box search-box {{isSeachWidth?'weui-flex__item':''}}">
+		<view class="weui-cell weui-flex start weui-flex__item">
+			<image src="../../images/search.png" class="searchIcon"/>
+			<input class="weui-input weui-flex__item search-input" bindinput="$search$inputBind" confirm-type="search" bindfocus="$search$inputFocus" value="{{$search$name}}" placeholder="搜索词"/>
+    </view>
+		<text>搜索</text>
+	</view>
+
+		</view>
+		<view class="page_margin view-detail">
+			<scroll-view scroll-y="true" style="height:100%">
+				<view class="video-tip"  wx:if="{{isBatch&&viewType==2&&receiptType!=3}}">提示：每次视频面试最多邀请8人 建议：根据实际情况设置面试时间</view>
+				<view class="video-switch weui-flex between" wx:if="{{!isBatch&&receiptType!=3}}">
+					<view class="video-switch-col1 {{viewType==1?'video-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="1">正常面试</view>
+					<view class="video-switch-col1 video-switch-col2 {{viewType==2?'video-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="2">视频面试</view>
+				</view>
+				
+	<view class="resume-list">
+		<block  wx:for="{{$companyResumeList$list}}" wx:key="index">
+			<view class="page_card" wx:if="{{$companyResumeList$list.length}}">
+				<view class="page_card_row weui-flex between" bindtap="$companyResumeList$viewDetail" data-wpyviewdetail-a="{{item}}">
+					<view class="weui-flex start">
+						<view wx:if="{{$companyResumeList$isBatch}}">
+							<image src="https://a.rsd123.com/image/images/user/radio2.png" alt="" mode="aspectFill" class="radio-icon" catchtap="$companyResumeList$selectResume" wx:if="{{item.disabled}}" data-wpyselectresume-a="{{item}}" data-wpyselectresume-b="{{index}}"/>
+							<image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else catchtap="$companyResumeList$selectResume" mode="aspectFill" class="radio-icon" data-wpyselectresume-a="{{item}}" data-wpyselectresume-b="{{index}}"/>
+						</view>
+						<view>
+							<view class="page_card_name">{{item.name}}</view>
+							<view class="text-line weui-flex__item">
+								{{item.age}}岁 {{item.sex==1?'男':'女'}} {{item.education}}</view>
+							<view class="text-line weui-flex__item">
+								{{item.citys||'-'}}
+							</view>
+						</view>
+					</view>
+					<view class="weui-flex end page_card_end">
+						<view class="page_card_col">
+							<view wx:if="{{$companyResumeList$isShowBtn}}" class="page_card_status-resume">
+								<view class="page_card_status-item weui-flex between" wx:if="{{($companyResumeList$receiptType==1&&!item.status)||($companyResumeList$receiptType==2&&!item.interview_status)||($companyResumeList$receiptType==3&&!item.entry_status)}}">
+									<button class="weui-btn_cell weui-btn_primary {{item.view_type==2&&!item.is_item&&$companyResumeList$receiptType!=3?'weui-btn_cell1':'weui-flex__item'}}" catchtap="$companyResumeList$handleResume" data-wpyhandleresume-a="{{item}}" data-wpyhandleresume-b="1">
+										{{item.view_type==1||($companyResumeList$receiptType===1&&!item.is_item) ||$companyResumeList$receiptType===3?$companyResumeList$text:'视频面试'}}
+									</button>
+									<button class="weui-btn_cell weui-flex__item weui-btn_primary_plain" wx:if="{{item.view_type!=2||(!item.entry_status&&$companyResumeList$receiptType==3)}}" catchtap="$companyResumeList$handleResume" data-wpyhandleresume-a="{{item}}" data-wpyhandleresume-b="2">
+										{{$companyResumeList$receiptType===1?'拒绝':$companyResumeList$receiptType===2?'未通过':'未入职'}}
+									</button>
+								</view>
+								<view wx:else class="page_card_status-text weui-flex center-start">
+									<view wx:if="{{item.status==1||item.interview_status==1||item.entry_status==1}}" class="page_card_receipt_status page_card_receipt_status2">已{{$companyResumeList$text}}</view>
+									<view wx:else class="page_card_receipt_status page_card_receipt_status3">
+										{{$companyResumeList$refuseText}}
+									</view>
+								</view>
+							</view>
+							<view wx:if="{{item.interview_status!=5}}">
+								<view class="page_card_time" wx:if="{{item.is_time||$companyResumeList$type==1||$companyResumeList$receiptType>0}}">{{item.addtime}}</view>
+								<view class="page_card_time page_card_time1" wx:else>未设置视频面试</view>
+							</view>
+							<view class="page_card_time page_card_time1" wx:else>面试待定</view>
+						</view>
+						<image mode="scaleToFill" class="page_down_icon" src="https://a.rsd123.com/image/images/right.png"/>
+					</view>
+				</view>
+			</view>
+		</block>
+		<view  wx:if="{{!$companyResumeList$list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+			</scroll-view>
+		</view>
+		<view wx:if="{{list.length}}">
+			<view wx:if="{{isCheckBtn || (check&&!isShowOverBtn)}}" class="create-btn footer-box">
+				<view class="weui-flex center footer-box-item" wx:if="{{!isBatch}}">
+					<view class="weui-flex__item item-btn weui-flex center" bindtap="batchHandle" wx:if="{{(!check||!statusObj.is_video&&viewType==2)&&receiptType<3}}">
+						<!-- 批量操作 -->
+						{{viewType==1?'批量正常面试':'批量视频面试'}}
+					</view>
+					<view wx:if="{{receiptType==3&&!check}}" class="weui-flex__item item-btn weui-flex center" bindtap="batchHandle">
+						批量操作
+					</view>
+					<view wx:if="{{statusObj.view_time||statusObj.is_video}}" class="weui-flex__item footer-box-item weui-flex center item-btn" bindtap="viewNotice">
+						<text wx:if="{{receiptType==1&&viewType==1}}">查看面试通知</text>
+						<text wx:if="{{receiptType==1&&viewType==2}}">通知记录</text>
+						<text wx:if="{{receiptType>1}}">查看入职通知</text>
+					</view>
+				</view>
+				<view class="weui-flex between footer-box-item" wx:if="{{isBatch}}">
+					<view class="item-col">
+						<image src="https://a.rsd123.com/image/images/user/radio2.png" wx:if="{{isCheck}}" bindtap="selectResumeAll" alt="" mode="aspectFill" class="radio-icon" data-wpyselectresumeall-a="{{isCheck}}"/>
+						<image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else bindtap="selectResumeAll" mode="aspectFill" class="radio-icon" data-wpyselectresumeall-a="{{isCheck}}"/>
+						全选
+					</view>
+					<view class="page_card_status-resume weui-flex center item-col" wx:if="{{!statusObj.invoice_status||viewType==1}}">
+						<button class="weui-btn_cell  weui-flex__item weui-btn_primary" bindtap="setResumeStatus" data-wpysetresumestatus-a="1">
+							通过
+						</button>
+						<button class="weui-btn_cell weui-flex__item weui-btn_primary_plain" bindtap="setResumeStatus" data-wpysetresumestatus-a="2">
+							拒绝
+						</button>
+					</view>
+					<view class="page_card_status-resume weui-flex center item-col" wx:else>
+						<button class="weui-btn_cell  weui-flex__item weui-btn_primary" bindtap="setNotice">
+							设置视频面试通知
+						</button>
+					</view>
+				</view>
+			</view>
+			<view wx:if="{{!isCheckBtn&&check}}" class="weui-flex between only-btn">
+				<!-- <view wx:if="{{isShowOverBtn}}" class="weui-flex center weui-flex__item only-btn-item">
+					<button class="weui-btn_cell  weui-flex__item weui-btn_primary" bindtap="overView">
+						{{receiptType===1?'提前结束面试':'提前结束入职'}}
+					</button>
+				</view> -->
+				<view wx:if="{{receiptType==2&&statusObj.interview_status>=3&&statusObj.entry_status}}" class="weui-flex weui-flex__item center only-btn-item">
+					<button class="weui-btn_cell  weui-flex__item weui-btn_primary_plain" bindtap="viewEntry">
+						查看入职
+					</button>
+				</view>
+			</view>
+		</view>
+	 <!-- </view> -->
+		
+	<view hidden="{{$noticeModal$isScaleModal}}">
+		<view bindtap="$noticeModal$ handleClose"  wx:if="{{$noticeModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box modal-notice_box transition3s {{ $noticeModal$isShow ? 'g_scale1': ''}}" style="height:{{$noticeModal$height}}rpx">
+			<view class="modal-content">
+				<view class="modal-title">设置{{$noticeModal$title}}通知</view>
+				<view class="modal-view-box {{$noticeModal$type==2?'modal-view-box1':''}}">
+					<view class="modal-row">
+						<text>{{$noticeModal$title}}时间</text>
+						
+	<view class="weui-cell weui-flex between">
+		<picker mode="date" value="{{$noticeModal$datePicker$dateValue}}" start="{{$noticeModal$datePicker$startValue}}" bindchange="$noticeModal$datePicker$bindDateChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!$noticeModal$datePicker$params.date?'placeholder':''}}">{{$noticeModal$datePicker$dateValue}}</view>
+					<image src="https://a.rsd123.com/image/images/orderTaking/date.png" class="dateIcon"/>
+				</view>
+			</view>
+		</picker>
+		<picker mode="time" value="{{$noticeModal$datePicker$timeValue}}" start="09:00" end="21:00" bindchange="$noticeModal$datePicker$timeChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!$noticeModal$datePicker$params.time?'placeholder':''}}">{{$noticeModal$datePicker$timeValue}}</view>
+					<image src="https://a.rsd123.com/image/images/orderTaking/time.png" class="dateIcon"/>
+				</view>
+			</view>
+		</picker>
+	</view>
+
+					</view>
+					<view class="modal-row"  wx:if="{{$noticeModal$type==1}}">
+						<text>{{$noticeModal$title}}地址</text>
+						
+  <picker mode="multiSelector" bindcancel="$noticeModal$districtSelet$cancelPickerChange" bindchange="$noticeModal$districtSelet$bindMultiPickerChange" bindcolumnchange="$noticeModal$districtSelet$bindMultiPickerColumnChange" value="{{$noticeModal$districtSelet$multiIndex}}" range="{{$noticeModal$districtSelet$multiArray}}" class="modal-col">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$noticeModal$districtSelet$options.length}}">
+          {{$noticeModal$districtSelet$multiArray[0][$noticeModal$districtSelet$multiIndex[0]]}}
+          {{$noticeModal$districtSelet$multiArray[1][$noticeModal$districtSelet$multiIndex[1]]}}
+          {{$noticeModal$districtSelet$disabled?$noticeModal$districtSelet$multiArray[2][$noticeModal$districtSelet$multiIndex[2]]:''}}
+       </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+    </view>
+  </picker>
+
+						<view class="modal-col modal-col-input">
+							<input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{$noticeModal$form.address}}" bindinput="$noticeModal$changeInput" placeholder="请输入详细地址"/>
+						</view>
+					</view>
+					<view class="modal-row">
+						<text>通知内容</text>
+						<textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col" value="{{$noticeModal$form.content}}" bindinput="$noticeModal$changeInput" placeholder="请输入{{$noticeModal$title}}通知的内容" maxlength="-1"/>
+						</view>
+					<view class="weui-flex start notice-tip" wx:if="{{$noticeModal$type==1}}">
+						<image src="https://a.rsd123.com/image/images/orderTaking/warn.png" class="tipIcon"/>
+						<text class="tip">审核通过简历会直接发送短信通知{{$noticeModal$title}}，谨慎操作</text>
+					</view>
+					<view class="weui-flex start notice-tip" wx:else>
+						<image src="https://a.rsd123.com/image/images/orderTaking/warn.png" class="tipIcon"/>
+					 <view>
+						 	<text class="tip">1.筛选通过简历直接短信通知视频面试信息，谨慎 操作</text>
+						<view class="tip">2.可根据实际情况修改面试通知，分批面试</view>
+					 </view>
+					</view>
+		    </view>
+        <view class="weui-cell_btn weui-flex between create-btn">
+          <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$noticeModal$handleClose">取消</button>
+					<button class="weui-btn_cell weui-btn_primary" bindtap="$noticeModal$handleOk">{{$noticeModal$timeInfo&&$noticeModal$type==1?'修改':'确定'}}</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$noticeModal$handleClose" class="close-icon"/>
+    </view>
+  </view>
+
+		
+	<view hidden="{{$viewNoticeModal$isScaleModal}}">
+		<view bindtap="$viewNoticeModal$ handleClose"  wx:if="{{$viewNoticeModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box modal-notice_box modal-viewNotice_box transition3s {{ $viewNoticeModal$isShow ? 'g_scale1': ''}}" style="height:{{$viewNoticeModal$height}}rpx">
+			<view class="modal-content">
+				<view class="modal-title">查看{{$viewNoticeModal$title}}通知</view>
+				<view class="modal-view-box">
+					<view class="modal-row">
+						<text>面试时间</text>
+						<view class="modal-col">{{$viewNoticeModal$form.time}}</view>
+					</view>
+					<view class="modal-row">
+						<text>面试地址</text>
+						<view class="modal-col"> {{$viewNoticeModal$form.address}}</view>
+						<view class="modal-col"> {{$viewNoticeModal$form.detailAddress||'-'}}</view>
+					</view>
+					<view class="modal-row">
+						<text>通知内容</text>
+						<view class="modal-col">
+							<view class="weui-input weui-textarea">
+								{{$viewNoticeModal$form.content}}
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="weui-cell_btn weui-flex center">
+					<button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$viewNoticeModal$handleOk">我知道了</button>
+				</view>
+			</view>
+			<image src="https://a.rsd123.com/image/images/close.png" bindtap="$viewNoticeModal$handleClose" class="close-icon"/>
+		</view>
+	</view>
+
+
+	</view>

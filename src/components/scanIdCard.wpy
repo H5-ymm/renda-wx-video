@@ -1,0 +1,134 @@
+<style lang="less">
+@import '../style/home.less';
+.weui-input {
+  text-align: right;
+}
+.add-view {
+  height: 78%;
+  .page_card_row {
+    height: 100%;
+    .card-text {
+      width: 100%;
+      margin: 20rpx auto 0;
+      text-align: center;
+      color: #6a6a6a;
+    }
+  }
+  .idCard-bg {
+    width: 241rpx;
+    height: 182rpx;
+    margin: 64rpx 0;
+  }
+}
+</style>
+
+<template>
+  <view class="add-view">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex center wrap">
+            <view class="card-text"> 点击开始识别正面（照片面）</view>
+            <image @tap="uploadImg" src="https://a.rsd123.com/image/images/cardIcon.png" class="idCard-bg" mode="scaleToFill" />
+            <!-- <image @tap="uploadImg" src="{{infoImg}}" wx:else class="idCard-bg" mode="aspectFit" /> -->
+          </view>
+        </view>
+      </view>
+    </view>
+    <canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { compressImg, getImgUrl } from '@/util.js'
+import { $http, uploadFile } from '@/http.js'
+// 通过继承自wepy.page的类创建页面逻辑
+export default class scanIdCard extends wepy.component {
+  data = {
+    form: {
+      name: '',
+      mobile: '',
+      address: '',
+      age: '',
+      education: 0,
+      sex: 1,
+      id_card: '',
+      household_address: ''
+    },
+    infoImg: '',
+    tempFilePaths: [],
+    cWidth: '',
+    cHeight: ''
+  }
+  getUrl (infoImg) {
+    let params = {
+      image_url: infoImg
+    }
+    $http('/wxresume/identificationOfIdcard', params).then(res => {
+      let data = JSON.parse(res.data)
+      console.log(res.data)
+      if (res.status.code == 200) {
+        if (!data || (data.data && !data.name && !data.addr)) {
+          wx.showToast({
+            icon: 'none',
+            title: '获取信息失败,请重新上传身份证正面',
+            duration: 2000
+          })
+          return
+        }
+        this.form.address = data.addr
+        this.form.name = data.name
+        this.form.id_card = data.id
+        let myDate = new Date()
+        let tYear = myDate.getFullYear()
+        let year = data.id.substring(6, 10)
+        console.log(year)
+        if (year) {
+          this.form.age = tYear - year
+        }
+        if (data.gender == '男') {
+          this.form.sex = 1
+        }
+        if (data.gender == '女') {
+          this.form.sex = 2
+        }
+        this.$emit('submitForm', this.form)
+      } else {
+        wx.showToast({
+          icon: 'none',
+          title: '获取信息失败',
+          duration: 2000
+        })
+      }
+    })
+  }
+  getImg (tempFilePaths) {
+    uploadFile(tempFilePaths).then(res => {
+      if (res.data && res.data.url) {
+        this.infoImg = getImgUrl(res.data.url)
+        this.getUrl(getImgUrl(res.data.url))
+        this.$apply()
+      } else {
+        wxToast('图片获取失败')
+      }
+    })
+  }
+  methods = {
+    uploadImg () {
+      wx.chooseImage({
+        sizeType: ['compressed'],
+        success: res => {
+          this.getImg(res.tempFilePaths)
+          // compressImg(res.tempFilePaths[0]).then(res => {
+          //   this.getImg([res.url])
+          // })
+        }
+      })
+    },
+    save () {
+      if (!this.infoImg) return
+      this.$emit('submitForm', this.form)
+    }
+  }
+}
+</script>

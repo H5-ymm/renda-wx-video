@@ -1,0 +1,171 @@
+
+  <view class="home-view register-view page_margin page__bd">
+    <view>
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{label}}名称：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="team_name" value="{{form.team_name}}" bindinput="changeInput" placeholder="请输入姓名"/>
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{label}}logo：</view>
+            <image bindtap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head"  wx:if="{{infoImg}}"/>
+						<image bindtap="uploadImg" src="https://a.rsd123.com/image/images/default1.png" mode="scaleToFill" class="my-head"  wx:else/>
+						<image mode="scaleToFill" bindtap="uploadImg" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon"/>
+          </view>
+        </view>
+    	  
+  <view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">上传营业执照：</view>
+        <image bindtap="$teamCompany$uploadImg" src="{{$teamCompany$infoImg}}" mode="scaleToFill" class="my-head"  wx:if="{{$teamCompany$infoImg}}"/>
+        <image bindtap="$teamCompany$uploadImg" src="https://a.rsd123.com/image/images/default2.png" mode="scaleToFill" class="my-head"  wx:else/>
+        <image mode="scaleToFill" bindtap="$teamCompany$uploadImg" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon"/>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">营业执照号：</view>
+        <input class="weui-input" placeholder-class="placeholder" data-name="business_licence" value="{{$teamCompany$form.business_licence}}" bindinput="$teamCompany$changeInput" placeholder="请输入营业执照号"/>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{$teamCompany$registerType==1}}">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">统一社会信用代码：</view>
+        <input class="weui-input" placeholder-class="placeholder" data-name="unified_social" value="{{$teamCompany$form.unified_social}}" bindinput="$teamCompany$changeInput" placeholder="请输入统一社会信用代码"/>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">从事行业：</view>
+        <picker bindchange="$teamCompany$bindPickerChange" value="{{$teamCompany$jobIndex}}" data-name="job_id" range="{{$teamCompany$job_array}}">
+          <view class="my-text-right weui-flex between">
+            <view class="{{$teamCompany$form.job_id!=''?'':'placeholder'}}">
+              {{$teamCompany$form.job_id!=''?$teamCompany$job_array[$teamCompany$jobIndex]:'请选择从事行业'}}
+            </view>
+            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">企业性质：</view>
+        <picker bindchange="$teamCompany$bindPickerChange" value="{{$teamCompany$comIndex}}" data-name="com_type" range="{{$teamCompany$com_type}}">
+          <view class="my-text-right weui-flex between">
+            <view class="{{$teamCompany$form.com_type!=''?'':'placeholder'}}">
+              {{$teamCompany$form.com_type!=''?$teamCompany$com_type[$teamCompany$comIndex]:'请选择企业性质'}}
+            </view>
+            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">企业规模：</view>
+        <picker bindchange="$teamCompany$bindPickerChange" data-name="com_scale" value="{{$teamCompany$comScaleIndex}}" range="{{$teamCompany$com_scale}}">
+          <view class="my-text-right weui-flex between">
+            <view class="{{$teamCompany$form.com_scale!=''?'':'placeholder'}}">
+              {{$teamCompany$form.com_scale!=''?$teamCompany$com_scale[$teamCompany$comScaleIndex]:'请选择企业规模'}}
+            </view>
+            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">企业地址：</view>
+        
+  <picker mode="multiSelector" bindcancel="$teamCompany$districtSelet$cancelPickerChange" bindchange="$teamCompany$districtSelet$bindMultiPickerChange" bindcolumnchange="$teamCompany$districtSelet$bindMultiPickerColumnChange" value="{{$teamCompany$districtSelet$multiIndex}}" range="{{$teamCompany$districtSelet$multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$teamCompany$districtSelet$options.length}}">
+          {{$teamCompany$districtSelet$multiArray[0][$teamCompany$districtSelet$multiIndex[0]]}}
+          {{$teamCompany$districtSelet$multiArray[1][$teamCompany$districtSelet$multiIndex[1]]}}
+          {{$teamCompany$districtSelet$disabled?$teamCompany$districtSelet$multiArray[2][$teamCompany$districtSelet$multiIndex[2]]:''}}
+       </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+    </view>
+  </picker>
+
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex end">
+        <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{$teamCompany$form.address}}" bindinput="$teamCompany$changeInput" placeholder="请输入详细地址"/>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item">企业电话：</view>
+        <view class="weui-flex between weui-flex__item">
+          <input class="weui-input" placeholder-class="placeholder" placeholder="区号" data-name="phone" value="{{$teamCompany$form.phone}}" bindinput="$teamCompany$changeInput"/>
+          <view class="line">-</view>
+          <input class="weui-input" placeholder-class="placeholder" placeholder="座机电话" data-name="phoneEnd" value="{{$teamCompany$form.phoneEnd}}" bindinput="$teamCompany$changeInput"/>
+        </view>
+      </view>
+    </view>
+    <canvas canvas-id="canvas" style="width:{{$teamCompany$cWidth}}px;height:{{$teamCompany$cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
+  </view>
+
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{nameLabel}}：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="user_name" value="{{form.user_name}}" bindinput="changeInput" placeholder="请输入{{nameLabel}}"/>
+          </view>
+        </view>
+				<view class="page_card_row" wx:if="{{registerType==2}}">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">申请人身份证号：</view>
+            <input class="weui-input" data-name="id_card" placeholder-class="placeholder" value="{{form.id_card}}" bindinput="changeInput" placeholder="请输入申请人身份证号码"/>
+          </view>
+        </view>
+         <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">{{label}}介绍：</view>
+          </view>
+					 <textarea data-name="introduction" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea" value="{{form.introduction}}" bindinput="changeInput" placeholder="请输入团队介绍" maxlength="-1"/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center register-btn">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="save">完成注册</button>
+    </view>
+		 
+  <view hidden="{{$teamCompanyModal$isScaleModal}}">
+    <view bindtap="$teamCompanyModal$handleOk"  wx:if="{{$teamCompanyModal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $teamCompanyModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$teamCompanyModal$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$teamCompanyModal$type}}">
+        <view class="modal-bg">
+          <image src="{{$teamCompanyModal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
+        </view>
+        <view class="modal-title">
+          {{$teamCompanyModal$modalObj.title}}
+        </view>
+        <text selectable="true" decode="{{$teamCompanyModal$true}}" class="modal-subTitle" wx:if="{{$teamCompanyModal$modalObj.subTitle}}">{{$teamCompanyModal$modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{$teamCompanyModal$openType}}" wx:if="{{$teamCompanyModal$openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$teamCompanyModal$handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$teamCompanyModal$handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{$teamCompanyModal$imgUrl}}" bindlongpress="$teamCompanyModal$saveImg" class="qrcode-img"/>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$teamCompanyModal$handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$teamCompanyModal$handleOk" class="close-icon"/>
+    </view>
+  </view>
+
+
+  </view>

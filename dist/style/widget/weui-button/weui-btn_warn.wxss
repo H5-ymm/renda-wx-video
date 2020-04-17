@@ -1,0 +1,1 @@
+.weui-btn_warn{color:#FE2A00;background-color:#F2F2F2}.weui-btn_warn:not(.weui-btn_disabled):visited{color:#FE2A00}.weui-btn_warn:not(.weui-btn_disabled):active{color:#FE2A00;background-color:#D9D9D9}

@@ -1,0 +1,135 @@
+<style lang="less">
+@import '../../style/user.less';
+.page_card_row {
+  .my-text {
+    flex: 1;
+  }
+}
+</style>
+<template>
+  <view class="page_bottom page page_margin">
+    <view class="my-view">
+      <view class="my-view-box">
+        <view class="page_card">
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业名称</view>
+              <view class="my-text-right"> {{companyData.com_name}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业logo</view>
+              <view class="weui-flex between">
+                <image src="https://a.rsd123.com/image/images/default1.png" mode="scaleToFill" class="my-head" wx:if="{{!companyData.logo_url}}"/>
+                <image src="{{companyData.logo_url}}" mode="aspectFill" class="my-head" wx:else/>
+              </view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">营业执照</view>
+              <view class="weui-flex between">
+                <image src="{{companyData.license_url}}" mode="aspectFill" class="my-head" wx:if="{{companyData.license_url}}"/>
+                <image @tap="uploadImg" src="https://a.rsd123.com/image/images/default2.png" mode="scaleToFill" class="my-head" wx:else />
+              </view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">营业执照号</view>
+              <view class="my-text-right">{{companyData.business_licence||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">统一社会信用代码</view>
+              <view class="my-text-right">{{companyData.unified_social_credit_code||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">从事行业</view>
+              <view class="my-text-right weui-flex__item">{{companyData.com_sortName||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业性质</view>
+              <view class="my-text-right weui-flex__item">{{companyData.com_typeName||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业规模</view>
+              <view class="my-text-right weui-flex__item">{{companyData.com_scaleName||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业地址</view>
+              <view class="my-text-right weui-flex__item">{{companyData.citys}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业电话</view>
+              <view class="my-text-right weui-flex__item">{{companyData.link_tel?companyData.link_tel:'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">联系人</view>
+              <view class="my-text-right weui-flex__item">{{companyData.link_man||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">联系人电话</view>
+              <view class="my-text-right weui-flex__item">{{companyData.link_phone||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">企业介绍</view>
+            </view>
+            <rich-text nodes="{{companyData.content}}" class="my-text weui-input weui-textarea"></rich-text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { getImgUrl } from '@/util.js'
+export default class companyInfo extends wepy.page {
+  config = {
+    navigationBarTitleText: '企业信息'
+  }
+  data = {
+    companyData: {}
+  }
+  onLoad () {
+    if (wx.getStorageSync('userInfo')) {
+      this.companyData = JSON.parse(wx.getStorageSync('userInfo'))
+      if(this.companyData.logo_url) {
+         if (this.companyData.logo_url.indexOf('http')>-1) {
+          this.companyData.logo_url = this.companyData.logo_url
+        } else {
+          this.companyData.logo_url = getImgUrl(this.companyData.logo_url)
+        }
+      }
+      if (this.companyData.license_url) {
+        if (this.companyData.license_url.indexOf('http')>-1) {
+          this.companyData.license_url = this.companyData.license_url
+        } else {
+          this.companyData.license_url = getImgUrl(this.companyData.license_url)
+        }
+      }
+      this.$apply()
+    }
+  }
+}
+</script>

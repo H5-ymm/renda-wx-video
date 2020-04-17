@@ -1,0 +1,48 @@
+		
+<style lang="less">
+@import '../style/resume.less';
+</style>
+<template>
+	<view class="resume-list">
+		<repeat wx:for="{{list}}" wx:key="index">
+			<view class="page_card" wx:if="{{list.length}}">
+				<view class="page_card_row weui-flex between">
+					<view class="weui-flex start">
+						<view>
+							<view class="page_card_name">{{item.name}}</view>
+							<view class="text-line weui-flex__item">
+								{{item.age}}岁 {{item.sex==1?'男':'女'}} {{item.education}}</view>
+							<view class="text-line weui-flex__item">
+								{{item.citys||(item.province?item.province:'-'+item.city?item.city:'')||'-'}}
+							</view>
+						</view>
+					</view>
+					<view class="weui-flex end wrap page_card_end">
+						<view class="page_card_status-resume">
+							<view class="page_card_receipt_status {{'page_card_receipt_status'+item.status}}" wx:if="{{receiptType==2}}">{{item.status==1?'已通过':item.status==2?'已拒绝':'待审核'}}</view>
+							<view class="page_card_receipt_status {{'page_card_receipt_status'+item.interview_status}}" wx:if="{{receiptType==3}}">{{item.interview_status==1?'已通过':item.interview_status==2?'已拒绝':'待审核'}}</view>
+							<view class="page_card_receipt_status {{'page_card_receipt_status'+item.entry_status}}" wx:if="{{receiptType==4}}">{{item.entry_status==1?'已通过':item.entry_status==2?'已拒绝':'待审核'}}</view>
+						</view>
+						<view class="page_card_time">{{item.addtime}}</view>
+					</view>
+				</view>
+			</view>
+		</repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class teamResumeList extends wepy.component {
+	props = {
+		list: Array,
+		receiptType: Number
+	}
+	data = {
+
+	}
+}
+</script>

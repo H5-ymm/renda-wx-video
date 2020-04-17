@@ -1,0 +1,390 @@
+<style lang="less">
+@import "../style/home.less";
+@import "../style/form.less";
+.register-btn {
+  margin: 60rpx 0;
+}
+</style>
+<template>
+  <view>
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">缴纳五金：</view>
+            <picker @change="bindPickerChange" data-name="is_five_risks" value="{{index}}" 
+							range="{{welfareList}}" range-key="label">
+							<view class="my-text-right weui-flex between">
+								<view class="{{welfareList[index]?'':'placeholder'}}">
+									{{welfareList[index]?welfareList[index].label:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+        </view>
+				 <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">缴纳公积金：
+						</view>
+						<picker @change="bindPickerChange" 
+						  data-name="is_fund" value="{{fundIndex}}" 
+							range="{{welfareList}}" range-key="label">
+							<view class="my-text-right weui-flex between">
+								<view class="{{welfareList[fundIndex]?'':'placeholder'}}">
+									{{welfareList[fundIndex]?welfareList[fundIndex].label:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+        </view>
+      </view>
+			<view class="page_card">
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">返利模式：</view>
+						<picker @change="bindPickerChange" data-name="reward_type" 
+             value="{{rewardIndex}}" range-key="label" range="{{rewardTypeList}}">
+							<view class="my-text-right weui-flex between">
+								<view class="{{form.reward_type!=''?'':'placeholder'}}">
+									{{form.reward_type!=''?rewardTypeList[rewardIndex].label:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">返利金额：</view>
+						 <input class="weui-input" data-name="reward_money" placeholder-class="placeholder" 	placeholder="请输入返利金额" 
+					 	value="{{form.reward_money}}" @input="changeInput" />
+						<view class="input-text-end" wx:if="{{form.reward_type!=''}}">
+							{{wxs.rewardTypeText(form.reward_type)}}
+						</view>
+          </view>
+        </view>
+        <view class="page_card_row" wx:if="{{form.reward_type==1}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">返利日期：</view>
+						<view class="weui-flex end">
+							 <view class="input-text-end">次月</view>
+							 <input class="weui-input settlement_time_input" 
+								data-name="settlement_time" value="{{form.settlement_time}}"
+								placeholder="请输入" placeholder-class="placeholder"   @input="changeInput"/>
+							 <view class="input-text-end">号</view>
+				  	</view>    
+          </view>
+        </view>
+				<view class="page_card_row" wx:if="{{form.reward_type&&form.reward_type!=4}}">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">结算方式：</view>
+						<picker wx:if="{{form.reward_type==1}}" @change="bindPickerChange" data-name="reward_money_type" value="{{rewardTypeIndex}}" 
+							range="{{rewardMoneyType}}">
+							<view class="my-text-right weui-flex between">
+								<view class="{{rewardMoneyType[rewardTypeIndex]?'':'placeholder'}}">
+									{{form['reward_money_type']!=''?rewardMoneyType[rewardTypeIndex]:'请选择'}}
+								</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+						<picker wx:if="{{form.reward_type==2||form.reward_type==3}}"   mode="multiSelector" @change="bindMultiPickerChange" 
+             @cancel="cancelPickerChange" @columnchange="bindMultiPickerColumnChange" range="{{rewardMoneyTypeList}}" value="{{moneyTypeIndex}}" >
+							<view class="my-text-right weui-flex between">
+								<view wx:if="{{form.reward_money_type!=''}}">
+									{{rewardMoneyTypeList[0][moneyTypeIndex[0]]}}
+									{{rewardMoneyTypeList[1][moneyTypeIndex[1]]}}
+									{{rewardMoneyTypeList[2][moneyTypeIndex[2]]}}
+								</view>
+								<view class="placeholder" wx:else>请选择</view>
+								<image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+							</view>
+						</picker>
+          </view>
+       </view>
+			 <view class="page_card_row"
+			    wx:if="{{rewardTypeIndex==1||(form.reward_type==2||form.reward_type==3)}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">持续时长：</view>
+						<view class="weui-flex end">
+							 <input class="weui-input" 
+							 placeholder-class="placeholder" placeholder="请输入持续时长"
+						   value="{{form.duration_time}}" @input="changeInput"
+							  data-name="duration_time"/>
+							  <view class="input-text-end" wx:if="{{form.reward_money_type<4}}">
+							   {{	wxs.rewardTimeText(form.reward_money_type)}}
+								</view>
+								<view class="input-text-end" wx:else>天</view>
+								<image mode="scaleToFill" @tap="viewTip(1)" src="https://a.rsd123.com/image/images/tip.png" class="page_down_icon" />
+				  	</view>    
+          </view>
+        </view>
+			 <view class="page_card_row" wx:if="{{form.reward_type>1}}">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">需入职：</view>
+						<view class="weui-flex end">
+							 <input class="weui-input" 
+							 placeholder-class="placeholder" placeholder="请输入可返利的入职周期"
+						   value="{{form.reward_needtime}}" @input="changeInput" data-name="reward_needtime" />
+							  <view class="input-text-end" wx:if="{{form.reward_money_type<4}}">
+							   {{	wxs.rewardTimeText(form.reward_money_type)}}
+								</view>
+								<view class="input-text-end" wx:else>天	</view>
+							  <image mode="scaleToFill" @tap="viewTip(2)" src="https://a.rsd123.com/image/images/tip.png" class="page_down_icon" />
+				  	</view>    
+          </view>
+        </view>
+			</view>
+			<view class="page_card">
+				<view class="page_card_row">
+         <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">联系人：</view>
+            <input class="weui-input" data-name="link_name" placeholder-class="placeholder" 
+						value="{{form.link_name}}" @input="changeInput" placeholder="请输入联系人" />
+          </view>
+        </view>
+				<view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">联系人电话：</view>
+            <input class="weui-input" data-name="tel" placeholder-class="placeholder" 
+						value="{{form.tel}}" @input="changeInput" placeholder="请输入联系人电话" />
+          </view>
+        </view>
+      </view>
+			<view class="page_card">
+				<view class="page_card_row">
+         <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">邮箱：</view>
+            <input class="weui-input" data-name="email" placeholder-class="placeholder" 
+						value="{{form.email}}" @input="changeInput" placeholder="请输入邮箱" />
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex between register-btn create-btn" 
+		  wx:if="{{typeBtn==1}}">
+			<button class="weui-btn_cell weui-btn_primary" @tap="prePage">
+				上一步
+			</button>
+      <button class="weui-btn_cell weui-btn_primary" @tap="save">
+				发布
+			</button>
+    </view>
+		<view class="weui-cell_btn weui-flex between register-btn create-btn" 
+		  wx:if="{{typeBtn==2}}">
+			<button class="weui-btn_cell weui-btn_primary" @tap="save">
+				修改
+			</button>
+      <button class="weui-btn_cell weui-btn_primary_plain" 
+			@tap="deleteInvice">取消发布</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxToast, checkMobile, wxReLaunch, getErrorTip, wxNavigateTo } from '@/util.js'
+import { welfareList, moneyTypeList, rewardTypeList, weekList } from '@/base/base.js'
+import wxs from '../filterWxs/rewaryFilter.wxs'
+export default class createForm extends wepy.component {
+	wxs = { wxs }
+	data = {
+		form: {
+			is_five_risks: 1,
+			is_fund: 1,
+			reward_type: '', // 返利类型(1月返 2日返 3时返 4一次性返)
+			reward_money: '', // 返利金额(根据类型修改单位)
+			reward_money_type: '', // 1日2周3月(针对日返和时返) 1长期2持续（针对月返）结算类型 
+			settlement_time: '', // 结算时间(针对月返：次月第XX多少天；)
+			reward_needtime: '', // 需求入职天数/周数/月数(一次性时：0表示当天返)
+			duration_time: '', // 持续 (天数/周数/月数)
+			settlement_type: '',
+			link_name: '',
+			tel: '',
+			email: ''
+		},
+		moneyTypeList,
+		rewardTypeList,
+		rewardMoneyType: ['长期返利', '持续返利'],
+		rewardMoneyTypeList: [
+			['按日结算', '按周结算', '按月结算'],
+			['当日', '次日'],
+			[]
+		],
+		moneyTypeIndex: [0, 0, 0], // 结算方式
+		rewardIndex: 0, // 返利模式
+		rewardTypeIndex: 0, // 返利模式为月的结算方式
+		weekList, // 周
+		welfareList, // 五险和公积金
+		job_array: [],
+		typeIndex: 0,
+		index: 0, // 五险,
+		fundIndex: 0, // 公积金
+		isEdit: false
+	}
+	computed = {
+		rewardType() {
+			return this.form.reward_money_type == 1 ? '日' : this.form.reward_money_type == 2 ? '周' : '个月'
+		}
+	}
+	props = {
+		typeBtn: Number
+	}
+	events = {
+		getInvoiceDetail: data => {
+			this.isEdit = true
+			for (let key in this.form) {
+				this.form[key] = data[key]
+			}
+			this.index = this.form.is_five_risks ? this.form.is_five_risks - 1 : 0
+			this.fundIndex = this.form.is_fund ? this.form.is_fund - 1 : 0
+			this.rewardIndex = this.form.reward_type ? this.form.reward_type - 1 : 0
+			if (this.form.reward_type==1) {
+	      this.rewardTypeIndex = this.form.reward_money_type ? this.form.reward_money_type - 1 : 0
+			} else {
+				this.typeIndex = this.form.reward_money_type - 1
+				this.moneyTypeIndex[0] = this.form.reward_money_type - 1
+				this.moneyTypeIndex[1] = this.form.settlement_type - 1
+				this.moneyTypeIndex[2] = this.form.settlement_time - 1
+			}
+			this.form.email = this.form.email ? this.form.email : ''
+			this.$apply()
+		}
+	}
+	watch = {
+		typeIndex(val) {
+			let arr = []
+			if (val === 0) {
+				arr = [
+					['按日结算', '按周结算', '按月结算'],
+					['当日', '次日'],
+					[]
+				]
+			} else if (val === 1) {
+				arr = [
+					['按日结算', '按周结算', '按月结算'],
+					['本周', '次周'],
+				]
+				arr[2] = weekList
+			} else {
+				let money = []
+				for (let i = 1;i < 32;i++) {
+					money.push(i + '号')
+				}
+				arr = [
+					['按日结算', '按周结算', '按月结算'],
+					['本月', '次月']
+				]
+				arr[2] = money
+			}
+			this.rewardMoneyTypeList = arr
+			this.$apply()
+		},
+	}
+	methods = {
+		viewTip(index) {
+			if (index === 1) {
+				wxToast(`持续天数为空时，默认为1${this.rewardType}`)
+			} else {
+				wxToast(`入职时间为空时，默认工作1${this.rewardType}返利1${this.rewardType}`)
+			}
+		},
+		bindPickerChange(e) {
+			let key = e.currentTarget.dataset.name
+			let index = e.detail.value
+			if (key === 'is_five_risks') {
+				this.index = index
+			} else if (key === 'is_fund') {
+				this.fundIndex = index
+			} else if (key === 'reward_type') {
+				this.rewardIndex = index
+				this.form.reward_money_type = ''
+				if (index == 0) {
+					this.form.settlement_type = 1
+				}
+			} else if (key === 'reward_money_type') {
+				this.rewardTypeIndex = index
+			} else {
+				this.eduIndex = index
+			}
+			this.form[key] = Number(index) + 1
+			this.$apply()
+		},
+		bindMultiPickerChange(e) {
+			this.moneyTypeIndex = e.detail.value
+			let reward_money_type = Number(this.moneyTypeIndex[0]) + 1
+			let settlement_type = Number(this.moneyTypeIndex[1]) + 1
+			if (reward_money_type > 1) {
+				this.form.settlement_time = Number(this.moneyTypeIndex[1]) + 1
+			}
+			this.form.reward_money_type = reward_money_type
+			this.form.settlement_type = settlement_type
+			this.$apply()
+		},
+		bindMultiPickerColumnChange(e) {
+			this.moneyTypeIndex[e.detail.column] = e.detail.value
+			this.form.duration_time = ''
+			this.form.settlement_time = ''
+			this.form.reward_needtime = ''
+			let index = this.moneyTypeIndex[0]
+			if (e.detail.column == 0) {
+				this.typeIndex = index
+				this.form.reward_money_type = index
+				this.moneyTypeIndex = [e.detail.value, 0, 0]
+			} else if (e.detail.column == 1) {
+				this.moneyTypeIndex[1] = e.detail.value
+			}
+			else {
+				this.moneyTypeIndex[2] = e.detail.value
+			}
+			this.$apply()
+		},
+		cancelPickerChange(e) {
+			if (!this.isEdit) {
+				this.moneyTypeIndex = [0, 0, 0]
+				this.form.reward_money_type = ''
+				this.typeIndex = 0
+				this.form.duration_time = ''
+				this.form.settlement_time = ''
+				this.form.reward_needtime = ''
+			}
+			this.$apply()
+		},
+		changeInput(e) {
+			let key = e.currentTarget.dataset.name
+			this.form[key] = e.detail.value
+		},
+		prePage() {
+			this.$emit('prePage')
+		},
+		deleteInvice() {
+			this.$emit('deleteInvice')
+		},
+		save() {
+			if (!this.form.reward_type) {
+				wxToast('请选择返利模式')
+			} else if (this.form.reward_money === '') {
+				wxToast('请输入返利金额')
+			} else if (this.form.reward_type == 1 && !this.form.settlement_time) {
+				wxToast('请输入结算时间')
+			} else if (this.form.reward_type != 4 && !this.form.reward_money_type) {
+				wxToast('请选择结算方式')
+			} else if (this.form.reward_type == 1 && Number(this.form.settlement_time) > 31) {
+				wxToast('结算时间最大输入31')
+			} else if ((this.form.reward_type != 4 &&
+				Number(this.form.reward_needtime) > Number(this.form.duration_time))) {
+				wxToast('入职周期不能大于持续时长')
+			} else if (!this.form.link_name) {
+				wxToast('请输入联系人姓名')
+			} else if (!this.form.tel) {
+				wxToast('请输入联系人电话')
+			} else if (!checkMobile(this.form.tel)) {
+				wxToast('请输入正确的联系人电话')
+			} else {
+				console.log(this.form)
+				this.$emit('submit', this.form)
+			}
+		}
+	}
+}
+</script>

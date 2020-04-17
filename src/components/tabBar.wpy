@@ -1,0 +1,71 @@
+<style lang="less">
+.tabBar {
+  height: 100%;
+  color: #999999;
+  font-size: 24rpx;
+  width: 68%;
+  position: relative;
+  line-height: 32rpx;
+  .tab-line {
+    position: absolute;
+    left: 10rpx;
+    bottom: 0;
+    background: #1890ff;
+    height: 4rpx;
+    width: 98rpx;
+    transition: 0.7s;
+    border-radius: 4rpx;
+    &.line0 {
+      left: 10rpx;
+    }
+    &.line1 {
+      left: 27%;
+    }
+    &.line2 {
+      left: 52%;
+    }
+    &.line3 {
+      left: 77%;
+    }
+  }
+  .tabBar_item {
+    text-align: center;
+    &.tabBar_item-active {
+      color: #1890ff;
+    }
+  }
+}
+</style>
+<template>
+  <view class="weui-flex around tabBar" wx:if="{{!isSeachWidth}}">
+    <repeat wx:for="{{tabBarList}}" wx:key="index">
+      <view class="{{activeIndex==index?'tabBar_item-active':''}} weui-flex__item tabBar_item" @tap="switchTab({{index}})">
+        <view>{{item.name}}</view>
+        <view wx:if="{{item.num!=-1}}">({{item.num}})</view>
+      </view>
+    </repeat>
+    <view class="tab-line {{'line'+activeIndex}}"></view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class tabBar extends wepy.component {
+  // props 接收父组件传递过来的值
+  props = {
+    tabBarList: {
+      type: Array,
+      default: []
+    }
+  }
+  data = {
+    activeIndex: 0
+  }
+  methods = {
+    switchTab (index) {
+      this.activeIndex = index
+      this.$emit('switchTab', this.activeIndex)
+      this.$apply()
+    }
+  }
+}
+</script>

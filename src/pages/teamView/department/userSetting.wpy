@@ -1,0 +1,199 @@
+<style lang="less">
+@import '../../../style/home.less';
+.picker {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: 33;
+  height: 420rpx;
+  background: #fff;
+  width: 100%;
+  .picker-btn {
+    height: 80rpx;
+    border-bottom: 1px solid #eee;
+    padding: 0 24rpx;
+    color: #6a6a6a;
+    .ok-btn {
+      color: #07c160;
+    }
+  }
+  .picker-view {
+    text-align: center;
+    width: 100%;
+    height: 300rpx;
+    .picker-view-item {
+      line-height: 80rpx;
+    }
+  }
+}
+</style>
+<template>
+	<view class="home-view page_margin">
+		<scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height: 100%;">
+			<userSettingList @settingRole="settingRole" :list.sync="list"></userSettingList>
+		</scroll-view>
+		<view class="picker" wx:if="{{isPicker}}">
+			<view class="weui-flex between picker-btn">
+				<view class="weui-flex center" @tap="selectClose">
+					取消
+				</view>
+				<view class="weui-flex center ok-btn" @tap="selectOk">
+					确定
+				</view>
+			</view>
+			<picker-view class="picker-view" indicator-style="height: 40px;" value="{{depIndex}}" @change="bindChange">
+				<picker-view-column>
+					<repeat wx:for="{{depList}}" wx:key="index">
+						<view class="picker-view-item">{{item.depart_name}}</view>
+					</repeat>
+				</picker-view-column>
+				<picker-view-column>
+					<repeat wx:for="{{jobList}}" wx:key="index">
+						<view class="picker-view-item">{{item.grade_name}}</view>
+					</repeat>
+				</picker-view-column>
+			</picker-view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import userSettingList from '@/components/userSettingList'
+import { getList, wxNavigateTo, wxShowModal, wxToast, wxReLaunch, getImgUrl } from '@/util'
+export default class department extends wepy.page {
+	components = {
+		userSettingList: userSettingList
+	}
+	data = {
+		list: [],
+		count: 0,
+		params: {
+			uid: '',
+			page: 1,
+			limit: 10,
+			departId: '',
+			gradeId: ''
+		},
+		jobList: [],
+		depList: [],
+		depId: '',
+		isPicker: false,
+		depIndex: [0, 0],
+		userId: '',
+		gradeId: ''
+	}
+	config = {
+		navigationBarTitleText: '人员调整'
+	}
+	getAdjustmentList () {
+		$http('/team/adjustmentList', this.params).then(res => {
+			this.list = res.data.data || []
+			this.count = res.data.count
+			this.$apply()
+		})
+	}
+	// 团队成员角色调整
+	editTeamUserRole (params) {
+		$http('/team/editTeamUserRole', params).then(res => {
+			if (res.data) {
+				wxToast('人员调整成功')
+				this.gradeId = ''
+			}
+			this.isPicker = false
+			this.$broadcast('editSuccess')
+			this.getAdjustmentList()
+			this.$apply()
+		})
+	}
+	getDepartmenList () {
+		$http('/team/departmentRoleList', { uid: this.params.uid }).then(res => {
+			let list = res.data || []
+			this.depList = list
+			this.depIndex[0] = this.getIndex(this.depList, this.depId)
+			if (!this.depId) {
+				this.depId = this.depList[0].id
+			}
+			this.jobList = this.getArr(this.depList, this.depId)
+			this.depIndex[1] = this.getIndex(this.jobList, this.gradeId)
+			this.$apply()
+		})
+	}
+	getIndex (list, id) {
+		let ind = 0
+		list.forEach((item, index) => {
+			if (item.id == id) {
+				ind = index
+			}
+		})
+		return ind
+	}
+	getCurrentDepList (array) {
+		let arr = []
+		array.filter(item => {
+			if (item.id == this.depId) {
+				arr.push(item)
+			}
+		})
+		return arr
+	}
+	getArr (arr, id) {
+		let newArr = []
+		arr.forEach(item => {
+			if (item.id == id) {
+				newArr = item.child
+			}
+		})
+		return newArr
+	}
+	onLoad (options) {
+		this.params.departId = options.query
+		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+	}
+	onShow () {
+		this.getAdjustmentList()
+	}
+	events = {
+		settingRole: val => {
+			this.isPicker = true
+			this.depId = val.depart_id
+			this.userId = val.uid
+			// this.gradeId = val.grade_id
+			// console.log(this.gradeId)
+			this.$apply()
+			this.getDepartmenList()
+		}
+	}
+	methods = {
+		bindChange (e) {
+			this.depIndex = e.detail.value
+			this.jobList = this.getArr(this.depList, this.depList[this.depIndex[0]].id)
+			this.$apply()
+		},
+		selectClose () {
+			this.isPicker = false
+			this.$apply()
+			this.$broadcast('editSuccess')
+		},
+		selectOk () {
+			this.gradeId = this.jobList[this.depIndex[1]].id
+			let params = {
+				gradeId: this.gradeId,
+				uid: this.params.uid,
+				userId: this.userId
+			}
+			this.editTeamUserRole(params)
+		},
+		addDep () {
+			this.isModal = !this.isModal
+			this.$apply()
+		},
+		searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getAdjustmentList()
+			}
+		}
+	}
+}
+</script>

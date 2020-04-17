@@ -1,0 +1,92 @@
+
+  <view class="login_page welcome-page page_bottom">
+    <view class="login-view welcome-view">
+      <image src="https://a.rsd123.com/image/images/welcome/welcomeBg.png" mode="aspectFill" class="login-view-bg welcome-view-bg"/>
+      <view class="login-view-box welcome-view-box">
+        <view class="welcome-view-form login-view-form">
+          <view class="weui-cell_btn weui-flex center login-btn">
+            <button lang="zh_CN" disabled="{{!isRead}}" class="weui-btn_cell weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" bindgetuserinfo="getUserInfo" open-type="getUserInfo">开始使用</button>
+          </view>
+          <view class="rule-view weui-flex start wrap" bindtap="checkedRule" data-wpycheckedrule-a="{{checked}}">
+            <image  wx:if="{{!checked}}" src="https://a.rsd123.com/image/images/check.png" mode="scaleToFill" class="check-icon"/>
+            <image  wx:else src="https://a.rsd123.com/image/images/check1.png" mode="scaleToFill" class="check-icon"/>
+            我已认真阅读并同意<view class="text">《用户协议及隐私政策》</view>和
+            <view class="text">《信息保护政策》
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+  <view hidden="{{$modal$isScaleModal}}">
+    <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modal$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$modal$type}}">
+        <view class="modal-bg">
+          <image src="{{$modal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
+        </view>
+        <view class="modal-title">
+          {{$modal$modalObj.title}}
+        </view>
+        <text selectable="true" decode="{{$modal$true}}" class="modal-subTitle" wx:if="{{$modal$modalObj.subTitle}}">{{$modal$modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{$modal$openType}}" wx:if="{{$modal$openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{$modal$imgUrl}}" bindlongpress="$modal$saveImg" class="qrcode-img"/>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modal$handleOk" class="close-icon"/>
+    </view>
+  </view>
+
+
+    
+  <view hidden="{{$modalogin$isScaleModal}}">
+    <view bindtap="$modalogin$ handleClose"  wx:if="{{$modalogin$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $modalogin$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modalogin$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$modalogin$type}}">
+        <view class="home-view-box weui-flex between wrap">
+          <view class="modal-title ">请选择团队性质</view>
+          <block wx:for="{{$modalogin$menus}}" wx:key="index">
+            <view class="card-item weui-flex between wrap" bindtap="$modalogin$selectType" data-wpyselecttype-a="{{index}}">
+              <image src="{{item.icon}}" alt="" mode="aspectFill" class="menu-icon"/>
+              <view class="card-item-title">{{item.title}}</view>
+              <text class="card-item-content" decode="{{$modalogin$true}}">{{item.content}}</text>
+              <image src="https://a.rsd123.com/image/images/user/radio2.png" alt="" mode="aspectFill" wx:if="{{index==$modalogin$activeIndex}}" class="radio-icon"/>
+              <image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else alt="" mode="aspectFill" class="radio-icon"/>
+            </view>
+          </block>
+        </view>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modalogin$handleOk">确定</button>
+        </view>
+      </view>
+      <view class="modal-content" wx:if="{{$modalogin$type}}">
+        <view class="home-view-box weui-flex between wrap">
+          <view class="modal-title">{{!$modalogin$isInviteUser?'请选择登录/注册方式':'微信授权登录'}}</view>
+          <view class="weui-cell_btn weui-flex center wrap login-way {{$modalogin$isInviteUser?'login-way-add':''}}">
+            <button class="weui-btn_cell weui-flex center weui-btn_cell-gradient" bindgetphonenumber="$modalogin$bindgetphonenumber" open-type="getPhoneNumber">
+              <image src="https://a.rsd123.com/image/images/welcome/wx-active.png" alt="" class="login-icon"/>
+              <text>微信登录/注册 </text>
+            </button>
+            <button class="weui-btn_cell weui-flex center" wx:if="{{!$modalogin$isInviteUser}}" bindtap="$modalogin$handleOk">
+              <image src="https://a.rsd123.com/image/images/welcome/phone.png" alt="" class="login-icon"/>
+              <text>手机号登录/注册</text>
+            </button>
+          </view>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modalogin$handleClose" class="close-icon"/>
+    </view>
+  </view>
+
+  </view>

@@ -1,0 +1,152 @@
+<wxs src="../../filterWxs/receiptFilter.wxs" module="wxs"/>
+
+	<view class="detail-view">
+		<view class="page_margin view-detail">
+			<view>
+				<view class="weui-flex start panel">
+					<image mode="scaleToFill" src="https://a.rsd123.com/image/images/teamDetail/icon1.png" class="panel-icon"/>
+					<view class="panel-text">职位信息</view>
+				</view>
+				<view class="page_card">
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text weui-flex__item">职位名称</view>
+							<view class="my-text-right">{{formJob.name}}</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text weui-flex__item">招聘人数</view>
+							<view class="my-text-right">{{formJob.required_number}}人</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view>
+				<view class="weui-flex start panel">
+					<image mode="scaleToFill" src="https://a.rsd123.com/image/images/teamDetail/icon2.png" class="panel-icon"/>
+					<view class="panel-text">团队信息</view>
+				</view>
+				<view class="page_card">
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">团队名称</view>
+							<view class="my-text-right">{{form.team_name}}</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">团队负责人</view>
+							<view class="my-text-right">{{form.user_name}}</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">团队性质</view>
+							<view class="my-text-right">{{form.type==2?'个人':'企业'}}团队</view>
+						</view>
+					</view>
+					<view class="page_card_row"  wx:if="{{form.type==1}}">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">团队规模</view>
+							<view class="my-text-right">{{form.scale}}人</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">注册时间</view>
+							<view class="my-text-right">{{form.addtime}}</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">团队地址</view>
+							<view class="my-text-right">
+								{{form.provinceName}} {{form.cityName}} {{form.provinceName}}
+							</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">团队介绍</view>
+						</view>
+						<view class="my-text-right weui-input weui-textarea">
+							{{form.introduction}}
+						</view>
+					</view>
+				</view>
+			</view>
+			<view>
+				<view class="weui-flex start panel">
+					<image mode="scaleToFill" src="https://a.rsd123.com/image/images/teamDetail/icon3.png" class="panel-icon"/>
+					<view class="panel-text">团队数据</view>
+				</view>
+				<view class="page_card">
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">成功接单</view>
+							<view class="my-text-right">{{form.applyNum}}单</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">完成接单</view>
+							<view class="my-text-right">{{form.completeInvoiceNum}}单</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">已推荐简历</view>
+							<view class="my-text-right">{{form.recommendNum}}份</view>
+						</view>
+					</view>
+					<view class="page_card_row">
+						<view class="weui-flex between">
+							<view class="my-text  weui-flex__item">已入职简历</view>
+							<view class="my-text-right">{{form.entryNum}}人</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view>
+				<view class="weui-flex start panel">
+					<image mode="scaleToFill" src="https://a.rsd123.com/image/images/teamDetail/icon4.png" class="panel-icon"/>
+					<view class="panel-text">申请状态</view>
+				</view>
+				<view class="page_card">
+					<view class="page_card_row ">
+						<view class="weui-flex between">
+							<view class="my-text weui-flex__item">
+								申请状态
+							</view>
+							<view class="page_card_receipt_status {{'page_card_receipt_status'+(formJob.status+1)}}"  wx:if="{{formJob.job_status==1}}">
+								{{wxs.statusTeamText(formJob.status)}}
+							</view>
+							<view class="page_card_receipt_status page_card_receipt_status4" wx:else>
+								已下架
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="weui-cell_btn weui-flex center create-btn" wx:if="{{!formJob.status}}">
+			<button class="weui-btn_cell weui-btn_primary" bindtap="handleTeam" data-wpyhandleteam-a="1">
+				同意
+			</button>
+			<button class="weui-btn_cell weui-btn_primary_plain" bindtap="handleTeam" data-wpyhandleteam-a="2">
+				拒绝
+			</button>
+		</view>
+		<view class="weui-cell_btn weui-flex center {{formJob.status>2?'create-btn':'only-btn'}}" wx:if="{{formJob.status}}">
+			<button class="weui-btn_cell weui-btn_primary" bindtap="contactPhone" wx:if="{{formJob.status==1}}">
+				联系客服
+			</button>
+			<button class="weui-btn_cell weui-btn_primary" bindtap="viewJob" wx:if="{{formJob.status>2}}">
+				查看职位
+			</button>
+			<button wx:if="{{formJob.status>1}}" class="weui-btn_cell weui-btn_primary_plain" bindtap="deleteTeamApply">
+				删除
+			</button>
+		</view>
+	</view>

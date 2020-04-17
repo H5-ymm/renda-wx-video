@@ -1,0 +1,43 @@
+@import "./base/variable/color";
+
+.page_card_row {
+    border-bottom: 1px solid @weuiLineColorLight;
+
+    &:nth-last-child(1) {
+        border-bottom: none;
+    }
+
+    .my-text {
+        color: @weuiTextColorDesc;
+        font-size: 32rpx;
+        height: 30rpx;
+        line-height: 30rpx;
+        width: 150rpx;
+
+        &.my-text-require {
+            position: relative;
+
+            &::before {
+                content: '*';
+                color: @weuiColorWarn;
+                position: absolute;
+                left: -16rpx;
+                top: 0;
+            }
+        }
+
+        &.my-text-active {
+            color: @weuiColorPrimary;
+        }
+    }
+
+    .my-subTitle {
+        font-size: 28rpx;
+        color: @weuiTextColorLight;
+    }
+
+    .my-text-right {
+        color: @weuiTextColorLight;
+        text-align: right;
+    }
+}

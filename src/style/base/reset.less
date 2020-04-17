@@ -1,0 +1,146 @@
+/*
+* Tencent is pleased to support the open source community by making WeUI available.
+* 
+* Copyright (C) 2017 THL A29 Limited, a Tencent company. All rights reserved.
+* 
+* Licensed under the MIT License (the "License"); you may not use this file except in compliance
+* with the License. You may obtain a copy of the License at
+* 
+*       http://opensource.org/licenses/MIT
+* 
+* Unless required by applicable law or agreed to in writing, software distributed under the License is
+* distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+* either express or implied. See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+@import "fn";
+html {
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    line-height: 1.6;
+    font-family: @weuiFontDefault;
+}
+
+a img {
+    border: 0;
+}
+
+a {
+    text-decoration: none;
+    .setTapColor();
+}
+input,textarea{
+  caret-color:@weuiColorPrimary;
+}
+::-webkit-input-placeholder{
+  color:@weuiTextColorTips;
+}
+
+html, body {
+    height: 100%;
+    -webkit-tap-highlight-color: transparent;
+
+}
+
+body{
+  font-family: -apple-system-font, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+ul{
+  list-style: none;
+}
+.page{
+  box-sizing:border-box;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.login_page {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 1; // fix 滑动几次后可滚动区域会卡住的问题
+}
+[class^="form_"], [class*=" form_"]{
+    &.page{
+      padding:0;
+    }
+}
+
+.page.picker{
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+.weui-half-screen-dialog{
+  transition:transform .3s;
+  transform:translateY(100%);
+}
+.weui-half-screen-dialog_show{
+  transform:translateY(0);
+}
+
+/* animation */
+
+@keyframes slideIn {
+  from {
+    transform: translate3d(100%, 0, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+    to {
+        transform: translate3d(100%, 0, 0);
+        opacity: 0;
+    }
+}
+
+.slideIn {
+    animation: slideIn .2s forwards;
+}
+.slideOut {
+    animation: slideOut .2s forwards;
+}
+
+// iphone x
+@supports (top: constant(safe-area-inset-top)){
+    .page{
+        padding:constant(safe-area-inset-top) constant(safe-area-inset-right) constant(safe-area-inset-bottom) constant(safe-area-inset-left);
+        &.tabbar,&.navbar{
+            padding-left:0;
+            padding-right:0;
+        }
+    }
+    .weui-tab__panel{
+        padding-left:constant(safe-area-inset-left);
+        padding-right:constant(safe-area-inset-right);
+    }
+}
+@supports (top: env(safe-area-inset-top)){
+    .page{
+        padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        &.tabbar,&.navbar,&.msg_success,&.msg_warn,&.msg_text,&.msg_text_primary,&.article{
+            padding:0;
+        }
+    }
+}
+.text-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

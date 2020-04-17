@@ -1,0 +1,310 @@
+<style lang="less">
+@import './style/common.less';
+</style>
+<script>
+import wepy from 'wepy';
+import './utils.js'
+import 'lodash'
+import 'wepy-async-function';
+import { setStore } from 'wepy-redux'
+import configStore from './store'
+import { $http } from '@/http.js'
+const store = configStore()
+setStore(store)
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/home/index',
+      'pages/login/welcome',
+      'pages/teamView/index',
+      'pages/my/index',
+      'pages/companyView/index',
+      'pages/companyView/addStaff',
+      // 'pages/home/index',
+      'pages/message/index',
+      'pages/teamView/orderManage/index',
+      'pages/home/hall',
+      'pages/teamView/userList',
+      'pages/teamView/userInfo',
+      'pages/home/list',
+      'pages/message/dialogBox',
+      'pages/message/personalDialogBox',
+      'pages/home/resumeDetail',
+      'pages/home/qrCodeResume',
+      'pages/home/addInfo',
+      'pages/my/userInfo',
+      'pages/my/companyInfo',
+      'pages/my/teamInfo',
+      'pages/my/userBind',
+      'pages/teamView/cityView',
+      'pages/teamView/department/index',
+      'pages/teamView/orderManage/list',
+      'pages/teamView/orderManage/viewResumeList',
+      'pages/teamView/internalInvoice/list',
+      'pages/teamView/internalInvoice/teamJobDetail',
+      'pages/teamView/internalInvoice/insiderJobDetail',
+      'pages/teamView/orderManage/allocationPerson',
+      'pages/teamView/department/userSetting',
+      'pages/register/selectUser',
+      'pages/companyView/staffManage',
+      'pages/companyView/checkReceipt',
+      'pages/companyView/checkTeam',
+      'pages/companyView/resumeSiftings',
+      'pages/companyView/checkResumeList',
+      'pages/companyView/viewResult',
+      'pages/companyView/checkResumeDetail',
+      'pages/companyView/noticeRecord',
+      'pages/companyView/teamDetail',
+      'pages/companyView/jobDetail',
+      'pages/companyView/viewJob',
+      'pages/companyView/ceateList',
+      'pages/companyView/ceateMoreList',
+      'pages/register/companyTeam',
+      'pages/register/companyForm',
+      'pages/register/team',
+      'pages/login/login',
+      'pages/login/rule'
+    ],
+    window: {
+      navigationBarTextStyle: 'white',
+      navigationBarTitleText: '人事达',
+      navigationBarBackgroundColor: '#1890FF',
+      backgroundColor: '#1890FF'
+    },
+    tabBar: {
+      color:'#919398',
+      selectedColor:'#1890FF',
+      borderStyle:'white',
+      list: [{
+        pagePath: 'pages/home/index',
+        text: '首页',
+   
+        iconPath: '/images/nav/home.png',
+        selectedIconPath: '/images/nav/home-active.png'
+      },
+      {
+        pagePath: 'pages/message/index',
+        text: '消息',
+        iconPath: '/images/nav/message.png',
+        selectedIconPath: '/images/nav/message-active.png'
+      },
+      {
+        pagePath: 'pages/my/index',
+        text: '我的',
+        iconPath: '/images/nav/my.png',
+        selectedIconPath: '/images/nav/my-active.png'
+      }]
+    },
+    networkTimeout: {
+      request: 10000,
+      connectSocket: 10000,
+      uploadFile: 10000,
+      downloadFile: 10000
+    }
+  };
+  onLaunch (options) {
+    this.removeData()
+    this.autoUpdate()
+    this.isCheckSession()
+    wx.loadFontFace ({
+      family: 'PingFangSC-Medium',
+      source: 'url("https://www.your-server.com/PingFangSC-Medium.ttf")',
+      success: function(){console.log('load font success')}
+    })
+  }
+  removeData () {
+    wx.removeStorageSync('preForm')
+    wx.removeStorageSync('resumeType');
+    wx.removeStorageSync('sendAuthCode');;
+    // wx.removeStorageSync('rendaUidQrcode');
+    // wx.removeStorageSync('rendaUidQrcodeTeamId');
+  }
+  onShow (options) {
+    wx.removeStorageSync('rendaUidQrcode');
+    wx.removeStorageSync('rendaUserTeamId');
+    let uid = ''
+    let teamId = ''
+    let scene = decodeURIComponent(options.scene);
+    //&是我们定义的参数链接方式
+    uid = scene.split("&")[0];
+    teamId = scene.split('&')[1];
+    if (teamId) {
+      this.globalData.rendaUidQrcode = uid
+      wx.setStorageSync('rendaUidQrcode', uid)
+      if (teamId != 'addResume') {
+        this.globalData.teamId = teamId
+        wx.setStorageSync('rendaUserTeamId', teamId)
+      }
+    } else {
+      wx.setStorageSync('rendaUidQrcode', '')
+      wx.setStorageSync('rendaUserTeamId', '')
+    }
+    
+    if (options.query && options.query.uid) {
+      wx.setStorageSync('rendaUidQrcode', options.query.uid)
+      this.globalData.rendaUidQrcode = options.query.uid
+      if (options.query.teamId) {
+        this.globalData.teamId = options.query.teamId
+        wx.setStorageSync('rendaUserTeamId', options.query.teamId)
+      }
+    }
+  }
+  autoUpdate () {
+    var self = this
+    // 获取小程序更新机制兼容
+    if (wx.canIUse('getUpdateManager')) {
+      const updateManager = wx.getUpdateManager()
+      // 1. 检查小程序是否有新版本发布
+      updateManager.onCheckForUpdate(function (res) {
+        // 请求完新版本信息的回调
+        if (res.hasUpdate) {
+          // 检测到新版本，需要更新，给出提示
+          wx.showModal({
+            title: '更新提示',
+            content: '检测到新版本，是否下载新版本并重启小程序？',
+            success: function (res) {
+              if (res.confirm) {
+                // 2. 用户确定下载更新小程序，小程序下载及更新静默进行
+                self.downLoadAndUpdate(updateManager)
+              } else if (res.cancel) {
+                // 用户点击取消按钮的处理，如果需要强制更新，则给出二次弹窗，如果不需要，则这里的代码都可以删掉了
+                wx.showModal({
+                  title: '温馨提示~',
+                  content: '本次版本更新涉及到新的功能添加，旧版本无法正常访问的哦~',
+                  showCancel: false, // 隐藏取消按钮
+                  confirmText: '确定更新', // 只保留确定更新按钮
+                  success: function (res) {
+                    if (res.confirm) {
+                      // 下载新版本，并重新应用
+                      self.downLoadAndUpdate(updateManager)
+                    }
+                  }
+                })
+              }
+            }
+          })
+        }
+      })
+    } else {
+      // 如果希望用户在最新版本的客户端上体验您的小程序，可以这样子提示
+      wx.showModal({
+        title: '提示',
+        content: '当前微信版本过低，无法使用该功能，请升级到最新微信版本后重试。'
+      })
+    }
+  }
+  downLoadAndUpdate (updateManager) {
+    wx.showLoading();
+    // 静默下载更新小程序新版本
+    updateManager.onUpdateReady(function () {
+      wx.hideLoading()
+      // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+      updateManager.applyUpdate()
+    })
+    updateManager.onUpdateFailed(function () {
+      // 新的版本下载失败
+      wx.showModal({
+        title: '已经有新版本了哟~',
+        content: '新版本已经上线啦~，请您删除当前小程序，重新搜索打开哟~'
+      })
+    })
+  }
+  constructor() {
+    super();
+    this.use('promisify');
+    this.use('requestfix');
+    // 授权成功，缓存没有微信信息
+    if (!wx.getStorageSync('wxInfo')) {
+      wx.getUserInfo({
+        success: res => {
+          let params = {
+            head_img: res.userInfo.avatarUrl,
+            address: res.userInfo.province + res.userInfo.city,
+            user_name: res.userInfo.nickName
+          }
+          this.globalData.wxInfo = params
+          wx.setStorageSync('wxInfo', JSON.stringify(params))
+        }
+      })
+    }
+  }
+  globalData = {
+    headerHeight: 0,
+    statusBarHeight: 0,
+    userInfo: null,
+    uid: '',
+    openId: '',
+    wxInfo: '',
+    rendaUidQrcode: '',
+    sessionKey: '',
+    teamId: '',
+    list: [
+      {
+        pagePath: '/pages/home/index',
+        text: '简历列表',
+        selected: true,
+        iconPath: '../images/list.png',
+        selectedIconPath: '../images/list-active.png'
+      },
+      {
+        pagePath: '/pages/my/index',
+        text: '我的',
+        selected: false,
+        iconPath: '../images/my.png',
+        selectedIconPath: '../images/my-active.png'
+      }
+    ],
+    tabBar: {
+      color: '#999999',
+      selectedColor: '#1890FF',
+      borderStyle: 'white',
+      list: []
+    }
+    // 处理tabBar中点击, 被点击,将当前的数据对象中 selected 改成true, 其余的就得改成 false;  这里的id是标识, 在
+  };
+  tabBarClickHandle (id, that) {
+    let tbList = this.globalData.tabBar.list;
+    tbList.forEach((item, index) => {
+      if (id === index) {
+        tbList[id].selected = true;
+      } else {
+        tbList[index].selected = false;
+      }
+    });
+    that.$apply();
+    return this.globalData.tabBar;
+  }
+  isCheckSession () {
+    wx.checkSession({
+      success: () => {
+        console.log('没有过期')
+      },
+      fail: () => {
+        this.getOpenId()
+      }
+    })
+  }
+  getOpenId () {
+    let that = this
+    wx.login({
+      success (res) {
+        if (res.code) {
+          $http('/Login/getopenid', { code: res.code }).then(res => {
+            let data = JSON.parse(res.data)
+            that.globalData.openid = data.openid
+            that.globalData.sessionKey = data.session_key
+            wx.setStorageSync('session_key', data.session_key)
+            wx.setStorageSync('rendaOpenId', data.openid)
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          console.log(1)
+          console.log('获取失败！' + res.errMsg)
+        }
+      }
+    })
+    return that.globalData.openid
+  }
+}
+</script>

@@ -1,0 +1,25 @@
+@import "./base/variable/color";
+@import "./cell";
+
+.home-view {
+    height: 100%;
+    .home-view-header {
+        background: @weuiColorPrimary;
+        height: 70rpx;
+        width: 100%;
+    }
+
+    .home-view-box {}
+
+    >.page {
+        height: 100%;
+        position: relative;
+        z-index: 222;
+        margin-top: -40rpx;
+
+        .page_card_col1 {
+            color: @weuiTextColorDesc;
+            width: 62%;
+        }
+    }
+}

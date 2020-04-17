@@ -1,0 +1,51 @@
+
+<template>
+  <view>
+    <view wx:if="{{list.length}}">
+      <repeat for="{{list}}" key="index" item="rItem">
+        <view class="page_card" @tap="viewDetail({{rItem}})">
+          <teamReceiptItem :itemValue.sync="rItem"></teamReceiptItem>
+        </view>
+      </repeat>
+    </view>
+    <view wx:else class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import teamReceiptItem from './teamReceiptItem'
+import { wxToast, wxNavigateTo } from '@/util.js'
+export default class teamReceiptList extends wepy.component {
+  components = {
+    teamReceiptItem: teamReceiptItem
+  }
+  props = {
+    list: Array,
+    receiptType: {
+      type: Number,
+      default: 0
+    }
+  }
+  methods = {
+    viewDetail (item) {
+      if (!this.receiptType) {
+        wxNavigateTo('/pages/teamView/internalInvoice/teamJobDetail?query=' + item.id)
+      } else if (this.receiptType == 1) {
+        wxNavigateTo(`/pages/teamView/orderManage/allocationPerson?query=${item.id}&distributionnum=${item.distributionnum}&job_id=${item.job_id}`)
+      } else {
+        if (this.receiptType == 2) {
+          wx.setStorageSync('receiptTime', item.view_time)
+        } else {
+          wx.setStorageSync('receiptTime', item.entry_time)
+        }
+        wx.navigateTo({
+          url: '/pages/teamView/orderManage/viewResumeList?query=' + this.receiptType + '&id=' + item.job_id+'&apply_id='+item.id
+        })
+      }
+    }
+  }
+}
+</script>

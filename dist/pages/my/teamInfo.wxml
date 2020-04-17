@@ -1,0 +1,67 @@
+
+  <view class="page_bottom page page_margin">
+    <view class="my-view">
+      <view class="my-view-box">
+        <view class="page_card">
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">团队logo</view>
+              <view class="weui-flex between">
+                <image src="{{teamData.logo}}"  wx:if="{{teamData.logo}}" mode="aspectFill" class="my-head"/>
+                <image src="https://a.rsd123.com/image/images/header.png"  wx:else mode="aspectFit" class="my-head"/>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_right-icon"/>
+              </view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">团队名称</view>
+              <view class="my-text-right"> {{teamData.name}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">成员数量</view>
+              <view class="my-text-right">{{teamData.number?teamData.number:0}}人</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">简历数量</view>
+              <view class="my-text-right">{{teamData.export_num||0}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">已入职</view>
+              <view class="my-text-right">{{teamData.entry_num||0}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">所属部门</view>
+              <view class="my-text-right weui-flex__item">{{teamData.depart_name||'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">等级</view>
+              <view class="my-text-right weui-flex__item">{{teamData.grade_name?teamData.grade_name:'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">直属上级</view>
+              <view class="my-text-right weui-flex__item">{{teamData.superiorName?teamData.superiorName:'-'}}</view>
+            </view>
+          </view>
+          <view class="page_card_row">
+            <view class="weui-flex between">
+              <view class="my-text">最近登录时间</view>
+              <view class="my-text-right weui-flex__item">{{teamData.logout_time||'-'}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>

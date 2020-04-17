@@ -1,0 +1,150 @@
+<style lang="less">
+@import '../../../style/user.less';
+</style>
+<template>
+	<view class="page-my">
+		<view class="view-content">
+			<view class="page_margin my-view">
+				<view class="my-view-box">
+					<view class="page_card page-card-company">
+						<repeat wx:for="{{menus}}" wx:key="index">
+							<view class="page_card_row" @tap="viewInfo({{item}})">
+								<view class="weui-flex between">
+									<view class="weui-flex start">
+										<image src="{{item.icon}}" alt="" class="my-icon" />
+										<view class="my-info">
+											<view class="my-text">{{item.title}}</view>
+											<view class="my-subTitle">{{item.subTitle}}</view>
+											<view class="badgeNum" wx:if="{{item.badgeNum&&item.badgeNum<10}}">{{item.badgeNum}}</view>
+											<view class="badgeNum badgeNum1" wx:if="{{item.badgeNum>10&&item.badgeNum<100}}">{{item.badgeNum}}</view>
+											<view class="badgeNum badgeNum2" wx:if="{{item.badgeNum>10&&item.badgeNum>100}}">99+</view>
+										</view>
+									</view>
+									<view>
+										<image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
+									</view>
+								</view>
+							</view>
+						</repeat>
+					</view>
+				</view>
+			</view>
+		</view>
+		<tabBarBottom :tabBarIndex.sync="tabBarIndex" :usertype.sync="usertype"></tabBarBottom>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { wxNavigateTo } from '@/util.js'
+import tabBarBottom from '@/components/tabBarBottom'
+export default class teamView extends wepy.page {
+  components = {
+    tabBarBottom: tabBarBottom
+  }
+	data = {
+		userTeamType: 1,
+		menus: [],
+		usertype: 2,
+    tabBarIndex: 1,
+	}
+	config = {
+		navigationBarTitleText: '接单管理'
+	}
+	getMenus (userTeamType) {
+		let arr = []
+		let arr2 = []
+		let arr1 = [{
+			title: '简历初筛',
+			subTitle: '推荐简历给企业筛选，通过简历可参加面试',
+			icon: 'https://a.rsd123.com/image/images/orderTaking/icon3.png',
+			url: '/pages/teamView/orderManage/list?query=2',
+			badgeNum: 0
+		},
+		{
+			title: '面试结果',
+			subTitle: '已通过面试简历，可参加入职',
+			icon: 'https://a.rsd123.com/image/images/orderTaking/icon4.png',
+			url: '/pages/teamView/orderManage/list?query=3',
+			badgeNum: 0
+		},
+		{
+			title: '入职名单',
+			subTitle: '已入职简历',
+			icon: 'https://a.rsd123.com/image/images/orderTaking/icon5.png',
+			url: '/pages/teamView/orderManage/list?query=4',
+			badgeNum: 0
+		}]
+		if (userTeamType == 1) {
+			arr = [{
+				title: '申请接单',
+				subTitle: '已申请接单的审核情况',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon6.png',
+				url: '/pages/teamView/orderManage/list?query=0',
+				badgeNum: 0
+			},
+			{
+				title: '接单分配',
+				subTitle: '已确定合作企业接单',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon7.png',
+				url: '/pages/teamView/orderManage/list?query=1',
+				badgeNum: 0
+			}]
+		} else
+			if (userTeamType == 1) {
+				arr = [{
+					title: '接单分配',
+					subTitle: '已确定合作企业接单',
+					icon: 'https://a.rsd123.com/image/images/orderTaking/icon7.png',
+					url: '/pages/companyView/checkTeam',
+					badgeNum: 0
+				}]
+			} else {
+				arr = []
+			}
+		arr2 = arr.concat(arr1)
+		this.getUnreadNum(arr2, userTeamType)
+		return arr2
+	}
+	getUnreadNum (arr, type) {
+		let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		$http('/apply/getStatistics', { uid }).then(res => {
+			if (type == 1) {
+				arr[0].badgeNum = res.data.applynummsg
+				arr[1].badgeNum = res.data.orderDistribution
+				arr[2].badgeNum = res.data.applyshmsg
+				arr[3].badgeNum = res.data.applyviewmsg
+				arr[4].badgeNum = res.data.applynumentrymsg
+			} else if (type == 2) {
+				arr[0].badgeNum = res.data.orderDistribution
+				arr[1].badgeNum = res.data.applyshmsg
+				arr[2].badgeNum = res.data.applyviewmsg
+				arr[3].badgeNum = res.data.applynumentrymsg
+			} else {
+				arr[0].badgeNum = res.data.applyshmsg
+				arr[1].badgeNum = res.data.applyviewmsg
+				arr[2].badgeNum = res.data.applynumentrymsg
+			}
+			this.$apply()
+		})
+	}
+	methods = {
+		viewInfo (item) {
+			let receiptType = item.url.split('=')[1]
+			if (item.url.indexOf('orderManage') > -1) {
+				wx.setStorageSync('receiptType', receiptType)
+			}
+			wxNavigateTo(item.url)
+		},
+		createOrderTaking () {
+			wxNavigateTo('/pages/companyView/ceateList')
+		}
+	}
+	onLoad () {
+		this.userTeamType = wx.getStorageSync('rendaUserTeamType')
+	}
+	onShow () {
+		this.menus = this.getMenus(this.userTeamType)
+	}
+}
+</script>

@@ -1,0 +1,92 @@
+<style lang="less">
+@import '../../style/home.less';
+@import '../../style/form.less';
+.input-text-end {
+  margin-left: 10rpx;
+}
+.create-btn {
+  .weui-btn_cell {
+    width: 40%;
+  }
+}
+.weui-input {
+  &.settlement_time_input {
+    width: 100rpx;
+    text-align: center;
+  }
+}
+.orderModal {
+  .navigator {
+    margin-top: 20rpx;
+  }
+}
+</style>
+<template>
+	<view class="home-view register-view page_margin">
+		<createForm :typeBtn.sync="typeBtn" @submit="submit" @prePage="prePage"></createForm>
+		<teamModal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight" :modalObj.sync="modalObj" class="orderModal"></teamModal>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import modal from '@/components/modal'
+import createForm from '@/components/createForm'
+import { $http } from '@/http.js'
+import { wxToast, wxReLaunch, getErrorTip, wxNavigateTo } from '@/util.js'
+let lock = false
+export default class ceateList extends wepy.page {
+	components = {
+		teamModal: modal,
+		createForm: createForm
+	}
+	data = {
+		form: {
+			uid: wx.getStorageSync('rendaUid')
+		},
+		modalHeight: 460,
+		modalObj: {
+			title: '发单成功',
+			subTitle: '',
+			imgBg: 'https://a.rsd123.com/image/images/success.png'
+		},
+		isModal: true,
+		preForm: '',
+		typeBtn: 1
+	}
+	config = {
+		navigationBarTitleText: '更多信息'
+	}
+	events = {
+		handleOk: val => {
+			this.isModal = true
+			this.$apply()
+			wx.setStorageSync('receiptType', 0)
+			wxNavigateTo('/pages/companyView/checkReceipt')
+		},
+		submit: data => {
+			let params = Object.assign(JSON.parse(this.preForm), data, this.form)
+			if (!lock) {
+				this.createOrderApi(params)
+			}
+		},
+		prePage: () => {
+			wx.setStorageSync('preForm', this.preForm)
+			wxReLaunch('/pages/companyView/ceateList')
+		}
+	}
+	onLoad (options) {
+		this.preForm = options.query
+	}
+	createOrderApi (params) {
+		lock = true
+		$http('/enterpriseinvoice/createInvoice', params).then(res => {
+			if (res.data) {
+				this.isModal = false
+				this.$apply()
+			} else {
+				wxToast('发单失败')
+			}
+		})
+	}
+}
+</script>

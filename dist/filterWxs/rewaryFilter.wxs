@@ -1,0 +1,63 @@
+var rewardTypeText = function (number) {
+    var text = ''
+    switch (number) {
+        case 1:
+            text = '月'
+            break;
+        case 2:
+            text = '日'
+            break;
+        case 3:
+            text = '时'
+            break;
+        case 4:
+            text = '次'
+            break;
+        default:
+            text = ''
+    }
+    return '元/人/' + text
+}
+var rewardTimeText = function (number) {
+    var text = ''
+    console.log(number)
+    switch (number) {
+        case 1:
+            text = '天'
+            break;
+        case 2:
+            text = '周'
+            break;
+        case 3:
+            text = '个月'
+            break;
+        case 4:
+            text = '天'
+            break;
+        default:
+            text = ''
+    }
+    return text
+}
+var rewardText = function (number) {
+    var text = ''
+    switch (number) {
+        case 1:
+            text = '日'
+            break;
+        case 2:
+            text = '周'
+            break;
+        case 3:
+            text = '月'
+            break;
+        default:
+            text = ''
+    }
+    return text
+}
+module.exports = {
+    rewardTypeText: rewardTypeText,
+    rewardTimeText: rewardTimeText,
+    rewardText: rewardText
+}

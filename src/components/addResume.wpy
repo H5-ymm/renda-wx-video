@@ -1,0 +1,213 @@
+<style lang="less">
+@import '../style/home.less';
+.weui-input {
+  text-align: right;
+}
+.add-view {
+  height: 80%;
+}
+.page_down_icon {
+  width: 24rpx;
+  height: 24rpx;
+  margin-left: 10rpx;
+}
+</style>
+
+<template>
+  <view class="add-view">
+    <view class="home-view-box">
+      <view class="page_card">
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require"> 姓名：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="name" value="{{form.name}}" @input="changeInput" placeholder="请输入姓名" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">身份证号码：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="id_card" value="{{form.id_card}}" @input="changeInput" placeholder="请输入身份证号码" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item my-text-require"> 手机号码：</view>
+            <input class="weui-input" data-name="mobile" placeholder-class="placeholder" value="{{form.mobile}}" @input="changeInput" placeholder="请输入手机号码" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">性别：</view>
+            <picker @change="bindPickerChange" value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between ">
+            <view class="my-text weui-flex__item">户籍地址：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{form.address}}" @input="changeInput" placeholder="请输入住址" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">学历：</view>
+            <picker @change="eduPickerChange" value="{{eduIndex}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[eduIndex]?'':'placeholder'}}"> {{eduList[eduIndex]?eduList[eduIndex]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">年龄：</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="age" value="{{form.age}}" @input="changeInput" placeholder="请输入年龄" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">期望岗位：</view>
+            <input class="weui-input" data-name="desired_position" placeholder-class="placeholder" value="{{form.desired_position}}" @input="changeInput" placeholder="请输入期望岗位" />
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item">现住地址：</view>
+            <districtSelet @selectCity="selectCity" :disabled.sync="disabled" :address.sync="[]"></districtSelet>
+          </view>
+        </view>
+        <view class="page_card_row">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item"></view>
+            <input class="weui-input" data-name="household_address" placeholder-class="placeholder" value="{{form.household_address}}" @input="changeInput" placeholder="请输入详细住址" />
+          </view>
+        </view>
+
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+
+      <button class="weui-btn_cell .weui-btn_primary" @tap="save">{{step==1?'下一步':'保存'}}</button>
+
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import districtSelet from './districtSelet'
+import { wxToast, checkMobile, validateIdCard } from '@/util.js'
+export default class addResume extends wepy.component {
+  props = {
+    resumeInfo: Object,
+    stepActive: {
+      type: Number,
+      default: 1
+    }
+  }
+  components = {
+    districtSelet: districtSelet
+  }
+  data = {
+    array: ['男', '女'],
+    eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
+    index: 0,
+    eduIndex: 0,
+    addressIndex: -1,
+    form: {
+      name: '',
+      mobile: '',
+      address: '',
+      age: '',
+      education: 0,
+      sex: '1',
+      desired_position: '',
+      provinceid: '',
+      cityid: '',
+      id_card: '',
+      household_address: ''
+    },
+    step: 1,
+    disabled: false
+  }
+  watch = {
+    resumeInfo (val) {
+      if (val && val.name) {
+        this.form = val
+        this.index = val.sex - 1
+        this.step = this.step + 1
+      } else {
+        this.form = {
+          name: '',
+          mobile: '',
+          address: '',
+          age: '',
+          education: 0,
+          sex: '1',
+          desired_position: '',
+          provinceid: '',
+          cityid: '',
+          id_card: ''
+        }
+        this.index = 0
+      }
+      this.$apply()
+    },
+    stepActive (val) {
+      if (val) {
+        this.step = val
+        console.log(this.step)
+        this.$apply()
+      }
+    }
+  }
+  events = {
+    selectCity: data => {
+      this.form.provinceid = data[0] ? data[0] : 0
+      this.form.cityid = data[1] ? data[1] : 0
+    }
+  }
+  methods = {
+    bindPickerChange (e) {
+      this.index = e.detail.value
+      this.form.sex = Number(this.index) + 1
+    },
+    eduPickerChange (e) {
+      this.eduIndex = e.detail.value
+      this.form.education = this.eduIndex
+    },
+    changeInput (e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+    },
+    save () {
+      if (!this.form.name) {
+        wxToast('请输入姓名')
+      } else if (!this.form.id_card) {
+        wxToast('请输入身份证')
+      } else if (!validateIdCard(this.form.id_card)) {
+        wxToast('请输入正确的身份证')
+      } else if (!this.form.mobile) {
+        wxToast('请输入手机号码')
+      } else if (!checkMobile(this.form.mobile)) {
+        wxToast('请输入正确的手机号码')
+      } else if (this.form.age && Number(this.form.age) < 16) {
+        wxToast('请输入的年龄不小于16')
+      } else if (this.form.age && Number(this.form.age) > 65) {
+        wxToast('请输入的年龄不大于65')
+      } else {
+        if (this.step < 2) {
+          this.step = this.step + 1
+        }
+        console.log(this.step)
+        this.$emit('submit', this.form)
+      }
+    }
+  }
+}
+</script>

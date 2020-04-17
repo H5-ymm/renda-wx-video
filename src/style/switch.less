@@ -1,0 +1,51 @@
+@import "./base/variable/color";
+.hall-switch {
+  width: 50%;
+  height: 58rpx;
+  line-height: 58rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  margin: 0 auto 20rpx;
+  .hall-switch-col1 {
+    text-align: center;
+    color: @weuiColorPrimary;
+    width: 50%;
+    line-height: 58rpx;
+    text-align: center;
+    background: @weuiBgColorWhite;
+    border-radius: 16rpx 0px 0px 16rpx;
+    position: relative;
+    &::before {
+      content:'';
+      position: absolute;
+      width: 100rpx;
+      height: 2rpx;
+      background: @weuiColorPrimary;
+      left: -110rpx;
+      top: 45%;
+      opacity: .4;
+    }
+    &.hall-switch-active {
+      color: @weuiBgColorWhite;
+      background: @weuiColorPrimary;
+    }
+    &.hall-switch-col2 {
+      border-radius: 0 16rpx 16rpx 0px;
+      position: relative;
+      &::before {
+        content:'';
+        z-index: -1;
+      }
+      &::after {
+        content:'';
+        position: absolute;
+        width: 100rpx;
+        height: 2rpx;
+        background: @weuiColorPrimary;
+        right: -110rpx;
+        top: 45%;
+        opacity: .4;
+      }
+    }
+  }
+}

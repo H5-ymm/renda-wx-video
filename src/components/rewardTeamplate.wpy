@@ -1,0 +1,74 @@
+<template>
+  <view class="page_card">
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">招聘模式</view>
+        <view class="my-text-right">返利招聘</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">返利模式</view>
+        <view class="my-text-right">
+          {{ formReward.reward_type==1?'月返': formReward.reward_type==2?'日返': formReward.reward_type==3
+          ?'时返':'一次性返利'}}
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">返利金额</view>
+        <view class="my-text-right">{{ formReward.reward_money}}{{wxs.rewardTypeText( formReward.reward_type)}}</view>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{ formReward.reward_type==1}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">返利日期</view>
+        <view class="weui-flex end">
+          <view class="input-text-end">次月</view>
+          <view class="my-text-right">{{ formReward.settlement_time}}号</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{ formReward.reward_type}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">结算方式</view>
+        <view class="my-text-right" wx:if="{{ formReward.reward_type==1}}">{{ formReward.reward_money_type==1?'长期返利':'持续返利'}}</view>
+        <view class="my-text-right weui-flex end" wx:if="{{ formReward.reward_type==2|| formReward.reward_type==3}}">
+          按{{wxs.rewardText( formReward.reward_money_type)}}结算
+          {{ formReward.settlement_type==1?'本':'次'}}{{wxs.rewardText( formReward.reward_money_type)}}
+          <view wx:if="{{ formReward.reward_money_type!=1}}">{{ formReward.settlement_time}}{{wxs.rewardText( formReward.reward_money_type)}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{( formReward.reward_type==1&& formReward.reward_money_type==2)||( formReward.reward_type==2|| formReward.reward_type==3)}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">持续时长</view>
+        <view class="my-text-right">
+          {{ formReward.duration_time}}
+          {{wxs.rewardTimeText( formReward.reward_money_type)}}
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{ formReward.reward_type>1}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">需入职</view>
+        <view class="my-text-right">
+          {{ formReward.reward_needtime}}
+          <text wx:if="{{ formReward.reward_money_type<4}}">{{wxs.rewardTimeText( formReward.reward_money_type)}}</text>
+          <text wx:else>天</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import wxs from '../filterWxs/rewaryFilter.wxs'
+export default class rewardTeamplate extends wepy.component {
+  wxs = { wxs }
+  props = {
+    formReward: Object
+  }
+}
+</script>

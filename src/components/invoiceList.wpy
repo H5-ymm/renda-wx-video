@@ -1,0 +1,92 @@
+		
+<style lang="less">
+.resume-list {
+  .page_card_row {
+    line-height: 40rpx;
+    .page_card_name {
+      font-size: 32rpx;
+      margin-bottom: 6rpx;
+    }
+    .text-line {
+      font-size: 26rpx;
+    }
+  }
+}
+.page_card_end {
+  .page_card_time {
+    width: 100%;
+    text-align: right;
+    font-size: 22rpx;
+    color: #999;
+    margin-right: 8rpx;
+  }
+  .weui-btn_cell {
+    margin-bottom: 40rpx;
+    border-radius: 5rpx;
+    font-size: 25rpx;
+    padding: 23rpx 18rpx 21rpx;
+  }
+  .page_card_status-text {
+    height: 80rpx;
+  }
+}
+</style>
+<template>
+	<view class="resume-list">
+		<repeat wx:for="{{list}}" wx:key="index">
+			<view class="page_card" wx:if="{{list.length}}" @tap="selectJob({{item}})">
+				<view class="page_card_row weui-flex between">
+					<view class="weui-flex__item">
+						<view class="weui-flex between">
+							<view>
+								<view class="page_card_name">{{item.job_name}}</view>
+								<view class="text-line weui-flex__item">
+									{{recommendType==1?item.com_name:item.company_name}}</view>
+								<view class="text-line weui-flex__item">
+									需求人数 : {{recommendType==1?item.required_number:item.number}}人
+								</view>
+							</view>
+							<view class="weui-flex end wrap page_card_end">
+								<view class="page_card_status-text">
+									<button class="weui-btn_cell weui-flex__item weui-btn_primary" @tap.stop="handleJob({{item}},1)">
+										推荐岗位
+									</button>
+								</view>
+								<view class="page_card_time">已推荐 : {{item.put_num}}</view>
+							</view>
+						</view>
+					</view>
+					<image mode="scaleToFill" class="weui-flex__item" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon" />
+				</view>
+			</view>
+		</repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class invoiceList extends wepy.component {
+	props = {
+		list: Array,
+		recommendType: Number
+	}
+	data = {
+
+	}
+	methods = {
+		handleJob (item, status) {
+			let query = {
+				uid: wx.getStorageSync('rendaUid'),
+				id: item.id
+			}
+			this.$emit('handleJob', {id: item.id})
+		},
+		selectJob (item) {
+			this.$emit('selectJob', {id: item.id})
+		}
+	}
+}
+</script>

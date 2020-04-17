@@ -1,0 +1,98 @@
+
+  <view class="page-my {{usertype==1?'page-team-home page-cmpany-home':''}} page">
+    <view class="my-view-header"  wx:if="{{usertype==2}}">
+      <image src="https://a.rsd123.com/image/images/bg.png" class="my-view-header-bg" mode="aspectFill" alt=""/>
+      <view class="my-view-userInfo">
+        <view class="my-avatar-box">
+          <image src="{{head_img}}" wx:if="{{head_img}}" alt="" mode="aspectFill" class="my-avatar"/>
+          <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar"/>
+        </view>
+        <view class="my-user-name">{{userName}}</view>
+        <view class="my-user-mobile">{{userInfo.mobile?userInfo.mobile:''}}</view>
+      </view>
+    </view>
+    <view class="my-view-header weui-flex start-between"  wx:if="{{usertype==1}}">
+      <view class="my-avatar-box">
+        <image src="{{head_img}}" wx:if="{{head_img}}" alt="" mode="aspectFill" class="my-avatar"/>
+        <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar"/>
+      </view>
+      <view class="team-info-row">
+        <view class="my-user-name">{{userInfo.user_name}}</view>
+        <view class="weui-flex start">
+          <image src="https://a.rsd123.com/image/images/ok.png" alt="" mode="aspectFill" class="icon-company"/>
+        </view>
+      </view>
+    </view>
+    <view class="view-content">
+      <view class="page_margin my-view">
+        <view class="my-view-box">
+          <block wx:for="{{menus}}" wx:key="index">
+            <view class="page_card">
+              <block wx:for="{{item.child}}" wx:key="index" wx:for-item="newitem">
+                <view class="page_card_row" bindtap="viewInfo" data-wpyviewinfo-a="{{newitem}}">
+                  <view class="weui-flex between">
+                    <view class="weui-flex start">
+                      <image src="{{newitem.icon}}" alt="" class="my-icon"/>
+                      <view class="my-text">{{newitem.title}}</view>
+                    </view>
+                    <view class="weui-flex between">
+                      <view wx:if="{{newitem.title==='切换账号'}}">{{usertype==1?"企业":'团队'}}</view>
+                      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon"/>
+                    </view>
+                  </view>
+                </view>
+              </block>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex between page_margin">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="outLogin">退出登录</button>
+    </view>
+    
+	<view class="tabBarBox weui-flex center">
+		<!-- 首页 -->
+		<block  wx:for="{{$tabBarBottom$tabBarList.list}}" wx:key="index">
+			<navigator class="itemView  weui-flex__item" url="{{item.pagePath}}" open-type="redirect" hover-class="none">
+				<image class="item_icon" src="{{item.selected ? item.selectedIconPath : item.iconPath}}"/>
+				<view class="item_text {{item.selected ? 'c-y' : 'c-gray'}}">
+					{{item.text}}
+				</view>
+			</navigator>
+		</block>
+	</view>
+
+    
+  <view hidden="{{$modal$isScaleModal}}">
+    <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modal$height}}rpx">
+      <view class="modal-content"  wx:if="{{!$modal$type}}">
+        <view class="modal-bg">
+          <image src="{{$modal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
+        </view>
+        <view class="modal-title">
+          {{$modal$modalObj.title}}
+        </view>
+        <text selectable="true" decode="{{$modal$true}}" class="modal-subTitle" wx:if="{{$modal$modalObj.subTitle}}">{{$modal$modalObj.subTitle}}</text>
+        <view class="weui-cell_btn weui-flex center">
+          <navigator open-type="{{$modal$openType}}" wx:if="{{$modal$openType}}" target="miniProgram" class="navigator">
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </navigator>
+          <view class="navigator" wx:else>
+            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
+          </view>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{$modal$imgUrl}}" bindlongpress="$modal$saveImg" class="qrcode-img"/>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">长按图片保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modal$handleOk" class="close-icon"/>
+    </view>
+  </view>
+
+
+  </view>

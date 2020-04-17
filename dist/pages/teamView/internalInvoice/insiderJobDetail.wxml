@@ -1,0 +1,243 @@
+
+  <view class="detail-view">
+    
+  <view class="home-view-box page_margin view-detail">
+    <view class="page_card">
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">职位名称</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.job_name}}</view>
+        </view>
+      </view>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">用工企业</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.company_name}}</view>
+        </view>
+      </view>
+      <view class="page_card_row"  wx:if="{{$insiderJobTemplate$form.form.settlement_time}}">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">截止日期</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.form.settlement_time}}</view>
+        </view>
+      </view>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">招聘人数</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.number}}人</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card">
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">综合薪资</view>
+          <view class="my-text-right"  wx:if="{{$insiderJobTemplate$form.offermoney_type==1}}">{{$insiderJobTemplate$form.money_min}}-{{$insiderJobTemplate$form.money_max}}</view>
+          <view class="my-text-right" wx-else="wx-else">{{$insiderJobTemplate$form.offermoney}}</view>
+        </view>
+      </view>
+      <view class="page_card_row" wx:if="{{$insiderJobTemplate$form.welfare_statement}}">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">福利说明</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.welfare_statement}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card">
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">工作内容</view>
+        </view>
+        <rich-text nodes="{{$insiderJobTemplate$form.job_description}}" class="my-text-right weui-input weui-textarea"/>
+      </view>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">工作地址</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.province}}{{$insiderJobTemplate$form.city}}{{$insiderJobTemplate$form.address}}</view>
+        </view>
+      </view>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">上班时长</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.working_hours}}</view>
+        </view>
+      </view>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">入职条件</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.entry_requirements}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card">
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">年龄</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.age_min}}岁-{{$insiderJobTemplate$form.age_max}}岁</view>
+        </view>
+      </view>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">性别</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.sex==1?'男':$insiderJobTemplate$form.sex==2?'女':'男女不限'}}</view>
+        </view>
+      </view>
+      <view class="page_card_row" wx:if="{{$insiderJobTemplate$form.education}}">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">学历</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.education}}</view>
+        </view>
+      </view>
+      <view class="page_card_row" wx:if="{{$insiderJobTemplate$form.five_risks}}">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">缴纳五金</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.five_risks==1?'是': $insiderJobTemplate$form.five_risks==2?'否':'试用期后'}}</view>
+        </view>
+      </view>
+      <view class="page_card_row" wx:if="{{$insiderJobTemplate$form.reserve_fund}}">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">缴纳公积金：</view>
+          <view class="my-text-right">{{$insiderJobTemplate$form.reserve_fund==1?'是': $insiderJobTemplate$form.reserve_fund==2?'否':'试用期后'}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card">
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">企业介绍</view>
+        </view>
+        <rich-text nodes="{{$insiderJobTemplate$form.com_introduction}}" class="my-text-right weui-input weui-textarea"/>
+      </view>
+    </view>
+    <wxs src="../../../filterWxs/rewaryFilter.wxs" module="wxs"/>
+
+  <view class="page_card" wx:if="{{$insiderJobTemplate$form.type==1}}">
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">招聘模式</view>
+        <view class="my-text-right">返利招聘</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">返利模式</view>
+        <view class="my-text-right">
+          {{ $insiderJobTemplate$rewardTeamplate$formReward.reward_type==1?'月返': $insiderJobTemplate$rewardTeamplate$formReward.reward_type==2?'日返': $insiderJobTemplate$rewardTeamplate$formReward.reward_type==3
+          ?'时返':'一次性返利'}}
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">返利金额</view>
+        <view class="my-text-right">{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_money}}{{wxs.rewardTypeText( $insiderJobTemplate$rewardTeamplate$formReward.reward_type)}}</view>
+      </view>
+    </view>
+    <view class="page_card_row"  wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_type==1}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">返利日期</view>
+        <view class="weui-flex end">
+          <view class="input-text-end">次月</view>
+          <view class="my-text-right">{{ $insiderJobTemplate$rewardTeamplate$formReward.settlement_time}}号</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row"  wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_type}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">结算方式</view>
+        <view class="my-text-right" wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_type==1}}">{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type==1?'长期返利':'持续返利'}}</view>
+        <view class="my-text-right weui-flex end" wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_type==2|| $insiderJobTemplate$rewardTeamplate$formReward.reward_type==3}}">
+          按{{wxs.rewardText( $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type)}}结算
+          {{ $insiderJobTemplate$rewardTeamplate$formReward.settlement_type==1?'本':'次'}}{{wxs.rewardText( $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type)}}
+          <view wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type!=1}}">{{ $insiderJobTemplate$rewardTeamplate$formReward.settlement_time}}{{wxs.rewardText( $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type)}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{( $insiderJobTemplate$rewardTeamplate$formReward.reward_type==1&& $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type==2)||( $insiderJobTemplate$rewardTeamplate$formReward.reward_type==2|| $insiderJobTemplate$rewardTeamplate$formReward.reward_type==3)}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">持续时长</view>
+        <view class="my-text-right">
+          {{ $insiderJobTemplate$rewardTeamplate$formReward.duration_time}}
+          {{wxs.rewardTimeText( $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type)}}
+        </view>
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_type>1}}">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">需入职</view>
+        <view class="my-text-right">
+          {{ $insiderJobTemplate$rewardTeamplate$formReward.reward_needtime}}
+          <text wx:if="{{ $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type<4}}">{{wxs.rewardTimeText( $insiderJobTemplate$rewardTeamplate$formReward.reward_money_type)}}</text>
+          <text wx:else>天</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+    <view class="page_card" wx:else>
+      <view class="page_card_row">
+        <view class="weui-flex between">
+          <view class="my-text weui-flex__item">招聘模式</view>
+          <view class="my-text-right">普通招聘</view>
+        </view>
+      </view>
+    </view>
+    
+  <view class="page_card" wx:if="{{$insiderJobTemplate$form.setinfo}}">
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">岗位类型</view>
+        <view class="my-text-right"  wx:if="{{!$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.job_type}}">普通岗位</view>
+        <view class="my-text-right"  wx:else>{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.job_type==1?'':$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.job_type==2?'精选岗位':$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.job_type==3?'高额返利':'企业急招'}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">岗位来源</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.source}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">合作姓名</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.work_man}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">合作电话</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.work_tel}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">面试时间</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.meeting_time}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">面试地址</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.meeting_addr}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">联系人</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.link_man}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">联系人电话</view>
+        <view class="my-text-right">{{$insiderJobTemplate$insiderOperatorTemplate$formOperator.setinfo.link_tel}}</view>
+      </view>
+    </view>
+  </view>
+
+  </view>
+
+    <view class="weui-cell_btn weui-flex between only-btn">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="recommendResume">推荐岗位</button>
+    </view>
+  </view>

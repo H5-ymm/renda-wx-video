@@ -1,0 +1,206 @@
+
+<template>
+  <view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">上传营业执照：</view>
+        <image @tap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head" wx:if="{{infoImg}}" />
+        <image @tap="uploadImg" src="https://a.rsd123.com/image/images/default2.png" mode="scaleToFill" class="my-head" wx:else />
+        <image mode="scaleToFill" @tap="uploadImg" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon" />
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">营业执照号：</view>
+        <input class="weui-input" placeholder-class="placeholder" data-name="business_licence" value="{{form.business_licence}}" @input="changeInput" placeholder="请输入营业执照号" />
+      </view>
+    </view>
+    <view class="page_card_row" wx:if="{{registerType==1}}">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">统一社会信用代码：</view>
+        <input class="weui-input" placeholder-class="placeholder" data-name="unified_social" value="{{form.unified_social}}" @input="changeInput" placeholder="请输入统一社会信用代码" />
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">从事行业：</view>
+        <picker @change="bindPickerChange" value="{{jobIndex}}" data-name="job_id" range="{{job_array}}">
+          <view class="my-text-right weui-flex between">
+            <view class="{{form.job_id!=''?'':'placeholder'}}">
+              {{form.job_id!=''?job_array[jobIndex]:'请选择从事行业'}}
+            </view>
+            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">企业性质：</view>
+        <picker @change="bindPickerChange" value="{{comIndex}}" data-name="com_type" range="{{com_type}}">
+          <view class="my-text-right weui-flex between">
+            <view class="{{form.com_type!=''?'':'placeholder'}}">
+              {{form.com_type!=''?com_type[comIndex]:'请选择企业性质'}}
+            </view>
+            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">企业规模：</view>
+        <picker @change="bindPickerChange" data-name="com_scale" value="{{comScaleIndex}}" range="{{com_scale}}">
+          <view class="my-text-right weui-flex between">
+            <view class="{{form.com_scale!=''?'':'placeholder'}}">
+              {{form.com_scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
+            </view>
+            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item my-text-require">企业地址：</view>
+        <districtSelet @selectCity="selectCity" :address.sync="[]" :disabled.sync="disabled"></districtSelet>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex end">
+        <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{form.address}}" @input="changeInput" placeholder="请输入详细地址" />
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text  weui-flex__item">企业电话：</view>
+        <view class="weui-flex between weui-flex__item">
+          <input class="weui-input" placeholder-class="placeholder" placeholder="区号" data-name="phone" value="{{form.phone}}" @input="changeInput" />
+          <view class="line">-</view>
+          <input class="weui-input" placeholder-class="placeholder" placeholder="座机电话" data-name="phoneEnd" value="{{form.phoneEnd}}" @input="changeInput" />
+        </view>
+      </view>
+    </view>
+    <canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import districtSelet from './districtSelet'
+import { wxToast, getImgUrl, compressImg } from '@/util.js'
+import { uploadFile } from '@/http.js'
+import { connect, getStore } from 'wepy-redux'
+const store = getStore()
+@connect({
+  list: (state) => state.contant.list
+})
+export default class Company extends wepy.component {
+  props = {
+    resumeInfo: Object
+  }
+  components = {
+    districtSelet: districtSelet
+  }
+  data = {
+    form: {
+      address: '',
+      provinceid: '',
+      three_cityid: '',
+      cityid: '',
+      job_id: '',
+      com_type: '',
+      com_scale: '',
+      logo: '',
+      phoneEnd: '',
+      phone: '',
+      unified_social: '',
+      business_licence: '',
+      jobName: ''
+    },
+    infoImg: '',
+    registerType: '',
+    list: [],
+    com_type: [],
+    com_scale: [],
+    job_array: [],
+    comIndex: 0,
+    comScaleIndex: 0,
+    jobIndex: 0,
+    disabled: true
+  }
+  watch = {
+    form (val) {
+      this.$emit('submit', val)
+    }
+  }
+  isCheck (obj) {
+    let flag = true
+    for (let key in obj) {
+      if (key !== 'phoneEnd' && key !== 'address' && key !== 'phone' && key != 'unified_social' && key === '') {
+        flag = false
+      }
+    }
+    return flag
+  }
+  onLoad () {
+    let allData = store.getState().contant.list
+    for (let key in allData) {
+      this[key] = allData[key]
+    }
+    this.registerType = wx.getStorageSync('rendaUserType')
+    console.log(this.registerType + 'ddd')
+    this.$apply()
+  }
+  events = {
+    selectCity: data => {
+      this.form.provinceid = data[0] ? data[0] : 0
+      this.form.cityid = data[1] ? data[1] : 0
+      this.form.three_cityid = data[2] ? data[2] : 0
+    }
+  }
+  getImg (tempFilePaths) {
+    uploadFile(tempFilePaths).then(res => {
+      if (res.data && res.data.url) {
+        this.infoImg = getImgUrl(res.data.url)
+        this.form.logo = res.data.url
+        this.$apply()
+      } else {
+        wxToast('图片获取失败')
+      }
+    })
+  }
+  // 事件处理函数(集中保存在methods对象中)
+  methods = {
+    uploadImg () {
+      wx.chooseImage({
+        sizeType: ['compressed'],
+        success: res => {
+          compressImg(res.tempFilePaths[0]).then(res => {
+            this.cWidth = res.cWidth
+            this.cHeight = res.cHeight
+            this.getImg([res.url])
+          })
+        }
+      })
+    },
+    bindPickerChange (e) {
+      let key = e.currentTarget.dataset.name
+      if (key === 'job_id') {
+        this.jobIndex = e.detail.value
+        this.form.jobName = this.job_array[this.jobIndex]
+      } else if (key === 'com_type') {
+        this.comIndex = e.detail.value
+      } else {
+        this.comScaleIndex = e.detail.value
+      }
+      this.form[key] = e.detail.value
+      this.$apply()
+    },
+    changeInput (e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+      this.$apply()
+    }
+  }
+}
+</script>

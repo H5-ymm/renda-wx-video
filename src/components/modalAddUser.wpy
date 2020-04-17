@@ -1,0 +1,155 @@
+<style lang="less">
+@import '../style/modal.less';
+.modal-title {
+  margin-bottom: 20rpx;
+}
+.modal-content-qrcode {
+  text-align: center;
+}
+.qrcode-img {
+  width: 300rpx;
+  height: 300rpx;
+  margin: 30rpx auto;
+}
+</style>
+<template>
+  <view hidden='{{isScaleModal}}'>
+    <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+    <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+      <view class="modal-content" wx:if="{{!type}}">
+        <view class="home-view-box weui-flex between wrap">
+          <view class="modal-title">{{title}}</view>
+          <repeat wx:for="{{menus}}" wx:key="index">
+            <view class="card-item weui-flex between wrap" @tap="selectType({{index}})">
+              <image src="{{item.icon}}" alt="" mode="aspectFill" class="menu-icon" />
+              <view class="card-item-title">{{item.title}}</view>
+              <image src="https://a.rsd123.com/image/images/user/radio2.png" alt="" mode="aspectFill" wx:if="{{index==activeIndex}}" class="radio-icon" />
+              <image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else alt="" mode="aspectFill" class="radio-icon" />
+            </view>
+          </repeat>
+        </view>
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button class="weui-btn_cell weui-btn_cell-gradient" @tap="handleOk">确定</button>
+        </view>
+      </view>
+      <view wx:else class="modal-content modal-content-qrcode">
+        <image src="{{imgUrl}}" @longpress="saveImg" class="qrcode-img" />
+        <view class="weui-cell_btn weui-flex center user-btn">
+          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" @tap="handleOk">长按保存二维码并分享</button>
+        </view>
+      </view>
+      <image src="https://a.rsd123.com/image/images/close.png" @tap="handleClose" class="close-icon" />
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { wxToast } from '@/util.js'
+export default class modalAddUser extends wepy.component {
+  props = {
+    isScaleModal: Boolean,
+    height: Number,
+    type: Number,
+    imgUrl: String,
+    title: String
+  }
+  data = {
+    isShow: false,
+    menus: [
+      {
+        icon: 'https://a.rsd123.com/image/images/modal/icon2.png',
+        title: '手动添加'
+      },
+      {
+        icon: 'https://a.rsd123.com/image/images/modal/icon1.png',
+        title: '二维码添加'
+      }
+    ],
+    activeIndex: 0
+  }
+  saveImgUrl (url) {
+    wx.getImageInfo({
+      src: url,
+      success: res => {
+        let path = res.path;
+        wx.saveImageToPhotosAlbum({
+          filePath: path,
+          success: (res) => {
+            console.log(res);
+            wxToast('保存成功')
+          },
+          fail: (res) => {
+            console.log(res);
+            wxToast('保存失败')
+          }
+        })
+      },
+      fail: (res) => {
+        console.log(res);
+      }
+    })
+  }
+  methods = {
+    // 长按保存图片
+    saveImg () {
+      //用户需要授权
+      let that = this
+      wx.getSetting({
+        success: (res) => {
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            wx.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: () => {
+                // 同意授权
+                this.saveImgUrl(this.imgUrl);
+              },
+              fail: (res) => {
+                console.log(res)
+              }
+            })
+          } else {
+            // 已经授权了
+            this.saveImgUrl(this.imgUrl);
+          }
+        },
+        fail: (res) => {
+          console.log(res);
+        }
+      })
+    },
+    handleClose () {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleClose')
+    },
+    selectType (index) {
+      this.activeIndex = index
+      this.$apply()
+    },
+    handleOk () {
+      if (!this.activeIndex) {
+        this.isShow = false
+      }
+      if (this.imgUrl) {
+        this.isShow = false
+        this.$emit('handleOk', this.activeIndex)
+      }
+      this.$apply()
+      this.$emit('handleOk', this.activeIndex)
+    }
+  }
+  watch = {
+    isScaleModal (val) {
+      console.log(val)
+      if (!val) {
+        this.isShow = true
+      } else {
+        this.activeIndex = 0
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+}
+</script>

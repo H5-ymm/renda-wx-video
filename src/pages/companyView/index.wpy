@@ -1,0 +1,139 @@
+<style lang="less">
+@import '../../style/user.less';
+</style>
+<template>
+	<view class="page-my">
+		<view class="view-content">
+			<view class="page_margin my-view">
+				<view class="my-view-box">
+					<view class="page_card page-card-company">
+						<repeat wx:for="{{menus}}" wx:key="index">
+							<view class="page_card_row" @tap="viewInfo({{item}})">
+								<view class="weui-flex between">
+									<view class="weui-flex start">
+										<image src="{{item.icon}}" alt="" class="my-icon" />
+										<view class="my-info">
+											<view class="my-text">{{item.title}}</view>
+											<view class="my-subTitle">{{item.subTitle}}</view>
+											<view class="badgeNum" wx:if="{{item.badgeNum&&item.badgeNum<10}}">{{item.badgeNum}}</view>
+											<view class="badgeNum badgeNum1" wx:if="{{item.badgeNum>10&&item.badgeNum<100}}">{{item.badgeNum}}</view>
+											<view class="badgeNum badgeNum2" wx:if="{{item.badgeNum>10&&item.badgeNum>100}}">99+</view>
+										</view>
+									</view>
+									<view>
+										<image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
+									</view>
+								</view>
+							</view>
+						</repeat>
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="home-add-resume" @tap="createOrderTaking">
+			<image src="https://a.rsd123.com/image/images/orderTaking/create.png" class="add-icon" />
+			<view class="home-add-text">发布招聘</view>
+		</view>
+		<tabBarBottom usertype.sync="usertype" :tabBarIndex.sync="tabBarIndex"></tabBarBottom>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { wxNavigateTo } from '@/util.js'
+import tabBarBottom from '@/components/tabBarBottom'
+export default class Index extends wepy.page {
+	components = {
+		tabBarBottom: tabBarBottom
+	}
+	data = {
+		menus: [
+			{
+				title: '审核发单',
+				subTitle: '已发布职位的审核情况',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon1.png',
+				url: '/pages/companyView/checkReceipt',
+				badgeNum: 0
+			},
+			{
+				title: '审核团队',
+				subTitle: '选择确定合作团队',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon2.png',
+				url: '/pages/companyView/checkTeam',
+				badgeNum: 0
+			},
+			{
+				title: '简历初筛',
+				subTitle: '团队推荐简历等待筛选，确认面试信息',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon3.png',
+				url: '/pages/companyView/resumeSiftings?query=1',
+				badgeNum: 0
+			},
+			{
+				title: '面试结果',
+				subTitle: '已完成面试，确认入职名单、时间及入职信息',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon4.png',
+				url: '/pages/companyView/resumeSiftings?query=2',
+				// url: '/pages/companyView/viewList',
+				badgeNum: 0
+			},
+			{
+				title: '入职名单',
+				subTitle: '已完成入职，确认入职名单',
+				icon: 'https://a.rsd123.com/image/images/orderTaking/icon5.png',
+				// url: '/pages/companyView/entryList',
+				url: '/pages/companyView/resumeSiftings?query=3',
+				badgeNum: 0
+			}
+		],
+		usertype: 1,
+		tabBarIndex: 0
+	}
+	config = {
+		navigationBarTitleText: '发单管理'
+	}
+	getUnreadNum () {
+		let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		$http('/company/obtainAuditedTeamNum', { uid }).then(res => {
+			this.menus[0].badgeNum = res.data.teamInvoiceNum
+			this.menus[1].badgeNum = res.data.teamNum
+			this.menus[2].badgeNum = res.data.resumeNum
+			this.menus[3].badgeNum = res.data.interviewNum
+			this.menus[4].badgeNum = res.data.entryNum
+			this.$apply()
+		})
+	}
+	saveUser(uid) {
+    let userinfo = wx.getStorageSync('wxInfo')
+    let params = {
+      uid,
+      head_img: userinfo.head_img
+    }
+    $http('/userinfo/editUserInfo', params).then(res => {
+      console.log(res)
+    })
+  }
+	methods = {
+		viewInfo (item) {
+			if (item.url.indexOf('checkReceipt') > -1) {
+				wx.setStorageSync('receiptType', 0)
+			}
+			if (item.url.indexOf('resumeSiftings') > -1) {
+				let receiptType = item.url.split('=')[1]
+				wx.setStorageSync('receiptType', receiptType)
+			}
+			wxNavigateTo(item.url)
+		},
+		createOrderTaking () {
+			wxNavigateTo('/pages/companyView/ceateList')
+		}
+	}
+	onShow () {
+		this.getUnreadNum()
+		let userInfo = wx.getStorageSync('userInfo') || ''
+		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
+      this.saveUser()
+    }
+	}
+}
+</script>

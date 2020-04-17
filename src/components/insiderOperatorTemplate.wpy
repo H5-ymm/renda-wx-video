@@ -1,0 +1,64 @@
+<template>
+  <view class="page_card">
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">岗位类型</view>
+        <view class="my-text-right" wx:if="{{!formOperator.setinfo.job_type}}">普通岗位</view>
+        <view
+          class="my-text-right"
+          wx:else
+        >{{formOperator.setinfo.job_type==1?'':formOperator.setinfo.job_type==2?'精选岗位':formOperator.setinfo.job_type==3?'高额返利':'企业急招'}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">岗位来源</view>
+        <view class="my-text-right">{{formOperator.setinfo.source}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">合作姓名</view>
+        <view class="my-text-right">{{formOperator.setinfo.work_man}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">合作电话</view>
+        <view class="my-text-right">{{formOperator.setinfo.work_tel}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">面试时间</view>
+        <view class="my-text-right">{{formOperator.setinfo.meeting_time}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">面试地址</view>
+        <view class="my-text-right">{{formOperator.setinfo.meeting_addr}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">联系人</view>
+        <view class="my-text-right">{{formOperator.setinfo.link_man}}</view>
+      </view>
+    </view>
+    <view class="page_card_row">
+      <view class="weui-flex between">
+        <view class="my-text weui-flex__item">联系人电话</view>
+        <view class="my-text-right">{{formOperator.setinfo.link_tel}}</view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class insiderOperatorTemplate extends wepy.component {
+  props = {
+    formOperator: Object
+  }
+}
+</script>
