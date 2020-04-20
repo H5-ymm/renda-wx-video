@@ -83,107 +83,104 @@ page {
   word-break: break-all;
 }
 .weui-input {
-    text-align: right;
-    &.weui-textarea {
-        margin: 20rpx 0;
-        min-height: 130rpx;
-        text-align: left;
-        height: 140rpx;
-        width: 100%;
-        display: block;
+  text-align: right;
+  &.weui-textarea {
+    margin: 20rpx 0;
+    min-height: 130rpx;
+    text-align: left;
+    height: 140rpx;
+    width: 100%;
+    display: block;
+  }
+  &.settlement_time_input {
+    width: 100rpx;
+    text-align: center;
+  }
+}
+.list-card {
+  padding: 24rpx 30rpx;
+  background:@weuiBgColorDefault;
+  color: @weuiTextColorTitle;
+  border-radius: 16rpx;
+  line-height: 60rpx;
+  margin: 0 30rpx 20rpx;
+  position: relative;
+  .weui-btn_cell {
+    width: auto;
+    padding: 23rpx 24rpx 21rpx;
+    border-radius:4px;
+    font-size: 24rpx;
+    &.weui-btn_warn {
+      background: @weuiColorWarn;
     }
-
-    &.settlement_time_input {
-        width: 100rpx;
-        text-align: center;
+    &.weui-btn_primary_plain {
+      border-radius: 50rpx;
+      padding: 23rpx 32rpx 21rpx;
     }
   }
-
-  .list-card {
-    padding: 24rpx 30rpx;
-    background:@weuiBgColorDefault;
-    color: @weuiTextColorTitle;
-    border-radius: 16rpx;
-    line-height: 60rpx;
-    margin: 0 30rpx 20rpx;
-    position: relative;
+  .card-col-1 {
+    font-weight: 500;
+    font-size: 32rpx;
     .weui-btn_cell {
-      width: auto;
-      padding: 23rpx 24rpx 21rpx;
-      border-radius:4px;
-      font-size: 24rpx;
-      &.weui-btn_warn {
-        background: @weuiColorWarn;
-      }
-      &.weui-btn_primary_plain {
-        border-radius: 50rpx;
-        padding: 23rpx 32rpx 21rpx;
-      }
+      margin-right: 20rpx;
     }
-    .card-col-1 {
-       font-weight: 500;
-       font-size: 32rpx;
-       .weui-btn_cell {
-        margin-right: 20rpx;
-      }
-      .name {
-        flex: 1;
-        line-height: 40rpx;
-      }
-    }
-    .card-col-2 {
-      line-height: 46rpx;
-      color: @weuiTextColorDesc;
-      font-size: 25rpx;
-      text {
-        display: inline-block;
-        margin-right: 20rpx;
-      }
-      .name {
-        color: @weuiTextColorTitle;
-        font-weight: 500;
-      }
-      .card-text {
-        font-size: 22rpx;
-      }
-    }
-    .card-col-3 {
-      position: absolute;
-      right: 30rpx;
-      bottom: 30rpx;
+    .name {
+      flex: 1;
+      line-height: 40rpx;
     }
   }
-  .shadow {
-    box-shadow: 0px 4rpx 28rpx 0px  @weuiCellShadow;
-  }
-  .page_card_icon {
-    width: 36rpx;
-    height: 36rpx;
-  }
-  .samll_card_icon {
-    width: 48rpx;
-    height: 48rpx;
-  }
- .card-item  {
-    padding: 0 16rpx;
-    background:#F0F6FE;
-    border-radius: 4rpx;
-    margin-right: 10rpx;
-    font-size: 22rpx;
+  .card-col-2 {
+    line-height: 46rpx;
     color: @weuiTextColorDesc;
-    &.active {
-      background: @weuiColorPrimary;
-      color: @weuiTextColorWhite;
+    font-size: 25rpx;
+    text {
+      display: inline-block;
+      margin-right: 20rpx;
     }
- }
- .page_list {
+    .name {
+      color: @weuiTextColorTitle;
+      font-weight: 500;
+    }
+    .card-text {
+      font-size: 22rpx;
+    }
+  }
+  .card-col-3 {
+    position: absolute;
+    right: 30rpx;
+    bottom: 30rpx;
+  }
+}
+.shadow {
+  box-shadow: 0px 4rpx 28rpx 0px  @weuiCellShadow;
+}
+.page_card_icon {
+  width: 36rpx;
+  height: 36rpx;
+}
+.samll_card_icon {
+  width: 48rpx;
+  height: 48rpx;
+}
+.card-item  {
+  padding: 0 16rpx;
+  background:#F0F6FE;
+  border-radius: 4rpx;
+  margin-right: 10rpx;
+  font-size: 22rpx;
+  color: @weuiTextColorDesc;
+  &.active {
+    background: @weuiColorPrimary;
+    color: @weuiTextColorWhite;
+  }
+}
+.page_list {
   text-align: center;
   .page_noData {
     max-width: 440rpx;
     height: 245rpx;
     margin: 300rpx auto 40rpx;
   }
-
   .page_noData_text {
     font-size: 28rpx;
     color: @weuiTextColorTips;
@@ -194,7 +191,7 @@ page {
   width: 100rpx;
   height: 100rpx;
   border-radius: 16rpx;
-}
+  }
 .big_icon {
   width: 60rpx;
   height: 60rpx;

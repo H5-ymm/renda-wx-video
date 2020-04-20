@@ -15,7 +15,7 @@
         <view class="my-view-box">
           <block  wx:for="{{menusList}}" wx:key="index">
             <view class="list-row">
-              <view class="list-row-col1" bindtap="viewInfo" data-wpyviewinfo-a="{{newitem}}">
+              <view class="list-row-col1" bindtap="viewInfo" data-wpyviewinfo-a="{{item}}">
                 <view class="weui-flex between">
                   <view class="page__title">{{item.title}}</view>
                   <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon"/>

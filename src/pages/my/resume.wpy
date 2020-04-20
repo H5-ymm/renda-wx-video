@@ -3,14 +3,14 @@
 </style>
 <template>
   <view class="page view_auto">
-    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="page">
+    <scroll-view scroll-y="true" class="page">
       <view class="resume-box">
         <view class="page_bottom section-box">
           <view class="weui-flex between">
             <view class="com_info">
               <view class="page__title">
                 杨萌萌
-                <image src="../../images/user/edit.png" class="page_card_icon" mode="scaleToFill" />
+                <image src="../../images/user/edit.png" @tap="routerView('editResume')" class="page_card_icon" mode="scaleToFill" />
               </view>
               <view class="page__desc">1992-12-25 上海市、浦东新区</view>
               <view class="page__desc">联系电话：15753911234</view>
@@ -22,7 +22,7 @@
         <view class="section-box">
           <view class="page__title weui-flex between">
             求职意向
-            <image src="../../images/user/edit.png" class="page_card_icon" mode="scaleToFill" />
+            <image src="../../images/user/edit.png" @tap="routerView('editJob')" class="page_card_icon" mode="scaleToFill" />
           </view>
           <view class="job_detail">
             <view class="page__title">工作性质：全职</view>
@@ -43,7 +43,7 @@
           <view class="page__desc">
            毕业时间：2016-06-15
           </view>
-          <view class="page__text__active weui-flex center">
+          <view class="page__text__active weui-flex center" @tap="routerView('editEducation')">
             添加教育背景
             <image src="../../images/user/add.png" class="page_card_icon " mode="scaleToFill" />
           </view>
@@ -63,7 +63,7 @@
             制定设计规范，参与大型运营活动的讨论，并能从视觉和用户体验的角度提出自己的建议。
             负责运营推广和物料设计，负责部分线下物料产品周边设计。
           </view>
-          <view class="page__text__active weui-flex center">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill" /></view>
+          <view class="page__text__active weui-flex center" @tap="routerView('editWorkExperience')">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill" /></view>
         </view>
       </view>
     </scroll-view>
@@ -101,83 +101,12 @@ export default class resume extends wepy.page {
     ]
   }
   config = {
-    navigationBarTitleText: '企业详情'
+    navigationBarTitleText: '我的简历'
   }
-  updateResume () {
-    if (this.checkObj(this.form, this.formTeam)) {
-      wxRedirectTo('/pages/home/index')
-      return
-    }
-    this.form = Object.assign(this.query, this.form)
-    $http('/Wxresume/editruseme', this.form).then(res => {
-      if (res.data) {
-        wxRedirectTo('/pages/home/index')
-      } else {
-        wxToast('修改失败')
-      }
-    })
-  }
-  getResumeDetail (query) {
-    this.type = query.type
-    $http('/Wxresume/getresume_recommend', query).then(res => {
-      this.form = res.data
-      this.form.from_user = !res.data.from_user ? '' : res.data.from_user
-      this.form.to_user = !res.data.to_user ? '' : res.data.to_user
-      this.form.age = !res.data.age ? '' : res.data.age
-      this.eduIndex = res.data.education
-      if (this.form.provinceid != 0) {
-        this.address = [this.form.provinceid, this.form.cityid]
-      } else {
-        this.address = []
-      }
-      this.index = res.data.sex - 1
-      this.formTeam = JSON.parse(JSON.stringify(this.form))
-      this.$apply()
-    })
-  }
-  checkObj (obj1, obj2) {
-    let flag = true
-    for (let key in obj1) {
-      if (obj1[key] != obj2[key]) {
-        flag = false
-        break
-      } else {
-        flag = true
-      }
-    }
-    return flag
-  }
-  changeResumeStatus (urlApi, parasm) {
-    $http(urlApi, parasm).then(res => {
-      if (res.data) {
-        wxToast('操作成功')
-        wxRedirectTo('/pages/home/index')
-      } else {
-        wxToast('操作失败')
-      }
-    })
-  }
-  events = {
-    selectCity: data => {
-      this.form.provinceid = data[0] ? data[0] : 0
-      this.form.cityid = data[1] ? data[1] : 0
-    },
-    selectOk: val => {
-      if (this.modalTitle == '请选择简历方式') {
-        if (val === 0) {
-          wx.navigateTo({
-            url: '/pages/home/addInfo' // 页面 A
-          })
-        } else {
-          this.createQrcode()
-        }
-      } else {
-        wxNavigateTo(`/pages/teamView/internalInvoice/list?query=${val}&resumeId=${this.query.resume_id}&recommendId=${this.id}`)
-      }
-    },
-  }
-  //事件处理函数(集中保存在methods对象中)
   methods = {
+    routerView(url) {
+      wxNavigateTo(`/pages/my/${url}`)
+    },
     bindPickerChange (e) {
       this.index = e.detail.value
       this.form.sex = Number(this.index) + 1
@@ -190,49 +119,9 @@ export default class resume extends wepy.page {
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.value
     },
-    handleResume (status) {
-      this.status = Number(status)
-      let urlApi = this.status === 0 ? '/apply/del_put' : this.status === 1 ? '/apply/giveup_view' : '/apply/giveup_entry'
-      let text = this.status === 0 ? '放弃报名' : this.status === 1 ? '放弃面试' : '放弃入职'
-      let params = {
-        uid: this.uid,
-        ids: this.id
-      }
-      wxShowModal('', `确定${text}?`, '确定').then(res => {
-        this.changeResumeStatus(urlApi, params)
-      }).catch(() => {
-        console.log('取消')
-      })
-    },
-    routerResume(){
-      this.isSelectModal = !this.isSelectModal
-      this.$apply()
-    },
     save () {
-      if (this.form.age && Number(this.form.age) < 16) {
-        wxToast('请输入的年龄不小于16')
-        return
-      }
-      if (this.form.age && Number(this.form.age) > 65) {
-        wxToast('请输入的年龄不大于65')
-        return
-      }
       this.updateResume()
     }
-  }
-  //页面的生命周期函数
-  onLoad (options) {
-    // this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    // this.query = {
-    //   uid: this.uid,
-    //   job_id: options.job_id,
-    //   type: options.type,
-    //   resume_id: options.resume_id
-    // }
-    // this.id = options.recommendId
-  }
-  onShow () {
-    // this.getResumeDetail(this.query)
   }
 }
 </script>

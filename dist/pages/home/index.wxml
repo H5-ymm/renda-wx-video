@@ -52,7 +52,7 @@
       <view>规模：100家企业</view>
     </view>
     <view class="card-col-3">
-      <button class="weui-btn_cell weui-btn_primary {{$jobFairList$jobFairItem$isShowBtn?'':'weui-btn_primary_plain'}}">
+      <button class="weui-btn_cell weui-btn_primary {{$jobFairList$jobFairItem$isShowBtn?'':'weui-btn_primary_plain'}}" catchtap="$jobFairList$jobFairItem$handle" data-com-index="{{$jobFairList$undefined}}">
         {{$jobFairList$jobFairItem$isShowBtn?'进入会场':'详情'}}
       </button>
     </view>

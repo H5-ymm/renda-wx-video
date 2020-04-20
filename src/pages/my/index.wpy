@@ -19,7 +19,7 @@
         <view class="my-view-box">
           <repeat wx:for="{{menusList}}" wx:key="index">
             <view class="list-row">
-              <view class="list-row-col1" @tap="viewInfo({{newitem}})">
+              <view class="list-row-col1" @tap="viewInfo({{item}})">
                 <view class="weui-flex between">
                   <view class="page__title">{{item.title}}</view>
                   <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
@@ -73,21 +73,9 @@ export default class my extends wepy.page {
   }
   methods = {
     viewInfo (item) {
-      // userType 1 企业切换团队 2 团队切换企业
-      if (item.title === '切换账号') {
-        let text = this.usertype == 2 ? "企业" : '团队'
-        wxShowModal('切换账号', `确定切换${text}账号吗?`, '确定').then(res => {
-          this.type = this.usertype == 2 ? 2 : 1
-          this.switchUser(this.type)
-        }).catch(() => {
-          console.log('取消')
-        })
-        this.$apply()
-      } else {
-        wx.navigateTo({
-          url: item.url
-        })
-      }
+      wx.navigateTo({
+        url: item.url
+      })
     },
     outLogin () {
       wxShowModal('退出登录', `确定退出登录吗?`, '确定').then(res => {
@@ -201,13 +189,15 @@ export default class my extends wepy.page {
       } else {
         arr = [
           {
-            title: '我的简历'
+            title: '我的简历',
+            url:'/pages/my/resume'
           },
           {
             title: '投递记录'
           },
           {
-            title: '我的收藏'
+            title: '我的收藏',
+            url:'/pages/home/collect'
           },
           {
             title: '意见反馈'

@@ -1,0 +1,2 @@
+@import "./../../components/pickerModal.wxss";
+.add-view .page_form{margin-top:40rpx}.add-view .page_form .page__label{margin-right:20rpx}.add-view .page_form .page_margin{padding:10rpx 0}.add-view .weui-cell_btn{background:#fff;border-top:1px solid #F6F7FA;padding:30rpx 0}.add-view .weui-cell_btn .weui-btn_cell{border-radius:16rpx;background:#F6F6F6;color:rgba(17,17,17,0.5);padding:40rpx 10rpx;width:30%;margin:0 24rpx}.add-view .weui-cell_btn .weui-btn_cell.weui-btn_primary{width:50%;padding:40rpx 50rpx;background:#1890FF;color:#fff}

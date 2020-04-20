@@ -4,7 +4,7 @@
 </style>
 <template>
   <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
-    <jobFairItemHall :item.sync="jobFairInfo" :isShowBtn.sync="isShowBtn"></jobFairItemHall>
+    <jobFairItemHall :item.sync="jobFairInfo" :isShowBtn.sync="isShowBtn" @viewDetail="viewDetail"></jobFairItemHall>
     <view class="hall-switch weui-flex between shadow">
       <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView('1')">招聘大厅</view>
       <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView('2')">求职大厅</view>
@@ -62,6 +62,12 @@ export default class hall extends wepy.page {
   }
   config = {
     navigationBarTitleText: '人事达网络招聘会'
+  }
+  events = {
+    viewDetail: ()=>{
+      this.isInvitationModal = false
+      this.$apply()
+    }
   }
   methods = {
     viewInfo (item) {

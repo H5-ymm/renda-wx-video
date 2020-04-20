@@ -32,6 +32,7 @@
     margin: 0 auto;
     .weui-btn_cell {
       border-radius:16rpx;
+      font-weight: normal;
     }
   }
 }

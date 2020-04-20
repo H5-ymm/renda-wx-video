@@ -1,0 +1,149 @@
+<style lang="less">
+.add-view {
+  .page_form {
+    margin-top: 40rpx;
+    .page__label {
+      margin-right: 20rpx;
+    }
+    .page_margin {
+      padding: 10rpx 0;
+    }
+  }
+  .weui-cell_btn {
+    background: #fff;
+    border-top: 1px solid #F6F7FA;
+    padding: 30rpx 0;
+    .weui-btn_cell {
+      border-radius:16rpx;
+      background: #F6F6F6;
+      color:rgba(17,17,17,.5);
+      padding: 40rpx 10rpx;
+      width: 30%;
+      margin: 0 24rpx;
+      &.weui-btn_primary {
+        width: 50%;
+        padding: 40rpx 50rpx;
+        background: #1890FF;
+        color:#fff;
+      }
+    }
+  }
+  .weui-textarea {
+    word-break: break-all;
+  }
+  .weui-input {
+    &.weui-textarea {
+      width: 94%;
+      padding: 20rpx;
+      border: 1px solid #eeeeee;
+    }
+  }
+}
+</style>
+<template>
+  <view class="add-view page">
+    <view class="view-list">
+      <view class="page_form">
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作时间</view>
+            <picker mode="date" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png"  class="page_card_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">公司名称</view>
+            <view class="weui-flex between" @tap="selectType">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.from_user}}" data-name="from_user" @input="changeInput" />
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作类型</view>
+            <view class="weui-flex between" @tap="selectType">
+              <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png"  class="page_card_icon" />
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">职位名称</view>
+            <view class="weui-flex between" @tap="selectType">
+               <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png"  class="page_card_icon" />
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作职责</view>
+          </view>
+          <textarea data-name="introduction" placeholder-class="placeholder"
+            disable-default-padding="true"
+            class="weui-input weui-textarea" value="{{form.introduction}}" @input="changeInput"
+            placeholder="请输入工作职责" maxlength="-1"/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+     	<button class="weui-btn_cell"  @tap="close">
+        取消 
+      </button>
+      <button class="weui-btn_cell weui-btn_primary" @tap="save">
+        保存
+      </button>
+    </view>
+    <pickerModal :isScaleModal.sync="isPicker" :list.sync="eduList"></pickerModal>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import districtSelet from '@/components/districtSelet'
+import pickerModal from '@/components/pickerModal'
+
+export default class editWorkExperience extends wepy.page {
+  components = {
+    districtSelet: districtSelet,
+    pickerModal: pickerModal
+  }
+  data = {
+    form: {
+      introduction: ''
+    },
+    jobName: '',
+    array: ['男', '女'],
+    eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
+    index: 0,
+    eduIndex: 0,
+    addressIndex: -1,
+    step: 1,
+    disabled: false,
+    isPicker: true,
+    depIndex: []
+  }
+  config = {
+    navigationBarTitleText: '工作/实习经历'
+  }
+  onLoad(){
+    // this.isPicker = false
+    // this.$apply()
+  }
+  // 事件处理函数(集中保存在methods对象中)
+  methods = {
+    changeInput(e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+    },
+    submit() {
+    
+    }
+  }
+}
+</script>

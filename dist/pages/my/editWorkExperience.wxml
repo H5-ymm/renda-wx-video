@@ -1,0 +1,89 @@
+
+  <view class="add-view page">
+    <view class="view-list">
+      <view class="page_form">
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作时间</view>
+            <picker mode="date" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">公司名称</view>
+            <view class="weui-flex between" bindtap="selectType">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.from_user}}" data-name="from_user" bindinput="changeInput"/>
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作类型</view>
+            <view class="weui-flex between" bindtap="selectType">
+              <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">职位名称</view>
+            <view class="weui-flex between" bindtap="selectType">
+               <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作职责</view>
+          </view>
+          <textarea data-name="introduction" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea" value="{{form.introduction}}" bindinput="changeInput" placeholder="请输入工作职责" maxlength="-1"/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+     	<button class="weui-btn_cell" bindtap="close">
+        取消 
+      </button>
+      <button class="weui-btn_cell weui-btn_primary" bindtap="save">
+        保存
+      </button>
+    </view>
+    
+	<view hidden="{{$pickerModal$isScaleModal}}">
+		<view bindtap="$pickerModal$ handleClose"  wx:if="{{$pickerModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box transition3s {{ $pickerModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$pickerModal$height}}rpx">
+			<view class="modal-content">
+        <view class="picker">
+        <view class="weui-flex between picker-btn">
+          <view class="weui-flex center" bindtap="$pickerModal$selectClose">
+            取消
+          </view>
+          <view class="weui-flex center ok-btn" bindtap="$pickerModal$selectOk">
+            确定
+          </view>
+        </view>
+        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerModal$activeIndex}}" bindchange="$pickerModal$bindChange">
+          <picker-view-column>
+            <block  wx:for="{{$pickerModal$list}}" wx:key="index">
+              <view class="picker-view-item">{{item}}</view>
+            </block>
+          </picker-view-column>
+          <picker-view-column>
+            <block wx:for="{{$pickerModal$list}}" wx:key="index">
+              <view class="picker-view-item">{{item}}</view>
+            </block>
+          </picker-view-column>
+        </picker-view>
+      </view>
+			</view>
+		</view>
+	</view>
+
+  </view>

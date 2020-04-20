@@ -1,13 +1,13 @@
 
   <view class="page view_auto">
-    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="page">
+    <scroll-view scroll-y="true" class="page">
       <view class="resume-box">
         <view class="page_bottom section-box">
           <view class="weui-flex between">
             <view class="com_info">
               <view class="page__title">
                 杨萌萌
-                <image src="../../images/user/edit.png" class="page_card_icon" mode="scaleToFill"/>
+                <image src="../../images/user/edit.png" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editResume"/>
               </view>
               <view class="page__desc">1992-12-25 上海市、浦东新区</view>
               <view class="page__desc">联系电话：15753911234</view>
@@ -19,7 +19,7 @@
         <view class="section-box">
           <view class="page__title weui-flex between">
             求职意向
-            <image src="../../images/user/edit.png" class="page_card_icon" mode="scaleToFill"/>
+            <image src="../../images/user/edit.png" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editJob"/>
           </view>
           <view class="job_detail">
             <view class="page__title">工作性质：全职</view>
@@ -40,7 +40,7 @@
           <view class="page__desc">
            毕业时间：2016-06-15
           </view>
-          <view class="page__text__active weui-flex center">
+          <view class="page__text__active weui-flex center" bindtap="routerView" data-wpyrouterview-a="editEducation">
             添加教育背景
             <image src="../../images/user/add.png" class="page_card_icon " mode="scaleToFill"/>
           </view>
@@ -60,7 +60,7 @@
             制定设计规范，参与大型运营活动的讨论，并能从视觉和用户体验的角度提出自己的建议。
             负责运营推广和物料设计，负责部分线下物料产品周边设计。
           </view>
-          <view class="page__text__active weui-flex center">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill"/></view>
+          <view class="page__text__active weui-flex center" bindtap="routerView" data-wpyrouterview-a="editWorkExperience">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill"/></view>
         </view>
       </view>
     </scroll-view>
