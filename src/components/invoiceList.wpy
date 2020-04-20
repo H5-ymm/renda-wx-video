@@ -39,7 +39,7 @@
 					<view class="weui-flex__item">
 						<view class="weui-flex between">
 							<view>
-								<view class="page_card_name">{{item.job_name}}</view>
+								<view class="page_card_name">上海市任达网络科技有限公司</view>
 								<view class="text-line weui-flex__item">
 									{{recommendType==1?item.com_name:item.company_name}}</view>
 								<view class="text-line weui-flex__item">

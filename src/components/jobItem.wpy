@@ -8,7 +8,7 @@
     <view class="page__desc">IT | 互联网 | 教育培训</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">业绩提成</view><view class="card-item weui-flex center">业绩提成</view></view>
-      <button class="weui-btn_cell weui-btn_primary">
+      <button class="weui-btn_cell weui-btn_primary" wx:if="{{isShowBtn}}">
         投递简历
       </button>
     </view>

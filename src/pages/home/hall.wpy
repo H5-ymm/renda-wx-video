@@ -14,7 +14,9 @@
     在线企业(18)
     </view>
     <searchHall></searchHall>
-    <hallList :list.sync="list"></hallList>
+    <hallList :list.sync="list" wx:if="{{hallType==1}}"></hallList>
+    <jobHallList :list.sync="list" wx:else></jobHallList>
+    <invitationModal :isScaleModal.sync="isInvitationModal"></invitationModal>
     <!-- <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet> -->
   </scroll-view>
 </template>
@@ -25,14 +27,19 @@ import $moment from 'moment'
 import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
 import jobFairItem from '@/components/jobFairItem'
 import actionSheet from '@/components/actionSheet'
+import invitationModal from '@/components/invitationModal'
 import search from '@/components/search'
 import hallList from '@/components/hallList'
+import jobHallList from '@/components/jobHallList'
+
 export default class hall extends wepy.page {
   components = {
     jobFairItemHall: jobFairItem,
     hallList: hallList,
+    jobHallList: jobHallList,
     actionSheet: actionSheet,
-    searchHall: search
+    searchHall: search,
+    invitationModal: invitationModal
   }
   data = {
     rendaUserTeamType: 0,
@@ -50,6 +57,7 @@ export default class hall extends wepy.page {
     activeIndex: 0,
     jobFairInfo: {},
     isShowBtn: false,
+    isInvitationModal: true,
     hallType: 1
   }
   config = {
@@ -133,7 +141,8 @@ export default class hall extends wepy.page {
     })
   }
   onLoad(options) {
-    this.isScaleModal = false
+    // this.isInvitationModal = false
+    // this.isScaleModal = false
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     this.$apply()
     this.getTeamInfoAPi(this.params.uid)

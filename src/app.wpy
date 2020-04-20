@@ -14,11 +14,16 @@ setStore(store)
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/my/editResume',
+      'pages/my/resume',
       'pages/home/index',
-      'pages/login/welcome',
-      'pages/my/index',
       'pages/message/index',
+      'pages/my/index',
       'pages/home/hall',
+      'pages/home/collect',
+      'pages/home/jobDetail',
+      'pages/home/companyDetail',
+      'pages/login/welcome',
       'pages/home/jobView',
       'pages/home/list',
       'pages/message/dialogBox',
@@ -30,7 +35,7 @@ export default class extends wepy.app {
       'pages/my/companyInfo',
       'pages/my/teamInfo',
       'pages/my/userBind',
-      'pages/teamView/orderManage/allocationPerson',
+      'pages/message/allocationPerson',
       'pages/register/companyTeam',
       'pages/register/companyForm',
       'pages/register/team',
@@ -44,9 +49,9 @@ export default class extends wepy.app {
       backgroundColor: '#1890FF'
     },
     tabBar: {
-      color:'#919398',
-      selectedColor:'#1890FF',
-      borderStyle:'white',
+      color: '#919398',
+      selectedColor: '#1890FF',
+      borderStyle: 'white',
       list: [{
         pagePath: 'pages/home/index',
         text: '首页',

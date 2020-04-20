@@ -1,0 +1,33 @@
+
+<template>
+	<view>
+	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
+      <jobHallItem :item.sync="item"></jobHallItem>
+    </repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+import jobHallItem from './jobHallItem'
+export default class jobHallList extends wepy.component {
+  components = {
+    jobHallItem: jobHallItem
+  }
+	props = {
+		list: Array
+	}
+	data = {
+	
+	}
+	methods = {
+    routerHall() {
+      wxNavigateTo('/pages/home/hall')
+    }
+	}
+}
+</script>

@@ -1,140 +1,36 @@
 @import "./base/variable/color";
 @import "./cell";
-
 .page-my {
-    .my-view-header {
-        width: 100%;
-        position: relative;
-        height: 256rpx;
-
-        .my-view-header-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 256rpx;
-            width: 100%;
-        }
-
-        .my-view-userInfo {
-            position: relative;
-            z-index: 22;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-            color: @weuiBgColorWhite;
-            line-height: 48rpx;
-
-            .my-avatar-box {
-                text-align: center;
-                height: 140rpx;
-                padding-bottom: 6rpx;
-            }
-
-            .my-avatar {
-                width: 140rpx;
-                height: 140rpx;
-                margin: 0 auto;
-                border-radius: 50%;
-            }
-
-            .my-user-name {
-                font-size: 40rpx;
-            }
-
-            .my-user-mobile {
-                font-size: 32rpx;
-            }
-        }
+  .my-view-header {
+    height: 256rpx;
+    padding: 0 30rpx;
+    .my-avatar-box {
+      text-align: center;
+      height: 140rpx;
+      padding-bottom: 6rpx;
     }
-    &.page-team-home {
-        .my-view-header {
-          padding: 0 24rpx;
-          color: #333333;
-          height: 256rpx;
-          .my-avatar-box {
-            height: 180rpx;
-            width: 180rpx;
-            position: relative;
-            z-index: 222;
-            .my-avatar {
-              width: 100%;
-              height: 100%;
-              border-radius: 50%;
-            }
-          }
-          .team-info-row {
-            margin-left: 20rpx;
-            line-height: 70rpx;
-            position: relative;
-            z-index: 222;
-            .my-user-name {
-              font-size: 40rpx;
-            }
-            .team-info-col {
-              line-height: 48rpx;
-            }
-            .team-info-total {
-              margin-right: 50rpx;
-              margin-top: 16rpx;
-              .team-info-num {
-                font-weight: bold;
-                font-size: 36rpx;
-              }
-              .team-info-label {
-                font-size: 26rpx;
-                font-weight: 200;
-              }
-            }
-          }
-        }
-        .page_margin {
-          margin: 0 24rpx 24rpx;
-        }
-        &.page-cmpany-home {
-            .my-view-header {
-                background: @weuiColorPrimary;
-                color:@weuiBgColorWhite ;
-                height: 280rpx;
-                padding-top: 50rpx;
-                .my-avatar-box {
-                    width: 140rpx;
-                    height: 140rpx;
-                }
-                .icon-company {
-                    width: 90rpx;
-                    height: 32rpx;
-                }
-               .team-info-row{
-                  line-height: 80rpx;
-                }
-            }
-            .view-content {
-                margin-top: -90rpx;
-                position: relative;
-                z-index: 333;
-                height: 63%;
-            }
-        }
-      }
-      .view-content {
-          height: 57%;
-      }
-    .my-view {
-        &.my-view-main {
-            margin: 60rpx 48rpx 0;
-        }
-
-        .my-head {
-            width: 88rpx;
-            height: 88rpx;
-            border-radius: 5rpx;
-            margin-right: 10rpx;
-        }
-
-        .my-icon {
-            width: 52rpx;
-            height: 52rpx;
-            margin-right: 20rpx;
-        }
+    .my-avatar {
+      width: 140rpx;
+      height: 140rpx;
+      margin: 0 auto;
+      border-radius: 50%;
     }
+    .userInfo-row {
+      margin-left: 40rpx;
+      .my-user-name {
+        font-size: 40rpx;
+      }
+    }
+  }
+  .login-out {
+    width: 80%;
+    margin: 0 auto;
+    .weui-btn_cell {
+      padding: 40rpx 16rpx;
+    }
+  }
+  .list-row {
+    padding: 30rpx;
+  }
 }
+

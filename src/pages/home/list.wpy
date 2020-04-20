@@ -7,17 +7,14 @@
       <view class="home-view-box">
         <repeat wx:for="{{list}}" wx:key="index">
           <view class="page_card  {{activeIndex==index? 'page_card_active': ''}}" wx:if="{{list.length}}" @tap="selectJob({{index}},{{item}})">
-            <view class="page_card_row">
-              <view class="weui-flex between">
+            <view class="weui-flex between">
+              <view>
                 <view class="page_card_name">{{item.job_name}}</view>
                 <view class="page_card_num" wx:if="{{resumeType == '团队接单'}}">需求人数：{{item.required_number}}人</view>
                 <view class="page_card_num" wx:else>需求人数：{{item.number}}人</view>
               </view>
-              <view class="weui-flex between">
-                <view class="text-line weui-flex start">
-                  <view class="page_card_col1" wx:if="{{resumeType == '团队接单'}}">{{item.com_name}}</view>
-                  <view class="page_card_col1" wx:else>{{item.company_name}}</view>
-                </view>
+              <view>
+                <image mode="scaleToFill" class="weui-flex__item" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
               </view>
             </view>
           </view>

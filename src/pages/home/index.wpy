@@ -54,7 +54,7 @@
         </view>
       </view>
     </scroll-view>
-    <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet>
+    <actionSheet :isScaleModal.sync="isScaleModal" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet>
   </view>
 </template>
 <script>
@@ -89,7 +89,6 @@ export default class teamView extends wepy.page {
     {
       status: 2
     }],
-    height: 200,
     isScaleModal: true,
     count: 0,
     activeIndex: 0,

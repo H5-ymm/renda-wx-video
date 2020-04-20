@@ -1,18 +1,21 @@
 
   <view class="login_page welcome-page page_bottom">
     <view class="login-view welcome-view">
-      <image src="https://a.rsd123.com/image/images/welcome/welcomeBg.png" mode="aspectFill" class="login-view-bg welcome-view-bg"/>
-      <view class="login-view-box welcome-view-box">
+      <view class="login-title">
+        <view>Hi,</view>
+        <view class="login-title-col">欢迎使用人事达视频招聘会</view>
+      </view>
+       <image src="../../images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg"/>
+      <view class="welcome-view-box">
         <view class="welcome-view-form login-view-form">
-          <view class="weui-cell_btn weui-flex center login-btn">
-            <button lang="zh_CN" disabled="{{!isRead}}" class="weui-btn_cell weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" bindgetuserinfo="getUserInfo" open-type="getUserInfo">开始使用</button>
+           <view class="rule-view weui-flex start wrap" bindtap="checkedRule" data-wpycheckedrule-a="{{checked}}">
+            <image  wx:if="{{!checked}}" src="../../images/selected.png" mode="scaleToFill" class="check-icon"/>
+            <image  wx:else src="../../images/radio.png" mode="scaleToFill" class="check-icon"/>
+            我已阅读并同意<view class="text">《视频招聘会协议》</view>
           </view>
-          <view class="rule-view weui-flex start wrap" bindtap="checkedRule" data-wpycheckedrule-a="{{checked}}">
-            <image  wx:if="{{!checked}}" src="https://a.rsd123.com/image/images/check.png" mode="scaleToFill" class="check-icon"/>
-            <image  wx:else src="https://a.rsd123.com/image/images/check1.png" mode="scaleToFill" class="check-icon"/>
-            我已认真阅读并同意<view class="text">《用户协议及隐私政策》</view>和
-            <view class="text">《信息保护政策》
-            </view>
+          <view class="weui-cell_btn weui-flex center wrap">
+            <button lang="zh_CN" disabled="{{!isRead}}" class="weui-btn_cell weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" bindgetuserinfo="getUserInfo" open-type="getUserInfo">微信账号快捷登录</button>
+            <view class="other-login other-login1">输入手机号码登录/注册</view>
           </view>
         </view>
       </view>
@@ -49,5 +52,71 @@
   </view>
 
 
+    
+  <view hidden="{{$actionLoginSheet$isScaleModal}}">
+    <view bindtap="$actionLoginSheet$handleClose"  wx:if="{{$actionLoginSheet$isShow}}" class="modal_mask"/>
+    <view class="modal_transform g_transition3s {{ $actionLoginSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionLoginSheet$height}}rpx">
+      <view class="modal-page_card">
+        <image mode="scaleToFill" src="../../images/close.png" class="close-icon" bindtap="$actionLoginSheet$handleClose"/>
+        <view  wx:if="{{!$actionLoginSheet$title}}" class="modal-content">
+          <view class="modal_text weui-flex center">{{$actionLoginSheet$text}}</view>
+          <view class="weui-flex around modal-btn">
+            <text class="weui-flex__item weui-flex center">取消</text>
+            <text class="active weui-flex__item weui-flex center">{{$actionLoginSheet$okText}}</text>
+          </view>
+        </view>
+        <view wx:else class="select-user">
+          <view class="modal_title weui-flex center">{{$actionLoginSheet$title}}</view>
+          <view class="modal_text weui-flex center">{{$actionLoginSheet$text}}</view>
+          <view class="weui-flex center modal-btn wrap">
+            <view class="col weui-flex center">我是企业招聘者</view>
+            <view class="col weui-flex center">我是求职者</view>
+          </view>
+        </view>
+      </view>
+  </view>
+
+<script>
+import wepy from 'wepy'
+export default class actionSheet extends wepy.component {
+  props = {
+    isScaleModal: Boolean,
+    height: {
+      type: Number,
+      default: 280
+    },
+    text: String,
+    okText: {
+      type: String,
+      default: '联系客服'
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  }
+  data = {
+    isShow: false,
+  }
+  methods = {
+    handleClose() {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleClose')
+    }
+  }
+  watch = {
+    isScaleModal(val) {
+      if (!val) {
+        this.isShow = true
+      }
+      else {
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+}
+</script></view>
     <!-- <modalogin v-bind:isScaleModal.sync="isLoginModal" v-bind:type.sync="type" bindhandleClose="handleClose" bindhandleOkLogin="handleOkLogin" v-bind:height.sync="modalLoginHeight"></modalogin> -->
   </view>

@@ -8,25 +8,30 @@ page {
 .page {
   height: 100%;
   .home-view-box {
-      overflow: auto;
+    overflow: auto;
   }
 }
+.view_hidden {
+  overflow: hidden;
+}
+.view_auto {
+  overflow: auto;
+}
 .placeholder {
-  color: @weuiPlaceholderColor;
+  color: @weuiTextColorDesc;
 }
 .view-content {
-    height: calc(100% - 60px);
+  height: calc(100% - 60px);
 }
-.view-detail {
-   height: calc(100% - 100px);
+.view-content1 {
+  height: calc(100% - 100px);
 }
 .view-list {
-    height: calc(100% - 120px);
+  height: calc(100% - 120px);
 }
 .page_margin {
    margin: 30rpx;
 }
-
 .login_page {
   background-color: @weuiBgColorWhite;
 }
@@ -34,7 +39,9 @@ page {
 .page__hd {
   padding: 40px;
 }
-
+.page__pg {
+  background: @weuiBgColorDefault;
+}
 .page__bd {
   padding-bottom: 40px;
 }
@@ -53,13 +60,24 @@ page {
   font-size: 32rpx;
   color: @weuiTextColorTitle;
 }
+.page__label {
+  font-size: 32rpx;
+  color: @weuiTextColorTitle;
+}
 .page__desc {
   margin-top: 5px;
   color: @weuiTextColorDesc;
   font-size: 28rpx;
 }
+.page__text__active {
+  color: @weuiColorPrimary;
+  font-size: 28rpx;
+}
 .page_bottom {
   border-bottom: 1px solid @weuiLineColorLight;
+}
+.page_top {
+  border-top: 10rpx solid @weuiLineColorLight;
 }
 .weui-textarea {
   word-break: break-all;
@@ -141,8 +159,11 @@ page {
   .page_card_icon {
     width: 36rpx;
     height: 36rpx;
-    margin-right: 20rpx;
- }
+  }
+  .samll_card_icon {
+    width: 48rpx;
+    height: 48rpx;
+  }
  .card-item  {
     padding: 0 16rpx;
     background:#F0F6FE;
@@ -168,4 +189,14 @@ page {
     color: @weuiTextColorTips;
     margin-left: 20rpx;
   }
+}
+.card-header {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 16rpx;
+}
+.big_icon {
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 40rpx;
 }

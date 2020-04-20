@@ -2,12 +2,12 @@
   <picker mode="multiSelector" @cancel="cancelPickerChange" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
     <view class="my-text-right weui-flex between">
       <view wx:if="{{options.length}}">
-          {{multiArray[0][multiIndex[0]]}}
-          {{multiArray[1][multiIndex[1]]}}
-          {{disabled?multiArray[2][multiIndex[2]]:''}}
-       </view>
+        {{multiArray[0][multiIndex[0]]}}
+        {{multiArray[1][multiIndex[1]]}}
+        {{disabled?multiArray[2][multiIndex[2]]:''}}
+      </view>
       <view wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png"  class="page_down_icon" />
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png"  class="page_card_icon" />
     </view>
   </picker>
 </template>

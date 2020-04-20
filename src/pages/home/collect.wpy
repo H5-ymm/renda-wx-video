@@ -1,0 +1,171 @@
+<style lang="less">
+@import '../../style/list.less';
+.page {
+  border-top: 10rpx solid #F0F2FA;
+  .page__desc {
+    font-size:24rpx;
+  }
+  .number {
+    font-size: 26rpx; 
+  }
+}
+</style>
+<template>
+	<view class="page">
+	  <tabBar :tabBarList.sync="tabBarList" class="header-tab"></tabBar>
+    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content">
+      <view class="home-view-box">
+        <repeat wx:for="{{list}}" wx:key="index">
+          <view class="list-row weui-flex between" wx:if="{{list.length}}" @tap="selectJob({{index}},{{item}})">
+            <view class="list-col-1">
+              <view class="page__title">上海市任达网络科技有限公司</view>
+              <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>
+              <view class="number">该公司共有8个职位在招聘</view>
+            </view>
+            <view class="weui-flex between">
+              <button class="weui-btn_cell weui-btn_primary">
+                立即沟通
+              </button>
+              <!-- <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" /> -->
+            </view>
+          </view>
+        </repeat>
+        <view wx:if="{{!list.length}}" class="page_list">
+          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+          <view class="page_noData_text">暂无数据！</view>
+        </view>
+      </view>
+    </scroll-view>
+ </view>
+</template>
+<script>
+import wepy from 'wepy'
+import tabBar from '@/components/tabBar'
+import { $http } from '@/http.js'
+export default class collect extends wepy.page {
+  components = {
+		tabBar: tabBar
+	}
+  data = {
+    list: [],
+    activeIndex: 0,
+    resumeType: '',
+    params: {
+      uid: '',
+      page: 1,
+      limit: 10
+    },
+    tabBarList: [
+    { name: '企业'},
+    { name: '职位'}],
+    count: 0
+  }
+  config = {
+    navigationBarTitleText: this.resumeType
+  }
+  getGeportOrderList () {
+    $http('/Wxresume/reportOrderList', this.params).then(res => {
+      this.list = res.data.data || []
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getInternalInvoiceList () {
+    $http('/Wxresume/internalInvoiceList', this.params).then(res => {
+      this.list = res.data.data || []
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+ methods = {
+    viewInfo (item) {
+      wx.navigateTo({
+        url: item.url
+      })
+    },
+    switchView(index) {
+      this.hallType = index
+      this.$apply()
+    },
+    viewDetail(item) {
+      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+    },
+    searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getReceiptList()
+			}
+    },
+    showModal(index){
+      this.activeIndex = index
+      this.$apply()
+    },
+    applyRecepit(item) {
+      let params = {
+        job_id: item.id,
+        uid: this.params.uid
+      }
+      this.setReceipt(params)
+    }
+  }
+  setReceipt(params) {
+    $http('/apply/add_apply', params).then(res => {
+      if(res.data) {
+        wxToast('接单成功')
+        wx.setStorageSync('receiptType', 0)
+        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
+      } else {
+        wxToast('接单失败')
+      }
+    })
+  }
+  getReceiptList (uid) {
+    $http('/receipt/receiptList', this.params).then(res => {
+      let arr = []
+      arr = res.data.data ? res.data.data.data : []
+      // arr.forEach(item=>{
+      //   if(item.utime - $moment().valueOf() > 0) {
+      //     item.utime = $moment.unix(item.utime).format('HH:ss')
+      //   } else {
+      //     item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
+      //   }
+      // })
+      this.list = arr
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getTeamInfoAPi (uid) {
+    $http('/Userinfo/getteaminfo', { uid }).then(res => {
+      this.rendaUserTeamType = res.data.grade_num
+      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
+      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
+      wx.setStorageSync('rendaDradeId', res.data.grade_id)
+      this.$apply()
+    })
+  }
+  saveUser(uid) {
+    let userinfo = wx.getStorageSync('wxInfo')
+    let params = {
+      uid,
+      head_img: userinfo.head_img
+    }
+    $http('/userinfo/editUserInfo', params).then(res => {
+      console.log(res)
+    })
+  }
+  onLoad(options) {
+    this.isScaleModal = false
+    this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.$apply()
+    this.getTeamInfoAPi(this.params.uid)
+  }
+  onShow () {
+    this.getReceiptList()
+    let userInfo = wx.getStorageSync('userInfo') || ''
+		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
+      this.saveUser()
+    }
+  }
+}
+</script>

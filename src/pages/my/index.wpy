@@ -1,56 +1,36 @@
 <style lang="less">
+@import '../../style/list.less';
 @import '../../style/user.less';
 </style>
 <template>
-  <view class="page-my {{usertype==1?'page-team-home page-cmpany-home':''}} page">
-    <view class="my-view-header" wx:if="{{usertype==2}}">
-      <image src="https://a.rsd123.com/image/images/bg.png" class="my-view-header-bg" mode="aspectFill" alt="" />
-      <view class="my-view-userInfo">
+  <view class="page-my page shadow">
+    <view class="view-content1">
+      <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="{{head_img}}" wx:if="{{head_img}}" alt="" mode="aspectFill" class="my-avatar" />
-          <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" />
+          <image src="../../images/head.png" class="my-avatar shadow" mode="scaleToFill" />
+          <!-- <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" /> -->
         </view>
-        <view class="my-user-name">{{userName}}</view>
-        <view class="my-user-mobile">{{userInfo.mobile?userInfo.mobile:''}}</view>
-      </view>
-    </view>
-    <view class="my-view-header weui-flex start-between" wx:if="{{usertype==1}}">
-      <view class="my-avatar-box">
-        <image src="{{head_img}}" wx:if="{{head_img}}" alt="" mode="aspectFill" class="my-avatar" />
-        <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" />
-      </view>
-      <view class="team-info-row">
-        <view class="my-user-name">{{userInfo.user_name}}</view>
-        <view class="weui-flex start">
-          <image src="https://a.rsd123.com/image/images/ok.png" alt="" mode="aspectFill" class="icon-company" />
+        <view class="userInfo-row">
+          <view class="my-user-name">上海任达信息科技有限公司</view>
+          <view class="page__desc">一切致力于为客户服务</view>
         </view>
       </view>
-    </view>
-    <view class="view-content">
-      <view class="page_margin my-view">
+      <view class="view-content">
         <view class="my-view-box">
-          <repeat wx:for="{{menus}}" wx:key="index">
-            <view class="page_card">
-              <repeat wx:for="{{item.child}}" wx:key="index" wx:for-item="newitem">
-                <view class="page_card_row" @tap="viewInfo({{newitem}})">
-                  <view class="weui-flex between">
-                    <view class="weui-flex start">
-                      <image src="{{newitem.icon}}" alt="" class="my-icon" />
-                      <view class="my-text">{{newitem.title}}</view>
-                    </view>
-                    <view class="weui-flex between">
-                      <view wx:if="{{newitem.title==='切换账号'}}">{{usertype==1?"企业":'团队'}}</view>
-                      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
-                    </view>
-                  </view>
+          <repeat wx:for="{{menusList}}" wx:key="index">
+            <view class="list-row">
+              <view class="list-row-col1" @tap="viewInfo({{newitem}})">
+                <view class="weui-flex between">
+                  <view class="page__title">{{item.title}}</view>
+                  <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
                 </view>
-              </repeat>
+              </view>
             </view>
           </repeat>
         </view>
       </view>
     </view>
-    <view class="weui-cell_btn weui-flex between page_margin">
+    <view class="weui-cell_btn weui-flex between page_margin login-out">
       <button class="weui-btn_cell weui-btn_primary" @tap="outLogin">退出登录</button>
     </view>
     <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
@@ -201,65 +181,36 @@ export default class my extends wepy.page {
         : ''
       return this.userInfo.user_name ? this.userInfo.user_name : name
     },
-    menus () {
+    menusList () {
       let arr = []
       if (this.usertype == 2) {
         arr = [
-          {
-            child: [
-              {
-                title: '账户信息',
-                icon: 'https://a.rsd123.com/image/images/icon1.png',
-                url: '/pages/my/userInfo'
-              },
-              {
-                title: '账户绑定',
-                icon: 'https://a.rsd123.com/image/images/icon2.png',
-                url: '/pages/my/userBind'
-              }
-            ]
-          },
-          {
-            child: [{
-              title: '团队信息',
-              icon: 'https://a.rsd123.com/image/images/icon3.png',
-              url: '/pages/my/teamInfo'
-            }]
-          },
-          {
-            child: [{
-              title: '切换账号',
-              icon: 'https://a.rsd123.com/image/images/icon6.png',
-              url: '/pages/my/userBind'
-            }, {
-              title: '我的消息',
-              icon: '../../images/icon7.png',
-              url: '/pages/message/index'
-            }]
-          }
-        ]
+      {
+        title: '企业信息'
+      },
+      {
+        title: '职位管理'
+      },
+      {
+        title: '应聘简历'
+      },
+      {
+        title: '意见反馈'
+      }
+    ]
       } else {
         arr = [
           {
-            child: [
-              {
-                title: '账户信息',
-                icon: 'https://a.rsd123.com/image/images/icon1.png',
-                url: '/pages/my/companyInfo'
-              },
-              {
-                title: '账户绑定',
-                icon: 'https://a.rsd123.com/image/images/icon2.png',
-                url: '/pages/my/userBind'
-              }
-            ]
+            title: '我的简历'
           },
           {
-            child: [{
-              title: '切换账号',
-              icon: 'https://a.rsd123.com/image/images/icon6.png',
-              url: '/pages/my/userBind'
-            }]
+            title: '投递记录'
+          },
+          {
+            title: '我的收藏'
+          },
+          {
+            title: '意见反馈'
           }
         ]
       }

@@ -1,0 +1,237 @@
+<style lang="less">
+@import '../../style/list.less';
+@import '../../style/detail.less';
+</style>
+<template>
+  <view class="page view_hidden">
+    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view_auto view-content">
+      <view class="detail-box">
+        <view class="section-box company_section-box">
+          <view class="weui-flex between">
+            <view class="com_info">
+              <view class="page__title">任达科技信息有限公司</view>
+              <view class="page__desc">天使轮 · 500人以上 · 软件开发</view>
+            </view>
+            <image src="../../images/head.png" class="company_logo shadow" mode="scaleToFill" />
+          </view>
+          <view class="page__title">
+            <text>上午9:00-下午6:00</text>
+            <text>双休</text>
+            <text>弹性工作</text>
+          </view>
+          <view class="welfare_swiper">
+            <swiper class="swiper" circular="true" previous-margin="100px" next-margin="50px">
+              <repeat wx:for="{{welfareList}}" wx:key="index">
+                <swiper-item class="swiper-item">
+                  <view class="welfare-item weui-flex between">
+                    <image src="{{item.icon}}" alt="" class="samll_card_icon" mode="aspectFill">
+                    <text class="welfare_desc">{{item.title}}</text> 
+                  </view>
+                </swiper-item>
+              </repeat>
+            </swiper>
+          </view>
+        </view>
+        <view class="address-box section-box">
+          <view class="page__title">公司地址</view>
+          <view class="page__desc address-detail">上海市交通大学国家科技园</view>
+        </view>
+        <view class="section-box">
+          <view class="page__title">公司介绍</view>
+          <view class="page__desc">
+            岗位职责： 
+            1、负责公司移动客户端UI界面设计，为公司新产品与新功能提供 创意及设计方案。 
+            2、参与设计讨论，和开发团队共同创建用户界面，跟踪设计效 果，提出设计优化方案。 
+            3、参与移动产品设计体验、流程的制定和规范。 
+            4、熟练使用ppt，c4d，ae。
+          </view>
+        </view>
+        <view class="section-box">
+          <view class="page__title">该公司其他职位</view>
+          <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn"></jobDetailItem>
+          <view class="page__text__active ">查看更多</view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="footer-box">
+      <view class="weui-flex between">
+        <view>
+          <image mode="scaleToFill" class="big_icon" src="../../images/company/collect-active.png" />
+          <image mode="scaleToFill" class="big_icon" src="../../images/company/share.png" />
+        </view>
+        <view>
+          <button class="weui-btn_cell weui-btn_primary">
+            立即沟通
+          </button>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import jobItem from '@/components/jobItem'
+import { $http } from '@/http.js'
+import { wxShowModal, wxToast, wxRedirectTo, wxNavigateTo } from '@/util.js'
+export default class jobDetail extends wepy.page {
+  components = {
+    jobDetailItem: jobItem
+  }
+  data = {
+    item: {},
+    isShowBtn: false,
+    welfareList: [
+      {
+        icon: '../../images/company/welfare_icon1.png',
+        title: '五险一金'
+      },
+      {
+       icon: '../../images/company/welfare_icon1.png',
+        title: '五险一金'
+      },
+      {
+        icon: '../../images/company/welfare_icon1.png',
+        title: '五险一金'
+      },
+      {
+        icon: '../../images/company/welfare_icon1.png',
+        title: '五险一金'
+      }
+    ]
+  }
+  config = {
+    navigationBarTitleText: '企业详情'
+  }
+  updateResume () {
+    if (this.checkObj(this.form, this.formTeam)) {
+      wxRedirectTo('/pages/home/index')
+      return
+    }
+    this.form = Object.assign(this.query, this.form)
+    $http('/Wxresume/editruseme', this.form).then(res => {
+      if (res.data) {
+        wxRedirectTo('/pages/home/index')
+      } else {
+        wxToast('修改失败')
+      }
+    })
+  }
+  getResumeDetail (query) {
+    this.type = query.type
+    $http('/Wxresume/getresume_recommend', query).then(res => {
+      this.form = res.data
+      this.form.from_user = !res.data.from_user ? '' : res.data.from_user
+      this.form.to_user = !res.data.to_user ? '' : res.data.to_user
+      this.form.age = !res.data.age ? '' : res.data.age
+      this.eduIndex = res.data.education
+      if (this.form.provinceid != 0) {
+        this.address = [this.form.provinceid, this.form.cityid]
+      } else {
+        this.address = []
+      }
+      this.index = res.data.sex - 1
+      this.formTeam = JSON.parse(JSON.stringify(this.form))
+      this.$apply()
+    })
+  }
+  checkObj (obj1, obj2) {
+    let flag = true
+    for (let key in obj1) {
+      if (obj1[key] != obj2[key]) {
+        flag = false
+        break
+      } else {
+        flag = true
+      }
+    }
+    return flag
+  }
+  changeResumeStatus (urlApi, parasm) {
+    $http(urlApi, parasm).then(res => {
+      if (res.data) {
+        wxToast('操作成功')
+        wxRedirectTo('/pages/home/index')
+      } else {
+        wxToast('操作失败')
+      }
+    })
+  }
+  events = {
+    selectCity: data => {
+      this.form.provinceid = data[0] ? data[0] : 0
+      this.form.cityid = data[1] ? data[1] : 0
+    },
+    selectOk: val => {
+      if (this.modalTitle == '请选择简历方式') {
+        if (val === 0) {
+          wx.navigateTo({
+            url: '/pages/home/addInfo' // 页面 A
+          })
+        } else {
+          this.createQrcode()
+        }
+      } else {
+        wxNavigateTo(`/pages/teamView/internalInvoice/list?query=${val}&resumeId=${this.query.resume_id}&recommendId=${this.id}`)
+      }
+    },
+  }
+  //事件处理函数(集中保存在methods对象中)
+  methods = {
+    bindPickerChange (e) {
+      this.index = e.detail.value
+      this.form.sex = Number(this.index) + 1
+    },
+    eduPickerChange (e) {
+      this.eduIndex = e.detail.value
+      this.form.education = this.eduIndex
+    },
+    changeInput (e) {
+      let key = e.currentTarget.dataset.name
+      this.form[key] = e.detail.value
+    },
+    handleResume (status) {
+      this.status = Number(status)
+      let urlApi = this.status === 0 ? '/apply/del_put' : this.status === 1 ? '/apply/giveup_view' : '/apply/giveup_entry'
+      let text = this.status === 0 ? '放弃报名' : this.status === 1 ? '放弃面试' : '放弃入职'
+      let params = {
+        uid: this.uid,
+        ids: this.id
+      }
+      wxShowModal('', `确定${text}?`, '确定').then(res => {
+        this.changeResumeStatus(urlApi, params)
+      }).catch(() => {
+        console.log('取消')
+      })
+    },
+    routerResume(){
+      this.isSelectModal = !this.isSelectModal
+      this.$apply()
+    },
+    save () {
+      if (this.form.age && Number(this.form.age) < 16) {
+        wxToast('请输入的年龄不小于16')
+        return
+      }
+      if (this.form.age && Number(this.form.age) > 65) {
+        wxToast('请输入的年龄不大于65')
+        return
+      }
+      this.updateResume()
+    }
+  }
+  //页面的生命周期函数
+  onLoad (options) {
+    // this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    // this.query = {
+    //   uid: this.uid,
+    //   job_id: options.job_id,
+    //   type: options.type,
+    //   resume_id: options.resume_id
+    // }
+    // this.id = options.recommendId
+  }
+  onShow () {
+    // this.getResumeDetail(this.query)
+  }
+}
+</script>

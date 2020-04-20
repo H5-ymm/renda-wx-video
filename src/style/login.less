@@ -1,127 +1,111 @@
 @import "./base/variable/color";
 
 .login_page {
-    &.welcome-page {
+  &.welcome-page {
+    height: 100%;
+    overflow: hidden;
+    width: 80%;
+    margin: 0 auto;
+    .login-view-bg {
+      height: 600rpx;
+      width: 100%;
+    }
+    .welcome-view-box {
+      width: 100%;
+      .login-view-form {
         height: 100%;
-        overflow: hidden;
-    }
-
-    .login-view {
-        position: relative;
-        height: 94%;
-
-        &.welcome-view {
-            height: 100%;
-        }
-
-        .login-title {
-            padding: 170rpx 0 80rpx;
-            font-size: 48rpx;
+        &.welcome-view-form {
+          .login-btn {
             width: 100%;
-            color: @weuiTextColorTitle;
-
-            .login-title-col {
-                font-size: 36rpx;
-                margin-top: 10rpx;
-            }
+            margin: 0 auto ;
+          }
         }
-
-        .login-view-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 90%;
-
-            &.welcome-view-bg {
-                height: 80%;
-            }
+      }
+      .check-icon {
+        font-size: 36rpx;
+        width: 26rpx;
+        height: 26rpx;
+        margin-right: 10rpx;
+      }
+      .rule-view {
+        margin: 40rpx;
+        font-size: 26rpx;
+        color: @weuiTextColorDesc;
+        .text {
+          color: @weuiColorPrimary;
         }
-
-        .weui-cell {
-            margin-bottom: 20px;
-            font-size: 28rpx;
-            position: relative;
-
-            .weui-cell_label {
-                color: @weuiTextColorDesc;
-                width: 130rpx;
-            }
-
-            .weui-input {
-                padding: 20rpx 0 16rpx;
-                text-align: left;
-            }
-
-            .weui-cell_line {
-                margin-right: 30rpx;
-            }
-
-            .code-btn {
-                position: absolute;
-                top: 20rpx;
-                right: 0;
-                color: @weuiColorPrimary;
-                font-size: 28rpx;
-            }
-        }
+      }
     }
-
-    .login-view-box {
-        height: 85%;
-        width: 80%;
-        margin: 0 auto;
-
-        .login-view-form {
-            width: 100%;
-        }
-
-        &.welcome-view-box {
-            width: 86%;
-            position: absolute;
-            bottom: 20%;
-            height: 200rpx;
-            left: 7%;
-            z-index: 222;
-
-            .login-view-form {
-                height: 100%;
-
-                &.welcome-view-form {
-                    .login-btn {
-                        width: 50%;
-                        margin: 30rpx auto 0;
-                    }
-                }
-            }
-
-            .check-icon {
-                font-size: 18px;
-                width: 26rpx;
-                height: 26rpx;
-                margin-right: 10rpx;
-            }
-
-            .rule-view {
-                margin: 0 40rpx;
-                font-size: 26rpx;
-                color: @weuiTextColorDesc;
-
-                .text {
-                    color: @weuiColorPrimary;
-                }
-            }
-        }
+  }
+  .login-view {
+    position: relative;
+    height: 94%;
+    &.welcome-view {
+      height: 100%;
     }
-
-    .weui-cell_btn {
-        &.login-btn {
-            padding: 40rpx 0;
-        }
-
-        .weui-btn_cell-disabled {
-            color: @weuiBgColorWhite;
-            background: @weuiBgColorPrimary;
-        }
+    .login-title {
+      padding: 72rpx 0 20rpx;
+      font-size: 48rpx;
+      width: 100%;
+      color: @weuiTextColorTitle;
+      .login-title-col {
+        font-size: 36rpx;
+        margin-top: 10rpx;
+      }
     }
+    .weui-cell {
+      margin-bottom: 20px;
+      font-size: 28rpx;
+      position: relative;
+      .weui-cell_label {
+        width: 60rpx;
+      }
+      .weui-input {
+        color: @weuiTextColorTitle;
+        padding: 20rpx 0 16rpx;
+        text-align: left;
+      }
+      .weui-cell_line {
+        margin-right: 30rpx;
+      }
+      .code-btn {
+        position: absolute;
+        top: 26rpx;
+        right: 0;
+        color: @weuiTextColorDesc;
+        font-size: 26rpx;
+      }
+    }
+  }
+  .login-view-box {
+    height: 85%;
+    width: 80%;
+    margin: 40% auto;
+    .login-view-form {
+      width: 100%;
+    }
+  }
+  .weui-cell_btn {
+    &.login-btn {
+      padding: 80rpx 0;
+    }
+    .weui-btn_cell {
+      padding: 40rpx 16px ;
+    }
+    .other-login {
+      color: @weuiColorPrimary;
+      width: 100%;
+      text-align: center;
+      margin: 20rpx 0;
+      font-size: 28rpx;
+      &.other-login1 {
+        margin: 60rpx 0 20rpx;
+        font-size: 32rpx;
+      }
+    }
+    .weui-btn_cell-disabled {
+      color: @weuiBgColorWhite;
+      background: @weuiBgColorPrimary;
+    }
+  }
 }

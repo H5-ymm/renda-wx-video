@@ -1,0 +1,46 @@
+
+	<view class="detail-view">
+		<view class="weui-flex between header-box team-allocation-header"  wx:if="{{distributionnum}}">
+			
+  <view class="weui-flex around tabBar weui-flex__item">
+    <block  wx:for="{{$tabBar$tabBarList}}" wx:key="index">
+      <view class="{{$tabBar$activeIndex==index?'tabBar_item-active':''}} weui-flex__item tabBar_item " bindtap="$tabBar$switchTab" data-wpyswitchtab-a="{{index}}">
+        <view class="weui-flex center">{{item.name}}</view>
+      </view>
+    </block>
+    <view class="tab-line {{'line'+$tabBar$activeIndex}}"/>
+  </view>
+
+		</view>
+		<view class="view-detail page_margin {{distributionnum?'person-list':''}}">
+			<scroll-view scroll-y="true" style="height:100%" class="content-box">
+				
+  <view>
+    <block  wx:for="{{$selectPerson$personList}}" wx:key="index">
+      <view class="page_card" wx:if="{{$selectPerson$personList.length}}">
+        <view class="page_card_row weui-flex between">
+          <view class="weui-flex__item">
+            <view class="page_card_name">{{item.user_name || '-'}}</view>
+            <view class="text-line">
+              {{item.departname || item.depart_name || '-'}} {{item.grade_name||'-'}}
+            </view>
+            <view class="page_card_time">{{item.addtime}}</view>
+          </view>
+          <image src="https://a.rsd123.com/image/images/user/radio2.png" alt="" mode="aspectFill" class="radio-icon" bindtap="$selectPerson$selectUser" wx:if="{{item.disabled}}" data-wpyselectuser-a="{{item}}" data-wpyselectuser-b="{{index}}"/>
+          <image src="https://a.rsd123.com/image/images/user/radio1.png" wx:else bindtap="$selectPerson$selectUser" mode="aspectFill" class="radio-icon" data-wpyselectuser-a="{{item}}" data-wpyselectuser-b="{{index}}"/>
+        </view>
+      </view>
+    </block>
+    <view  wx:if="{{!$selectPerson$personList.length}}" class="page_list">
+      <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+      <view class="page_noData_text">暂无数据！</view>
+    </view>
+  </view>
+
+			</scroll-view>
+		</view>
+		<view class="weui-cell_btn weui-flex between footer-box">
+			<button class="weui-btn_cell weui-btn_primary" bindtap="okAllocation" wx:if="{{!activeIndex}}">确定分配</button>
+			<button class="weui-btn_cell weui-btn_primary_plain" bindtap="cancleAllocation" wx:else>取消分配</button>
+		</view>
+	</view>

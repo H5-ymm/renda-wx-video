@@ -4,30 +4,34 @@
 <template>
   <view class="login_page welcome-page page_bottom">
     <view class="login-view welcome-view">
-      <image src="https://a.rsd123.com/image/images/welcome/welcomeBg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
-      <view class="login-view-box welcome-view-box">
+      <view class="login-title">
+        <view>Hi,</view>
+        <view class="login-title-col">欢迎使用人事达视频招聘会</view>
+      </view>
+       <image src="../../images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
+      <view class="welcome-view-box">
         <view class="welcome-view-form login-view-form">
-          <view class="weui-cell_btn weui-flex center login-btn">
-            <button lang='zh_CN' disabled="{{!isRead}}" class="weui-btn_cell weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" @getuserinfo="getUserInfo" open-type="getUserInfo">开始使用</button>
+           <view class="rule-view weui-flex start wrap" @tap="checkedRule({{checked}})" >
+            <image wx:if="{{!checked}}" src="../../images/selected.png" mode="scaleToFill" class="check-icon" />
+            <image wx:else src="../../images/radio.png" mode="scaleToFill" class="check-icon" />
+            我已阅读并同意<view class="text">《视频招聘会协议》</view>
           </view>
-          <view class="rule-view weui-flex start wrap" @tap="checkedRule({{checked}})" >
-            <image wx:if="{{!checked}}" src="https://a.rsd123.com/image/images/check.png" mode="scaleToFill" class="check-icon" />
-            <image wx:else src="https://a.rsd123.com/image/images/check1.png" mode="scaleToFill" class="check-icon" />
-            我已认真阅读并同意<view class="text">《用户协议及隐私政策》</view>和
-            <view class="text">《信息保护政策》
-            </view>
+          <view class="weui-cell_btn weui-flex center wrap">
+            <button lang='zh_CN' disabled="{{!isRead}}" class="weui-btn_cell weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" @getuserinfo="getUserInfo" open-type="getUserInfo">微信账号快捷登录</button>
+            <view class="other-login other-login1">输入手机号码登录/注册</view>
           </view>
         </view>
       </view>
     </view>
     <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
+    <actionLoginSheet :isScaleModal.sync="isLoginModal" text="企业信息不完整，请前往完善" :title.sync="title" :okText.sync="okText" @handleClose="handleClose"></actionLoginSheet>
     <!-- <modalogin :isScaleModal.sync="isLoginModal" :type.sync="type" @handleClose="handleClose" @handleOkLogin="handleOkLogin" :height.sync="modalLoginHeight"></modalogin> -->
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import modal from '@/components/modal'
-// import modalUser from '@/components/modalUser'
+import actionSheet from '@/components/actionSheet'
 import { $http } from '@/http.js'
 import { wxToast, wxReLaunch, wxNavigateTo, getErrorTip } from '@/util.js'
 import { getStore } from 'wepy-redux'
@@ -41,7 +45,7 @@ const store = getStore()
 export default class Welcome extends wepy.page {
   components = {
     modal: modal,
-    // modalogin: modalUser
+    actionLoginSheet: actionSheet
   }
   data = {
     userInfo: null,
@@ -67,12 +71,16 @@ export default class Welcome extends wepy.page {
     rendaUidQrcode: '',
     uid: '',
     isLoginOut: false,
-    isHandleBtn: false
+    isHandleBtn: false,
+    okText: '完善信息',
+    title: '',
+    text: '明确身份后提供更准确的服务'
   }
   config = {
     enablePullDownRefresh: true
   }
   onLoad (options) {
+    this.isLoginModal = false
     this.rendaUidQrcode = wx.getStorageSync('rendaUidQrcode') || this.$parent.globalData.rendaUidQrcode
     this.teamId = wx.getStorageSync('rendaUserTeamId') || this.$parent.globalData.teamId
     if (this.rendaUidQrcode && this.teamId) {
@@ -195,23 +203,23 @@ export default class Welcome extends wepy.page {
     }
   }
   viewRouter (res) {
-    if (!res.usertype) {
-      wxReLaunch('/pages/register/selectUser')
-    } else if (Number(res.usertype) === 2) {
-      if (Number(res.is_team) !== 0) {
-        wxReLaunch('/pages/teamView/index')
-      } else {
-        wxReLaunch('/pages/register/selectUser?query=1')
-      }
-    } else if (Number(res.usertype) === 1) {
-      if (Number(res.is_company) !== 0) {
-        wxReLaunch('/pages/companyView/index')
-      } else {
-        wxReLaunch('/pages/register/companyForm')
-      }
-    } else {
-      wxReLaunch('/pages/message/index')
-    }
+    // if (!res.usertype) {
+    //   wxReLaunch('/pages/register/selectUser')
+    // } else if (Number(res.usertype) === 2) {
+    //   if (Number(res.is_team) !== 0) {
+    //     wxReLaunch('/pages/teamView/index')
+    //   } else {
+    //     wxReLaunch('/pages/register/selectUser?query=1')
+    //   }
+    // } else if (Number(res.usertype) === 1) {
+    //   if (Number(res.is_company) !== 0) {
+    //     wxReLaunch('/pages/companyView/index')
+    //   } else {
+    //     wxReLaunch('/pages/register/companyForm')
+    //   }
+    // } else {
+    //   wxReLaunch('/pages/message/index')
+    // }
   }
   showErrorTip (code) {
     if (code === 6100) {

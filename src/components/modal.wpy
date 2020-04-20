@@ -28,15 +28,15 @@
   background: #fff;
   border-radius: 10rpx;
 }
-.close-icon {
-  position: absolute;
-  z-index: 1002;
-  right: 0;
-  bottom: -80rpx;
-  left: 46%;
-  width: 40rpx;
-  height: 40rpx;
-}
+// .close-icon {
+//   position: absolute;
+//   z-index: 1002;
+//   right: 0;
+//   bottom: -80rpx;
+//   left: 46%;
+//   width: 40rpx;
+//   height: 40rpx;
+// }
 .modal-content {
   width: 86%;
   margin: 10rpx auto;

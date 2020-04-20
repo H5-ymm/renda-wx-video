@@ -124,7 +124,7 @@
           </view>
         </repeat>
         <view class="weui-cell_btn weui-flex center save-btn">
-          <button class="weui-btn_cell .weui-btn_primary" @tap="save">确定</button>
+          <button class="weui-btn_cell weui-btn_primary" @tap="save">确定</button>
         </view>
       </view>
     </actionSheet>
@@ -135,7 +135,6 @@
 import wepy from 'wepy'
 import addBaseInfo from '@/components/addBaseInfo'
 import addResume from '@/components/addResume'
-// import scanIdCard from '@/components/scanIdCard'
 import actionSheet from '@/components/actionSheet'
 import modal from '@/components/modal'
 import { $http } from '@/http.js'

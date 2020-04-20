@@ -1,0 +1,168 @@
+<style lang="less">
+.transition3s {
+  transition: 0.3s;
+  transform: scale(0);
+  &.g_scale1 {
+    transform: scale(1);
+  }
+}
+.modal_mask {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.2s;
+}
+.modal_box {
+  position: fixed;
+  z-index: 1001;
+  right: 0;
+  bottom: 20%;
+  top: 0;
+  left: 0;
+  width: 76%;
+  margin: auto;
+  background: #fff;
+  border-radius: 10rpx;
+  .weui-cell_btn {
+    width: 50%;
+    margin: 0 auto;
+    .weui-btn_cell {
+      border-radius:16rpx;
+    }
+  }
+}
+.modal-content {
+  width: 84%;
+  margin: 40rpx auto 60rpx;
+  line-height: 40rpx;
+  .modal-title-tab {
+    border-bottom: 1px solid #979797;
+    font-size: 32rpx;
+    color: #111;
+    margin: 0 30rpx;
+    box-sizing: border-box;
+    .modal-tab-item {
+      padding: 30rpx 48rpx;
+      &.modal-line {
+        border-bottom: 1px solid #1890FF;
+        color: #1890FF;
+      }
+    }
+  }
+  .modal-subTitle {
+    font-size: 26rpx;
+  }
+}
+</style>
+<template>
+  <view hidden='{{isScaleModal}}'>
+    <view @tap="handleOk" wx:if="{{isShow}}" class="modal_mask"></view>
+    <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+      <view class="modal-content">
+        <view class="modal-title-tab weui-flex center">
+          <view class="modal-tab-item {{activeIndex==0?'modal-line':''}}" @tap="switchTab(0)">邀请函</view>
+          <view class="modal-tab-item {{activeIndex==1?'modal-line':''}}" @tap="switchTab(1)">参展企业</view>
+        </view>
+        <text selectable='true' decode="{{true}}" class="modal-subTitle">
+          1.本次网络招聘会企业免费报名参加。
+          2.用人单位在进行网上报名时,应实事求是填写本 
+          单位情况(单位简介、营业执照及相关资质、招聘 岗位信息),并对所填的内容保证真实..
+        </text>
+      </view>
+      <view class="weui-cell_btn weui-flex center">
+        <button class="weui-btn_cell weui-btn_primary_plain" @tap="handleOk">知道了</button>
+      </view>
+    </view>
+  </view>
+
+</template>
+<script>
+import wepy from 'wepy'
+export default class invitationModal extends wepy.component {
+  props = {
+    isScaleModal: Boolean,
+    height: {
+      type: Number,
+      default: 640
+    }
+  }
+  data = {
+    isShow: false,
+    activeIndex: 0
+  }
+  saveImgUrl (url) {
+    wx.getImageInfo({
+      src: url,
+      success: res => {
+        let path = res.path;
+        wx.saveImageToPhotosAlbum({
+          filePath: path,
+          success: (res) => {
+            console.log(res);
+            wxToast('保存成功')
+          },
+          fail: (res) => {
+            console.log(res);
+            wxToast('保存失败')
+          }
+        })
+      },
+      fail: (res) => {
+        console.log(res);
+      }
+    })
+  }
+  methods = {
+    switchTab(index) {
+      this.activeIndex = index
+      this.$apply()
+    },
+    // 长按保存图片
+    saveImg () {
+      //用户需要授权
+      let that = this
+      wx.getSetting({
+        success: (res) => {
+          if (!res.authSetting['scope.writePhotosAlbum']) {
+            wx.authorize({
+              scope: 'scope.writePhotosAlbum',
+              success: () => {
+                // 同意授权
+                this.saveImgUrl(this.imgUrl);
+              },
+              fail: (res) => {
+                console.log(res)
+              }
+            })
+          } else {
+            // 已经授权了
+            this.saveImgUrl(this.imgUrl);
+          }
+        },
+        fail: (res) => {
+          console.log(res);
+        }
+      })
+    },
+    handleOk () {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleOk', this.imgUrl)
+    }
+  }
+  watch = {
+    isScaleModal (val) {
+      if (!val) {
+        this.isShow = true
+      } else {
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+}
+</script>

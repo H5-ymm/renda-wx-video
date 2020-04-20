@@ -69,12 +69,12 @@
   <picker mode="multiSelector" bindcancel="$addResume$districtSelet$cancelPickerChange" bindchange="$addResume$districtSelet$bindMultiPickerChange" bindcolumnchange="$addResume$districtSelet$bindMultiPickerColumnChange" value="{{$addResume$districtSelet$multiIndex}}" range="{{$addResume$districtSelet$multiArray}}">
     <view class="my-text-right weui-flex between">
       <view  wx:if="{{$addResume$districtSelet$options.length}}">
-          {{$addResume$districtSelet$multiArray[0][$addResume$districtSelet$multiIndex[0]]}}
-          {{$addResume$districtSelet$multiArray[1][$addResume$districtSelet$multiIndex[1]]}}
-          {{$addResume$districtSelet$disabled?$addResume$districtSelet$multiArray[2][$addResume$districtSelet$multiIndex[2]]:''}}
-       </view>
+        {{$addResume$districtSelet$multiArray[0][$addResume$districtSelet$multiIndex[0]]}}
+        {{$addResume$districtSelet$multiArray[1][$addResume$districtSelet$multiIndex[1]]}}
+        {{$addResume$districtSelet$disabled?$addResume$districtSelet$multiArray[2][$addResume$districtSelet$multiIndex[2]]:''}}
+      </view>
       <view  wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
     </view>
   </picker>
 

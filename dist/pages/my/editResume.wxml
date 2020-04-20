@@ -1,0 +1,75 @@
+
+  <view class="add-view page">
+    <view class="view-list">
+      <view class="page_form">
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">姓名</view>
+            <view class="weui-flex between" bindtap="selectType">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.from_user}}" data-name="from_user" bindinput="changeInput"/>
+            </view>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">性别</view>
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_card_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">出生年月</view>
+             <picker mode="date" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_card_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+         <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">现居地址</view>
+            
+  <picker mode="multiSelector" bindcancel="$districtSelet$cancelPickerChange" bindchange="$districtSelet$bindMultiPickerChange" bindcolumnchange="$districtSelet$bindMultiPickerColumnChange" value="{{$districtSelet$multiIndex}}" range="{{$districtSelet$multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$districtSelet$options.length}}">
+          {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
+          {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
+          {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
+       </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+    </view>
+  </picker>
+
+          </view>
+        </view>
+         <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">求职状态</view>
+            <view class="weui-flex between" bindtap="selectType">
+              <view class="page__label">{{resumeType}}</view>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_card_icon"/>
+            </view>
+          </view>
+        </view>
+         <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">邮箱</view>
+            <view class="weui-flex between" bindtap="selectType">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.from_user}}" data-name="from_user" bindinput="changeInput"/>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="submit">保存</button>
+    </view>
+  </view>

@@ -84,12 +84,12 @@
   <picker mode="multiSelector" bindcancel="$company$districtSelet$cancelPickerChange" bindchange="$company$districtSelet$bindMultiPickerChange" bindcolumnchange="$company$districtSelet$bindMultiPickerColumnChange" value="{{$company$districtSelet$multiIndex}}" range="{{$company$districtSelet$multiArray}}">
     <view class="my-text-right weui-flex between">
       <view  wx:if="{{$company$districtSelet$options.length}}">
-          {{$company$districtSelet$multiArray[0][$company$districtSelet$multiIndex[0]]}}
-          {{$company$districtSelet$multiArray[1][$company$districtSelet$multiIndex[1]]}}
-          {{$company$districtSelet$disabled?$company$districtSelet$multiArray[2][$company$districtSelet$multiIndex[2]]:''}}
-       </view>
+        {{$company$districtSelet$multiArray[0][$company$districtSelet$multiIndex[0]]}}
+        {{$company$districtSelet$multiArray[1][$company$districtSelet$multiIndex[1]]}}
+        {{$company$districtSelet$disabled?$company$districtSelet$multiArray[2][$company$districtSelet$multiIndex[2]]:''}}
+      </view>
       <view  wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon"/>
+      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
     </view>
   </picker>
 

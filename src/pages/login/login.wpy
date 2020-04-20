@@ -4,28 +4,28 @@
 <template>
   <view class="login_page page_bottom">
     <view class="login-view">
-      <image src="https://a.rsd123.com/image/images/loginBg.png" mode="widthFix" class="login-view-bg" />
       <view class="login-view-box">
-        <view class="login-title">
+        <!-- <view class="login-title">
           <view>您好，</view>
           <view class="login-title-col">欢迎使用人事达</view>
-        </view>
+        </view> -->
         <view class="login-view-form">
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-              +86<label class="weui-cell_line">|</label>
+               <image src="../../images/phone.png" mode="aspectFill" class="login_card_icon" />
             </view>
             <input class="weui-input" value="{{form.tel}}" @input="changeInput" data-name="tel" placeholder="输入您的手机号" />
           </view>
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-              验证码<label class="weui-cell_line">|</label>
+              <image src="../../images/password.png" mode="aspectFill" class="login_card_icon" />
             </view>
             <input class="weui-input" value="{{form.code}}" @input="changeInput" data-name="code" placeholder="输入验证码" />
             <text class="code-btn" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
           </view>
-          <view class="weui-cell_btn weui-flex center login-btn">
+          <view class="weui-cell_btn weui-flex center login-btn wrap">
             <button disabled="{{!checked}}" class="weui-btn_cell weui-btn_cell-gradient {{!checked?'weui-btn_cell-disabled':''}}" @tap="getUserInfo">登录</button>
+            <view class="other-login">微信快捷登录</view>
           </view>
         </view>
       </view>

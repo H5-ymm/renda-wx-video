@@ -38,7 +38,7 @@
 	</view>
 
     
-	<view>
+	<view wx:if="{{hallType==1}}">
 	  <block  wx:for="{{$hallList$list}}" wx:key="index" wx:if="{{$hallList$list.length}}">
       
   <view class="list-card shadow" bindtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$undefined}}" data-wpyrouterjob-a="{{$hallList$item}}">
@@ -71,6 +71,63 @@
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
+
+    
+	<view wx:else>
+	  <block  wx:for="{{$jobHallList$list}}" wx:key="index" wx:if="{{$jobHallList$list.length}}">
+      
+  <view class="list-card shadow" bindtap="$jobHallList$jobHallItem$routerJob" data-com-index="{{$jobHallList$undefined}}" data-wpyrouterjob-a="{{$jobHallList$item}}">
+    <view class="weui-flex start-start list-card-row">
+      <image src="../../images/head.png" class="list-card-header" mode="scaleToFill"/>
+      <view class="list-card-content">
+        <view class="weui-flex start card-col-1">    
+          <text class="name {{$jobHallList$jobHallItem$isShowBtn?'text-line':''}}">张超</text>
+        </view>
+        <view class="card-col-2">    
+          <view class="weui-flex start text-line">
+            <view class="page__desc">男｜22岁</view>
+          </view>
+          <view class="text-line"><text class="name">本科/计算机科学与技术</text></view>
+          <view class="weui-flex between">
+            <view class="card-text weui-flex__item">意向：测试可靠</view>
+            <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$jobHallList$jobHallItem$routerJob" data-com-index="{{$jobHallList$undefined}}" data-wpyrouterjob-a="{{$jobHallList$item}}">
+              立即沟通
+            </button>
+          </view>
+        </view>
+      </view>
+      <view class="online">在线</view>
+    </view>
+  </view>
+
+    </block>
+		<view  wx:if="{{!$jobHallList$list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+    
+  <view hidden="{{$invitationModal$isScaleModal}}">
+    <view bindtap="$invitationModal$handleOk"  wx:if="{{$invitationModal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $invitationModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$invitationModal$height}}rpx">
+      <view class="modal-content">
+        <view class="modal-title-tab weui-flex center">
+          <view class="modal-tab-item {{$invitationModal$activeIndex==0?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="0">邀请函</view>
+          <view class="modal-tab-item {{$invitationModal$activeIndex==1?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="1">参展企业</view>
+        </view>
+        <text selectable="true" decode="{{$invitationModal$true}}" class="modal-subTitle">
+          1.本次网络招聘会企业免费报名参加。
+          2.用人单位在进行网上报名时,应实事求是填写本 
+          单位情况(单位简介、营业执照及相关资质、招聘 岗位信息),并对所填的内容保证真实..
+        </text>
+      </view>
+      <view class="weui-cell_btn weui-flex center">
+        <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$invitationModal$handleOk">知道了</button>
+      </view>
+    </view>
+  </view>
+
 
     <!-- <actionSheet v-bind:isScaleModal.sync="isScaleModal" v-bind:height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " bindhandleClose="handleClose"></actionSheet> -->
   </scroll-view>

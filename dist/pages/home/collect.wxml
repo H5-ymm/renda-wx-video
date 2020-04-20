@@ -1,0 +1,36 @@
+
+	<view class="page">
+	  
+  <view class="weui-flex around tabBar header-tab">
+    <block  wx:for="{{$tabBar$tabBarList}}" wx:key="index">
+      <view class="{{$tabBar$activeIndex==index?'tabBar_item-active':''}} weui-flex__item tabBar_item " bindtap="$tabBar$switchTab" data-wpyswitchtab-a="{{index}}">
+        <view class="weui-flex center">{{item.name}}</view>
+      </view>
+    </block>
+    <view class="tab-line {{'line'+$tabBar$activeIndex}}"/>
+  </view>
+
+    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="view-content">
+      <view class="home-view-box">
+        <block  wx:for="{{list}}" wx:key="index">
+          <view class="list-row weui-flex between" wx:if="{{list.length}}" bindtap="selectJob" data-wpyselectjob-a="{{index}}" data-wpyselectjob-b="{{item}}">
+            <view class="list-col-1">
+              <view class="page__title">上海市任达网络科技有限公司</view>
+              <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>
+              <view class="number">该公司共有8个职位在招聘</view>
+            </view>
+            <view class="weui-flex between">
+              <button class="weui-btn_cell weui-btn_primary">
+                立即沟通
+              </button>
+              <!-- <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" /> -->
+            </view>
+          </view>
+        </block>
+        <view  wx:if="{{!list.length}}" class="page_list">
+          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+          <view class="page_noData_text">暂无数据！</view>
+        </view>
+      </view>
+    </scroll-view>
+ </view>
