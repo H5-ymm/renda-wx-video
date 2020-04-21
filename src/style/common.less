@@ -1,7 +1,7 @@
 @import "./weui.less";
 page {
   background-color: @weuiBgColorDefault;
-  font-size: 16px;
+  font-size: 32rpx;
   height: 100%;
   font-family:PingFangSC-Medium;
 }
@@ -91,6 +91,8 @@ page {
     height: 140rpx;
     width: 100%;
     display: block;
+    border-radius: 16rpx;
+    border: 1px solid @weuiLineColorLight;
   }
   &.settlement_time_input {
     width: 100rpx;
@@ -158,6 +160,10 @@ page {
   width: 36rpx;
   height: 36rpx;
 }
+.page_right_icon {
+  width: 32rpx;
+  height: 32rpx;
+}
 .samll_card_icon {
   width: 48rpx;
   height: 48rpx;
@@ -182,9 +188,8 @@ page {
     margin: 300rpx auto 40rpx;
   }
   .page_noData_text {
-    font-size: 28rpx;
-    color: @weuiTextColorTips;
-    margin-left: 20rpx;
+    font-size: 32rpx;
+    color: @weuiTextColorDesc;
   }
 }
 .card-header {

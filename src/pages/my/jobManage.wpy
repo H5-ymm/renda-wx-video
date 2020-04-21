@@ -1,0 +1,152 @@
+<style lang="less">
+@import "../../style/list.less";
+.resume_view {
+  margin-bottom: 30rpx;
+  .weui-cell_btn {
+    width: 78%;
+		margin: 0 auto;
+		height: 200rpx;
+    .weui-btn_cell {
+      padding: 50rpx 16rpx;
+    }
+  }
+}
+</style>
+<template>
+ <view class="page page_top resume_view view_hidden">
+    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content1">
+      <jobManageList :list.sync="list" class="scroll-view page"></jobManageList>
+    </scroll-view>
+    <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" @tap="save">发布职位</button>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
+import jobManageList from '@/components/jobManageList'
+export default class jobManage extends wepy.page {
+  components = {
+    jobManageList: jobManageList,
+  }
+  data = {
+    rendaUserTeamType: 0,
+    params: {
+			uid: '',
+			page: 1,
+      limit: 10,
+      required_number: '',
+      sex: ''
+    },
+    list: [{
+      name: '得到大家'
+    },
+    {
+      name: '得到大家'
+    }],
+    height: 200,
+    isScaleModal: true,
+    count: 0,
+    activeIndex: 0,
+    jobFairInfo: {},
+    isShowBtn: false,
+    hallType: 1
+  }
+  config = {
+    navigationBarTitleText: '职位管理'
+  }
+  methods = {
+    viewInfo (item) {
+      wx.navigateTo({
+        url: item.url
+      })
+    },
+    switchView(index) {
+      this.hallType = index
+      this.$apply()
+    },
+    viewDetail(item) {
+      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+    },
+    searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getReceiptList()
+			}
+    },
+    showModal(index){
+      this.activeIndex = index
+      this.$apply()
+    },
+    applyRecepit(item) {
+      let params = {
+        job_id: item.id,
+        uid: this.params.uid
+      }
+      this.setReceipt(params)
+    }
+  }
+  setReceipt(params) {
+    $http('/apply/add_apply', params).then(res => {
+      if(res.data) {
+        wxToast('接单成功')
+        wx.setStorageSync('receiptType', 0)
+        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
+      } else {
+        wxToast('接单失败')
+      }
+    })
+  }
+  getReceiptList (uid) {
+    $http('/receipt/receiptList', this.params).then(res => {
+      let arr = []
+      arr = res.data.data ? res.data.data.data : []
+      arr.forEach(item=>{
+        if(item.utime - $moment().valueOf() > 0) {
+          item.utime = $moment.unix(item.utime).format('HH:ss')
+        } else {
+          item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
+        }
+      })
+      this.list = arr
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getTeamInfoAPi (uid) {
+    $http('/Userinfo/getteaminfo', { uid }).then(res => {
+      this.rendaUserTeamType = res.data.grade_num
+      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
+      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
+      wx.setStorageSync('rendaDradeId', res.data.grade_id)
+      this.$apply()
+    })
+  }
+  saveUser(uid) {
+    let userinfo = wx.getStorageSync('wxInfo')
+    let params = {
+      uid,
+      head_img: userinfo.head_img
+    }
+    $http('/userinfo/editUserInfo', params).then(res => {
+      console.log(res)
+    })
+  }
+  onLoad(options) {
+    this.isScaleModal = false
+    this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.$apply()
+    this.getTeamInfoAPi(this.params.uid)
+  }
+  onShow () {
+    // this.getReceiptList()
+    let userInfo = wx.getStorageSync('userInfo') || ''
+		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
+      this.saveUser()
+    }
+  }
+}
+</script>

@@ -1,51 +1,52 @@
 <style lang="less">
-@import '../../style/resume.less';
-.detail-view {
-  &.message-view {
-    background: #fff;
+// @import '../../style/resume.less';
+  .message-view {
+		background: #fff;
+		.view-content {
+			margin: 0 30rpx;
+		}
+		.message-row {
+			font-size: 32rpx;
+			color: #333;
+		}
+		.message-col-1 {
+			width: 120rpx;
+			height: 120rpx;
+			border-radius: 50%;
+			background: #eeeeee;
+			position: relative;
+			.message-col-header {
+				height: 100%;
+				width: 100%;
+				border-radius: 50%;
+				border:1px solid rgba(24,144,255,0.2);
+			}
+			.bage {
+				width: 16rpx;
+				height: 16rpx;
+				color: #fff;
+				background: #f41800;
+				border-radius: 50%;
+				position: absolute;
+				top: 8rpx;
+				right: 0;
+			}
+		}
+		.message-col-2 {
+			// line-height: 50rpx;
+			margin-left: 20rpx;
+			padding: 30rpx 0;
+			.message-col-small {
+				font-size: 26rpx;
+			}
+			.message-col-time {
+				margin-top: 10rpx;
+			}
+		}
   }
-  .message-row {
-    font-size: 32rpx;
-    color: #333;
-  }
-  .message-col-1 {
-    width: 94rpx;
-    height: 94rpx;
-    border-radius: 50%;
-    background: #eeeeee;
-    position: relative;
-    .message-col-header {
-      height: 100%;
-      width: 100%;
-      border-radius: 50%;
-    }
-    .bage {
-      width: 16rpx;
-      height: 16rpx;
-      color: #fff;
-      background: #f41800;
-      border-radius: 50%;
-      position: absolute;
-      top: 8rpx;
-      right: 0;
-    }
-  }
-  .message-col-2 {
-    line-height: 50rpx;
-    margin-left: 20rpx;
-    padding: 14rpx 0;
-    .message-col-small {
-      font-size: 26rpx;
-      color: #888888;
-    }
-    .message-col-time {
-      margin-top: 10rpx;
-    }
-  }
-}
 </style>
 <template>
-	<view class="detail-view message-view">
+	<view class="message-view shadow page">
 		<view class="page_margin view-content">
 			<scroll-view scroll-y="true" style="height:100%" wx:if="{{list.length}}" @scrolltolower="searchScrollLower">
 				<repeat wx:for="{{list}}" wx:key="index">
@@ -59,10 +60,10 @@
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
 							<view>
-								<view>{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
-								<view class="message-col-small">{{item.job_name}}</view>
+								<view class="page__title">{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
+								<view class="message-col-small page__desc">{{item.job_name}}</view>
 							</view>
-							<view class="message-col-small message-col-time">{{item.view_time}}</view>
+							<view class="message-col-small message-col-time page__desc">{{item.view_time}}</view>
 						</view>
 					</view>
 				</repeat>
@@ -72,27 +73,27 @@
 				<view class="page_noData_text">暂无消息！</view>
 		   </view>
 		</view>
-		<!-- <tabBarBottom :tabBarIndex.sync="tabBarIndex" :usertype.sync="usertype" wx:if="{{usertype==1}}"></tabBarBottom> -->
 	</view>
 </template>
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import { getImgUrl, wxNavigateTo, getList } from '@/util.js'
-import tabBarBottom from '@/components/tabBarBottom'
 export default class message extends wepy.page {
-	components = {
-		tabBarBottom: tabBarBottom
-	}
 	data = {
 		teamData: {},
-		usertype: 0,
-		tabBarIndex: 2,
 		rendaUserTeamType: 0,
 		params: {
 			uid: ''
 		},
-		list: [],
+		list: [{
+			header_img: '',
+			com_read: 1,
+			job_name: '前端开发',
+			view_time: 1532384000,
+			user_name: '杨萌萌',
+			com_name: '仁达'
+		}],
 		count: 0
 	}
 	config = {
@@ -108,16 +109,14 @@ export default class message extends wepy.page {
 	}
 	onLoad () {
 		this.usertype = wx.getStorageSync('rendaUserType')
-		// this.usertype = 3
 		if (this.usertype == 1) {
 			this.tabBarIndex = 2
 		}
 		this.$apply()
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-		// this.params.uid = 4
 	}
 	onShow () {
-		this.getMsglist()
+		// this.getMsglist()
 	}
 	getMsglist () {
 		$http(this.urlApi, this.params).then(res => {

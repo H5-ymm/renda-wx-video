@@ -9,11 +9,7 @@
       <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView('1')">招聘大厅</view>
       <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView('2')">求职大厅</view>
     </view>
-    <view class="job-title weui-flex start page_margin">
-    <image src="../../images/radio.png" class="page_card_icon" mode="scaleToFill" />
-    在线企业(18)
-    </view>
-    <searchHall></searchHall>
+    <searchHall placeholder="搜索意向职位"></searchHall>
     <hallList :list.sync="list" wx:if="{{hallType==1}}"></hallList>
     <jobHallList :list.sync="list" wx:else></jobHallList>
     <invitationModal :isScaleModal.sync="isInvitationModal"></invitationModal>

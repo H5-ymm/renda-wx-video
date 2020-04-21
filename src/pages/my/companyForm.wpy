@@ -1,0 +1,181 @@
+<style lang="less">
+@import "../../style/list.less";
+.add-view {
+	&.page__company {
+		overflow: hidden;
+		margin: 0 30rpx;
+		.weui-input {
+			text-align: left;
+			&.weui-textarea {
+				border: none;
+				margin: 8rpx;
+			}
+		}
+		.page_right_icon {
+			display: none;
+		}
+	}
+  .page_form {
+    margin-top: 0;
+    .list-row {
+      padding: 30rpx 0;
+		}
+		.my-text {
+			width: 150rpx;
+		}
+	}
+	.my-head {
+		width: 80rpx;
+		height: 80rpx;
+	}
+  .weui-cell_btn {
+    width: 78%;
+		margin: 0 auto;
+		height: 200rpx;
+    .weui-btn_cell {
+      padding: 50rpx 16rpx;
+    }
+  }
+}
+</style>
+<template>
+  <view class="page__company add-view page">
+    <view class="view-content1 view_auto">
+      <view class="page_form">
+        <view class="list-row">
+          <view class="weui-flex start">
+            <view class="my-text">企业名称</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="com_name" value="{{form.com_name}}" @input="changeInput" placeholder="请输入企业名称" />
+          </view>
+        </view>
+    	  <company @submit="submit"></company>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center register-btn">
+      <button class="weui-btn_cell weui-btn_primary" @tap="save">保存</button>
+    </view>
+		<welfareModal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight"></welfareModal>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import company from '@/components/company'
+import welfareModal from '@/components/welfareModal'
+import { wxToast, checkMobile, getImgUrl, validateIdCard, compressImg, getErrorTip, wxReLaunch } from '@/util.js'
+import { $http, uploadFile } from '@/http.js'
+export default class companyForm extends wepy.page {
+	components = {
+		company: company,
+		welfareModal: welfareModal
+	}
+	data = {
+		form: {
+			com_name: '',
+			address: '',
+			provinceid: '',
+			cityid: '',
+			three_cityid: '',
+			id_card: '',
+			logo_url: '',
+			license_img: '',
+			business_licence: '',
+			com_type: '',
+			com_scale: '',
+			com_sort: '',
+			content: '',
+			uid: wx.getStorageSync('rendaUid'),
+			unified_social_credit_code: ''
+		},
+		infoImg: '',
+		modalHeight: 400,
+		isModal: true
+	}
+	config = {
+		navigationBarTitleText: '企业信息'
+	}
+	onLoad() {
+		// this.isModal = false
+		this.$apply()
+	}
+	events = {
+		selectCity: data => {
+			this.form.provinceid = data[0] ? data[0] : 0
+			this.form.cityid = data[1] ? data[1] : 0
+		},
+		submit: data => {
+			for (let key in data) {
+				for (let val in this.form) {
+					if (val === key) {
+						this.form[val] = data[key]
+					}
+				}
+			}
+			this.form.license_url = data.logo
+			this.form.com_sort = data.job_id
+			this.form.unified_social_credit_code = data.unified_social
+			if (data.phone && data.phoneEnd) {
+				this.form.link_tel = data.phone + '-' + data.phoneEnd
+			}
+		},
+		handleOk() {
+			this.isModal = true
+			this.$apply()
+			wxReLaunch('/pages/login/welcome')
+		}
+	}
+	getImg(tempFilePaths) {
+		uploadFile(tempFilePaths).then(res => {
+			if (res.data && res.data.url) {
+				this.infoImg = getImgUrl(res.data.url)
+				this.form.logo_url = res.data.url
+				this.$apply()
+			} else {
+				wxToast('图片获取失败')
+			}
+		})
+	}
+	registerCompany() {
+		this.form.uid = wx.getStorageSync('rendaUid')
+		$http('/login/companyRegister', this.form).then(res => {
+			if (res.data) {
+				let obj = getErrorTip(6006)
+				this.modalObj.title = obj.title
+				this.modalObj.subTitle = obj.subTitle
+				this.isModal = false
+				this.$apply()
+			} else {
+				wxToast('注册失败')
+			}
+		})
+	}
+	methods = {
+		uploadImg() {
+			wx.chooseImage({
+				sizeType: ['compressed'],
+				success: res => {
+					compressImg(res.tempFilePaths[0]).then(res => {
+						this.getImg([res.url])
+					})
+				}
+			})
+		},
+		changeInput(e) {
+			let key = e.currentTarget.dataset.name
+			this.form[key] = e.detail.value
+		},
+		save() {
+			if (!this.form.com_name) {
+				wxToast('请输入联系人')
+			} else if (!this.form.link_man) {
+				wxToast('请输入联系人')
+			} else if (!this.form.link_phone) {
+				wxToast('请输入联系人电话')
+			} else if (!checkMobile(this.form.link_phone)) {
+				wxToast('请输入正确的联系人电话')
+			} else {
+				this.registerCompany()
+			}
+		}
+	}
+}
+</script>

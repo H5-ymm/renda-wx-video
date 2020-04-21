@@ -1,0 +1,124 @@
+
+  <view class="add-view page jobForm page_margin">
+    <view class="view-content1 view_auto">
+      <view class="page_form">
+        <view class="list-row">
+          <view class="weui-flex between page_margin">
+            <view class="my-text">职位名称</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="com_name" value="{{form.com_name}}" bindinput="changeInput" placeholder="请输入职位名称"/>
+          </view>
+          <view class="weui-flex between page_margin">
+            <view class="my-text">工作地点</view>
+            
+  <picker mode="multiSelector" bindcancel="$districtSelet$cancelPickerChange" bindchange="$districtSelet$bindMultiPickerChange" bindcolumnchange="$districtSelet$bindMultiPickerColumnChange" value="{{$districtSelet$multiIndex}}" range="{{$districtSelet$multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$districtSelet$options.length}}">
+        {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
+        {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
+        {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
+      </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+    </view>
+  </picker>
+
+          </view>
+        </view>
+        <view class="list-row">
+          <view class="weui-flex between page_margin">
+            <view class="my-text">工作性质</view>
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+          <view class="weui-flex between page_margin">
+            <view class="my-text">招聘人数</view>
+            <input class="weui-input" data-name="link_phone" placeholder-class="placeholder" value="{{form.link_phone}}" bindinput="changeInput" placeholder="请输入招聘人数"/>
+          </view>
+          <view class="weui-flex between page_margin">
+            <view class="my-text weui-flex__item my-text-require">学历</view>
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="list-row">
+          <view class="weui-flex between page_margin">
+            <view class="my-text">企业福利</view>
+             <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+          <view class="weui-flex between page_margin">
+            <view class="my-text">薪资</view>
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+          <view class="weui-flex between page_margin">
+            <view class="my-text weui-flex__item my-text-require">社保</view>
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="list-row"> 
+          <view class="weui-flex between page_margin">
+            <view class="my-text">岗位类别</view>
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+          <view class="page_margin page_bottom">
+            <view class="my-text">职位要求</view>
+          </view>
+          <textarea data-name="content" placeholder-class="placeholder" class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" bindinput="changeInput" placeholder="请输入职位要求" auto-height/>
+        </view>
+        <view class="list-row">
+          <view class="weui-flex start-start page_margin page_bottom">
+            <view class="my-text">职位描述</view>
+          </view>
+          <textarea data-name="content" placeholder-class="placeholder" class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" bindinput="changeInput" placeholder="请输入职位描述" auto-height/>
+        </view>
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center register-btn">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="save">保存</button>
+      <!-- <button class="weui-btn_cell weui-btn_warn" bindtap="save">结束招聘</button> -->
+    </view>
+		
+  <view hidden="{{$companyModal$isScaleModal}}">
+    <view bindtap="$companyModal$handleOk"  wx:if="{{$companyModal$isShow}}" class="modal_mask"/>
+    <view class="modal_box transition3s {{ $companyModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$companyModal$height}}rpx">
+      <view class="modal-content">
+        <view class="modal-title page__title">{{$companyModal$modalObj.title}}</view>
+        <view class="modal-textarea weui-flex center">
+            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$companyModal$changeInput" placeholder="{{$companyModal$modalObj.subTitle}}" maxlength="-1" value="{{$companyModal$content}}"/>
+         </view>
+         <view class="weui-cell_btn weui-flex around">
+          <view class="text page__desc" bindtap="$companyModal$handleClose">取消</view>
+          <view class="text page__text__active" bindtap="$companyModal$handleOk">确定</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  </view>

@@ -1,0 +1,33 @@
+
+ <view class="page page_top resume_view view_hidden">
+    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="view-content1">
+      
+	<view class="scroll-view page">
+	  <block  wx:for="{{$jobManageList$list}}" wx:key="index" wx:if="{{$jobManageList$list.length}}">
+      
+  <view class="list-row weui-flex between" bindtap="$jobManageList$jobManageItem$selectJob" data-com-index="{{$jobManageList$undefined}}" data-wpyselectjob-a="{{$jobManageList$jobManageItem$index}}" data-wpyselectjob-b="{{$jobManageList$item}}">
+    <view class="list-col-1 weui-flex__item">
+      <view class="weui-flex between weui-flex__item">
+        <view class="page__title"> 前端开发</view>
+        <view class="page__desc">待审核</view>
+      </view>
+      <view class="number">8k</view>
+      <view class="page__desc">全职｜本科｜上海</view>
+    </view>
+    <view class="weui-flex between">
+      <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png"/>
+    </view>
+  </view>
+
+    </block>
+		<view  wx:if="{{!$jobManageList$list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+    </scroll-view>
+    <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="save">发布职位</button>
+    </view>
+  </view>

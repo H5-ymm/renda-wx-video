@@ -6,7 +6,7 @@
       <button class="weui-btn_cell weui-btn_primary {{$jobFairItemHall$item.status==1 ? '' : 'weui-btn_warn'}}"  wx:if="{{$jobFairItemHall$isShowBtn}}">
         {{$jobFairItemHall$item.money==1?'进行中':'待举办'}}
       </button>
-      <text class="name {{$jobFairItemHall$isShowBtn?'text-line':''}}"> {{$jobFairItemHall$item.name}}得到极大的打击打击打击打击打击打击打击急急急</text>
+      <text class="name {{$jobFairItemHall$isShowBtn?'text-line':''}}">上海大型招聘会</text>
     </view>
     <view class="card-col-2">    
       <view>时间：2020-03-21 11:00 至 2020-03-21 11:00</view>
@@ -24,15 +24,11 @@
       <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="1">招聘大厅</view>
       <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="2">求职大厅</view>
     </view>
-    <view class="job-title weui-flex start page_margin">
-    <image src="../../images/radio.png" class="page_card_icon" mode="scaleToFill"/>
-    在线企业(18)
-    </view>
     
   <view class="weui-flex between search-box">
 		<view class="weui-cell weui-flex start weui-flex__item">
 			<image src="../../images/search.png" class="searchIcon"/>
-			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" placeholder="搜索词"/>
+			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" placeholder="{{$searchHall$placeholder}}"/>
     </view>
 		<text>搜索</text>
 	</view>
@@ -43,7 +39,7 @@
       
   <view class="list-card shadow" bindtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$undefined}}" data-wpyrouterjob-a="{{$hallList$item}}">
     <view class="weui-flex start-start list-card-row">
-      <image src="../../images/head.png" class="list-card-header" mode="scaleToFill"/>
+      <image src="../../images/head.png" class="list-card-header" mode="scaleToFill" catchtap="$hallList$hallItem$viewCompany" data-com-index="{{$hallList$undefined}}"/>
       <view class="list-card-content">
         <view class="weui-flex start card-col-1">    
           <text class="name {{$hallList$hallItem$isShowBtn?'text-line':''}}">仁达网络科技</text>
@@ -61,7 +57,7 @@
           </view>
         </view>
       </view>
-      <view class="online">在线</view>
+      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 
@@ -96,7 +92,7 @@
           </view>
         </view>
       </view>
-      <view class="online">在线</view>
+      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 

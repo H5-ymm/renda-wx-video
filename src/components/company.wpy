@@ -1,86 +1,85 @@
 
 <template>
   <view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">上传营业执照：</view>
-        <image @tap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head" wx:if="{{infoImg}}" />
-        <image @tap="uploadImg" src="https://a.rsd123.com/image/images/default2.png" mode="scaleToFill" class="my-head" wx:else />
-        <image mode="scaleToFill" @tap="uploadImg" src="https://a.rsd123.com/image/images/right.png" class="page_down_icon" />
-      </view>
-    </view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">营业执照号：</view>
-        <input class="weui-input" placeholder-class="placeholder" data-name="business_licence" value="{{form.business_licence}}" @input="changeInput" placeholder="请输入营业执照号" />
-      </view>
-    </view>
-    <view class="page_card_row" wx:if="{{registerType==1}}">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">统一社会信用代码：</view>
-        <input class="weui-input" placeholder-class="placeholder" data-name="unified_social" value="{{form.unified_social}}" @input="changeInput" placeholder="请输入统一社会信用代码" />
-      </view>
-    </view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">从事行业：</view>
-        <picker @change="bindPickerChange" value="{{jobIndex}}" data-name="job_id" range="{{job_array}}">
-          <view class="my-text-right weui-flex between">
-            <view class="{{form.job_id!=''?'':'placeholder'}}">
-              {{form.job_id!=''?job_array[jobIndex]:'请选择从事行业'}}
-            </view>
-            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
-          </view>
-        </picker>
-      </view>
-    </view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">企业性质：</view>
-        <picker @change="bindPickerChange" value="{{comIndex}}" data-name="com_type" range="{{com_type}}">
-          <view class="my-text-right weui-flex between">
-            <view class="{{form.com_type!=''?'':'placeholder'}}">
-              {{form.com_type!=''?com_type[comIndex]:'请选择企业性质'}}
-            </view>
-            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
-          </view>
-        </picker>
-      </view>
-    </view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">企业规模：</view>
-        <picker @change="bindPickerChange" data-name="com_scale" value="{{comScaleIndex}}" range="{{com_scale}}">
-          <view class="my-text-right weui-flex between">
-            <view class="{{form.com_scale!=''?'':'placeholder'}}">
-              {{form.com_scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
-            </view>
-            <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_down_icon" />
-          </view>
-        </picker>
-      </view>
-    </view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item my-text-require">企业地址：</view>
+    <view class="list-row">
+      <view class="weui-flex start">
+        <view class="my-text">所属区域</view>
         <districtSelet @selectCity="selectCity" :address.sync="[]" :disabled.sync="disabled"></districtSelet>
       </view>
     </view>
-    <view class="page_card_row">
+    <view class="list-row">
+      <view class="weui-flex start">
+        <view class="my-text">所属行业</view>
+        <picker @change="bindPickerChange" value="{{jobIndex}}" data-name="job_id" range="{{job_array}}">
+          <view class="my-text-right weui-flex start">
+            <view class="{{form.job_id!=''?'':'placeholder'}}">
+              {{form.job_id!=''?job_array[jobIndex]:'请选择从事行业'}}
+            </view> 
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start">
+        <view class="my-text">企业性质</view>
+        <picker @change="bindPickerChange" value="{{comIndex}}" data-name="com_type" range="{{com_type}}">
+          <view class="my-text-right weui-flex start">
+            <view class="{{form.com_type!=''?'':'placeholder'}}">
+              {{form.com_type!=''?com_type[comIndex]:'请选择企业性质'}}
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="list-row">
+      <view class="weui-flex start">
+        <view class="my-text">企业规模</view>
+        <picker @change="bindPickerChange" data-name="com_scale" value="{{comScaleIndex}}" range="{{com_scale}}">
+          <view class="my-text-right weui-flex start">
+            <view class="{{form.com_scale!=''?'':'placeholder'}}">
+              {{form.com_scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start-start">
+        <view class="my-text">企业简介</view>
+        <textarea data-name="content" placeholder-class="placeholder"
+        class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" @input="changeInput"
+        placeholder="请输入企业简介" auto-height />
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start">
+        <view class="my-text">联系人</view>
+        <input class="weui-input" placeholder-class="placeholder" data-name="link_man" 
+        value="{{form.link_man}}" @input="changeInput" placeholder="请输入联系人" />
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start">
+        <view class="my-text">手机号码</view>
+        <input class="weui-input" data-name="link_phone" placeholder-class="placeholder" 
+        value="{{form.link_phone}}" @input="changeInput" placeholder="请输入手机号码" />
+      </view>
+     </view>
+     <view class="list-row">
+      <view class="weui-flex between">
+        <view class="weui-flex__item weui-flex start-end">
+          <view class="my-text">营业执照照片上传</view>
+          <view class="page__desc">图像大小不要超过5M</view>
+        </view>
+        <image @tap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head" wx:if="{{infoImg}}" />
+        <image @tap="uploadImg" src="../images/upload.png" mode="scaleToFill" class="my-head" wx:else />  
+      </view>
+    </view>
+    <!-- <view class=" list-row">
       <view class="weui-flex end">
         <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{form.address}}" @input="changeInput" placeholder="请输入详细地址" />
       </view>
-    </view>
-    <view class="page_card_row">
-      <view class="weui-flex between">
-        <view class="my-text  weui-flex__item">企业电话：</view>
-        <view class="weui-flex between weui-flex__item">
-          <input class="weui-input" placeholder-class="placeholder" placeholder="区号" data-name="phone" value="{{form.phone}}" @input="changeInput" />
-          <view class="line">-</view>
-          <input class="weui-input" placeholder-class="placeholder" placeholder="座机电话" data-name="phoneEnd" value="{{form.phoneEnd}}" @input="changeInput" />
-        </view>
-      </view>
-    </view>
+    </view> -->
     <canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
   </view>
 </template>
@@ -111,7 +110,6 @@ export default class Company extends wepy.component {
       com_type: '',
       com_scale: '',
       logo: '',
-      phoneEnd: '',
       phone: '',
       unified_social: '',
       business_licence: '',

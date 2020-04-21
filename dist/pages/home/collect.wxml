@@ -20,10 +20,10 @@
               <view class="number">该公司共有8个职位在招聘</view>
             </view>
             <view class="weui-flex between">
-              <button class="weui-btn_cell weui-btn_primary">
+              <button class="weui-btn_cell weui-btn_primary" wx:if="{{activeIndex}}">
                 立即沟通
               </button>
-              <!-- <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" /> -->
+              <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" wx:else/>
             </view>
           </view>
         </block>

@@ -1,5 +1,5 @@
 
-	<view class="detail-view message-view">
+	<view class="message-view shadow page">
 		<view class="page_margin view-content">
 			<scroll-view scroll-y="true" style="height:100%"  wx:if="{{list.length}}" bindscrolltolower="searchScrollLower">
 				<block wx:for="{{list}}" wx:key="index">
@@ -13,10 +13,10 @@
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
 							<view>
-								<view>{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
-								<view class="message-col-small">{{item.job_name}}</view>
+								<view class="page__title">{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
+								<view class="message-col-small page__desc">{{item.job_name}}</view>
 							</view>
-							<view class="message-col-small message-col-time">{{item.view_time}}</view>
+							<view class="message-col-small message-col-time page__desc">{{item.view_time}}</view>
 						</view>
 					</view>
 				</block>
@@ -26,5 +26,4 @@
 				<view class="page_noData_text">暂无消息！</view>
 		   </view>
 		</view>
-		<!-- <tabBarBottom v-bind:tabBarIndex.sync="tabBarIndex" v-bind:usertype.sync="usertype" wx:if="{{usertype==1}}"></tabBarBottom> -->
 	</view>

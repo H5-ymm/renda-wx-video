@@ -21,13 +21,5 @@ export default class jobFairList extends wepy.component {
 	props = {
 		list: Array
 	}
-	data = {
-	
-	}
-	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
-    }
-	}
 }
 </script>

@@ -31,32 +31,17 @@
   <view hidden="{{$modal$isScaleModal}}">
     <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
     <view class="modal_box transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$modal$height}}rpx">
-      <view class="modal-content"  wx:if="{{!$modal$type}}">
-        <view class="modal-bg">
-          <image src="{{$modal$modalObj.imgBg}}" mode="aspectFill" class="modal-img-bg"/>
-        </view>
-        <view class="modal-title">
-          {{$modal$modalObj.title}}
-        </view>
-        <text selectable="true" decode="{{$modal$true}}" class="modal-subTitle" wx:if="{{$modal$modalObj.subTitle}}">{{$modal$modalObj.subTitle}}</text>
-        <view class="weui-cell_btn weui-flex center">
-          <navigator open-type="{{$modal$openType}}" wx:if="{{$modal$openType}}" target="miniProgram" class="navigator">
-            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
-          </navigator>
-          <view class="navigator" wx:else>
-            <button class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">我知道啦</button>
-          </view>
+      <view class="modal-content">
+        <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
+        <view class="modal-textarea weui-flex center">
+            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}" maxlength="-1" value="{{$modal$content}}"/>
+         </view>
+         <view class="weui-cell_btn weui-flex around">
+          <view class="text page__desc" bindtap="$modal$handleClose">取消</view>
+          <view class="text page__text__active" bindtap="$modal$handleOk">确定</view>
         </view>
       </view>
-      <view wx:else class="modal-content modal-content-qrcode">
-        <image src="{{$modal$imgUrl}}" bindlongpress="$modal$saveImg" class="qrcode-img"/>
-        <view class="weui-cell_btn weui-flex center user-btn">
-          <button open-type="share" class="weui-btn_cell weui-btn_cell-gradient" bindtap="$modal$handleOk">长按图片保存二维码并分享</button>
-        </view>
-      </view>
-      <image src="https://a.rsd123.com/image/images/close.png" bindtap="$modal$handleOk" class="close-icon"/>
     </view>
   </view>
-
 
   </view>

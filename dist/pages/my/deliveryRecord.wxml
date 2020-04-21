@@ -1,0 +1,51 @@
+
+	<view class="page">
+    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="page">
+      <view class="home-view-box">
+        
+	<view>
+	  <block  wx:for="{{$deliveryRecordList$list}}" wx:key="index" wx:if="{{$deliveryRecordList$list.length}}">
+      <view class="list-row">
+        <view class="page__desc">记录来自：陕西大学招聘会</view>       
+      </view>
+      <view>
+				<block wx:for="{{item.data}}" wx:for-item="newitem" wx:key="index">
+					
+	<view class="list-row">
+    <view class="list-col-1">
+      <view class="page__title weui-flex between">
+        应聘职位：人事专员
+        <view class="time">03-21 11:00</view>
+      </view>
+      <view class="weui-flex between">
+        <view class="weui-flex__item">
+          <view class="number">8k</view>
+          <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>          
+        </view>
+        <button class="weui-btn_cell weui-btn_primary">
+          立即沟通
+        </button>
+      </view>
+    </view>
+    <view class="weui-flex between">
+      <view class="page__title">上海市任达网络科技有限公司</view>
+      <view class="number" bindtap="$deliveryRecordList$deliveryRecordItem$viewDetail" data-com-index="{{$deliveryRecordList$undefined}}" data-wpyviewdetail-a="{{$deliveryRecordList$newitem}}">查看详情</view>
+    </view>
+  </view>
+
+				</block>
+			</view>
+    </block>
+		<view  wx:if="{{!$deliveryRecordList$list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+        <view  wx:if="{{!list.length}}" class="page_list">
+          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+          <view class="page_noData_text">暂无数据！</view>
+        </view>
+      </view>
+    </scroll-view>
+ </view>

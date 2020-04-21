@@ -1,0 +1,84 @@
+<style lang="less">
+@import '../style/modal.less';
+.welfare_modal {
+  .modal-content {
+    width: 94%;
+    margin: 0 auto;
+    .modal-title {
+      padding: 30rpx 10rpx 30rpx 0;
+    }
+    .card-item {
+      font-size: 28rpx;
+      margin-bottom: 20rpx;
+      padding: 6rpx 16rpx;
+    }
+  }
+}
+</style>
+<template>
+	<view hidden='{{isScaleModal}}'>
+		<view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+		<view class="modal_box welfare_modal transition3s {{ isShow ? 'g_scale1': ''}}" style="height:{{height}}rpx">
+			<view class="modal-content">
+				<view class="modal-title weui-flex between">
+          <view class="page__title">企业福利</view>
+          <view class="page__text__active">确定</view>
+        </view>
+        <view class="weui-flex between wrap">
+          <view class="card-item active">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class welfareModal extends wepy.component {
+	props = {
+		isScaleModal: Boolean,
+		height: Number
+	}
+	data = {
+    isShow: false,
+    
+	}
+	methods = {
+		handleClose () {
+			this.isShow = false
+			this.$apply()
+			this.$emit('handleClose')
+		},
+		handleOk () {
+			this.isShow = false
+			this.$apply()
+			let params = {}
+			this.$emit('handleOk', params)
+		}
+	}
+	watch = {
+		isScaleModal (val) {
+			if (!val) {
+				this.isShow = true
+			} else {
+				this.isShow = false
+			}
+			this.$apply()
+		}
+	}
+}
+</script>

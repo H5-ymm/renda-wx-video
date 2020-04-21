@@ -1,0 +1,31 @@
+
+	<view class="page page_top resume_view">
+    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="page">
+      <view class="home-view-box">
+        <block  wx:for="{{list}}" wx:key="index">
+          <view class="list-row" wx:if="{{list.length}}" bindtap="selectJob" data-wpyselectjob-a="{{index}}" data-wpyselectjob-b="{{item}}">
+            <view class="list-col-1">
+              <view class="weui-flex between">
+                <view class="page__text__active">应聘职位：人事专员</view>
+                <view class="time">03-21 11:00</view>
+              </view>
+              <view class="page__title">
+                <view class="page__title">杨萌萌</view>
+                <view class="page__title">23</view>          
+              </view>
+              <view class="weui-flex between">
+                <view class="page__title weui-flex__item">上海市任达网络科技有限公司</view>
+                 <button class="weui-btn_cell weui-btn_primary">
+                  立即沟通
+                </button>
+              </view>
+            </view>
+          </view>
+        </block>
+        <view  wx:if="{{!list.length}}" class="page_list">
+          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+          <view class="page_noData_text">暂无数据！</view>
+        </view>
+      </view>
+    </scroll-view>
+ </view>

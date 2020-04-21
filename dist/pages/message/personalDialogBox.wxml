@@ -1,42 +1,67 @@
 
-	<view class="detail-view dialogBox-view">
-		<view class="page_margin view-content">
-			<scroll-view scroll-y="true" style="height:100%" bindscrolltolower="searchScrollLower">
-				<view class="dialogBox-row">
-					<view>
-						<view class="dialogBox-row-time">{{messageDetail.addtime}}</view>
-						<view class="weui-flex start dialogBox-col weui-flex__item">
-							<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header"  wx:if="{{messageDetail.header_img}}"/>
-							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header"  wx:else/>
-							<view class="dialogBox-content dialogBox-content-left dialogBox-content-left1">
-								<text decode="{{true}}">公司：{{messageDetail.com_name}}\n您好，你已预约视频面试，通知：{{messageDetail.content}},\n面试职位:{{messageDetail.job_name}}\n面试时间 {{messageDetail.view_time}}\n</text><text bindtap="concat">联系电话：一键拨打</text>
-							</view>
-						</view>
-						<view class="dialogBox-btn weui-flex between">
-							<button class="weui-btn_cell weui-btn_primary" bindtap="recommend">职位详情</button>
-							<button class="weui-btn_cell weui-btn_default" bindtap="videoView">进入面试</button>
+	<view class="dialogBox-view page">
+		<scroll-view scroll-y="true" style="height:100%" bindscrolltolower="searchScrollLower">
+			<view class="weui-flex between message-header">
+				<view>
+					<image mode="scaleToFill" src="../../images/company/video.png" class="dialogBox_icon"/>
+					<view class="page__title">视频面试</view>
+				</view>
+				<view>
+					<image mode="scaleToFill" src="../../images/company/view.png" class="dialogBox_icon"/>
+					<view class="page__title">查看简历</view>
+				</view>
+				<view>
+					<image mode="scaleToFill" src="../../images/company/notice.png" class="dialogBox_icon"/>
+					<view class="page__title">通知入职</view>
+				</view>
+				<view>
+					<image mode="scaleToFill" src="../../images/company/close.png" class="dialogBox_icon"/>
+					<view class="page__title">不合适</view>
+				</view>
+			</view>
+			<view class="dialogBox-row page_margin">
+				<view>
+					<view class="weui-flex start dialogBox-col weui-flex__item">
+						<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header"  wx:if="{{messageDetail.header_img}}"/>
+						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header"  wx:else/>
+						<view class="dialogBox-content dialogBox-content-left weui-flex start">
+							进入视频面试
+              <image mode="scaleToFill" src="../../images/company/video.png" class="dialogBox_icon"/>
 						</view>
 					</view>
-					<view wx:if="{{isView || messageDetail.status}}">
-						<view class="weui-flex start dialogBox-col weui-flex__item">
-							<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header" wx:if="{{messageDetail.header_img}}"/>
-							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
-							<view class="dialogBox-content dialogBox-content-left">您已退出面试</view>
-						</view>
-						<view class="dialogBox-btn weui-flex between" wx:if="{{isView || messageDetail.status}}">
-							<button class="weui-btn_cell weui-btn_primary" bindtap="videoView">重新进入</button>
-							<button class="weui-btn_cell weui-btn_primary_plain">已完成面试</button>
-						</view>
-					</view>
-					<view class="weui-flex end wrap dialogBox-col weui-flex__item" wx:if="{{isView}}">
-						<view class="dialogBox-content dialogBox-content-right">已完成面试</view>
-						<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header" wx:if="{{messageDetail.logo_url}}"/>
-						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+					<view class="dialogBox-btn weui-flex between" wx:if="{{isView || messageDetail.status}}">
+						<button class="weui-btn_cell weui-btn_primary" bindtap="videoView">重新进入</button>
+						<button class="weui-btn_cell weui-btn_primary_plain">已完成面试</button>
 					</view>
 				</view>
-			</scroll-view>
-		</view>
-		<view class="weui-cell_btn weui-flex between register-btn" wx:if="{{!isView || messageDetail.status}}">
-			<button class="weui-btn_cell weui-flex__item weui-btn_primary" bindtap="videoView">视频面试</button>
-		</view>
+				<view class="weui-flex end wrap dialogBox-col weui-flex__item">
+					<view class="dialogBox-content dialogBox-content-right weui-flex start">
+						已完成面试
+						<image mode="scaleToFill" src="../../images/company/video2.png" class="dialogBox_icon"/>
+					</view>
+					<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header" wx:if="{{messageDetail.logo_url}}"/>
+					<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+				</view>
+			</view>
+			<view class="message-input-box shadow">
+				<view class="weui-flex between page_margin">
+					<input class="weui-input weui-flex__item" bindinput="inputBind" placeholder="请输入...."/>
+					<image mode="scaleToFill" src="../../images/company/add.png" class="dialogBox_icon"/>
+				</view>
+				<view class="weui-flex start message-menus">
+					<view class="page_margin">
+						<view class="weui-flex center message-item">
+							<image mode="scaleToFill" src="../../images/company/video1.png" class="dialogBox_icon"/>
+						</view>
+						<view class="page__desc">视频面试</view>
+					</view>
+					<view class="page_margin">
+						<view class="weui-flex center message-item">
+							<image mode="scaleToFill" src="../../images/company/phone.png" class="dialogBox_icon"/>
+						</view>
+						<view class="page__desc">图片</view>
+					</view>
+				</view>
+			</view>
+		</scroll-view>
 	</view>

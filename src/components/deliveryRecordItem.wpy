@@ -1,0 +1,40 @@
+
+<template>
+	<view class="list-row">
+    <view class="list-col-1">
+      <view class="page__title weui-flex between">
+        应聘职位：人事专员
+        <view class="time">03-21 11:00</view>
+      </view>
+      <view class="weui-flex between">
+        <view class="weui-flex__item">
+          <view class="number">8k</view>
+          <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>          
+        </view>
+        <button class="weui-btn_cell weui-btn_primary">
+          立即沟通
+        </button>
+      </view>
+    </view>
+    <view class="weui-flex between">
+      <view class="page__title">上海市任达网络科技有限公司</view>
+      <view class="number" @tap="viewDetail({{item}})">查看详情</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+export default class deliveryRecordItem extends wepy.component {
+	props = {
+    item: Object
+	}
+	data = {
+	}
+	methods = {
+    viewDetail() {
+      wxNavigateTo('/pages/my/resume?query=1')
+    }
+	}
+}
+</script>

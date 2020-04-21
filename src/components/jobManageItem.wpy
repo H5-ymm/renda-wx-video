@@ -1,0 +1,37 @@
+
+<template>
+  <view class="list-row weui-flex between" @tap="selectJob({{index}},{{item}})">
+    <view class="list-col-1 weui-flex__item">
+      <view class="weui-flex between weui-flex__item">
+        <view class="page__title"> 前端开发</view>
+        <view class="page__desc">待审核</view>
+      </view>
+      <view class="number">8k</view>
+      <view class="page__desc">全职｜本科｜上海</view>
+    </view>
+    <view class="weui-flex between">
+      <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" />
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+export default class jobManageItem extends wepy.component {
+	props = {
+    item: Object,
+    isShowBtn: {
+			type: Boolean,
+			default: true
+		},
+	}
+	data = {
+	
+	}
+	methods = {
+    routerHall() {
+      wxNavigateTo('/pages/home/hall')
+    }
+	}
+}
+</script>

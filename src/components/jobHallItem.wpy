@@ -20,7 +20,7 @@
           </view>
         </view>
       </view>
-      <view class="online">在线</view>
+      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 </template>

@@ -1,0 +1,139 @@
+
+  <view class="page__company add-view page">
+    <view class="view-content1 view_auto">
+      <view class="page_form">
+        <view class="list-row">
+          <view class="weui-flex start">
+            <view class="my-text">企业名称</view>
+            <input class="weui-input" placeholder-class="placeholder" data-name="com_name" value="{{form.com_name}}" bindinput="changeInput" placeholder="请输入企业名称"/>
+          </view>
+        </view>
+    	  
+  <view>
+    <view class="list-row">
+      <view class="weui-flex start">
+        <view class="my-text">所属区域</view>
+        
+  <picker mode="multiSelector" bindcancel="$company$districtSelet$cancelPickerChange" bindchange="$company$districtSelet$bindMultiPickerChange" bindcolumnchange="$company$districtSelet$bindMultiPickerColumnChange" value="{{$company$districtSelet$multiIndex}}" range="{{$company$districtSelet$multiArray}}">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$company$districtSelet$options.length}}">
+        {{$company$districtSelet$multiArray[0][$company$districtSelet$multiIndex[0]]}}
+        {{$company$districtSelet$multiArray[1][$company$districtSelet$multiIndex[1]]}}
+        {{$company$districtSelet$disabled?$company$districtSelet$multiArray[2][$company$districtSelet$multiIndex[2]]:''}}
+      </view>
+      <view  wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+    </view>
+  </picker>
+
+      </view>
+    </view>
+    <view class="list-row">
+      <view class="weui-flex start">
+        <view class="my-text">所属行业</view>
+        <picker bindchange="$company$bindPickerChange" value="{{$company$jobIndex}}" data-name="job_id" range="{{$company$job_array}}">
+          <view class="my-text-right weui-flex start">
+            <view class="{{$company$form.job_id!=''?'':'placeholder'}}">
+              {{$company$form.job_id!=''?$company$job_array[$company$jobIndex]:'请选择从事行业'}}
+            </view> 
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start">
+        <view class="my-text">企业性质</view>
+        <picker bindchange="$company$bindPickerChange" value="{{$company$comIndex}}" data-name="com_type" range="{{$company$com_type}}">
+          <view class="my-text-right weui-flex start">
+            <view class="{{$company$form.com_type!=''?'':'placeholder'}}">
+              {{$company$form.com_type!=''?$company$com_type[$company$comIndex]:'请选择企业性质'}}
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class="list-row">
+      <view class="weui-flex start">
+        <view class="my-text">企业规模</view>
+        <picker bindchange="$company$bindPickerChange" data-name="com_scale" value="{{$company$comScaleIndex}}" range="{{$company$com_scale}}">
+          <view class="my-text-right weui-flex start">
+            <view class="{{$company$form.com_scale!=''?'':'placeholder'}}">
+              {{$company$form.com_scale!=''?$company$com_scale[$company$comScaleIndex]:'请选择企业规模'}}
+            </view>
+          </view>
+        </picker>
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start-start">
+        <view class="my-text">企业简介</view>
+        <textarea data-name="content" placeholder-class="placeholder" class="weui-input weui-textarea weui-flex__item" value="{{$company$form.content}}" bindinput="$company$changeInput" placeholder="请输入企业简介" auto-height/>
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start">
+        <view class="my-text">联系人</view>
+        <input class="weui-input" placeholder-class="placeholder" data-name="link_man" value="{{$company$form.link_man}}" bindinput="$company$changeInput" placeholder="请输入联系人"/>
+      </view>
+    </view>
+    <view class=" list-row">
+      <view class="weui-flex start">
+        <view class="my-text">手机号码</view>
+        <input class="weui-input" data-name="link_phone" placeholder-class="placeholder" value="{{$company$form.link_phone}}" bindinput="$company$changeInput" placeholder="请输入手机号码"/>
+      </view>
+     </view>
+     <view class="list-row">
+      <view class="weui-flex between">
+        <view class="weui-flex__item weui-flex start-end">
+          <view class="my-text">营业执照照片上传</view>
+          <view class="page__desc">图像大小不要超过5M</view>
+        </view>
+        <image bindtap="$company$uploadImg" src="{{$company$infoImg}}" mode="scaleToFill" class="my-head"  wx:if="{{$company$infoImg}}"/>
+        <image bindtap="$company$uploadImg" src="../../images/upload.png" mode="scaleToFill" class="my-head"  wx:else/>  
+      </view>
+    </view>
+    <!-- <view class=" list-row">
+      <view class="weui-flex end">
+        <input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{form.address}}" bindinput="changeInput" placeholder="请输入详细地址" />
+      </view>
+    </view> -->
+    <canvas canvas-id="canvas" style="width:{{$company$cWidth}}px;height:{{$company$cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
+  </view>
+
+      </view>
+    </view>
+    <view class="weui-cell_btn weui-flex center register-btn">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="save">保存</button>
+    </view>
+		
+	<view hidden="{{$welfareModal$isScaleModal}}">
+		<view bindtap="$welfareModal$ handleClose"  wx:if="{{$welfareModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box welfare_modal transition3s {{ $welfareModal$isShow ? 'g_scale1': ''}}" style="height:{{$welfareModal$height}}rpx">
+			<view class="modal-content">
+				<view class="modal-title weui-flex between">
+          <view class="page__title">企业福利</view>
+          <view class="page__text__active">确定</view>
+        </view>
+        <view class="weui-flex between wrap">
+          <view class="card-item active">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+          <view class="card-item">年底双薪</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  </view>

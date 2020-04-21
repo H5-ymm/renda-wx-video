@@ -8,7 +8,7 @@
             <picker mode="date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -26,7 +26,7 @@
             <view class="my-text  weui-flex__item my-text-require">工作类型</view>
             <view class="weui-flex between" bindtap="selectType">
               <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
             </view>
           </view>
         </view>
@@ -35,7 +35,7 @@
             <view class="my-text  weui-flex__item my-text-require">职位名称</view>
             <view class="weui-flex between" bindtap="selectType">
                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
             </view>
           </view>
         </view>

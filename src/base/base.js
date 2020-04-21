@@ -1,70 +1,70 @@
-export const list1 = [{
-    pagePath: '/pages/companyView/index',
-    text: '发单管理',
-    selected: true,
-    iconPath: '/images/orderTaking/list.png',
-    selectedIconPath: '/images/orderTaking/list-active.png'
-},
-{
-    pagePath: '/pages/companyView/staffManage',
-    text: '员工管理',
-    selected: false,
-    iconPath: '/images/orderTaking/staff.png',
-    selectedIconPath: '/images/orderTaking/staff-active.png'
-},
-{
-    pagePath: '/pages/message/index',
-    text: '消息管理',
-    selected: false,
-    iconPath: '/images/message.png',
-    selectedIconPath: '/images/message-active.png'
-},
+// export const list1 = [{
+//     pagePath: '/pages/companyView/index',
+//     text: '发单管理',
+//     selected: true,
+//     iconPath: '/images/orderTaking/list.png',
+//     selectedIconPath: '/images/orderTaking/list-active.png'
+// },
+// {
+//     pagePath: '/pages/companyView/staffManage',
+//     text: '员工管理',
+//     selected: false,
+//     iconPath: '/images/orderTaking/staff.png',
+//     selectedIconPath: '/images/orderTaking/staff-active.png'
+// },
+// {
+//     pagePath: '/pages/message/index',
+//     text: '消息管理',
+//     selected: false,
+//     iconPath: '/images/message.png',
+//     selectedIconPath: '/images/message-active.png'
+// },
 
-{
-    pagePath: '/pages/my/index',
-    text: '企业中心',
-    selected: false,
-    iconPath: '/images/orderTaking/my.png',
-    selectedIconPath: '/images/orderTaking/my-active.png'
-}
-]
-export const list2 = [{
-    pagePath: '/pages/teamView/index',
-    text: '首页',
-    selected: true,
-    iconPath: '/images/team/home.png',
-    selectedIconPath: '/images/team/home-active.png'
-},
-{
-    pagePath: '/pages/teamView/orderManage/index',
-    text: '接单管理',
-    selected: true,
-    iconPath: '/images/team/receipt.png',
-    selectedIconPath: '/images/team/receipt-active.png'
-},
-{
-    pagePath: '/pages/my/index',
-    text: '我的',
-    selected: false,
-    iconPath: '/images/my.png',
-    selectedIconPath: '/images/my-active.png'
-}
-]
-export const list3 = [{
-    pagePath: '/pages/message/index',
-    text: '消息',
-    selected: true,
-    iconPath: '/images/message.png',
-    selectedIconPath: '/images/message-active.png'
-},
-{
-    pagePath: '/pages/my/index',
-    text: '我的',
-    selected: false,
-    iconPath: '/images/my.png',
-    selectedIconPath: '/images/my-active.png'
-}
-]
+// {
+//     pagePath: '/pages/my/index',
+//     text: '企业中心',
+//     selected: false,
+//     iconPath: '/images/orderTaking/my.png',
+//     selectedIconPath: '/images/orderTaking/my-active.png'
+// }
+// ]
+// export const list2 = [{
+//     pagePath: '/pages/teamView/index',
+//     text: '首页',
+//     selected: true,
+//     iconPath: '/images/team/home.png',
+//     selectedIconPath: '/images/team/home-active.png'
+// },
+// {
+//     pagePath: '/pages/teamView/orderManage/index',
+//     text: '接单管理',
+//     selected: true,
+//     iconPath: '/images/team/receipt.png',
+//     selectedIconPath: '/images/team/receipt-active.png'
+// },
+// {
+//     pagePath: '/pages/my/index',
+//     text: '我的',
+//     selected: false,
+//     iconPath: '/images/my.png',
+//     selectedIconPath: '/images/my-active.png'
+// }
+// ]
+// export const list3 = [{
+//     pagePath: '/pages/message/index',
+//     text: '消息',
+//     selected: true,
+//     iconPath: '/images/message.png',
+//     selectedIconPath: '/images/message-active.png'
+// },
+// {
+//     pagePath: '/pages/my/index',
+//     text: '我的',
+//     selected: false,
+//     iconPath: '/images/my.png',
+//     selectedIconPath: '/images/my-active.png'
+// }
+// ]
 export const welfareList = [{
     label: '是',
     value: 1

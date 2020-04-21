@@ -5,7 +5,7 @@
       <button class="weui-btn_cell weui-btn_primary {{item.status==1 ? '' : 'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
         {{item.money==1?'进行中':'待举办'}}
       </button>
-      <text class="name {{isShowBtn?'text-line':''}}"> {{item.name}}得到极大的打击打击打击打击打击打击打击急急急</text>
+      <text class="name {{isShowBtn?'text-line':''}}">上海大型招聘会</text>
     </view>
     <view class="card-col-2">    
       <view>时间：2020-03-21 11:00 至 2020-03-21 11:00</view>
@@ -38,7 +38,11 @@ export default class jobFairItem extends wepy.component {
       wxNavigateTo('/pages/home/hall')
     },
     handle() {
-      this.$emit('viewDetail')
+      if (!this.isShowBtn) {
+        this.$emit('viewDetail')
+      } else {
+        wxNavigateTo('/pages/home/hall')
+      }
     }
 	}
 }

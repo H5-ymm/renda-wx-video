@@ -3,12 +3,14 @@
 </style>
 <script>
 import wepy from 'wepy';
+import moment from 'moment'
 import './utils.js'
 import 'lodash'
 import 'wepy-async-function';
 import { setStore } from 'wepy-redux'
 import configStore from './store'
 import { $http } from '@/http.js'
+moment.locale('zh-cn');
 const store = configStore()
 setStore(store)
 export default class extends wepy.app {
@@ -18,26 +20,23 @@ export default class extends wepy.app {
       'pages/message/index',
       'pages/my/index',
       'pages/my/resume',
+      'pages/my/deliveryRecord',
+      'pages/my/resumeList', 
       'pages/my/editJob',
+      'pages/my/jobForm',
+      'pages/my/jobManage',
+      'pages/home/hall',
+      'pages/home/collect',
+      'pages/my/companyForm',
+      'pages/message/dialogBox',
+      'pages/message/personalDialogBox',
       'pages/my/editWorkExperience',
       'pages/my/editEducation',
       'pages/my/editResume',
-      'pages/home/hall',
-      'pages/home/collect',
       'pages/home/jobDetail',
       'pages/home/companyDetail',
-      'pages/login/welcome',
       'pages/home/jobView',
-      'pages/home/list',
-      'pages/message/dialogBox',
-      'pages/message/personalDialogBox',
-      'pages/home/resumeDetail',
-      // 'pages/home/qrCodeResume',
-      // 'pages/home/addInfo',
-      'pages/message/allocationPerson',
-      'pages/register/companyTeam',
-      'pages/register/companyForm',
-      'pages/register/team',
+      'pages/login/welcome',
       'pages/login/login',
       'pages/login/rule'
     ],
@@ -50,11 +49,9 @@ export default class extends wepy.app {
     tabBar: {
       color: '#919398',
       selectedColor: '#1890FF',
-      borderStyle: 'white',
       list: [{
         pagePath: 'pages/home/index',
         text: '首页',
-   
         iconPath: '/images/nav/home.png',
         selectedIconPath: '/images/nav/home-active.png'
       },

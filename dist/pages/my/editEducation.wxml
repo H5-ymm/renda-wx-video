@@ -8,7 +8,7 @@
             <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -19,7 +19,7 @@
             <picker mode="date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -29,7 +29,7 @@
             <view class="my-text  weui-flex__item my-text-require">学校名称</view>
             <view class="weui-flex between" bindtap="selectType">
               <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
             </view>
           </view>
         </view>
@@ -38,7 +38,7 @@
             <view class="my-text  weui-flex__item my-text-require">院系</view>
             <view class="weui-flex between" bindtap="selectType">
               <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
             </view>
           </view>
         </view>
@@ -47,7 +47,7 @@
             <view class="my-text  weui-flex__item my-text-require">专业</view>
             <view class="weui-flex between" bindtap="selectType">
               <view class="page__label">{{resumeType}}</view>
-              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
             </view>
           </view>
         </view>

@@ -16,7 +16,7 @@
             <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -27,12 +27,12 @@
             <picker mode="date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                 <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
         </view>
-         <view class="page_margin">
+        <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">现居地址</view>
             
@@ -44,7 +44,7 @@
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
       <view  wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+      <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
     </view>
   </picker>
 
@@ -55,7 +55,7 @@
             <view class="my-text  weui-flex__item my-text-require">求职状态</view>
             <view class="weui-flex between" bindtap="selectType">
               <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="https://a.rsd123.com/image/images/down.png" class="page_card_icon"/>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
             </view>
           </view>
         </view>

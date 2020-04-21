@@ -2,7 +2,7 @@
 <template>
   <view class="list-card shadow" @tap="routerJob({{item}})">
     <view class="weui-flex start-start list-card-row">
-      <image src="../images/head.png" class="list-card-header" mode="scaleToFill" />
+      <image src="../images/head.png" class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany"/>
       <view class="list-card-content">
         <view class="weui-flex start card-col-1">    
           <text class="name {{isShowBtn?'text-line':''}}">仁达网络科技</text>
@@ -20,7 +20,7 @@
           </view>
         </view>
       </view>
-      <view class="online">在线</view>
+      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 </template>
@@ -40,6 +40,9 @@ export default class hallItem extends wepy.component {
 	methods = {
     routerJob() {
       wxNavigateTo('/pages/home/jobView')
+    },
+    viewCompany() {
+      wxNavigateTo('/pages/home/companyDetail')
     }
 	}
 }

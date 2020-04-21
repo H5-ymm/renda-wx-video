@@ -1,0 +1,40 @@
+
+<template>
+	<view>
+	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
+      <view class="list-row">
+        <view class="page__desc">记录来自：陕西大学招聘会</view>       
+      </view>
+      <view>
+				<repeat wx:for="{{item.data}}" wx:for-item="newitem" wx:key="index">
+					<deliveryRecordItem :item.sync="newitem"></deliveryRecordItem>
+				</repeat>
+			</view>
+    </repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+import deliveryRecordItem from './deliveryRecordItem'
+export default class deliveryRecordList extends wepy.component {
+  components = {
+    deliveryRecordItem: deliveryRecordItem
+  }
+	props = {
+		list: Array
+	}
+	data = {
+	
+	}
+	methods = {
+    routerHall() {
+      wxNavigateTo('/pages/home/hall')
+    }
+	}
+}
+</script>

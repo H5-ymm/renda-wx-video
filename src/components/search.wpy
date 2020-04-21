@@ -28,7 +28,7 @@
 		<view class="weui-cell weui-flex start weui-flex__item">
 			<image src="../images/search.png" class="searchIcon" />
 			<input class="weui-input weui-flex__item search-input" @input='inputBind' confirm-type="search" @focus="inputFocus"
-			value="{{name}}" placeholder="搜索词"/>
+			value="{{name}}" placeholder="{{placeholder}}"/>
     </view>
 		<text>搜索</text>
 	</view>
@@ -36,6 +36,12 @@
 <script>
 import wepy from 'wepy'
 export default class search extends wepy.component {
+	props = {
+		placeholder: {
+			type: String,
+			default: '搜索词'
+		}
+	}
 	data = {
 		name: ''
 	}
