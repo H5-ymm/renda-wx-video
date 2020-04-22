@@ -1,19 +1,19 @@
 
 <template>
-  <view class="list-card shadow" @tap="routerHall({{item}})">
+  <view class="list-card shadow" @tap="routerHall({{itemValue}})">
     <view class="weui-flex start card-col-1">    
-      <button class="weui-btn_cell weui-btn_primary {{item.status==1 ? '' : 'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
-        {{item.money==1?'进行中':'待举办'}}
+      <button class="weui-btn_cell weui-btn_primary {{itemValue.now_status==1?'':'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
+        {{itemValue.now_status==1?'进行中':'待举办'}}
       </button>
-      <text class="name {{isShowBtn?'text-line':''}}">上海大型招聘会</text>
+      <text class="name {{isShowBtn?'text-line':''}}">{{itemValue.title}}</text>
     </view>
     <view class="card-col-2">    
-      <view>时间：2020-03-21 11:00 至 2020-03-21 11:00</view>
-      <view>动态：<text>企业10家 | 岗位10家 | 求职者10人</text></view>
-      <view>规模：100家企业</view>
+      <view>时间：{{itemValue.starttime}} 至 {{itemValue.endtime}}</view>
+      <view>动态：<text>企业{{itemValue.scale}}家 | 岗位10家 | 求职者10人</text></view>
+      <view>规模：{{itemValue.scale}}家企业</view>
     </view>
     <view class="card-col-3">
-      <button class="weui-btn_cell weui-btn_primary {{isShowBtn?'':'weui-btn_primary_plain'}}" @tap.stop="handle">
+      <button class="weui-btn_cell weui-btn_primary {{isShowBtn?'':'weui-btn_primary_plain'}}" @tap.stop="handle({{itemValue}})">
         {{isShowBtn?'进入会场':'详情'}}
       </button>
     </view>
@@ -28,11 +28,24 @@ export default class jobFairItem extends wepy.component {
     isShowBtn: {
 			type: Boolean,
 			default: true
-		},
-	}
-	data = {
-	
-	}
+		}
+  }
+ 	data = {
+		itemValue: null
+  }
+  onLoad() {
+    console.log(this.itemValue)
+  }
+  watch = {
+    item(val) {
+      console.log(this.itemValue)
+      if (val) {
+        this.itemValue = val
+        console.log(this.itemValue)
+      }
+      this.$apply()
+    }
+  }
 	methods = {
     routerHall() {
       wxNavigateTo('/pages/home/hall')

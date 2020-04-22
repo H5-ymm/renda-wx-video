@@ -23,15 +23,15 @@
           <view class="list-row" wx:if="{{list.length}}" @tap="selectJob({{index}},{{item}})">
             <view class="list-col-1">
               <view class="weui-flex between">
-                <view class="page__text__active">应聘职位：人事专员</view>
-                <view class="time">03-21 11:00</view>
+                <view class="page__text__active">应聘职位：{{item.job_name}} {{item.salary}}</view>
+                <view class="time">{{item.addtime}}</view>
               </view>
               <view class="page__title">
-                <view class="page__title">杨萌萌</view>
-                <view class="page__title">23</view>          
+                <view class="page__title">{{item.nickname}}</view>
+                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age}}</view>          
               </view>
               <view class="weui-flex between">
-                <view class="page__title weui-flex__item">上海市任达网络科技有限公司</view>
+                <view class="page__title weui-flex__item">{{item.edu}}</view>
                  <button class="weui-btn_cell weui-btn_primary">
                   立即沟通
                 </button>
@@ -40,7 +40,7 @@
           </view>
         </repeat>
         <view wx:if="{{!list.length}}" class="page_list">
-          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+          <image src="../../images/noData.png" class="page_noData" mode="scaleToFill" />
           <view class="page_noData_text">暂无数据！</view>
         </view>
       </view>
@@ -110,64 +110,25 @@ export default class resumeList extends wepy.page {
       this.setReceipt(params)
     }
   }
-  setReceipt(params) {
-    $http('/apply/add_apply', params).then(res => {
-      if(res.data) {
-        wxToast('接单成功')
-        wx.setStorageSync('receiptType', 0)
-        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
-      } else {
-        wxToast('接单失败')
-      }
-    })
-  }
-  getReceiptList (uid) {
-    $http('/receipt/receiptList', this.params).then(res => {
+  getResumeList () {
+    $http('/Companyjob/getresume_list', this.params).then(res => {
       let arr = []
-      arr = res.data.data ? res.data.data.data : []
-      // arr.forEach(item=>{
-      //   if(item.utime - $moment().valueOf() > 0) {
-      //     item.utime = $moment.unix(item.utime).format('HH:ss')
-      //   } else {
-      //     item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
-      //   }
-      // })
+      arr = res.data.data ? res.data.data : []
+      arr.forEach(item=>{
+        item.addtime = $moment.unix(item.addtime).format('MM-DD HH:ss')
+      })
       this.list = arr
       this.count = res.data.count
       this.$apply()
-    })
-  }
-  getTeamInfoAPi (uid) {
-    $http('/Userinfo/getteaminfo', { uid }).then(res => {
-      this.rendaUserTeamType = res.data.grade_num
-      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
-      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
-      wx.setStorageSync('rendaDradeId', res.data.grade_id)
-      this.$apply()
-    })
-  }
-  saveUser(uid) {
-    let userinfo = wx.getStorageSync('wxInfo')
-    let params = {
-      uid,
-      head_img: userinfo.head_img
-    }
-    $http('/userinfo/editUserInfo', params).then(res => {
-      console.log(res)
     })
   }
   onLoad(options) {
     this.isScaleModal = false
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     this.$apply()
-    this.getTeamInfoAPi(this.params.uid)
   }
   onShow () {
-    this.getReceiptList()
-    let userInfo = wx.getStorageSync('userInfo') || ''
-		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
-      this.saveUser()
-    }
+    this.getResumeList()
   }
 }
 </script>

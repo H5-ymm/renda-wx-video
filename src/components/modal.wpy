@@ -80,7 +80,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-export default class actionSheet extends wepy.component {
+export default class modal extends wepy.component {
   props = {
     isScaleModal: Boolean,
     height: Number,

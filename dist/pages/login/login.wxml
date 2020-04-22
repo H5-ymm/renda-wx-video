@@ -2,31 +2,101 @@
   <view class="login_page page_bottom">
     <view class="login-view">
       <view class="login-view-box">
-        <!-- <view class="login-title">
-          <view>您好，</view>
-          <view class="login-title-col">欢迎使用人事达</view>
-        </view> -->
         <view class="login-view-form">
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-               <image src="../../images/phone.png" mode="aspectFill" class="login_card_icon"/>
+               <image src="../../images/phone.png" mode="aspectFill" class="page_card_icon"/>
             </view>
             <input class="weui-input" value="{{form.tel}}" bindinput="changeInput" data-name="tel" placeholder="输入您的手机号"/>
           </view>
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-              <image src="../../images/password.png" mode="aspectFill" class="login_card_icon"/>
+              <image src="../../images/password.png" mode="aspectFill" class="page_card_icon"/>
             </view>
             <input class="weui-input" value="{{form.code}}" bindinput="changeInput" data-name="code" placeholder="输入验证码"/>
-            <text class="code-btn" bindtap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
+            <text class="code-btn {{!sendAuthCode?'code-btn1':''}}" bindtap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
           </view>
           <view class="weui-cell_btn weui-flex center login-btn wrap">
             <button disabled="{{!checked}}" class="weui-btn_cell weui-btn_cell-gradient {{!checked?'weui-btn_cell-disabled':''}}" bindtap="getUserInfo">登录</button>
-            <view class="other-login">微信快捷登录</view>
+            <view class="other-login" bindtap="wxLogin">微信快捷登录</view>
           </view>
         </view>
       </view>
     </view>
+    
+  <view hidden="{{$actionSheet$isScaleModal}}">
+    <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
+    <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
+      <view class="modal-page_card">
+        <image mode="scaleToFill" src="../../images/close.png" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <view  wx:if="{{!$actionSheet$title}}" class="modal-content">
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex around modal-btn">
+            <text class="weui-flex__item weui-flex center">取消</text>
+            <text class="active weui-flex__item weui-flex center" bindtap="$actionSheet$handleOk">{{$actionSheet$okText}}</text>
+          </view>
+        </view>
+        <view wx:else class="select-user">
+          <view class="modal_title weui-flex center">{{$actionSheet$title}}</view>
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex center modal-btn wrap">
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是求职者</view>
+          </view>
+        </view>
+      </view>
+  </view>
+
+<script>
+import wepy from 'wepy'
+export default class actionSheet extends wepy.component {
+  props = {
+    isScaleModal: Boolean,
+    height: {
+      type: Number,
+      default: 280
+    },
+    text: String,
+    okText: {
+      type: String,
+      default: '联系客服'
+    },
+    title: {
+      type: String,
+      default: ''
+    }
+  }
+  data = {
+    isShow: false
+  }
+  methods = {
+    selectUser(index) {
+      this.$emit('selectUser', index)
+    },
+    handleOk() {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleOk')
+    },
+    handleClose() {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleClose')
+    }
+  }
+  watch = {
+    isScaleModal(val) {
+      if (!val) {
+        this.isShow = true
+      }
+      else {
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+}
+</script></view>
     
   <view hidden="{{$modal$isScaleModal}}">
     <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>

@@ -8,11 +8,11 @@
   <view class="list-row weui-flex between" bindtap="$jobManageList$jobManageItem$selectJob" data-com-index="{{$jobManageList$undefined}}" data-wpyselectjob-a="{{$jobManageList$jobManageItem$index}}" data-wpyselectjob-b="{{$jobManageList$item}}">
     <view class="list-col-1 weui-flex__item">
       <view class="weui-flex between weui-flex__item">
-        <view class="page__title"> 前端开发</view>
+        <view class="page__title">{{$jobManageList$item.job_name}}</view>
         <view class="page__desc">待审核</view>
       </view>
-      <view class="number">8k</view>
-      <view class="page__desc">全职｜本科｜上海</view>
+      <view class="number">{{$jobManageList$item.salary}}</view>
+      <view class="page__desc">全职｜{{$jobManageList$item.edu}}｜{{$jobManageList$item.province}}{{$jobManageList$item.city}}{{$jobManageList$item.area}}</view>
     </view>
     <view class="weui-flex between">
       <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png"/>
@@ -21,7 +21,7 @@
 
     </block>
 		<view  wx:if="{{!$jobManageList$list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

@@ -3,17 +3,17 @@
     <view class="view-content1">
       <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="../../images/head.png" class="my-avatar shadow" mode="scaleToFill"/>
-          <!-- <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" /> -->
+          <image src="../../images/head.png" class="my-avatar shadow"  wx:if="{{head_img}}" mode="scaleToFill"/>
+          <image src="https://a.rsd123.com/image/images/header.png"  wx:else alt="" mode="aspectFit" class="my-avatar"/>
         </view>
         <view class="userInfo-row">
-          <view class="my-user-name">上海任达信息科技有限公司</view>
-          <view class="page__desc">一切致力于为客户服务</view>
+          <view class="my-user-name">{{userInfo.user_name}}</view>
+          <view class="page__desc">{{userInfo.link_man}}</view>
         </view>
       </view>
       <view class="view-content">
         <view class="my-view-box">
-          <block  wx:for="{{menusList}}" wx:key="index">
+          <block wx:for="{{menusList}}" wx:key="index">
             <view class="list-row">
               <view class="list-row-col1" bindtap="viewInfo" data-wpyviewinfo-a="{{item}}">
                 <view class="weui-flex between">

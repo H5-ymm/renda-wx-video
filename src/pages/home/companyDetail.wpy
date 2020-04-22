@@ -116,14 +116,10 @@ export default class jobDetail extends wepy.page {
       }
     })
   }
-  getResumeDetail (query) {
+  getcompanyinfo (id) {
     this.type = query.type
-    $http('/Wxresume/getresume_recommend', query).then(res => {
+    $http('/Company/getcompanyinfo', { id }).then(res => {
       this.form = res.data
-      this.form.from_user = !res.data.from_user ? '' : res.data.from_user
-      this.form.to_user = !res.data.to_user ? '' : res.data.to_user
-      this.form.age = !res.data.age ? '' : res.data.age
-      this.eduIndex = res.data.education
       if (this.form.provinceid != 0) {
         this.address = [this.form.provinceid, this.form.cityid]
       } else {
@@ -160,20 +156,7 @@ export default class jobDetail extends wepy.page {
     selectCity: data => {
       this.form.provinceid = data[0] ? data[0] : 0
       this.form.cityid = data[1] ? data[1] : 0
-    },
-    selectOk: val => {
-      if (this.modalTitle == '请选择简历方式') {
-        if (val === 0) {
-          wx.navigateTo({
-            url: '/pages/home/addInfo' // 页面 A
-          })
-        } else {
-          this.createQrcode()
-        }
-      } else {
-        wxNavigateTo(`/pages/teamView/internalInvoice/list?query=${val}&resumeId=${this.query.resume_id}&recommendId=${this.id}`)
-      }
-    },
+    }
   }
   //事件处理函数(集中保存在methods对象中)
   methods = {
@@ -231,7 +214,7 @@ export default class jobDetail extends wepy.page {
     // this.id = options.recommendId
   }
   onShow () {
-    // this.getResumeDetail(this.query)
+    // this.getcompanyinfo(this.id)
   }
 }
 </script>

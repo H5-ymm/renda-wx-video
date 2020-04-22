@@ -5,37 +5,35 @@
   <view class="login_page page_bottom">
     <view class="login-view">
       <view class="login-view-box">
-        <!-- <view class="login-title">
-          <view>您好，</view>
-          <view class="login-title-col">欢迎使用人事达</view>
-        </view> -->
         <view class="login-view-form">
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-               <image src="../../images/phone.png" mode="aspectFill" class="login_card_icon" />
+               <image src="../../images/phone.png" mode="aspectFill" class="page_card_icon" />
             </view>
             <input class="weui-input" value="{{form.tel}}" @input="changeInput" data-name="tel" placeholder="输入您的手机号" />
           </view>
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-              <image src="../../images/password.png" mode="aspectFill" class="login_card_icon" />
+              <image src="../../images/password.png" mode="aspectFill" class="page_card_icon" />
             </view>
             <input class="weui-input" value="{{form.code}}" @input="changeInput" data-name="code" placeholder="输入验证码" />
-            <text class="code-btn" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
+            <text class="code-btn {{!sendAuthCode?'code-btn1':''}}" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
           </view>
           <view class="weui-cell_btn weui-flex center login-btn wrap">
             <button disabled="{{!checked}}" class="weui-btn_cell weui-btn_cell-gradient {{!checked?'weui-btn_cell-disabled':''}}" @tap="getUserInfo">登录</button>
-            <view class="other-login">微信快捷登录</view>
+            <view class="other-login" @tap="wxLogin">微信快捷登录</view>
           </view>
         </view>
       </view>
     </view>
+    <actionSheet :isScaleModal.sync="isLoginModal" text="明确身份后提供更准确的服务" :title.sync="title" okText="完善信息" @handleOK="handleOK"  @handleClose="handleClose"></actionSheet>
     <modal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import modal from '@/components/modal'
+import actionSheet from '@/components/actionSheet'
 import { $http } from '@/http.js'
 import { wxToast, checkMobile, getErrorTip, wxReLaunch } from '@/util.js'
 import { getStore } from 'wepy-redux'
@@ -44,7 +42,8 @@ import { getAllContant } from '@/store/actions/contant.js'
 const store = getStore()
 export default class Login extends wepy.page {
   components = {
-    modal: modal
+    modal: modal,
+    actionSheet: actionSheet
   }
   data = {
     isModal: true,
@@ -62,7 +61,10 @@ export default class Login extends wepy.page {
     auth_time: 60, // 倒计时
     sendAuthCode: true, // 控制
     auth_timetimer: null,
-    openid: ''
+    openid: '',
+    isLoginModal: true,
+    title: '选择身份',
+    text: '明确身份后提供更准确的服务',
   }
   computed = {
     checked () {
@@ -76,28 +78,16 @@ export default class Login extends wepy.page {
       })
   }
   checkRouterView (res) {
-    if (res && res.uid) {
-      this.$parent.globalData.uid = res.uid
-      // userType 1 企业 2 团队
-      this.$apply()
+    if (res && res.id) {
+      this.$parent.globalData.uid = res.id
+      // userType 1 企业 2 求职者
       wx.setStorageSync('rendaUserType', res.usertype)
-      wx.setStorageSync('rendaUid', res.uid)
-      if (!res.usertype) {
-        wxReLaunch('/pages/register/selectUser')
-      } else if (res.usertype === 2) {
-        if (res.is_team !== '0') {
-          wxReLaunch('/pages/teamView/index')
-        } else {
-          wxReLaunch('/pages/register/selectUser?query=1')
-        }
-      } else if (Number(res.usertype) === 1) {
-        if (Number(res.is_company) !== 0) {
-          wxReLaunch('/pages/companyView/index')
-        } else {
-          wxReLaunch('/pages/register/companyForm')
-        }
+      wx.setStorageSync('rendaUid', res.id)
+      if (res.usertype) {
+        wxReLaunch('/pages/home/index')
       } else {
-        wxReLaunch('/pages/message/index')
+        this.isLoginModal = !this.isLoginModal
+        this.$apply()
       }
       store.dispatch(getAllContant())
     }
@@ -106,7 +96,7 @@ export default class Login extends wepy.page {
     wx.removeStorageSync('auth_time')
     wx.removeStorageSync('sendAuthCode')
     let params = Object.assign(this.form, { openid: this.openid })
-    $http('/login/is_register_manu', params).then(res => {
+    $http('/Login/is_resgister_menu', params).then(res => {
       this.checkRouterView(res.data)
     }).catch(error => {
       if (error && error.status) {
@@ -129,7 +119,7 @@ export default class Login extends wepy.page {
       clearInterval(this.auth_timetimer)
       this.getTime()
     }
-    this.openid = this.$parent.getOpenId()
+    this.openid =wx.getStorageSync('rendaOpenId') || this.$parent.getOpenId()
     this.$apply()
   }
   onShow () {
@@ -175,6 +165,9 @@ export default class Login extends wepy.page {
     changeInput (e) {
       let key = e.target.dataset.name
       this.form[key] = e.detail.value
+    },
+    wxLogin() {
+      wxReLaunch('/pages/login/welcome')
     },
     getCode () {
       if (!this.form.tel) {

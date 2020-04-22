@@ -74,6 +74,9 @@
         right: 0;
         color: @weuiTextColorDesc;
         font-size: 26rpx;
+        &.code-btn1 {
+          color: @weuiColorPrimary;
+        }
       }
     }
   }
@@ -97,10 +100,13 @@
       width: 100%;
       text-align: center;
       margin: 20rpx 0;
-      font-size: 28rpx;
+      font-size: 32rpx;
       &.other-login1 {
-        margin: 60rpx 0 20rpx;
-        font-size: 32rpx;
+        margin: 60rpx 0 20rpx;   
+        background: none;
+        &::after {
+          border: none;
+        }
       }
     }
     .weui-btn_cell-disabled {

@@ -36,6 +36,7 @@
   height: 100%;
   overflow: hidden;
   position: relative;
+  z-index: 1001;
   .close-icon {
     position: absolute;
     top: 30rpx;
@@ -91,6 +92,7 @@
         width: 100%;
         font-size: 40rpx;
         padding: 30rpx 0;
+        height: 100%;
       }
     }
   }
@@ -109,15 +111,15 @@
           <view class="modal_text weui-flex center">{{text}}</view>
           <view class="weui-flex around modal-btn">
             <text class="weui-flex__item weui-flex center">取消</text>
-            <text class="active weui-flex__item weui-flex center">{{okText}}</text>
+            <text class="active weui-flex__item weui-flex center" @tap="handleOk">{{okText}}</text>
           </view>
         </view>
         <view wx:else class="select-user">
           <view class="modal_title weui-flex center">{{title}}</view>
           <view class="modal_text weui-flex center">{{text}}</view>
           <view class="weui-flex center modal-btn wrap">
-            <view class="col weui-flex center">我是企业招聘者</view>
-            <view class="col weui-flex center">我是求职者</view>
+            <view class="col weui-flex center" @tap="selectUser(1)">我是企业招聘者</view>
+            <view class="col weui-flex center" @tap="selectUser(2)">我是求职者</view>
           </view>
         </view>
       </view>
@@ -143,9 +145,17 @@ export default class actionSheet extends wepy.component {
     }
   }
   data = {
-    isShow: false,
+    isShow: false
   }
   methods = {
+    selectUser(index) {
+      this.$emit('selectUser', index)
+    },
+    handleOk() {
+      this.isShow = false
+      this.$apply()
+      this.$emit('handleOk')
+    },
     handleClose() {
       this.isShow = false
       this.$apply()

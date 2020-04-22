@@ -5,7 +5,7 @@
       <jobManageItem :item.sync="item"></jobManageItem>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

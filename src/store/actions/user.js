@@ -9,8 +9,9 @@ import {
 } from '@/http.js'
 export const getAllUser = createAction(GETALLUSER, (data) => {
     return new Promise((resolve, reject) => {
-        $http('/login/is_autologin', data).then(res => {
-            wx.setStorageSync('phone', res.data.phone)
+        $http('/Login/is_autologin', data).then(res => {
+            wx.setStorageSync('rendaUserType', res.data.usertype)
+            wx.setStorageSync('rendaUid', res.data.id)
             resolve(res.data);
         }).catch(error => {
             reject(error.status)

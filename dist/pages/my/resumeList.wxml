@@ -6,15 +6,15 @@
           <view class="list-row" wx:if="{{list.length}}" bindtap="selectJob" data-wpyselectjob-a="{{index}}" data-wpyselectjob-b="{{item}}">
             <view class="list-col-1">
               <view class="weui-flex between">
-                <view class="page__text__active">应聘职位：人事专员</view>
-                <view class="time">03-21 11:00</view>
+                <view class="page__text__active">应聘职位：{{item.job_name}} {{item.salary}}</view>
+                <view class="time">{{item.addtime}}</view>
               </view>
               <view class="page__title">
-                <view class="page__title">杨萌萌</view>
-                <view class="page__title">23</view>          
+                <view class="page__title">{{item.nickname}}</view>
+                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age}}</view>          
               </view>
               <view class="weui-flex between">
-                <view class="page__title weui-flex__item">上海市任达网络科技有限公司</view>
+                <view class="page__title weui-flex__item">{{item.edu}}</view>
                  <button class="weui-btn_cell weui-btn_primary">
                   立即沟通
                 </button>
@@ -23,7 +23,7 @@
           </view>
         </block>
         <view  wx:if="{{!list.length}}" class="page_list">
-          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+          <image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
           <view class="page_noData_text">暂无数据！</view>
         </view>
       </view>

@@ -7,12 +7,12 @@
     <view class="view-content1">
       <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="../../images/head.png" class="my-avatar shadow" mode="scaleToFill" />
-          <!-- <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" /> -->
+          <image src="../../images/head.png" class="my-avatar shadow" wx:if="{{head_img}}" mode="scaleToFill" />
+          <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" />
         </view>
         <view class="userInfo-row">
-          <view class="my-user-name">上海任达信息科技有限公司</view>
-          <view class="page__desc">一切致力于为客户服务</view>
+          <view class="my-user-name">{{userInfo.user_name}}</view>
+          <view class="page__desc">{{userInfo.link_man}}</view>
         </view>
       </view>
       <view class="view-content">
@@ -64,16 +64,8 @@ export default class my extends wepy.page {
     },
     usertype: 0,
     uid: '',
-    type: 1,
     wxInfo: '',
-    tabBarIndex: 0
-  }
-  watch = {
-    usertype (val) {
-      if (val) {
-        this.getDetail(val)
-      }
-    }
+    com_id: ''
   }
   events = {
     handleOk: data => {
@@ -86,13 +78,14 @@ export default class my extends wepy.page {
       this.$apply()
     }
   }
+  config = {
+    navigationBarTitleText: '我的'
+  }
   onLoad () {
     this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     this.wxInfo = wx.getStorageSync('wxInfo')
     this.usertype = wx.getStorageSync('rendaUserType')
-    wx.setNavigationBarTitle({
-      title: 我的
-    })
+    this.getDetail(this.usertype)
     this.$apply()
   }
   computed = {
@@ -104,19 +97,19 @@ export default class my extends wepy.page {
     },
     menusList () {
       let arr = []
-      if (this.usertype == 2) {
+      if (this.usertype ==  1) {
         arr = [
       {
         title: '企业信息',
-        url:"/pages/register/companyForm"
+        url:"/pages/my/companyForm"
       },
       {
         title: '职位管理',
-        url:"/pages/my/jobManage"
+        url: `/pages/my/jobManage?query=${this.com_id}`
       },
       {
         title: '应聘简历',
-        url: '/pages/my/resume'
+        url: '/pages/my/resumeList'
       },
       {
         title: '意见反馈'
@@ -163,9 +156,11 @@ export default class my extends wepy.page {
     })
   }
   getCompanyInfo () {
-    $http('/company/selectCompanyInfo', { uid: this.uid }).then(res => {
+    $http('/Company/getcompanyinfobyuid', { uid: this.uid }).then(res => {
       let data = res.data || {}
       this.userInfo.user_name = data.com_name
+      this.userInfo.link_man = data.link_man
+      this.com_id = data.id
       if (data.logo_url) {
         if ( data.logo_url.indexOf('http') > -1) {
           this.head_img = data.logo_url

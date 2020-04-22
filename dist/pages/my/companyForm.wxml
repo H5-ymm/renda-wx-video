@@ -31,10 +31,10 @@
     <view class="list-row">
       <view class="weui-flex start">
         <view class="my-text">所属行业</view>
-        <picker bindchange="$company$bindPickerChange" value="{{$company$jobIndex}}" data-name="job_id" range="{{$company$job_array}}">
+        <picker bindchange="$company$bindPickerChange" value="{{$company$jobIndex}}" data-name="trades" range="{{$company$job_array}}">
           <view class="my-text-right weui-flex start">
-            <view class="{{$company$form.job_id!=''?'':'placeholder'}}">
-              {{$company$form.job_id!=''?$company$job_array[$company$jobIndex]:'请选择从事行业'}}
+            <view class="{{$company$form.trades!=''?'':'placeholder'}}">
+              {{$company$form.trades!=''?$company$job_array[$company$jobIndex]:'请选择从事行业'}}
             </view> 
           </view>
         </picker>
@@ -43,10 +43,10 @@
     <view class=" list-row">
       <view class="weui-flex start">
         <view class="my-text">企业性质</view>
-        <picker bindchange="$company$bindPickerChange" value="{{$company$comIndex}}" data-name="com_type" range="{{$company$com_type}}">
+        <picker bindchange="$company$bindPickerChange" value="{{$company$comIndex}}" data-name="nature" range="{{$company$com_type}}">
           <view class="my-text-right weui-flex start">
-            <view class="{{$company$form.com_type!=''?'':'placeholder'}}">
-              {{$company$form.com_type!=''?$company$com_type[$company$comIndex]:'请选择企业性质'}}
+            <view class="{{$company$form.nature!=''?'':'placeholder'}}">
+              {{$company$form.nature!=''?$company$com_type[$company$comIndex]:'请选择企业性质'}}
             </view>
           </view>
         </picker>
@@ -55,10 +55,10 @@
     <view class="list-row">
       <view class="weui-flex start">
         <view class="my-text">企业规模</view>
-        <picker bindchange="$company$bindPickerChange" data-name="com_scale" value="{{$company$comScaleIndex}}" range="{{$company$com_scale}}">
+        <picker bindchange="$company$bindPickerChange" data-name="scale" value="{{$company$comScaleIndex}}" range="{{$company$com_scale}}">
           <view class="my-text-right weui-flex start">
-            <view class="{{$company$form.com_scale!=''?'':'placeholder'}}">
-              {{$company$form.com_scale!=''?$company$com_scale[$company$comScaleIndex]:'请选择企业规模'}}
+            <view class="{{$company$form.scale!=''?'':'placeholder'}}">
+              {{$company$form.scale!=''?$company$com_scale[$company$comScaleIndex]:'请选择企业规模'}}
             </view>
           </view>
         </picker>
@@ -79,7 +79,7 @@
     <view class=" list-row">
       <view class="weui-flex start">
         <view class="my-text">手机号码</view>
-        <input class="weui-input" data-name="link_phone" placeholder-class="placeholder" value="{{$company$form.link_phone}}" bindinput="$company$changeInput" placeholder="请输入手机号码"/>
+        <input class="weui-input" data-name="link_tel" placeholder-class="placeholder" value="{{$company$form.link_tel}}" bindinput="$company$changeInput" placeholder="请输入手机号码"/>
       </view>
      </view>
      <view class="list-row">

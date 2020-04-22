@@ -10,10 +10,10 @@
     <view class="list-row">
       <view class="weui-flex start">
         <view class="my-text">所属行业</view>
-        <picker @change="bindPickerChange" value="{{jobIndex}}" data-name="job_id" range="{{job_array}}">
+        <picker @change="bindPickerChange" value="{{jobIndex}}" data-name="trades" range="{{job_array}}">
           <view class="my-text-right weui-flex start">
-            <view class="{{form.job_id!=''?'':'placeholder'}}">
-              {{form.job_id!=''?job_array[jobIndex]:'请选择从事行业'}}
+            <view class="{{form.trades!=''?'':'placeholder'}}">
+              {{form.trades!=''?job_array[jobIndex]:'请选择从事行业'}}
             </view> 
           </view>
         </picker>
@@ -22,10 +22,10 @@
     <view class=" list-row">
       <view class="weui-flex start">
         <view class="my-text">企业性质</view>
-        <picker @change="bindPickerChange" value="{{comIndex}}" data-name="com_type" range="{{com_type}}">
+        <picker @change="bindPickerChange" value="{{comIndex}}" data-name="nature" range="{{com_type}}">
           <view class="my-text-right weui-flex start">
-            <view class="{{form.com_type!=''?'':'placeholder'}}">
-              {{form.com_type!=''?com_type[comIndex]:'请选择企业性质'}}
+            <view class="{{form.nature!=''?'':'placeholder'}}">
+              {{form.nature!=''?com_type[comIndex]:'请选择企业性质'}}
             </view>
           </view>
         </picker>
@@ -34,10 +34,10 @@
     <view class="list-row">
       <view class="weui-flex start">
         <view class="my-text">企业规模</view>
-        <picker @change="bindPickerChange" data-name="com_scale" value="{{comScaleIndex}}" range="{{com_scale}}">
+        <picker @change="bindPickerChange" data-name="scale" value="{{comScaleIndex}}" range="{{com_scale}}">
           <view class="my-text-right weui-flex start">
-            <view class="{{form.com_scale!=''?'':'placeholder'}}">
-              {{form.com_scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
+            <view class="{{form.scale!=''?'':'placeholder'}}">
+              {{form.scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
             </view>
           </view>
         </picker>
@@ -61,8 +61,8 @@
     <view class=" list-row">
       <view class="weui-flex start">
         <view class="my-text">手机号码</view>
-        <input class="weui-input" data-name="link_phone" placeholder-class="placeholder" 
-        value="{{form.link_phone}}" @input="changeInput" placeholder="请输入手机号码" />
+        <input class="weui-input" data-name="link_tel" placeholder-class="placeholder" 
+        value="{{form.link_tel}}" @input="changeInput" placeholder="请输入手机号码" />
       </view>
      </view>
      <view class="list-row">
@@ -103,17 +103,18 @@ export default class Company extends wepy.component {
   data = {
     form: {
       address: '',
-      provinceid: '',
-      three_cityid: '',
-      cityid: '',
-      job_id: '',
-      com_type: '',
-      com_scale: '',
-      logo: '',
-      phone: '',
-      unified_social: '',
-      business_licence: '',
-      jobName: ''
+      province: '',
+      city: '',
+      area: '',
+      trades: '',
+      nature: '',
+      scale: '',
+      com_name: '',
+      link_tel: '',
+      link_man: '',
+      email: '',
+      content: '',
+      license_url: ''
     },
     infoImg: '',
     registerType: '',
@@ -146,14 +147,13 @@ export default class Company extends wepy.component {
       this[key] = allData[key]
     }
     this.registerType = wx.getStorageSync('rendaUserType')
-    console.log(this.registerType + 'ddd')
     this.$apply()
   }
   events = {
     selectCity: data => {
-      this.form.provinceid = data[0] ? data[0] : 0
-      this.form.cityid = data[1] ? data[1] : 0
-      this.form.three_cityid = data[2] ? data[2] : 0
+      this.form.province = data[0] ? data[0] : 0
+      this.form.city = data[1] ? data[1] : 0
+      this.form.area = data[2] ? data[2] : 0
     }
   }
   getImg (tempFilePaths) {

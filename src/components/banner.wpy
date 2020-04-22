@@ -28,7 +28,7 @@
 </style>
 <template>
   <view class="page-section page-section-spacing swiper">
-    <swiper indicator-dots="true" indicator-color="#B5B5B6" indicator-active-color="#1890FF"
+    <swiper indicator-dots="true" indicator-color="#B5B5B6" wx:if="{{banner.length}}" indicator-active-color="#1890FF"
       autoplay="true" class="swiper">
       <repeat wx:for="{{banner}}" wx:key="index">
         <swiper-item class="swiper-item">
@@ -50,14 +50,14 @@ export default class banner extends wepy.component {
      $http('/receipt/advertisementList', { page: 1, limit: 3 }).then(res => {
       let arr = res.data.data || []
       arr.forEach(item=>{
-         item.image = getImgUrl(item.image)
+        item.image = getImgUrl(item.image)
       })
       this.banner = arr
       this.$apply()
     })
   }
   onLoad() {
-    this.getBanner()
+    // this.getBanner()
   }
 }
 </script>
