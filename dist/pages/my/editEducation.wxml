@@ -5,7 +5,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">学历</view>
-            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+            <picker bindchange="bindPickerChange" data-name="edu" value="{{index}}" range="{{eduList}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
@@ -16,7 +16,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">毕业时间</view>
-            <picker mode="date" bindchange="bindDateChange">
+            <picker mode="date" data-name="graduation_date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
@@ -27,37 +27,37 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">学校名称</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
-            </view>
+            <picker bindchange="bindPickerChange" data-name="school" value="{{index}}" range="{{eduList}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{form.graduation_date?'page__label':'placeholder'}}"> {{form.graduation_date?form.graduation_date:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">院系</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入院系" value="{{form.faculty}}" data-name="faculty" bindinput="changeInput"/>
             </view>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">专业</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="page__label">{{resumeType}}</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入专业" value="{{form.speciality}}" data-name="speciality" bindinput="changeInput"/>
             </view>
           </view>
         </view>
       </view>
     </view>
     <view class="weui-cell_btn weui-flex center">
-     	<button class="weui-btn_cell" bindtap="close">
-        取消 
+     	<button class="weui-btn_cell" bindtap="deleteInfo">
+        删除 
       </button>
-      <button class="weui-btn_cell weui-btn_primary" bindtap="save">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="submit">
         保存
       </button>
     </view>

@@ -5,7 +5,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作时间</view>
-            <picker mode="date" bindchange="bindDateChange">
+            <picker mode="date" data-name="time" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
@@ -16,26 +16,27 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">公司名称</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.from_user}}" data-name="from_user" bindinput="changeInput"/>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.company_name}}" data-name="company_name" bindinput="changeInput"/>
             </view>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作类型</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
-            </view>
+            <picker mode="region" data-name="job_type" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">职位名称</view>
-            <view class="weui-flex between" bindtap="selectType">
-               <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.job_name}}" data-name="job_name" bindinput="changeInput"/>
             </view>
           </view>
         </view>
@@ -43,15 +44,15 @@
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作职责</view>
           </view>
-          <textarea data-name="introduction" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea" value="{{form.introduction}}" bindinput="changeInput" placeholder="请输入工作职责" maxlength="-1"/>
+          <textarea data-name="work_content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea" value="{{form.work_content}}" bindinput="changeInput" placeholder="请输入工作职责" maxlength="-1"/>
         </view>
       </view>
     </view>
     <view class="weui-cell_btn weui-flex center">
-     	<button class="weui-btn_cell" bindtap="close">
-        取消 
+     	<button class="weui-btn_cell" bindtap="deleteInfo">
+        删除 
       </button>
-      <button class="weui-btn_cell weui-btn_primary" bindtap="save">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="submit">
         保存
       </button>
     </view>

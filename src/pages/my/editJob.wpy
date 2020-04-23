@@ -8,7 +8,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作性质</view>
-            <picker @change="bindPickerChange" value="{{index}}" range="{{array}}">
+            <picker @change="bindPickerChange" data-name="nature_work"  value="{{index}}" range="{{array}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
                 <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
@@ -18,35 +18,41 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作地点</view>
+            <view class="my-text weui-flex__item my-text-require">工作地点</view>
             <districtSelet></districtSelet>
           </view>
         </view>
          <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望薪资</view>
-            <view class="weui-flex between" @tap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-            </view>
+            <picker @change="bindPickerChange" data-name="expected_salary"  value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+              </view>
+            </picker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望行业</view>
-            <view class="weui-flex between" @tap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-            </view>
+            <picker @change="bindPickerChange" data-name="expected_trades" value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+              </view>
+            </picker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望职位</view>
-            <view class="weui-flex between" @tap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-            </view>
+            <picker @change="bindPickerChange" data-name="expected_job"  value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+              </view>
+            </picker>
           </view>
         </view>
       </view>
@@ -61,7 +67,8 @@
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
 import pickerModal from '@/components/pickerModal'
-
+import { $http } from '@/http.js'
+import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
 export default class editJob extends wepy.page {
   components = {
     districtSelet: districtSelet,
@@ -69,15 +76,16 @@ export default class editJob extends wepy.page {
   }
   data = {
     form: {
-      name: '',
-      to_user: '',
-      from_user: ''
+      uid: '',
+      nature_work: '',
+      expected_province: '',
+      expected_city: '',
+      expected_salary: '',
+      expected_trades: '',
+      expected_job: ''
     },
-    jobName: '',
     array: ['男', '女'],
-    eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
     index: 0,
-    eduIndex: 0,
     addressIndex: -1,
     disabled: false,
     isPicker: true,
@@ -90,13 +98,22 @@ export default class editJob extends wepy.page {
     // this.isPicker = false
     // this.$apply()
   }
+  saveJobExpected() {
+    $http('/Personal/add_Jobsearchintention', this.form).then(res => {
+ 			if (res.data) {
+			  wxToast('保存成功')
+			} else {
+				wxToast('保存失败')
+			}
+		})
+  }
   methods = {
     changeInput(e) {
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.value
     },
     submit() {
-      
+      this.saveJobExpected()
     }
   }
 }

@@ -76,7 +76,8 @@
     
 	<view wx:else>
 	  <block  wx:if="{{$jobHallList$list.length}}" wx:for="{{$jobHallList$list}}" wx:for-index="$jobHallList$index" wx:for-item="$jobHallList$item" wx:key="$jobHallList$index">
-      
+			<view bindtap="$jobHallList$routerConcat" data-wpyrouterconcat-a="{{$jobHallList$item}}">
+        
   <view class="list-card shadow">
     <view class="weui-flex start-start list-card-row">
       <image src="../../images/head.png" class="list-card-header" mode="scaleToFill"/>
@@ -91,7 +92,7 @@
           <view class="text-line"><text class="name"><text  wx:if="{{$jobHallList$item.edu}}">{{$jobHallList$item.edu}} /</text><text  wx:if="{{$jobHallList$item.speciality}}">{{$jobHallList$item.speciality || ''}}</text></text></view>
           <view class="weui-flex between">
             <view class="card-text weui-flex__item">意向：{{$jobHallList$item.expected_job || '无'}}</view>
-            <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$jobHallList$jobHallItem$routerConcat" data-com-index="{{$jobHallList$index}}" data-wpyrouterconcat-a="{{$jobHallList$item}}">
+            <button class="weui-btn_cell weui-btn_primary_plain">
               立即沟通
             </button>
           </view>
@@ -101,6 +102,7 @@
     </view>
   </view>
 
+      </view>
     </block>
 		<view wx:if="{{!$jobHallList$list.length}}" class="page_list">
 			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>

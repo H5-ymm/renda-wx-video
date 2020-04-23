@@ -2,7 +2,9 @@
 <template>
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-      <jobHallItem :item.sync="item" @routerConcat="routerConcat"></jobHallItem>
+			<view @tap="routerConcat({{item}})">
+        <jobHallItem :item.sync="item"></jobHallItem>
+      </view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
 			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
@@ -21,10 +23,11 @@ export default class jobHallList extends wepy.component {
 	props = {
 		list: Array
 	}
-	events = {
-	  routerConcat: data => {
-			this.$emit('routerConcat', data)
-		}
+	methods = {
+    routerConcat(item) {
+      console.log(item)
+      this.$emit('routerConcat', item)
+    }
 	}
 }
 </script>

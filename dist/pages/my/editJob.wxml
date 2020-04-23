@@ -5,7 +5,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作性质</view>
-            <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+            <picker bindchange="bindPickerChange" data-name="nature_work" value="{{index}}" range="{{array}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
@@ -15,7 +15,7 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作地点</view>
+            <view class="my-text weui-flex__item my-text-require">工作地点</view>
             
   <picker mode="multiSelector" bindcancel="$districtSelet$cancelPickerChange" bindchange="$districtSelet$bindMultiPickerChange" bindcolumnchange="$districtSelet$bindMultiPickerColumnChange" value="{{$districtSelet$multiIndex}}" range="{{$districtSelet$multiArray}}">
     <view class="my-text-right weui-flex between">
@@ -34,28 +34,34 @@
          <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望薪资</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
-            </view>
+            <picker bindchange="bindPickerChange" data-name="expected_salary" value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望行业</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
-            </view>
+            <picker bindchange="bindPickerChange" data-name="expected_trades" value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望职位</view>
-            <view class="weui-flex between" bindtap="selectType">
-              <view class="page__label">请选择</view>
-              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
-            </view>
+            <picker bindchange="bindPickerChange" data-name="expected_job" value="{{index}}" range="{{array}}">
+              <view class="my-text-right weui-flex between">
+                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
+                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
           </view>
         </view>
       </view>

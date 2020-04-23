@@ -14,7 +14,7 @@
           <view class="text-line"><text class="name"><text wx:if="{{item.edu}}">{{item.edu}} /</text><text wx:if="{{item.speciality}}">{{item.speciality || ''}}</text></text></view>
           <view class="weui-flex between">
             <view class="card-text weui-flex__item">意向：{{item.expected_job || '无'}}</view>
-            <button class="weui-btn_cell weui-btn_primary_plain" @tap="routerConcat({{item}})">
+            <button class="weui-btn_cell weui-btn_primary_plain">
               立即沟通
             </button>
           </view>
@@ -32,11 +32,12 @@ export default class hallItem extends wepy.component {
     item: Object,
     isShowBtn: {
 			type: Boolean,
-			default: true
+      default: true
 		},
 	}
 	methods = {
     routerConcat(item) {
+      console.log(item)
       this.$emit('routerConcat', item)
     }
 	}

@@ -8,7 +8,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">姓名</view>
-            <view class="weui-flex between" @tap="selectType">
+            <view class="weui-flex between">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.nickname}}" data-name="nickname" @input="changeInput" />
             </view>
           </view>
@@ -27,7 +27,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">出生年月</view>
-            <picker mode="date" bindchange="bindDateChange">
+            <picker mode="date" data-name="birthtime" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
                  <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
@@ -37,14 +37,14 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">现居地址</view>
+            <view class="my-text weui-flex__item my-text-require">现居地址</view>
             <districtSelet></districtSelet>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">求职状态</view>
-            <view class="weui-flex between" @tap="selectType">
+            <view class="weui-flex between">
               <view class="page__label">请选择</view>
               <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
             </view>
@@ -63,9 +63,9 @@
         </view>
          <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item">邮箱</view>
-            <view class="weui-flex between" @tap="selectType">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.from_user}}" data-name="from_user" @input="changeInput" />
+            <view class="my-text weui-flex__item">邮箱</view>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.email}}" data-name="email" @input="changeInput" />
             </view>
           </view>
         </view>
@@ -82,6 +82,7 @@ import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
 import pickerModal from '@/components/pickerModal'
 import { $http } from '@/http.js'
+import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
 export default class editResume extends wepy.page {
   components = {
     districtSelet: districtSelet,
@@ -89,7 +90,14 @@ export default class editResume extends wepy.page {
   }
   data = {
     form: {
-      nickname: ''
+      nickname: '',
+      job_search_status: '',
+      sex: '',
+      birthtime: '',
+      tel: '',
+      email: '',
+      province: '',
+      city: ''
     },
     jobName: '',
     array: ['男', '女'],
@@ -109,8 +117,12 @@ export default class editResume extends wepy.page {
     // this.$apply()
   }
   updateResume() {
-    $http('/Personal/edit_personal', this.form ).then(res => {
-
+    $http('/Personal/edit_personal', this.form).then(res => {
+      if (res.data) {
+			  wxToast('保存成功')
+			} else {
+				wxToast('保存失败')
+			}
     })
   }
   methods = {
@@ -119,6 +131,7 @@ export default class editResume extends wepy.page {
       this.form[key] = e.detail.value
     },
     submit() {
+      this.updateResume()
     }
   }
 }
