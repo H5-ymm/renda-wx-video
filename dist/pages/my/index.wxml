@@ -3,7 +3,7 @@
     <view class="view-content1">
       <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="../../images/head.png" class="my-avatar shadow"  wx:if="{{head_img}}" mode="scaleToFill"/>
+          <image src="{{head_img}}" class="my-avatar shadow"  wx:if="{{head_img}}" mode="scaleToFill"/>
           <image src="https://a.rsd123.com/image/images/header.png"  wx:else alt="" mode="aspectFit" class="my-avatar"/>
         </view>
         <view class="userInfo-row">

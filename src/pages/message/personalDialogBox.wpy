@@ -9,7 +9,7 @@
 					<image mode="scaleToFill" src="../../images/company/video.png" class="dialogBox_icon" />
 					<view  class="page__title">视频面试</view>
 				</view>
-				<view>
+				<view @tap="viewResume">
 					<image mode="scaleToFill" src="../../images/company/view.png" class="dialogBox_icon" />
 					<view  class="page__title">查看简历</view>
 				</view>
@@ -160,6 +160,9 @@ export default class personalDialogBox extends wepy.page {
 			}).catch(() => {
 				console.log('取消')
 			})
+		},
+		viewResume() {
+			wxNavigateTo('/pages/my/resume?query=1')
 		},
 		recommend() {
 			wx.navigateTo ({

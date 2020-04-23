@@ -7,7 +7,7 @@
     <view class="view-content1">
       <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="../../images/head.png" class="my-avatar shadow" wx:if="{{head_img}}" mode="scaleToFill" />
+          <image src="{{head_img}}" class="my-avatar shadow" wx:if="{{head_img}}" mode="scaleToFill" />
           <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" />
         </view>
         <view class="userInfo-row">
@@ -162,11 +162,7 @@ export default class my extends wepy.page {
       this.userInfo.link_tel = data.link_tel
       this.com_id = data.id
       if (data.logo_url) {
-        if ( data.logo_url.indexOf('http') > -1) {
-          this.head_img = data.logo_url
-        } else {
-          this.head_img = getImgUrl(data.logo_url)
-        }
+        this.head_img = data.logo_url
       }
       this.$apply()
       wx.setStorageSync('userInfo', JSON.stringify(data))
