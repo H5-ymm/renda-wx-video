@@ -1,7 +1,7 @@
 
   <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
     
-  <view class="list-card shadow" bindtap="$jobFairItemHall$routerHall" data-wpyrouterhall-a="{{$jobFairItemHall$itemValue}}">
+  <view class="list-card shadow">
     <view class="weui-flex start card-col-1">    
       <button class="weui-btn_cell weui-btn_primary {{$jobFairItemHall$itemValue.now_status==1?'':'weui-btn_warn'}}"  wx:if="{{$jobFairItemHall$isShowBtn}}">
         {{$jobFairItemHall$itemValue.now_status==1?'进行中':'待举办'}}
@@ -10,8 +10,8 @@
     </view>
     <view class="card-col-2">    
       <view>时间：{{$jobFairItemHall$itemValue.starttime}} 至 {{$jobFairItemHall$itemValue.endtime}}</view>
-      <view>动态：<text>企业{{$jobFairItemHall$itemValue.scale}}家 | 岗位10家 | 求职者10人</text></view>
-      <view>规模：{{$jobFairItemHall$itemValue.scale}}家企业</view>
+      <view>动态：<text>企业{{$jobFairItemHall$itemValue.companynum}}家 | 岗位{{$jobFairItemHall$itemValue.jobnum}}家 | 求职者{{$jobFairItemHall$itemValue.usernum}}人</text></view>
+      <view>规模：{{$jobFairItemHall$itemValue.scale || 1}}家企业</view>
     </view>
     <view class="card-col-3">
       <button class="weui-btn_cell weui-btn_primary {{$jobFairItemHall$isShowBtn?'':'weui-btn_primary_plain'}}" catchtap="$jobFairItemHall$handle" data-wpyhandle-a="{{$jobFairItemHall$itemValue}}">
@@ -30,63 +30,68 @@
 			<image src="../../images/search.png" class="searchIcon"/>
 			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" placeholder="{{$searchHall$placeholder}}"/>
     </view>
-		<text>搜索</text>
+		<text bindtap="$searchHall$searchValue">搜索</text>
 	</view>
 
     
 	<view wx:if="{{hallType==1}}">
-	  <block  wx:for="{{$hallList$list}}" wx:key="index" wx:if="{{$hallList$list.length}}">
-      
-  <view class="list-card shadow" bindtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$undefined}}" data-wpyrouterjob-a="{{$hallList$item}}">
-    <view class="weui-flex start-start list-card-row">
-      <image src="../../images/head.png" class="list-card-header" mode="scaleToFill" catchtap="$hallList$hallItem$viewCompany" data-com-index="{{$hallList$undefined}}"/>
-      <view class="list-card-content">
-        <view class="weui-flex start card-col-1">    
-          <text class="name {{$hallList$hallItem$isShowBtn?'text-line':''}}">仁达网络科技</text>
+	  <block  wx:if="{{$hallList$list.length}}" wx:for="{{$hallList$list}}" wx:for-index="$hallList$index" wx:for-item="$hallList$item" wx:key="$hallList$index">
+			<view class="list-card shadow" bindtap="$hallList$routerJob" data-wpyrouterjob-a="{{$hallList$itemValue}}">
+        
+  <view class="weui-flex start-start list-card-row">
+    <image src="{{$hallList$item.logo_url}}" class="list-card-header" mode="scaleToFill" catchtap="$hallList$hallItem$viewCompany" data-com-index="{{$hallList$index}}" data-wpyviewcompany-a="{{$hallList$item}}"/>
+    <view class="list-card-content">
+      <view class="weui-flex start card-col-1">    
+        <text class="name {{$hallList$hallItem$isShowBtn?'text-line':''}}">{{$hallList$item.com_name}}</text>
+      </view>
+      <view class="card-col-2">    
+        <view class="weui-flex start text-line">
+          <block wx:for="{{$hallList$item.benefits}}" wx:for-index="$hallList$hallItem$index" wx:for-item="$hallList$hallItem$benefitsItem" wx:key="$hallList$hallItem$index">
+            <view class="card-item weui-flex center">{{$hallList$hallItem$benefitsItem}}</view>
+          </block> 
         </view>
-        <view class="card-col-2">    
-          <view class="weui-flex start text-line">
-            <view class="card-item weui-flex center">业绩提成</view>
-          </view>
-          <view class="text-line"><text class="name">储蓄店长</text><text class="name">储蓄店长</text><text class="name">储蓄店长</text></view>
-          <view class="weui-flex between">
-            <view class="card-text weui-flex__item">共有10个职位在招聘</view>
-            <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$undefined}}" data-wpyrouterjob-a="{{$hallList$item}}">
-              投递简历
-            </button>
-          </view>
+        <view class="text-line">
+          <block wx:for="{{$hallList$item.job_list}}" wx:for-index="$hallList$hallItem$index" wx:for-item="$hallList$hallItem$newitem" wx:key="$hallList$hallItem$index">
+            <text class="name">{{$hallList$hallItem$newitem.job_name}}</text>
+          </block>
+        </view>
+        <view class="weui-flex between">
+          <view class="card-text weui-flex__item">共有{{$hallList$item.job_num}}个职位在招聘</view>
+          <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$index}}" data-wpyrouterjob-a="{{$hallList$item}}">
+            立即沟通
+          </button>
         </view>
       </view>
-      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 
+      </view>
     </block>
 		<view  wx:if="{{!$hallList$list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
 
     
 	<view wx:else>
-	  <block  wx:for="{{$jobHallList$list}}" wx:key="index" wx:if="{{$jobHallList$list.length}}">
+	  <block  wx:if="{{$jobHallList$list.length}}" wx:for="{{$jobHallList$list}}" wx:for-index="$jobHallList$index" wx:for-item="$jobHallList$item" wx:key="$jobHallList$index">
       
-  <view class="list-card shadow" bindtap="$jobHallList$jobHallItem$routerJob" data-com-index="{{$jobHallList$undefined}}" data-wpyrouterjob-a="{{$jobHallList$item}}">
+  <view class="list-card shadow">
     <view class="weui-flex start-start list-card-row">
       <image src="../../images/head.png" class="list-card-header" mode="scaleToFill"/>
       <view class="list-card-content">
         <view class="weui-flex start card-col-1">    
-          <text class="name {{$jobHallList$jobHallItem$isShowBtn?'text-line':''}}">张超</text>
+          <text class="name {{$jobHallList$jobHallItem$isShowBtn?'text-line':''}}">{{$jobHallList$item.nickname}}</text>
         </view>
         <view class="card-col-2">    
           <view class="weui-flex start text-line">
-            <view class="page__desc">男｜22岁</view>
+            <view class="page__desc">{{$jobHallList$item.sex==1?'男':'女'}}｜{{$jobHallList$item.age||1}}岁</view>
           </view>
-          <view class="text-line"><text class="name">本科/计算机科学与技术</text></view>
+          <view class="text-line"><text class="name"><text  wx:if="{{$jobHallList$item.edu}}">{{$jobHallList$item.edu}} /</text><text  wx:if="{{$jobHallList$item.speciality}}">{{$jobHallList$item.speciality || ''}}</text></text></view>
           <view class="weui-flex between">
-            <view class="card-text weui-flex__item">意向：测试可靠</view>
-            <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$jobHallList$jobHallItem$routerJob" data-com-index="{{$jobHallList$undefined}}" data-wpyrouterjob-a="{{$jobHallList$item}}">
+            <view class="card-text weui-flex__item">意向：{{$jobHallList$item.expected_job || '无'}}</view>
+            <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$jobHallList$jobHallItem$routerConcat" data-com-index="{{$jobHallList$index}}" data-wpyrouterconcat-a="{{$jobHallList$item}}">
               立即沟通
             </button>
           </view>
@@ -97,33 +102,57 @@
   </view>
 
     </block>
-		<view  wx:if="{{!$jobHallList$list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+		<view wx:if="{{!$jobHallList$list.length}}" class="page_list">
+			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
 
     
   <view hidden="{{$invitationModal$isScaleModal}}">
-    <view bindtap="$invitationModal$handleOk"  wx:if="{{$invitationModal$isShow}}" class="modal_mask"/>
+    <view  wx:if="{{$invitationModal$isShow}}" class="modal_mask"/>
     <view class="modal_box transition3s {{ $invitationModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$invitationModal$height}}rpx">
-      <view class="modal-content">
+      <image src="../../images/closed.png" class="close_icon" mode="scaleToFill" bindtap="$invitationModal$handleCloseModal"/>
+      <view class="modal-invitation">
         <view class="modal-title-tab weui-flex center">
           <view class="modal-tab-item {{$invitationModal$activeIndex==0?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="0">邀请函</view>
           <view class="modal-tab-item {{$invitationModal$activeIndex==1?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="1">参展企业</view>
         </view>
-        <text selectable="true" decode="{{$invitationModal$true}}" class="modal-subTitle">
-          1.本次网络招聘会企业免费报名参加。
-          2.用人单位在进行网上报名时,应实事求是填写本 
-          单位情况(单位简介、营业执照及相关资质、招聘 岗位信息),并对所填的内容保证真实..
+        <text selectable="true" decode="{{$invitationModal$true}}" class="modal-subTitle"  wx:if="{{!$invitationModal$activeIndex}}">
+          {{$invitationModal$invitationContent}}
         </text>
-      </view>
-      <view class="weui-cell_btn weui-flex center">
-        <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$invitationModal$handleOk">知道了</button>
+        <view wx:else class="companyList">
+          <block wx:for="{{$invitationModal$companyList}}" wx:for-index="$invitationModal$index" wx:for-item="$invitationModal$item" wx:key="$invitationModal$index">
+            <view>{{$invitationModal$item}}</view>
+          </block>
+        </view>
       </view>
     </view>
   </view>
 
+    
+  <view hidden="{{$actionSheet$isScaleModal}}">
+    <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
+    <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
+      <view class="modal-page_card">
+        <image mode="scaleToFill" src="../../images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <view wx:if="{{!$actionSheet$title}}" class="modal-content">
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex around modal-btn">
+            <text class="weui-flex__item weui-flex center" bindtap="$actionSheet$handleClose">取消</text>
+            <text class="active weui-flex__item weui-flex center" bindtap="$actionSheet$handleOk">{{$actionSheet$okText}}</text>
+          </view>
+        </view>
+        <view wx:else class="select-user">
+          <view class="modal_title weui-flex center">{{$actionSheet$title}}</view>
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex center modal-btn wrap">
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是求职者</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 
-    <!-- <actionSheet v-bind:isScaleModal.sync="isScaleModal" v-bind:height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " bindhandleClose="handleClose"></actionSheet> -->
   </scroll-view>

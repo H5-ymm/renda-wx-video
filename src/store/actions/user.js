@@ -1,20 +1,21 @@
 import {
-    GETALLUSER
+  GETALLUSER
 } from '../types/user';
 import {
-    createAction
+  createAction
 } from 'redux-actions';
 import {
-    $http
+  $http
 } from '@/http.js'
 export const getAllUser = createAction(GETALLUSER, (data) => {
-    return new Promise((resolve, reject) => {
-        $http('/Login/is_autologin', data).then(res => {
-            wx.setStorageSync('rendaUserType', res.data.usertype)
-            wx.setStorageSync('rendaUid', res.data.id)
-            resolve(res.data);
-        }).catch(error => {
-            reject(error.status)
-        })
-    })
+	return new Promise((resolve, reject) => {
+		$http('/Login/is_autologin', data).then(res => {
+			wx.setStorageSync('rendaUserType', res.data.usertype)
+			wx.setStorageSync('rendaUid', res.data.id)
+			wx.setStorageSync('rendaPerfect', res.data.is_perfect || 0)
+			resolve(res.data);
+		}).catch(error => {
+			reject(error.status)
+		})
+	})
 })

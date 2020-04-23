@@ -1,6 +1,6 @@
 
 <template>
-  <view class="list-card shadow" @tap="routerHall({{itemValue}})">
+  <view class="list-card shadow">
     <view class="weui-flex start card-col-1">    
       <button class="weui-btn_cell weui-btn_primary {{itemValue.now_status==1?'':'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
         {{itemValue.now_status==1?'进行中':'待举办'}}
@@ -9,8 +9,8 @@
     </view>
     <view class="card-col-2">    
       <view>时间：{{itemValue.starttime}} 至 {{itemValue.endtime}}</view>
-      <view>动态：<text>企业{{itemValue.scale}}家 | 岗位10家 | 求职者10人</text></view>
-      <view>规模：{{itemValue.scale}}家企业</view>
+      <view>动态：<text>企业{{itemValue.companynum}}家 | 岗位{{itemValue.jobnum}}家 | 求职者{{itemValue.usernum}}人</text></view>
+      <view>规模：{{itemValue.scale || 1}}家企业</view>
     </view>
     <view class="card-col-3">
       <button class="weui-btn_cell weui-btn_primary {{isShowBtn?'':'weui-btn_primary_plain'}}" @tap.stop="handle({{itemValue}})">
@@ -24,38 +24,15 @@ import wepy from 'wepy'
 import { wxNavigateTo } from '@/util'
 export default class jobFairItem extends wepy.component {
 	props = {
-    item: Object,
+    itemValue: Object,
     isShowBtn: {
 			type: Boolean,
 			default: true
 		}
   }
- 	data = {
-		itemValue: null
-  }
-  onLoad() {
-    console.log(this.itemValue)
-  }
-  watch = {
-    item(val) {
-      console.log(this.itemValue)
-      if (val) {
-        this.itemValue = val
-        console.log(this.itemValue)
-      }
-      this.$apply()
-    }
-  }
 	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
-    },
     handle() {
-      if (!this.isShowBtn) {
-        this.$emit('viewDetail')
-      } else {
-        wxNavigateTo('/pages/home/hall')
-      }
+      this.$emit('viewDetail')
     }
 	}
 }

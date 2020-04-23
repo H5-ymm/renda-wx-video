@@ -81,24 +81,6 @@ export default class resume extends wepy.page {
   data = {
     item: {},
     isShowBtn: false,
-    welfareList: [
-      {
-        icon: '../../images/company/welfare_icon1.png',
-        title: '五险一金'
-      },
-      {
-       icon: '../../images/company/welfare_icon1.png',
-        title: '五险一金'
-      },
-      {
-        icon: '../../images/company/welfare_icon1.png',
-        title: '五险一金'
-      },
-      {
-        icon: '../../images/company/welfare_icon1.png',
-        title: '五险一金'
-      }
-    ],
     resumeId: ''
   }
   config = {

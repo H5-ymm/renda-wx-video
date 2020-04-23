@@ -1,8 +1,8 @@
 
 <template>
 	<view>
-	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
-      <jobItem :item.sync="item"></jobItem>
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+      <jobItem :item.sync="item" @deliverResume="deliverResume"></jobItem>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
 			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
@@ -21,11 +21,13 @@ export default class jobList extends wepy.component {
 	props = {
 		list: Array
 	}
-	data = {
-	
+	events = {
+	  deliverResume: data => {
+		  wxNavigateTo('/pages/home/hall')
+	  }
 	}
 	methods = {
-    routerHall() {
+    deliverResume() {
       wxNavigateTo('/pages/home/hall')
     }
 	}

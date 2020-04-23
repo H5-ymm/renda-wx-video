@@ -61,7 +61,7 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
-export default class selectModal extends wepy.component {
+export default class pickerModal extends wepy.component {
 	props = {
 		isScaleModal: Boolean,
 		height: {

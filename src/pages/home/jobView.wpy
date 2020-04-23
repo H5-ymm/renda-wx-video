@@ -20,22 +20,13 @@ export default class jobView extends wepy.page {
     jobList: jobList,
   }
   data = {
-    rendaUserTeamType: 0,
     params: {
 			uid: '',
 			page: 1,
-      limit: 10,
-      required_number: '',
-      sex: ''
+      limit: 10
     },
     list: [],
-    height: 200,
-    isScaleModal: true,
-    count: 0,
-    activeIndex: 0,
-    jobFairInfo: {},
-    isShowBtn: false,
-    hallType: 1
+    count: 0
   }
   config = {
     navigationBarTitleText: '职位列表'
@@ -46,89 +37,31 @@ export default class jobView extends wepy.page {
         url: item.url
       })
     },
-    switchView(index) {
-      this.hallType = index
-      this.$apply()
-    },
     viewDetail(item) {
       wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {
 				this.params.limit = this.params.limit + 10
-				this.getReceiptList()
+				this.getjobList()
 			}
     },
     showModal(index){
       this.activeIndex = index
       this.$apply()
     },
-    applyRecepit(item) {
-      let params = {
-        job_id: item.id,
-        uid: this.params.uid
-      }
-      this.setReceipt(params)
-    }
   }
-  setReceipt(params) {
-    $http('/apply/add_apply', params).then(res => {
-      if(res.data) {
-        wxToast('接单成功')
-        wx.setStorageSync('receiptType', 0)
-        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
-      } else {
-        wxToast('接单失败')
-      }
-    })
-  }
-  getReceiptList (uid) {
-    $http('/receipt/receiptList', this.params).then(res => {
-      let arr = []
-      arr = res.data.data ? res.data.data.data : []
-      arr.forEach(item=>{
-        if(item.utime - $moment().valueOf() > 0) {
-          item.utime = $moment.unix(item.utime).format('HH:ss')
-        } else {
-          item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
-        }
-      })
-      this.list = arr
+  getjobList (uid) {
+    $http('/Companyjob/getjobList', this.params).then(res => {
+      this.list = res.data.data
       this.count = res.data.count
       this.$apply()
     })
   }
-  getTeamInfoAPi (uid) {
-    $http('/Userinfo/getteaminfo', { uid }).then(res => {
-      this.rendaUserTeamType = res.data.grade_num
-      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
-      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
-      wx.setStorageSync('rendaDradeId', res.data.grade_id)
-      this.$apply()
-    })
-  }
-  saveUser(uid) {
-    let userinfo = wx.getStorageSync('wxInfo')
-    let params = {
-      uid,
-      head_img: userinfo.head_img
-    }
-    $http('/userinfo/editUserInfo', params).then(res => {
-      console.log(res)
-    })
-  }
   onLoad(options) {
-    this.isScaleModal = false
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    this.$apply()
-    this.getTeamInfoAPi(this.params.uid)
-  }
-  onShow () {
-    this.getReceiptList()
-    let userInfo = wx.getStorageSync('userInfo') || ''
-		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
-      this.saveUser()
-    }
+    this.params.com_id = options.id
+    this.getjobList()
   }
 }
 </script>

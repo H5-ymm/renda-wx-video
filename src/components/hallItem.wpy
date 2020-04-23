@@ -1,26 +1,29 @@
 
 <template>
-  <view class="list-card shadow" @tap="routerJob({{item}})">
-    <view class="weui-flex start-start list-card-row">
-      <image src="../images/head.png" class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany"/>
-      <view class="list-card-content">
-        <view class="weui-flex start card-col-1">    
-          <text class="name {{isShowBtn?'text-line':''}}">仁达网络科技</text>
+  <view class="weui-flex start-start list-card-row">
+    <image src="{{itemValue.logo_url}}" class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany({{itemValue}})"/>
+    <view class="list-card-content">
+      <view class="weui-flex start card-col-1">    
+        <text class="name {{isShowBtn?'text-line':''}}">{{itemValue.com_name}}</text>
+      </view>
+      <view class="card-col-2">    
+        <view class="weui-flex start text-line">
+          <repeat key="index" for="{{itemValue.benefits}}" item="benefitsItem">
+            <view class="card-item weui-flex center">{{benefitsItem}}</view>
+          </repeat> 
         </view>
-        <view class="card-col-2">    
-          <view class="weui-flex start text-line">
-            <view class="card-item weui-flex center">业绩提成</view>
-          </view>
-          <view class="text-line"><text class="name">储蓄店长</text><text class="name">储蓄店长</text><text class="name">储蓄店长</text></view>
-          <view class="weui-flex between">
-            <view class="card-text weui-flex__item">共有10个职位在招聘</view>
-            <button class="weui-btn_cell weui-btn_primary_plain" @tap.stop="routerJob({{item}})">
-              投递简历
-            </button>
-          </view>
+        <view class="text-line">
+          <repeat key="index" for="{{itemValue.job_list}}" item="newitem">
+            <text class="name" >{{newitem.job_name}}</text>
+          </repeat>
+        </view>
+        <view class="weui-flex between">
+          <view class="card-text weui-flex__item">共有{{itemValue.job_num}}个职位在招聘</view>
+          <button class="weui-btn_cell weui-btn_primary_plain" @tap.stop="routerJob({{itemValue}})">
+            立即沟通
+          </button>
         </view>
       </view>
-      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 </template>
@@ -29,20 +32,21 @@ import wepy from 'wepy'
 import { wxNavigateTo } from '@/util'
 export default class hallItem extends wepy.component {
 	props = {
-    item: Object,
+    itemValue: {
+      type: Object,
+			default: {} 
+    },
     isShowBtn: {
 			type: Boolean,
 			default: true
-		},
-	}
-	data = {
+		}
 	}
 	methods = {
-    routerJob() {
-      wxNavigateTo('/pages/home/jobView')
+    routerJob(item) {
+      this.$emit('routerJob', item)
     },
-    viewCompany() {
-      wxNavigateTo('/pages/home/companyDetail')
+    viewCompany(item) {
+      wxNavigateTo('/pages/home/companyDetail?query=' + item.id)
     }
 	}
 }

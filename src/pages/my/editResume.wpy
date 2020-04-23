@@ -1,19 +1,5 @@
 <style lang="less">
-.add-view {
-  .page_form {
-    margin-top: 40rpx;
-    .page_margin {
-      padding: 10rpx 0;
-    }
-  }
-  .weui-cell_btn {
-    width: 78%;
-    margin:  0 auto;
-    .weui-btn_cell {
-      padding: 50rpx 16rpx;
-    }
-  }
-}
+@import "../../style/form.less";
 </style>
 <template>
   <view class="add-view page">
@@ -21,16 +7,16 @@
       <view class="page_form">
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">姓名</view>
+            <view class="my-text weui-flex__item my-text-require">姓名</view>
             <view class="weui-flex between" @tap="selectType">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.from_user}}" data-name="from_user" @input="changeInput" />
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.nickname}}" data-name="nickname" @input="changeInput" />
             </view>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">性别</view>
-            <picker @change="bindPickerChange" value="{{index}}" range="{{array}}">
+            <picker @change="bindPickerChange" value="{{index}}" data-name="sex" range="{{array}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
@@ -40,7 +26,7 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">出生年月</view>
+            <view class="my-text weui-flex__item my-text-require">出生年月</view>
             <picker mode="date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
@@ -55,7 +41,7 @@
             <districtSelet></districtSelet>
           </view>
         </view>
-         <view class="page_margin">
+        <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">求职状态</view>
             <view class="weui-flex between" @tap="selectType">
@@ -64,9 +50,20 @@
             </view>
           </view>
         </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">学历</view>
+            <picker mode="region" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[eduIndex]?'page__label':'placeholder'}}"> {{eduList[eduIndex]?eduList[eduIndex]:'请选择'}}</view>
+                 <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
          <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">邮箱</view>
+            <view class="my-text  weui-flex__item">邮箱</view>
             <view class="weui-flex between" @tap="selectType">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.from_user}}" data-name="from_user" @input="changeInput" />
             </view>
@@ -84,6 +81,7 @@
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
 import pickerModal from '@/components/pickerModal'
+import { $http } from '@/http.js'
 export default class editResume extends wepy.page {
   components = {
     districtSelet: districtSelet,
@@ -91,6 +89,7 @@ export default class editResume extends wepy.page {
   }
   data = {
     form: {
+      nickname: ''
     },
     jobName: '',
     array: ['男', '女'],
@@ -108,6 +107,11 @@ export default class editResume extends wepy.page {
   onLoad(){
     // this.isPicker = false
     // this.$apply()
+  }
+  updateResume() {
+    $http('/Personal/edit_personal', this.form ).then(res => {
+
+    })
   }
   methods = {
     changeInput(e) {

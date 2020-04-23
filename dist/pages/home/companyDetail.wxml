@@ -1,14 +1,14 @@
 
   <view class="page view_hidden">
-    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="view_auto view-content">
+    <scroll-view scroll-y="true" class="view_auto view-content">
       <view class="detail-box">
         <view class="section-box company_section-box">
           <view class="weui-flex between">
             <view class="com_info">
-              <view class="page__title">任达科技信息有限公司</view>
+              <view class="page__title">{{companyDetail.com_name}}</view>
               <view class="page__desc">天使轮 · 500人以上 · 软件开发</view>
             </view>
-            <image src="../../images/head.png" class="company_logo shadow" mode="scaleToFill"/>
+            <image src="{{companyDetail.logo_url}}" class="company_logo shadow" mode="scaleToFill"/>
           </view>
           <view class="page__title">
             <text>上午9:00-下午6:00</text>
@@ -30,50 +30,94 @@
         </view>
         <view class="address-box section-box">
           <view class="page__title">公司地址</view>
-          <view class="page__desc address-detail">上海市交通大学国家科技园</view>
-        </view>
-        <view class="section-box">
-          <view class="page__title">公司介绍</view>
-          <view class="page__desc">
-            岗位职责： 
-            1、负责公司移动客户端UI界面设计，为公司新产品与新功能提供 创意及设计方案。 
-            2、参与设计讨论，和开发团队共同创建用户界面，跟踪设计效 果，提出设计优化方案。 
-            3、参与移动产品设计体验、流程的制定和规范。 
-            4、熟练使用ppt，c4d，ae。
+          <view class="page__desc address-detail">
+            {{companyDetail.provincename}}{{companyDetail.cityname}}{{companyDetail.areaname}}{{companyDetail.address}}
           </view>
         </view>
         <view class="section-box">
-          <view class="page__title">该公司其他职位</view>
-          
-  <view class="list-row" bindtap="$jobDetailItem$routerHall" data-wpyrouterhall-a="{{$jobDetailItem$item}}">
+          <view class="page__title">公司介绍</view>
+          <view class="page__desc"> 
+           {{companyDetail.content}}
+          </view>
+        </view>
+        <view class="section-box">
+          <view class="page__title">该公司职位</view>
+          <block wx:for="{{jobList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+            
+  <view class="list-row" wx:if="{{index==0&&!showMore}}">
     <view class="weui-flex between list-col-1">    
-      <text class="page__title text-line">前端开发</text>
-      <view class="number">8k</view>
+      <text class="page__title text-line">{{item.job_name}}</text>
+      <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">IT | 互联网 | 教育培训</view>
+    <view class="page__desc">{{item.number}} | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">业绩提成</view><view class="card-item weui-flex center">业绩提成</view></view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobDetailItem$isShowBtn}}">
+      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn}}" bindtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
         投递简历
       </button>
     </view>
   </view>
 
-          <view class="page__text__active ">查看更多</view>
+            <view class="job-box {{showMore?'page_bottom':''}}">
+              
+  <view class="list-row" wx:if="{{showMore}}">
+    <view class="weui-flex between list-col-1">    
+      <text class="page__title text-line">{{item.job_name}}</text>
+      <view class="number">{{item.salary}}</view>
+    </view>
+    <view class="page__desc">{{item.number}} | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view class="weui-flex start text-line">
+      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn}}" bindtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
+        投递简历
+      </button>
+    </view>
+  </view>
+
+            </view>
+          </block>
+          <view class="page__text__active" bindtap="viewMoreJob"  wx:if="{{!showMore&&jobList.length>1}}">查看更多</view>
         </view>
       </view>
     </scroll-view>
     <view class="footer-box">
       <view class="weui-flex between">
-        <view>
+        <view class="weui-flex between">
           <image mode="scaleToFill" class="big_icon" src="../../images/company/collect-active.png"/>
-          <image mode="scaleToFill" class="big_icon" src="../../images/company/share.png"/>
+          <button open-type="share" class="share-btn">
+            <image mode="scaleToFill" class="big_icon" src="../../images/company/share.png"/>
+          </button>
         </view>
-        <view>
+        <view bindtap="communicateCompany">
           <button class="weui-btn_cell weui-btn_primary">
             立即沟通
           </button>
         </view>
       </view>
     </view>
+    
+  <view hidden="{{$actionSheet$isScaleModal}}">
+    <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
+    <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
+      <view class="modal-page_card">
+        <image mode="scaleToFill" src="../../images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <view wx:if="{{!$actionSheet$title}}" class="modal-content">
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex around modal-btn">
+            <text class="weui-flex__item weui-flex center" bindtap="$actionSheet$handleClose">取消</text>
+            <text class="active weui-flex__item weui-flex center" bindtap="$actionSheet$handleOk">{{$actionSheet$okText}}</text>
+          </view>
+        </view>
+        <view wx:else class="select-user">
+          <view class="modal_title weui-flex center">{{$actionSheet$title}}</view>
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex center modal-btn wrap">
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是求职者</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
   </view>

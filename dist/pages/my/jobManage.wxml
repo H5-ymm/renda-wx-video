@@ -3,9 +3,9 @@
     <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="view-content1">
       
 	<view class="scroll-view page">
-	  <block  wx:for="{{$jobManageList$list}}" wx:key="index" wx:if="{{$jobManageList$list.length}}">
+	  <block  wx:if="{{$jobManageList$list.length}}" wx:for="{{$jobManageList$list}}" wx:for-index="$jobManageList$index" wx:for-item="$jobManageList$item" wx:key="$jobManageList$index">
       
-  <view class="list-row weui-flex between" bindtap="$jobManageList$jobManageItem$selectJob" data-com-index="{{$jobManageList$undefined}}" data-wpyselectjob-a="{{$jobManageList$jobManageItem$index}}" data-wpyselectjob-b="{{$jobManageList$item}}">
+  <view class="list-row weui-flex between" bindtap="$jobManageList$jobManageItem$selectJob" data-com-index="{{$jobManageList$index}}" data-wpyselectjob-a="{{$jobManageList$jobManageItem$index}}" data-wpyselectjob-b="{{$jobManageList$item}}">
     <view class="list-col-1 weui-flex__item">
       <view class="weui-flex between weui-flex__item">
         <view class="page__title">{{$jobManageList$item.job_name}}</view>
@@ -28,6 +28,6 @@
 
     </scroll-view>
     <view class="weui-cell_btn weui-flex center">
-      <button class="weui-btn_cell weui-btn_primary" bindtap="save">发布职位</button>
+      <button class="weui-btn_cell weui-btn_primary" bindtap="releaseJob">发布职位</button>
     </view>
   </view>

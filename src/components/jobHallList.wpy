@@ -1,11 +1,11 @@
 
 <template>
 	<view>
-	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
-      <jobHallItem :item.sync="item"></jobHallItem>
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+      <jobHallItem :item.sync="item" @routerConcat="routerConcat"></jobHallItem>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
@@ -21,13 +21,10 @@ export default class jobHallList extends wepy.component {
 	props = {
 		list: Array
 	}
-	data = {
-	
-	}
-	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
-    }
+	events = {
+	  routerConcat: data => {
+			this.$emit('routerConcat', data)
+		}
 	}
 }
 </script>

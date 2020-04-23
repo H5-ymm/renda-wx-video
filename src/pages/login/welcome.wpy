@@ -80,15 +80,19 @@ export default class Welcome extends wepy.page {
   saveUserType() {
     let params = {
       uid: this.uid,
-      type: this.usertype || 2,
+      type: this.usertype,
       img: this.userInfo.avatarUrl,
       nickname: this.userInfo.nickName,
       tel: this.phoneNumber
     }
     $http('/login/saveusertype', params).then(res => {
-      console.log(res)
       if (res.data) {
-        this.isLoginModal = !this.isLoginModal
+        // this.isLoginModal = !this.isLoginModal
+         if (this.usertype == 1 ) {
+          this.text = '企业信息不完整，请前往完善'
+        } else {
+          this.text = '个人简历不完整，请前往完善'
+        }
         this.$apply()
         wx.setStorageSync('rendaUserType', this.usertype)
       }
@@ -107,7 +111,6 @@ export default class Welcome extends wepy.page {
     if (!res.usertype) {
       this.title = "选择身份"
       this.isLoginModal = !this.isLoginModal
-      this.saveUserType()
     } else {
       wx.setStorageSync('rendaUserType', res.usertype)
       if (res.is_perfect == 1) {
@@ -148,13 +151,8 @@ export default class Welcome extends wepy.page {
     selectUser: data => {
       this.usertype = data
       this.title = ''
-      this.saveUserType()
-      // if (data == 1 ) {
-      //   this.text = '企业信息不完整，请前往完善'
-      // } else {
-      //   this.text = '个人简历不完整，请前往完善'
-      // }
       this.$apply()
+      this.saveUserType()
     }
   }
   methods = {

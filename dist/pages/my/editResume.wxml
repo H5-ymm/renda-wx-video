@@ -4,16 +4,16 @@
       <view class="page_form">
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">姓名</view>
+            <view class="my-text weui-flex__item my-text-require">姓名</view>
             <view class="weui-flex between" bindtap="selectType">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.from_user}}" data-name="from_user" bindinput="changeInput"/>
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.nickname}}" data-name="nickname" bindinput="changeInput"/>
             </view>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">性别</view>
-            <picker bindchange="bindPickerChange" value="{{index}}" range="{{array}}">
+            <picker bindchange="bindPickerChange" value="{{index}}" data-name="sex" range="{{array}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
@@ -23,7 +23,7 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">出生年月</view>
+            <view class="my-text weui-flex__item my-text-require">出生年月</view>
             <picker mode="date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
@@ -50,7 +50,7 @@
 
           </view>
         </view>
-         <view class="page_margin">
+        <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">求职状态</view>
             <view class="weui-flex between" bindtap="selectType">
@@ -59,9 +59,20 @@
             </view>
           </view>
         </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">学历</view>
+            <picker mode="region" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{eduList[eduIndex]?'page__label':'placeholder'}}"> {{eduList[eduIndex]?eduList[eduIndex]:'请选择'}}</view>
+                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
          <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">邮箱</view>
+            <view class="my-text  weui-flex__item">邮箱</view>
             <view class="weui-flex between" bindtap="selectType">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.from_user}}" data-name="from_user" bindinput="changeInput"/>
             </view>

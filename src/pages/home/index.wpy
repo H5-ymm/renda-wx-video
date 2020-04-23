@@ -50,11 +50,11 @@
               </view>
             </view>
           </view>
-          <jobFairList :list.sync="list" :usertype.sync="usertype" @routerHall="routerHall"></jobFairList>
+          <jobFairList :list.sync="list" :usertype.sync="usertype" @routerHall="routerHall" @booking="booking"></jobFairList>
         </view>
       </view>
     </scroll-view>
-    <actionSheet :isScaleModal.sync="isScaleModal" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet>
+    <actionSheet :isScaleModal.sync="isScaleModal" text="企业信息正在审核中，请联系 客服021-8943895"   @handleClose="handleClose"></actionSheet>
   </view>
 </template>
 <script>
@@ -84,6 +84,7 @@ export default class teamView extends wepy.page {
 			uid: '',
 			page: 1,
       limit: 10,
+      status: ''
     },
     list: [],
     isScaleModal: true,
@@ -99,9 +100,22 @@ export default class teamView extends wepy.page {
     enablePullDownRefresh: true
   }
   events = {
+    searchValue: keywords => {
+      this.params = Object.assign(this.params, { keywords })
+      this.getJobfairList()
+    },
     handleClose: () => {
       wx.showTabBar()
       this.$apply()
+    },
+    booking: data => {
+      if (!data.applyinfo && data.is_finish!=1) {
+        this.addjobfair(data.id)
+      }
+      if(data.applyinfo && !applyinfo.status) {
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+      } 
     },
     routerHall: data => {
       if (!this.usertype) {
@@ -109,12 +123,13 @@ export default class teamView extends wepy.page {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
       } else {
-        wxNavigateTo('/pages/home/hall?query=' + data.id+'&title=' + data.title)
+        this.addjfUser(data.id)
+        wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
       }
     }
   }
   onPullDownRefresh () {
-    console.log(1)
+    this.openid = this.$parent.getOpenId()
   }
   addjobfair(jf_id) {
     let params = {
@@ -122,8 +137,20 @@ export default class teamView extends wepy.page {
       jf_id
     }
     $http('/Jobfair/addjobfair', params).then(res => {
+      if (res.data) {
+        wxToast('申请订展成功')
+      } else {
+        wxToast('申请订展失败')
+      }
+    })
+  }
+  addjfUser (jf_id) {
+     let params = {
+      uid: this.params.uid,
+      jf_id
+    }
+    $http('/Jobfair/addjf_user', params).then(res => {
       console.log(res)
-      this.$apply()
     })
   }
   checkUserLogin (openid) {
@@ -144,6 +171,19 @@ export default class teamView extends wepy.page {
       }
     })
   }
+  getJobfairList () {
+    $http('/Jobfair/getJobfairList', this.params).then(res => {
+      let arr = []
+      arr = res.data.data ? res.data.data : []
+      arr.forEach(item=>{
+        item.endtime = $moment.unix(item.endtime).format('YYYY-MM-DD HH:ss')
+        item.starttime = $moment.unix(item.starttime).format('YYYY-MM-DD HH:ss')
+      })
+      this.list = arr
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
   methods = {
     viewInfo (item) {
       wx.navigateTo({
@@ -161,31 +201,17 @@ export default class teamView extends wepy.page {
     },
     showModal(index){
       this.activeIndex = index
-      this.$apply()
+      this.params.status = index ? index : ''
+      this.getJobfairList()
+      // this.$apply()
     }
   }
-  getJobfairList () {
-    $http('/Jobfair/getJobfairList', this.params).then(res => {
-      let arr = []
-      arr = res.data.data ? res.data.data : []
-      arr.forEach(item=>{
-        item.endtime = $moment.unix(item.endtime).format('YYYY-MM-DD HH:ss')
-        item.starttime = $moment.unix(item.starttime).format('YYYY-MM-DD HH:ss')
-      })
-      this.list = arr
-      console.log(this.list)
-      this.count = res.data.count
-      this.$apply()
-    })
-  }
-  onLoad() {
+  onShow () {
     if (wx.getStorageSync('rendaOpenId')) {
       this.openid = wx.getStorageSync('rendaOpenId')
     } else {
       this.openid = this.$parent.getOpenId()
-    }  
-  }
-  onShow () {
+    } 
     this.checkUserLogin(this.openid)
   }
 }

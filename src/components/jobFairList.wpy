@@ -1,8 +1,8 @@
 
 <template>
-	<view>
-	  <repeat wx:for="{{newList}}" wx:key="index" wx:if="{{newList.length}}" >
-       <view class="list-card shadow" @tap="routerHall({{item}})">
+	<view >
+	  <repeat for="{{newList}}" key="index" wx:if="{{newList.length}}" >
+       <view class="list-card shadow">
 				<view class="weui-flex start card-col-1">    
 					<button class="weui-btn_cell weui-btn_primary {{item.now_status==1?'':'weui-btn_warn'}}">
 						{{item.now_status==1?'进行中':'待举办'}}
@@ -12,14 +12,18 @@
 				<view class="card-col-2">    
 					<view>时间：{{item.starttime}} 至 {{item.endtime}}</view>
 					<view>动态：<text>企业{{item.companynum}}家 | 岗位10家 | 求职者{{item.jobnum}}人</text></view>
-					<view>规模：{{item.scale||0}}家企业</view>
+					<view>规模：{{item.scale||1}}家企业</view>
 				</view>
 				<view class="card-col-3">
 				  <view class="weui-flex between">
-						<button class="weui-btn_cell weui-btn_primary" wx:if="{{usertype==1&&!item.applyinfo}}">
-							企业定展
+						<button class="weui-btn_cell weui-btn_warn"
+						  @tap="booking({{item}})"
+						  wx:if="{{usertype==1&&!item.applyinfo&&item.is_finish!=1}}">
+							企业订展
 						</button>
-						<button class="weui-btn_cell weui-btn_primary">
+						<view class="page__desc" wx:if="{{!item.applyinfo&&item.is_finish==1}}">订展结束</view>
+						<view class="page__desc" wx:if="{{item.applyinfo}}">企业已订展</view>
+						<button class="weui-btn_cell weui-btn_primary" @tap="routerHall({{item}})">
 						 进入会场
 						</button>
 					</view>
@@ -56,7 +60,10 @@ export default class jobFairList extends wepy.component {
 	methods = {
     routerHall(item) {
       this.$emit('routerHall', item)
-    }
+		},
+		booking(item) {
+			this.$emit('booking', item)
+		}
 	}
 }
 </script>

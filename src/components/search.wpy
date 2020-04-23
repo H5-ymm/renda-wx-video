@@ -30,7 +30,7 @@
 			<input class="weui-input weui-flex__item search-input" @input='inputBind' confirm-type="search" @focus="inputFocus"
 			value="{{name}}" placeholder="{{placeholder}}"/>
     </view>
-		<text>搜索</text>
+		<text @tap="searchValue">搜索</text>
 	</view>
 </template>
 <script>
@@ -47,8 +47,10 @@ export default class search extends wepy.component {
 	}
 	methods = {
 		inputBind(e) {
-			this.name = e.detail.value
-			this.$emit('searchValue', this.name)
+			this.name = e.detail.value		
+		},
+		searchValue() {
+      this.$emit('searchValue', this.name)
 		},
 		inputFocus() {
 			this.$emit('inputFocus')

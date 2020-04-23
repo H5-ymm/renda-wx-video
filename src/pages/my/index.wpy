@@ -12,7 +12,7 @@
         </view>
         <view class="userInfo-row">
           <view class="my-user-name">{{userInfo.user_name}}</view>
-          <view class="page__desc">{{userInfo.link_man}}</view>
+          <view class="page__desc">{{userInfo.link_tel}}</view>
         </view>
       </view>
       <view class="view-content">
@@ -159,7 +159,7 @@ export default class my extends wepy.page {
     $http('/Company/getcompanyinfobyuid', { uid: this.uid }).then(res => {
       let data = res.data || {}
       this.userInfo.user_name = data.com_name
-      this.userInfo.link_man = data.link_man
+      this.userInfo.link_tel = data.link_tel
       this.com_id = data.id
       if (data.logo_url) {
         if ( data.logo_url.indexOf('http') > -1) {

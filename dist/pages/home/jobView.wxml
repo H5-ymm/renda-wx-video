@@ -2,17 +2,17 @@
   <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" style="height:100%">
     
 	<view class="scroll-view">
-	  <block  wx:for="{{$jobList$list}}" wx:key="index" wx:if="{{$jobList$list.length}}">
+	  <block  wx:if="{{$jobList$list.length}}" wx:for="{{$jobList$list}}" wx:for-index="$jobList$index" wx:for-item="$jobList$item" wx:key="$jobList$index">
       
-  <view class="list-row" bindtap="$jobList$jobItem$routerHall" data-com-index="{{$jobList$undefined}}" data-wpyrouterhall-a="{{$jobList$item}}">
+  <view class="list-row">
     <view class="weui-flex between list-col-1">    
-      <text class="page__title text-line">前端开发</text>
-      <view class="number">8k</view>
+      <text class="page__title text-line">{{$jobList$item.job_name}}</text>
+      <view class="number">{{$jobList$item.salary}}</view>
     </view>
-    <view class="page__desc">IT | 互联网 | 教育培训</view>
+    <view class="page__desc">{{$jobList$item.number}} | {{$jobList$item.edu}} | {{$jobList$item.province}}{{$jobList$item.city}}{{$jobList$item.area}}</view>
     <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">业绩提成</view><view class="card-item weui-flex center">业绩提成</view></view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobItem$isShowBtn}}">
+      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{$jobList$item.social_security}}</view></view>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobItem$isShowBtn}}" bindtap="$jobList$jobItem$deliverResume" data-com-index="{{$jobList$index}}" data-wpydeliverresume-a="{{$jobList$item}}">
         投递简历
       </button>
     </view>

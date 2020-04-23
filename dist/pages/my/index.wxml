@@ -8,7 +8,7 @@
         </view>
         <view class="userInfo-row">
           <view class="my-user-name">{{userInfo.user_name}}</view>
-          <view class="page__desc">{{userInfo.link_man}}</view>
+          <view class="page__desc">{{userInfo.link_tel}}</view>
         </view>
       </view>
       <view class="view-content">

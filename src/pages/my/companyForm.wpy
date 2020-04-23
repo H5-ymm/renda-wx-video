@@ -1,5 +1,6 @@
 <style lang="less">
 @import "../../style/list.less";
+@import "../../style/cell.less";
 .add-view {
 	&.page__company {
 		overflow: hidden;
@@ -21,6 +22,8 @@
       padding: 30rpx 0;
 		}
 		.my-text {
+			height: auto;
+			line-height: 55rpx;
 			width: 150rpx;
 		}
 	}
@@ -44,107 +47,163 @@
       <view class="page_form">
         <view class="list-row">
           <view class="weui-flex start">
-            <view class="my-text">企业名称</view>
+            <view class="my-text my-text-require">企业名称</view>
             <input class="weui-input" placeholder-class="placeholder" data-name="com_name" value="{{form.com_name}}" @input="changeInput" placeholder="请输入企业名称" />
           </view>
         </view>
-    	  <company @submit="submit"></company>
+    	  <view class="list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">所属区域</view>
+						<districtSelet :address.sync="address" :disabled.sync="disabled" @selectCity="selectCity" ></districtSelet>
+				  </view>
+		  	</view>
+				<view class="list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">所属行业</view>
+						<picker @change="bindPickerChange" value="{{jobIndex}}" data-name="trades" range="{{job_array}}">
+							<view class="my-text my-text-require-right weui-flex start">
+								<view class="{{form.trades!=''?'':'placeholder'}}">
+									{{form.trades!=''?job_array[jobIndex]:'请选择从事行业'}}
+								</view> 
+							</view>
+						</picker>
+					</view>
+				</view>
+				<view class=" list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">企业性质</view>
+						<picker @change="bindPickerChange" value="{{comIndex}}" data-name="nature" range="{{com_type}}">
+							<view class="my-text my-text-require-right weui-flex start">
+								<view class="{{form.nature!=''?'':'placeholder'}}">
+									{{form.nature!=''?com_type[comIndex]:'请选择企业性质'}}
+								</view>
+							</view>
+						</picker>
+					</view>
+				</view>
+				<view class="list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">企业规模</view>
+						<picker @change="bindPickerChange" data-name="scale" value="{{comScaleIndex}}" range="{{com_scale}}">
+							<view class="my-text my-text-require-right weui-flex start">
+								<view class="{{form.scale!=''?'':'placeholder'}}">
+									{{form.scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
+								</view>
+							</view>
+						</picker>
+					</view>
+				</view>
+				<view class=" list-row">
+					<view class="weui-flex start-start">
+						<view class="my-text my-text-require">企业简介</view>
+						<textarea data-name="content" placeholder-class="placeholder"
+						class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" @input="changeInput"
+						placeholder="请输入企业简介" auto-height />
+					</view>
+				</view>
+				<view class=" list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">联系人</view>
+						<input class="weui-input" placeholder-class="placeholder" data-name="link_man" 
+						value="{{form.link_man}}" @input="changeInput" placeholder="请输入联系人" />
+					</view>
+				</view>
+				<view class=" list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">手机号码</view>
+						<input class="weui-input" data-name="link_tel" placeholder-class="placeholder" 
+						value="{{form.link_tel}}" @input="changeInput" placeholder="请输入手机号码" />
+					</view>
+				</view>
+				<view class="list-row">
+					<view class="weui-flex between">
+						<view class="weui-flex__item weui-flex start-end">
+							<view class="my-text">营业执照照片上传</view>
+							<view class="page__desc">图像大小不要超过5M</view>
+						</view>
+						<image @tap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head" wx:if="{{infoImg}}" />
+						<image @tap="uploadImg" src="../../images/upload.png" mode="scaleToFill" class="my-head" wx:else />  
+					</view>
+				</view>
       </view>
     </view>
-    <view class="weui-cell_btn weui-flex center register-btn">
+    <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="save">保存</button>
     </view>
 		<welfareModal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight"></welfareModal>
+		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import company from '@/components/company'
 import welfareModal from '@/components/welfareModal'
-import { wxToast, checkMobile, getImgUrl, validateIdCard, compressImg, getErrorTip, wxReLaunch } from '@/util.js'
+import districtSelet from '@/components/districtSelet'
+import { wxToast, checkMobile, getImgUrl, validateIdCard, compressImg, wxReLaunch } from '@/util.js'
 import { $http, uploadFile } from '@/http.js'
 export default class companyForm extends wepy.page {
 	components = {
-		company: company,
-		welfareModal: welfareModal
+		welfareModal: welfareModal,
+		districtSelet: districtSelet
 	}
 	data = {
 		form: {
 			com_name: '',
 			address: '',
-			provinceid: '',
-			cityid: '',
-			three_cityid: '',
-			id_card: '',
-			logo_url: '',
-			license_img: '',
-			business_licence: '',
-			com_type: '',
-			com_scale: '',
-			com_sort: '',
-			content: '',
-			uid: wx.getStorageSync('rendaUid'),
-			unified_social_credit_code: ''
-		},
+      province: '',
+      city: '',
+      area: '',
+      trades: '',
+      nature: '',
+      scale: '',
+      com_name: '',
+      link_tel: '',
+      link_man: '',
+      email: '',
+      content: '',
+      license_url: ''
+    },
 		infoImg: '',
-		modalHeight: 400,
-		isModal: true
+		disabled: true,
+		address: []
 	}
 	config = {
 		navigationBarTitleText: '企业信息'
 	}
 	onLoad() {
 		// this.isModal = false
+		if(wx.getStorageSync('userInfo')) {
+			this.form = JSON.parse(wx.getStorageSync('userInfo'))
+		}
 		this.$apply()
 	}
 	events = {
 		selectCity: data => {
-			this.form.provinceid = data[0] ? data[0] : 0
-			this.form.cityid = data[1] ? data[1] : 0
+			this.form.province = data[0] ? data[0] : 0
+			this.form.city = data[1] ? data[1] : 0
 		},
-		submit: data => {
-			for (let key in data) {
-				for (let val in this.form) {
-					if (val === key) {
-						this.form[val] = data[key]
-					}
-				}
-			}
-			this.form.license_url = data.logo
-			this.form.com_sort = data.job_id
-			this.form.unified_social_credit_code = data.unified_social
-			if (data.phone && data.phoneEnd) {
-				this.form.link_tel = data.phone + '-' + data.phoneEnd
-			}
-		},
-		handleOk() {
-			this.isModal = true
-			this.$apply()
-			wxReLaunch('/pages/login/welcome')
+		handleOk: data => {
+			// 福利选择
 		}
 	}
 	getImg(tempFilePaths) {
 		uploadFile(tempFilePaths).then(res => {
 			if (res.data && res.data.url) {
 				this.infoImg = getImgUrl(res.data.url)
-				this.form.logo_url = res.data.url
+				this.form.license_url = this.infoImg
 				this.$apply()
 			} else {
 				wxToast('图片获取失败')
 			}
 		})
 	}
-	registerCompany() {
+	updateCompany() {
 		this.form.uid = wx.getStorageSync('rendaUid')
-		$http('/login/companyRegister', this.form).then(res => {
+		$http('/Company/save_company', this.form).then(res => {
 			if (res.data) {
-				let obj = getErrorTip(6006)
-				this.modalObj.title = obj.title
-				this.modalObj.subTitle = obj.subTitle
-				this.isModal = false
-				this.$apply()
+				wxToast('修改成功')
+        wxReLaunch('/pages/my/index')
 			} else {
-				wxToast('注册失败')
+				wxToast('修改失败')
 			}
 		})
 	}
@@ -163,17 +222,21 @@ export default class companyForm extends wepy.page {
 			let key = e.currentTarget.dataset.name
 			this.form[key] = e.detail.value
 		},
+		bindPickerChange(e) {
+	    let key = e.currentTarget.dataset.name
+			this.form[key] = e.detail.value
+		},
 		save() {
 			if (!this.form.com_name) {
-				wxToast('请输入联系人')
+				wxToast('请输入公司名称')
 			} else if (!this.form.link_man) {
 				wxToast('请输入联系人')
 			} else if (!this.form.link_phone) {
-				wxToast('请输入联系人电话')
+				wxToast('请输入手机号码')
 			} else if (!checkMobile(this.form.link_phone)) {
-				wxToast('请输入正确的联系人电话')
+				wxToast('请输入正确的手机号码')
 			} else {
-				this.registerCompany()
+				this.updateCompany()
 			}
 		}
 	}

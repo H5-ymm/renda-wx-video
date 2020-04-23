@@ -1,20 +1,20 @@
 
 <template>
-  <view class="list-card shadow" @tap="routerJob({{item}})">
+  <view class="list-card shadow">
     <view class="weui-flex start-start list-card-row">
       <image src="../images/head.png" class="list-card-header" mode="scaleToFill" />
       <view class="list-card-content">
         <view class="weui-flex start card-col-1">    
-          <text class="name {{isShowBtn?'text-line':''}}">张超</text>
+          <text class="name {{isShowBtn?'text-line':''}}">{{item.nickname}}</text>
         </view>
         <view class="card-col-2">    
           <view class="weui-flex start text-line">
-            <view class="page__desc">男｜22岁</view>
+            <view class="page__desc">{{item.sex==1?'男':'女'}}｜{{item.age||1}}岁</view>
           </view>
-          <view class="text-line"><text class="name">本科/计算机科学与技术</text></view>
+          <view class="text-line"><text class="name"><text wx:if="{{item.edu}}">{{item.edu}} /</text><text wx:if="{{item.speciality}}">{{item.speciality || ''}}</text></text></view>
           <view class="weui-flex between">
-            <view class="card-text weui-flex__item">意向：测试可靠</view>
-            <button class="weui-btn_cell weui-btn_primary_plain" @tap.stop="routerJob({{item}})">
+            <view class="card-text weui-flex__item">意向：{{item.expected_job || '无'}}</view>
+            <button class="weui-btn_cell weui-btn_primary_plain" @tap="routerConcat({{item}})">
               立即沟通
             </button>
           </view>
@@ -26,7 +26,7 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
+// import { wxNavigateTo } from '@/util'
 export default class hallItem extends wepy.component {
 	props = {
     item: Object,
@@ -35,11 +35,9 @@ export default class hallItem extends wepy.component {
 			default: true
 		},
 	}
-	data = {
-	}
 	methods = {
-    routerJob() {
-      wxNavigateTo('/pages/home/jobView')
+    routerConcat(item) {
+      this.$emit('routerConcat', item)
     }
 	}
 }

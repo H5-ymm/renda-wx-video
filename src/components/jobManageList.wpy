@@ -1,7 +1,7 @@
 
 <template>
 	<view>
-	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
       <jobManageItem :item.sync="item"></jobManageItem>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">

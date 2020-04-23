@@ -1,14 +1,14 @@
 
 <template>
-  <view class="list-row" @tap="routerHall({{item}})">
+  <view class="list-row">
     <view class="weui-flex between list-col-1">    
-      <text class="page__title text-line">前端开发</text>
-      <view class="number">8k</view>
+      <text class="page__title text-line">{{item.job_name}}</text>
+      <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">IT | 互联网 | 教育培训</view>
+    <view class="page__desc">{{item.number}} | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">业绩提成</view><view class="card-item weui-flex center">业绩提成</view></view>
-      <button class="weui-btn_cell weui-btn_primary" wx:if="{{isShowBtn}}">
+      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
+      <button class="weui-btn_cell weui-btn_primary" wx:if="{{isShowBtn}}" @tap="deliverResume({{item}})">
         投递简历
       </button>
     </view>
@@ -25,12 +25,9 @@ export default class jobItem extends wepy.component {
 			default: true
 		},
 	}
-	data = {
-	
-	}
 	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
+    deliverResume(item) {
+      this.$emit('deliverResume', item)
     }
 	}
 }

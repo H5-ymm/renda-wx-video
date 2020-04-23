@@ -15,18 +15,17 @@ const store = configStore()
 setStore(store)
 export default class extends wepy.app {
   config = {
-    pages: [
-      
+    pages: [  
       'pages/home/index',
       'pages/message/index',
       'pages/my/index',
+      'pages/home/hall',
       'pages/my/resume',
       'pages/my/deliveryRecord',
       'pages/my/resumeList', 
       'pages/my/editJob',
       'pages/my/jobForm',
       'pages/my/jobManage',
-      'pages/home/hall',
       'pages/home/collect',
       'pages/my/companyForm',
       'pages/message/dialogBox',

@@ -28,11 +28,11 @@
               </view>
               <view class="page__title">
                 <view class="page__title">{{item.nickname}}</view>
-                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age}}</view>          
+                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age||1}}岁</view>          
               </view>
               <view class="weui-flex between">
-                <view class="page__title weui-flex__item">{{item.edu}}</view>
-                 <button class="weui-btn_cell weui-btn_primary">
+                <view class="page__title weui-flex__item">{{item.edu||''}}</view>
+                <button class="weui-btn_cell weui-btn_primary">
                   立即沟通
                 </button>
               </view>
@@ -50,6 +50,7 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
+import $moment from 'moment'
 export default class resumeList extends wepy.page {
   data = {
     list: [],
@@ -117,7 +118,7 @@ export default class resumeList extends wepy.page {
       arr.forEach(item=>{
         item.addtime = $moment.unix(item.addtime).format('MM-DD HH:ss')
       })
-      this.list = arr
+      this.list = res.data.data
       this.count = res.data.count
       this.$apply()
     })

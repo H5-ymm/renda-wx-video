@@ -4,16 +4,16 @@
 </style>
 <template>
   <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
-    <jobFairItemHall :item.sync="jobFairInfo" :isShowBtn.sync="isShowBtn" @viewDetail="viewDetail"></jobFairItemHall>
+    <jobFairItemHall :itemValue.sync="jobFairInfo" :isShowBtn.sync="isShowBtn" @viewDetail="viewDetail"></jobFairItemHall>
     <view class="hall-switch weui-flex between shadow">
       <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView('1')">招聘大厅</view>
       <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView('2')">求职大厅</view>
     </view>
     <searchHall placeholder="搜索意向职位"></searchHall>
-    <hallList :list.sync="list" wx:if="{{hallType==1}}"></hallList>
-    <jobHallList :list.sync="list" wx:else></jobHallList>
-    <invitationModal :isScaleModal.sync="isInvitationModal"></invitationModal>
-    <!-- <actionSheet :isScaleModal.sync="isScaleModal" :height.sync="height" text="企业信息正在审核中，请联系 客服021-8943895 " @handleClose="handleClose"></actionSheet> -->
+    <hallList :list.sync="list" wx:if="{{hallType==1}}" @routerJob="routerJob"></hallList>
+    <jobHallList :list.sync="list" wx:else @routerConcat="routerConcat"></jobHallList>
+    <invitationModal :isScaleModal.sync="isInvitationModal" @handleCloseModal="handleCloseModal" :companyList.sync="companyList" :invitationContent.sync="invitationContent"></invitationModal>
+    <actionSheet :isScaleModal.sync="isScaleModal" :text.sync="text" @handleOk="handleOk" okText="完善信息" @handleClose="handleClose"></actionSheet>
   </scroll-view>
 </template>
 <script>
@@ -22,12 +22,11 @@ import { $http } from '@/http.js'
 import $moment from 'moment'
 import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
 import jobFairItem from '@/components/jobFairItem'
-import actionSheet from '@/components/actionSheet'
-import invitationModal from '@/components/invitationModal'
 import search from '@/components/search'
 import hallList from '@/components/hallList'
 import jobHallList from '@/components/jobHallList'
-
+import actionSheet from '@/components/actionSheet'
+import invitationModal from '@/components/invitationModal'
 export default class hall extends wepy.page {
   components = {
     jobFairItemHall: jobFairItem,
@@ -38,7 +37,6 @@ export default class hall extends wepy.page {
     invitationModal: invitationModal
   }
   data = {
-    rendaUserTeamType: 0,
     params: {
 			jf_id: '',
 			page: 1,
@@ -54,38 +52,68 @@ export default class hall extends wepy.page {
     isInvitationModal: true,
     hallType: 1,
     jf_id: '',
-    title: ''
+    title: '',
+    invitationContent: '',
+    rendaPerfect: 0,
+    text: '',
+    companyParams: {
+      id: '',
+			page: 1,
+      limit: 10,
+      keywords: ''
+    },
+    companyList: []
   }
   events = {
-    viewDetail: ()=>{
-      this.isInvitationModal = false
-      this.$apply()
-    }
-  }
-  methods = {
-    switchView(index) {
-      this.hallType = index
+    searchValue: keywords => {
+      let params = {}
+      if (this.hallType == 1) {
+        params = Object.assign(this.companyParams, { keywords })
+      } else {
+        params = Object.assign(this.params, keywords)
+      }
+      this.getHallList(params)
+    },
+    handleCloseModal: ()=>{
+      this.isInvitationModal = !this.isInvitationModal
       this.$apply()
     },
-    searchScrollLower () {
-			if (this.count > this.list.length && this.count > this.params.limit) {
-				this.params.limit = this.params.limit + 10
-				this.getReceiptList()
-			}
+    viewDetail: ()=>{
+      this.getCompanyList()
+      this.isInvitationModal = !this.isInvitationModal
+      this.$apply()
+    },
+    routerConcat: data => {
+      let rendaPerfect  = wx.getStorageSync('rendaPerfect')
+      if (!rendaPerfect) {
+        this.text = '企业信息不完整，请前往完善'
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+      } else {
+        if (wx.getStorageSync('rendaUserType') == 1) {
+          wxNavigateTo('/pages/message/personalDialogBox')
+        } else {
+          wxToast('只有企业才能发起沟通')
+        }
+      }
+    },
+    routerJob: data => {
+      let rendaPerfect  = wx.getStorageSync('rendaPerfect')
+      if (!rendaPerfect) {
+        this.text = '个人简历不完整，请前往完善'
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+      } else {
+        if (wx.getStorageSync('rendaUserType') == 2) {
+          wxNavigateTo('/pages/home/jobView')
+        } else {
+          wxToast('只有求职者才能发起沟通')
+        }
+      }
+    },
+    handleOk: () => {
+      wxNavigateTo('/pages/my/resume')
     }
-  }
-  getUserlist () {
-    $http('/Jobfair/userlist', this.params).then(res => {
-      this.list = res.data.data
-      this.count = res.data.count
-      this.$apply()
-    })
-  }
-  getJobfairinfo (id) {
-    $http('/Jobfair/getJobfairinfo', { id }).then(res => {
-      this.jobFairInfo = res.data
-      this.$apply()
-    })
   }
   onLoad(options) {
     wx.setNavigationBarTitle({
@@ -93,10 +121,62 @@ export default class hall extends wepy.page {
     })
     this.jf_id = options.query
     this.params.jf_id = options.query
+    this.companyParams.id = options.query
+    this.hallType = wx.getStorageSync('rendaUserType') == 1 ? 2 : 1
+    this.$apply()
     this.getJobfairinfo(this.jf_id)
   }
   onShow () {
-    this.getUserlist()
+    this.getHallList(this.query)
+  }
+  computed = {
+		urlApi() {
+			return this.hallType == 1 ? '/Jobfair/getCompanyList': '/Jobfair/getUserList'
+    },
+    query() {
+      return this.hallType == 1 ? this.companyParams : this.params
+    }
+  }
+  getHallList (params) {
+    this.list = []
+    $http(this.urlApi, params).then(res => {
+      this.list = res.data.data
+      this.count = res.data.count
+      this.$apply()
+    })
+  }
+  getCompanyList() {
+     $http('/Jobfair/companylist', { id: this.jf_id }).then(res => {
+      this.companyList = res.data.concat(res.data)
+      this.$apply()
+    })
+  }
+  getJobfairinfo (id) {
+    $http('/Jobfair/getJobfairinfo', { id }).then(res => {
+      this.jobFairInfo = res.data
+      this.invitationContent = res.data.invitation_letter
+      this.jobFairInfo.endtime = $moment.unix(res.data.endtime).format('YYYY-MM-DD HH:ss')
+      this.jobFairInfo.starttime = $moment.unix(res.data.starttime).format('YYYY-MM-DD HH:ss')
+      this.$apply()
+    })
+  }
+  methods = {
+    switchView(index) {
+      this.hallType = index
+      this.$apply()
+      this.getHallList(this.query)
+    },
+    searchScrollLower () {
+      let limit = this.hallType == 1 ? this.companyParams.limit : this.params.limit
+			if (this.count > this.list.length && this.count > limit) {
+				if (this.hallType == 1) {
+          this.companyParams.limit = this.companyParams.limit + 10
+        } else {
+          this.params.limit = this.params.limit + 10
+        }
+				this.getHallList(this.query)
+			}
+    }
   }
 }
 </script>

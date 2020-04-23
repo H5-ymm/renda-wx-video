@@ -18,7 +18,7 @@
       <jobManageList :list.sync="list" class="scroll-view page"></jobManageList>
     </scroll-view>
     <view class="weui-cell_btn weui-flex center">
-      <button class="weui-btn_cell weui-btn_primary" @tap="save">发布职位</button>
+      <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布职位</button>
     </view>
   </view>
 </template>
@@ -48,6 +48,9 @@ export default class jobManage extends wepy.page {
   methods = {
     viewDetail(item) {
       wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+    },
+    releaseJob() {
+      wxNavigateTo('/pages/my/jobForm')
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

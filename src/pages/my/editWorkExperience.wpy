@@ -107,7 +107,6 @@
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
 import pickerModal from '@/components/pickerModal'
-
 export default class editWorkExperience extends wepy.page {
   components = {
     districtSelet: districtSelet,

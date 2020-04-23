@@ -1,19 +1,21 @@
 
 <template>
 	<view>
-	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
-      <hallItem :item.sync="item"></hallItem>
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+			<view class="list-card shadow" @tap="routerJob({{itemValue}})">
+        <hallItem :itemValue.sync="item"></hallItem>
+      </view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
 import hallItem from './hallItem'
+import { wxNavigateTo } from '@/util'
 export default class hallList extends wepy.component {
   components = {
     hallItem: hallItem
@@ -21,12 +23,13 @@ export default class hallList extends wepy.component {
 	props = {
 		list: Array
 	}
-	data = {
-	
-	}
 	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
+    routerJob(item) {
+      this.$emit('routerJob', item)
+    },
+    viewCompany() {
+			if (wx.getStorageSync('rendaUserType' == 1)) return
+      wxNavigateTo('/pages/home/companyDetail')
     }
 	}
 }
