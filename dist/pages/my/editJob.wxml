@@ -17,17 +17,51 @@
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">工作地点</view>
             
-  <picker mode="multiSelector" bindcancel="$districtSelet$cancelPickerChange" bindchange="$districtSelet$bindMultiPickerChange" bindcolumnchange="$districtSelet$bindMultiPickerColumnChange" value="{{$districtSelet$multiIndex}}" range="{{$districtSelet$multiArray}}">
+  <view class="districtSelet">
     <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$districtSelet$options.length}}">
+      <view  wx:if="{{$districtSelet$options.length}}" class="page__title">
         {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
         {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
-      <view  wx:else class="placeholder">请选择地址</view>
+      <view  wx:else class="placeholder" bindtap="$districtSelet$changeCity">请选择地址</view>
       <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
     </view>
-  </picker>
+    <view hidden="{{$districtSelet$isScaleModal}}">
+      <view bindtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $districtSelet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$districtSelet$height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" bindtap="$districtSelet$selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" bindtap="$districtSelet$selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$districtSelet$activeIndex}}" bindchange="$districtSelet$bindChange">
+              <picker-view-column>
+                <block wx:for="{{$districtSelet$multiArray[0]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+              <picker-view-column>
+                <block wx:for="{{$districtSelet$multiArray[1]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+              <picker-view-column>
+                <block wx:for="{{$districtSelet$multiArray[2]}}" wx:key="index" wx:if="{{$districtSelet$disabled}}">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 
           </view>
         </view>
@@ -75,27 +109,27 @@
 		<view class="modal_box transition3s {{ $pickerModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$pickerModal$height}}rpx">
 			<view class="modal-content">
         <view class="picker">
-        <view class="weui-flex between picker-btn">
-          <view class="weui-flex center" bindtap="$pickerModal$selectClose">
-            取消
-          </view>
-          <view class="weui-flex center ok-btn" bindtap="$pickerModal$selectOk">
-            确定
-          </view>
-        </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerModal$activeIndex}}" bindchange="$pickerModal$bindChange">
-          <picker-view-column>
-            <block  wx:for="{{$pickerModal$list}}" wx:key="index">
-              <view class="picker-view-item">{{item}}</view>
-            </block>
-          </picker-view-column>
-          <picker-view-column>
-            <block wx:for="{{$pickerModal$list}}" wx:key="index">
-              <view class="picker-view-item">{{item}}</view>
-            </block>
-          </picker-view-column>
-        </picker-view>
-      </view>
+					<view class="weui-flex between picker-btn">
+						<view class="weui-flex center" bindtap="$pickerModal$selectClose">
+							取消
+						</view>
+						<view class="weui-flex center ok-btn" bindtap="$pickerModal$selectOk">
+							确定
+						</view>
+					</view>
+					<picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerModal$activeIndex}}" bindchange="$pickerModal$bindChange">
+						<picker-view-column>
+							<block  wx:for="{{$pickerModal$list}}" wx:key="index">
+								<view class="picker-view-item">{{item}}</view>
+							</block>
+						</picker-view-column>
+						<picker-view-column>
+							<block wx:for="{{$pickerModal$list}}" wx:key="index">
+								<view class="picker-view-item">{{item}}</view>
+							</block>
+						</picker-view-column>
+					</picker-view>
+				</view>
 			</view>
 		</view>
 	</view>

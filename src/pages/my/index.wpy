@@ -85,8 +85,10 @@ export default class my extends wepy.page {
     this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     this.wxInfo = wx.getStorageSync('wxInfo')
     this.usertype = wx.getStorageSync('rendaUserType')
-    this.getDetail(this.usertype)
     this.$apply()
+  }
+  onShow() {
+    this.getDetail(this.usertype)
   }
   computed = {
     userName () {

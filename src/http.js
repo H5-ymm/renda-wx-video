@@ -48,7 +48,7 @@ const http = (url, params, method) => {
 const uploadFile = (tempFilePaths) => {
     return new Promise((resolve, reject) => {
         wx.uploadFile({
-            url: `${apiUrl}/uploadimg/moreupload`,
+            url: `${apiUrl}/Constant/moreupload`,
             filePath: tempFilePaths[0],
             name: 'image',
             success: res => {

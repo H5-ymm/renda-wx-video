@@ -2,7 +2,9 @@
 <template>
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-      <jobManageItem :item.sync="item"></jobManageItem>
+      <view @tap="viewJobDetail({{item}})">
+				<jobManageItem :item.sync="item"></jobManageItem>
+			</view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
 			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
@@ -25,8 +27,8 @@ export default class jobManageList extends wepy.component {
 	
 	}
 	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
+    viewJobDetail(item) {
+     this.$emit('viewJobDetail', item)
     }
 	}
 }

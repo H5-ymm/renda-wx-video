@@ -19,7 +19,10 @@
   .page_form {
     margin-top: 0;
     .list-row {
-      padding: 30rpx 0;
+			padding: 30rpx 0;
+			.my-text-require-right {
+				flex: auto;
+			}
 		}
 		.my-text {
 			height: auto;
@@ -61,8 +64,8 @@
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">所属行业</view>
 						<picker @change="bindPickerChange" value="{{jobIndex}}" data-name="trades" range="{{job_array}}">
-							<view class="my-text my-text-require-right weui-flex start">
-								<view class="{{form.trades!=''?'':'placeholder'}}">
+							<view class="my-text-require-right weui-flex start">
+								<view class="weui-flex__item {{form.trades!=''?'page__title':'placeholder'}}">
 									{{form.trades!=''?job_array[jobIndex]:'请选择从事行业'}}
 								</view> 
 							</view>
@@ -73,8 +76,8 @@
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">企业性质</view>
 						<picker @change="bindPickerChange" value="{{comIndex}}" data-name="nature" range="{{com_type}}">
-							<view class="my-text my-text-require-right weui-flex start">
-								<view class="{{form.nature!=''?'':'placeholder'}}">
+							<view class="my-text-require-right weui-flex start">
+								<view class="weui-flex__item {{form.nature!=''?'page__title':'placeholder'}}">
 									{{form.nature!=''?com_type[comIndex]:'请选择企业性质'}}
 								</view>
 							</view>
@@ -85,8 +88,8 @@
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">企业规模</view>
 						<picker @change="bindPickerChange" data-name="scale" value="{{comScaleIndex}}" range="{{com_scale}}">
-							<view class="my-text my-text-require-right weui-flex start">
-								<view class="{{form.scale!=''?'':'placeholder'}}">
+							<view class="my-text-require-right weui-flex start">
+								<view class="weui-flex__item {{form.scale!=''?'page__title':'placeholder'}}">
 									{{form.scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
 								</view>
 							</view>
@@ -130,19 +133,21 @@
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="save">保存</button>
     </view>
-		<welfareModal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight"></welfareModal>
 		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import welfareModal from '@/components/welfareModal'
 import districtSelet from '@/components/districtSelet'
 import { wxToast, checkMobile, getImgUrl, validateIdCard, compressImg, wxReLaunch } from '@/util.js'
 import { $http, uploadFile } from '@/http.js'
+import { connect, getStore } from 'wepy-redux'
+const store = getStore()
+@connect({
+  list: (state) => state.contant.list
+})
 export default class companyForm extends wepy.page {
 	components = {
-		welfareModal: welfareModal,
 		districtSelet: districtSelet
 	}
 	data = {
@@ -152,7 +157,7 @@ export default class companyForm extends wepy.page {
       province: '',
       city: '',
       area: '',
-      trades: '',
+      trades:'',
       nature: '',
       scale: '',
       com_name: '',
@@ -160,26 +165,43 @@ export default class companyForm extends wepy.page {
       link_man: '',
       email: '',
       content: '',
-      license_url: ''
+			license_url: '',
+			id: '',
+			uid: ''
     },
 		infoImg: '',
 		disabled: true,
-		address: []
+		address: [],
+		com_type: [],
+    com_scale: [],
+		job_array: [],
+		jobIndex: 0,
+		comIndex: 0,
+		comScaleIndex: 0
 	}
 	config = {
 		navigationBarTitleText: '企业信息'
 	}
 	onLoad() {
-		// this.isModal = false
-		if(wx.getStorageSync('userInfo')) {
-			this.form = JSON.parse(wx.getStorageSync('userInfo'))
+		let allData = store.getState().contant.list
+    for (let key in allData) {
+      this[key] = allData[key]
 		}
-		this.$apply()
+		if(wx.getStorageSync('userInfo')) {
+			let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
+			for(let key in userInfo) {
+				this.form[key] = userInfo[key]
+			}
+			this.infoImg = userInfo.license_url
+			this.address = [userInfo.province, userInfo.city, userInfo.area]
+		}
+    this.$apply()
 	}
 	events = {
 		selectCity: data => {
 			this.form.province = data[0] ? data[0] : 0
 			this.form.city = data[1] ? data[1] : 0
+			this.form.area = data[2] ? data[2] : 0
 		},
 		handleOk: data => {
 			// 福利选择
@@ -225,15 +247,23 @@ export default class companyForm extends wepy.page {
 		bindPickerChange(e) {
 	    let key = e.currentTarget.dataset.name
 			this.form[key] = e.detail.value
+			if (key == 'trades') {
+				this.jobIndex = e.detail.value
+				this.form[key] = e.detail.value + 1
+			} else if (key == 'nature') {
+				this.comIndex = e.detail.value
+			} else {
+				this.comScaleIndex = e.detail.value
+			}
 		},
 		save() {
 			if (!this.form.com_name) {
 				wxToast('请输入公司名称')
 			} else if (!this.form.link_man) {
 				wxToast('请输入联系人')
-			} else if (!this.form.link_phone) {
+			} else if (!this.form.link_tel) {
 				wxToast('请输入手机号码')
-			} else if (!checkMobile(this.form.link_phone)) {
+			} else if (!checkMobile(this.form.link_tel)) {
 				wxToast('请输入正确的手机号码')
 			} else {
 				this.updateCompany()

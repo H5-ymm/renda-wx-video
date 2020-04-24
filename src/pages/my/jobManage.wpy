@@ -15,7 +15,7 @@
 <template>
  <view class="page page_top resume_view view_hidden">
     <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content1">
-      <jobManageList :list.sync="list" class="scroll-view page"></jobManageList>
+      <jobManageList :list.sync="list" class="scroll-view page" @viewJobDetail="viewJobDetail"></jobManageList>
     </scroll-view>
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布职位</button>
@@ -45,10 +45,12 @@ export default class jobManage extends wepy.page {
   config = {
     navigationBarTitleText: '职位管理'
   }
+  events = {
+    viewJobDetail: data=> {
+      wxNavigateTo('/pages/my/jobForm?query='+data.id)
+    }
+  }
   methods = {
-    viewDetail(item) {
-      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
-    },
     releaseJob() {
       wxNavigateTo('/pages/my/jobForm')
     },
@@ -57,17 +59,6 @@ export default class jobManage extends wepy.page {
 				this.params.limit = this.params.limit + 10
 				this.getReceiptList()
 			}
-    },
-    showModal(index){
-      this.activeIndex = index
-      this.$apply()
-    },
-    applyRecepit(item) {
-      let params = {
-        job_id: item.id,
-        uid: this.params.uid
-      }
-      this.setReceipt(params)
     }
   }
   getjobList () {
@@ -80,9 +71,6 @@ export default class jobManage extends wepy.page {
   onLoad(options) {
     this.params.com_id = options.query
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    this.$apply()
-  }
-  onShow () {
     this.getjobList()
   }
 }

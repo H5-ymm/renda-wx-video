@@ -67,27 +67,27 @@
 		<view class="modal_box transition3s {{ $pickerModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$pickerModal$height}}rpx">
 			<view class="modal-content">
         <view class="picker">
-        <view class="weui-flex between picker-btn">
-          <view class="weui-flex center" bindtap="$pickerModal$selectClose">
-            取消
-          </view>
-          <view class="weui-flex center ok-btn" bindtap="$pickerModal$selectOk">
-            确定
-          </view>
-        </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerModal$activeIndex}}" bindchange="$pickerModal$bindChange">
-          <picker-view-column>
-            <block  wx:for="{{$pickerModal$list}}" wx:key="index">
-              <view class="picker-view-item">{{item}}</view>
-            </block>
-          </picker-view-column>
-          <picker-view-column>
-            <block wx:for="{{$pickerModal$list}}" wx:key="index">
-              <view class="picker-view-item">{{item}}</view>
-            </block>
-          </picker-view-column>
-        </picker-view>
-      </view>
+					<view class="weui-flex between picker-btn">
+						<view class="weui-flex center" bindtap="$pickerModal$selectClose">
+							取消
+						</view>
+						<view class="weui-flex center ok-btn" bindtap="$pickerModal$selectOk">
+							确定
+						</view>
+					</view>
+					<picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerModal$activeIndex}}" bindchange="$pickerModal$bindChange">
+						<picker-view-column>
+							<block  wx:for="{{$pickerModal$list}}" wx:key="index">
+								<view class="picker-view-item">{{item}}</view>
+							</block>
+						</picker-view-column>
+						<picker-view-column>
+							<block wx:for="{{$pickerModal$list}}" wx:key="index">
+								<view class="picker-view-item">{{item}}</view>
+							</block>
+						</picker-view-column>
+					</picker-view>
+				</view>
 			</view>
 		</view>
 	</view>

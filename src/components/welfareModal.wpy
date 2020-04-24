@@ -15,6 +15,17 @@
   }
 }
 </style>
+<wxs module="tools">
+  var checkHas = function(day, arr) {
+    var flag = arr.indexOf(day)
+    if (flag == -1) {
+      return false
+    } else {
+      return true
+    }
+  }
+ module.exports.checkHas = checkHas;
+</wxs>
 <template>
 	<view hidden='{{isScaleModal}}'>
 		<view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
@@ -25,22 +36,9 @@
           <view class="page__text__active">确定</view>
         </view>
         <view class="weui-flex between wrap">
-          <view class="card-item active">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
-          <view class="card-item">年底双薪</view>
+          <repeat for="{{benefitsList}}" key="index">
+            <view class="card-item {{tools.checkHas(item.id, idList)?'active': ''}}" @tap="select({{item}})">{{item.title}}</view>
+          </repeat>
         </view>
       </view>
     </view>
@@ -51,11 +49,12 @@ import wepy from 'wepy'
 export default class welfareModal extends wepy.component {
 	props = {
 		isScaleModal: Boolean,
-		height: Number
+    height: Number,
+    benefitsList: Array
 	}
 	data = {
     isShow: false,
-    
+    idList: []
 	}
 	methods = {
 		handleClose () {
@@ -68,7 +67,24 @@ export default class welfareModal extends wepy.component {
 			this.$apply()
 			let params = {}
 			this.$emit('handleOk', params)
-		}
+    },
+    select(item) {
+      let arr = []
+			if (arr.indexOf(item.id) === -1) {
+        arr.push(item.id)
+        console.log(arr)
+			} else {
+				let ret = arr.findIndex(v => {
+					return v === item.id
+				})
+				arr.splice(ret, 1)
+      }
+      console.log(arr)
+			arr = Array.from(new Set(arr))
+      this.idList = arr
+      console.log(this.idList)
+      this.$apply()
+    }
 	}
 	watch = {
 		isScaleModal (val) {

@@ -206,13 +206,18 @@ export default class teamView extends wepy.page {
       // this.$apply()
     }
   }
-  onShow () {
+  onLoad () {
+    console.log(wx.getStorageSync('rendaOpenId'))
     if (wx.getStorageSync('rendaOpenId')) {
       this.openid = wx.getStorageSync('rendaOpenId')
     } else {
       this.openid = this.$parent.getOpenId()
+      console.log(  this.openid + '11')
     } 
     this.checkUserLogin(this.openid)
+  } 
+  onShow() {
+    store.dispatch(getAllContant())
   }
 }
 </script>

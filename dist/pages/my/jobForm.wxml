@@ -10,26 +10,60 @@
           <view class="weui-flex between page_margin">
             <view class="my-text">工作地点</view>
             
-  <picker mode="multiSelector" bindcancel="$districtSelet$cancelPickerChange" bindchange="$districtSelet$bindMultiPickerChange" bindcolumnchange="$districtSelet$bindMultiPickerColumnChange" value="{{$districtSelet$multiIndex}}" range="{{$districtSelet$multiArray}}">
+  <view class="districtSelet">
     <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$districtSelet$options.length}}">
+      <view  wx:if="{{$districtSelet$options.length}}" class="page__title">
         {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
         {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
-      <view  wx:else class="placeholder">请选择地址</view>
+      <view  wx:else class="placeholder" bindtap="$districtSelet$changeCity">请选择地址</view>
       <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
     </view>
-  </picker>
+    <view hidden="{{$districtSelet$isScaleModal}}">
+      <view bindtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $districtSelet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$districtSelet$height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" bindtap="$districtSelet$selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" bindtap="$districtSelet$selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$districtSelet$activeIndex}}" bindchange="$districtSelet$bindChange">
+              <picker-view-column>
+                <block wx:for="{{$districtSelet$multiArray[0]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+              <picker-view-column>
+                <block wx:for="{{$districtSelet$multiArray[1]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+              <picker-view-column>
+                <block wx:for="{{$districtSelet$multiArray[2]}}" wx:key="index" wx:if="{{$districtSelet$disabled}}">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 
           </view>
         </view>
         <view class="list-row">
           <view class="weui-flex between page_margin">
             <view class="my-text">工作性质</view>
-            <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
+            <picker bindchange="bindPickerChange" value="{{index}}" range="{{workTypeList}}">
               <view class="my-text-right weui-flex between">
-                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <view class="{{workTypeList[index]?'page__label':'placeholder'}}"> {{workTypeList[index]?workTypeList[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
               </view>
             </picker>
@@ -51,12 +85,10 @@
         <view class="list-row">
           <view class="weui-flex between page_margin">
             <view class="my-text">企业福利</view>
-             <picker bindchange="bindPickerChange" value="{{index}}" range="{{eduList}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
-              </view>
-            </picker>
+            <view class="weui-flex end">
+              <view class="{{eduList[index]?'page__label':'placeholder'}}" bindtap="selectBnefits">请选择</view>
+              <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+            </view>
           </view>
           <view class="weui-flex between page_margin">
             <view class="my-text">薪资</view>
@@ -104,4 +136,22 @@
       <button class="weui-btn_cell weui-btn_primary" bindtap="save">保存</button>
       <!-- <button class="weui-btn_cell weui-btn_warn" bindtap="save">结束招聘</button> -->
     </view>
+    
+	<view hidden="{{$welfareModal$isScaleModal}}">
+		<view bindtap="$welfareModal$ handleClose"  wx:if="{{$welfareModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box welfare_modal transition3s {{ $welfareModal$isShow ? 'g_scale1': ''}}" style="height:{{$welfareModal$height}}rpx">
+			<view class="modal-content">
+				<view class="modal-title weui-flex between">
+          <view class="page__title">企业福利</view>
+          <view class="page__text__active">确定</view>
+        </view>
+        <view class="weui-flex between wrap">
+          <block wx:for="{{$welfareModal$benefitsList}}" wx:for-index="$welfareModal$index" wx:for-item="$welfareModal$item" wx:key="$welfareModal$index">
+            <view class="card-item {{$welfareModal$tools.checkHas($welfareModal$item.id, $welfareModal$idList)?'active': ''}}" bindtap="$welfareModal$select" data-wpyselect-a="{{$welfareModal$item}}">{{$welfareModal$item.title}}</view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
   </view>

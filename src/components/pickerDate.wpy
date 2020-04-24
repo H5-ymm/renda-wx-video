@@ -33,27 +33,32 @@
 		<view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
 			<view class="modal-content">
         <view class="picker">
-					<view class="weui-flex between picker-btn">
-						<view class="weui-flex center" @tap="selectClose">
-							取消
-						</view>
-						<view class="weui-flex center ok-btn" @tap="selectOk">
-							确定
-						</view>
-					</view>
-					<picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
-						<picker-view-column>
-							<repeat wx:for="{{list}}" wx:key="index">
-								<view class="picker-view-item">{{item}}</view>
-							</repeat>
-						</picker-view-column>
-						<picker-view-column>
-							<repeat wx:for="{{list}}" wx:key="index">
-								<view class="picker-view-item">{{item}}</view>
-							</repeat>
-						</picker-view-column>
-					</picker-view>
-				</view>
+        <view class="weui-flex between picker-btn">
+          <view class="weui-flex center" @tap="selectClose">
+            取消
+          </view>
+          <view class="weui-flex center ok-btn" @tap="selectOk">
+            确定
+          </view>
+        </view>
+        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+          <picker-view-column>
+            <repeat wx:for="{{years}}" wx:key="index">
+              <view class="picker-view-item">{{item}}年</view>
+            </repeat>
+          </picker-view-column>
+          <picker-view-column>
+            <repeat wx:for="{{months}}" wx:key="index">
+              <view class="picker-view-item">{{item}}月</view>
+            </repeat>
+          </picker-view-column>
+          <picker-view-column>
+            <repeat wx:for="{{days}}" wx:key="index">
+              <view class="picker-view-item">{{item}}日</view>
+            </repeat>
+          </picker-view-column>
+        </picker-view>
+      </view>
 			</view>
 		</view>
 	</view>
@@ -73,12 +78,35 @@ export default class pickerModal extends wepy.component {
 	data = {
 		isShow: false,
 		activeIndex: [],
-		rendaUserType: 0
+    rendaUserType: 0,
+    years: [],
+    year: '',
+    months: [],
+    month: 2,
+    days: [],
+    day: 2,
+    value: [9999, 1, 1],
 	}
 	onLoad () {
-		this.rendaUserType = wx.getStorageSync('rendaUserType')
+		const date = new Date()
+    for (let i = 1990; i <= date.getFullYear(); i++) {
+      this.years.push(i)
+    }
+
+    for (let i = 1; i <= 12; i++) {
+       this.months.push(i)
+    }
+
+    for (let i = 1; i <= 31; i++) {
+       this.days.push(i)
+    }
+
 	}
 	methods = {
+    bindChange: function (e) {
+      const val = e.detail.value
+      console.log(val)
+    },
 		handleClose () {
 			this.isShow = false
 			this.$apply()

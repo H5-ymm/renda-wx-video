@@ -1,15 +1,80 @@
+<style lang="less">
+@import '../style/modal.less';
+.footer-btn {
+  width: 86%;
+  margin: 0 auto;
+}
+.districtSelet {
+ .picker {
+    height: 520rpx;
+    background: #fff;
+    width: 100%;
+    .picker-btn {
+      height: 80rpx;
+      border-bottom: 1px solid #eee;
+      padding: 0 24rpx;
+      color: #6a6a6a;
+      .ok-btn {
+        color: #1890FF;
+      }
+    }
+    .picker-view {
+      text-align: center;
+      width: 100%;
+      height: 400rpx;
+      .picker-view-item {
+        line-height: 80rpx;
+      }
+    }
+  }
+}
+</style>
 <template>
-  <picker mode="multiSelector" @cancel="cancelPickerChange" @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" value="{{multiIndex}}" range="{{multiArray}}">
+  <view class="districtSelet">
     <view class="my-text-right weui-flex between">
-      <view wx:if="{{options.length}}">
+      <view wx:if="{{options.length}}" class="page__title">
         {{multiArray[0][multiIndex[0]]}}
         {{multiArray[1][multiIndex[1]]}}
         {{disabled?multiArray[2][multiIndex[2]]:''}}
       </view>
-      <view wx:else class="placeholder">请选择地址</view>
+      <view wx:else class="placeholder" @tap="changeCity">请选择地址</view>
       <image mode="scaleToFill" src="../images/right.png"  class="page_right_icon" />
     </view>
-  </picker>
+    <view hidden='{{isScaleModal}}'>
+      <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+      <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" @tap="selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" @tap="selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+              <picker-view-column>
+                <repeat wx:for="{{multiArray[0]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+              <picker-view-column>
+                <repeat wx:for="{{multiArray[1]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+              <picker-view-column>
+                <repeat wx:for="{{multiArray[2]}}" wx:key="index" wx:if="{{disabled}}">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -25,20 +90,22 @@ export default class districtSelet extends wepy.component {
     multiArray: [],
     multiIndex: [0, 0, 0],
     codeList: [],
-    province: []
+    province: [],
+    isScaleModal: true,
+    isShow: false
   }
   getCode(list) {
     return list.map(item => {
-      return item.code || item.provinceid
+      return item.id
     })
   }
   getList(list) {
     return list.map(item => {
-      return item.name || item.province
+      return item.area_name
     })
   }
   getRegion(value) {
-    $http('/Wxresume/getProvincesList')
+    $http('/Constant/selectAddress', {})
       .then(res => {
         let arr = this.getList(res.data)
         this.codeList[0] = this.getCode(res.data)
@@ -58,7 +125,7 @@ export default class districtSelet extends wepy.component {
     } else {
       code = value[0]
     }
-    $http('/Wxresume/getCitysList', { code }).then(res => {
+    $http('/Constant/selectAddress', { parentId: code }).then(res => {
       let arr = this.getList(res.data)
       this.codeList[1] = this.getCode(res.data)
       this.multiArray[1] = arr
@@ -82,7 +149,7 @@ export default class districtSelet extends wepy.component {
     } else {
       code = value[1]
     }
-    $http('/Wxresume/getAreasList', { code }).then(res => {
+    $http('/Constant/selectAddress', { parentId: code }).then(res => {
       let arr = this.getList(res.data)
       this.codeList[2] = this.getCode(res.data)
       this.multiArray[2] = arr
@@ -112,39 +179,29 @@ export default class districtSelet extends wepy.component {
     }
   }
   methods = {
-    bindMultiPickerChange(e) {
-      this.multiIndex = e.detail.value
+    changeCity() {
+      this.isScaleModal = !this.isScaleModal 
+      this.isShow = true
+      this.$apply()
+    },
+    selectOk() {
       this.codeList.forEach((item, index) => {
         this.options[index] = item[this.multiIndex[index]]
           ? item[this.multiIndex[index]]
           : 0
       })
       if (this.options.length) {
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
         this.$emit('selectCity', this.options)
-        if (this.multiArray[2]) {
-          let addressValue = this.multiArray[0][this.multiIndex[0]] + '/' + this.multiArray[1][this.multiIndex[1]] + '/'
-          + this.multiArray[2][this.multiIndex[2]]
-          console.log(addressValue)
-          this.$emit('selectCityText', addressValue)
-        }
       }
     },
-    bindMultiPickerColumnChange(e) {
-      this.multiIndex[e.detail.column] = e.detail.value
-      let cityid = this.codeList[0][this.multiIndex[0]]
-      if (e.detail.column == 0) {
-        this.getCityList([cityid, 0])
-        this.multiIndex = [e.detail.value, 0, 0]
-      } else if (e.detail.column == 1) {
-        this.multiIndex[1] = e.detail.value
-        if (this.disabled) {
-          let threid = this.codeList[1][this.multiIndex[1]]
-          this.getAreaList([cityid, threid])
-        }
-      }
-      else {
-        this.multiIndex[2] = e.detail.value
-      }
+    bindChange(e) {
+      this.multiIndex = e.detail.value
+      this.getCityList([this.codeList[0][this.multiIndex[0]], 0])
+    },
+    selectClose() {
+      this.isScaleModal = !this.isScaleModal
       this.$apply()
     },
     cancelPickerChange(e) {

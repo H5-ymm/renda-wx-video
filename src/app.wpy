@@ -232,7 +232,7 @@ export default class extends wepy.app {
         if (res.code) {
           $http('/Login/getopenid', { code: res.code }).then(res => {
             let data = JSON.parse(res.data)
-            that.globalData.openid = data.openid
+            that.globalData.openId = data.openid
             that.globalData.sessionKey = data.session_key
             wx.setStorageSync('session_key', data.session_key)
             wx.setStorageSync('rendaOpenId', data.openid)
@@ -240,12 +240,11 @@ export default class extends wepy.app {
             console.log(error)
           })
         } else {
-          console.log(1)
           console.log('获取失败！' + res.errMsg)
         }
       }
     })
-    return that.globalData.openid
+    return that.globalData.openId
   }
 }
 </script>

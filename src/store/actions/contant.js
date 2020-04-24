@@ -16,21 +16,21 @@ export const getArray = obj => {
     return arr
 }
 export const getKeyValue = obj => {
-    for (let key in obj) {
-        if (key === 'job_array' || key === 'money_array') {
-            obj[key] = getArray(obj[key])
-        }
+  for (let key in obj) {
+    if (key === 'job_array' || key === 'money_array' || key === 'social_security') {
+      obj[key] = getArray(obj[key])
     }
-    return obj
+  }
+  return obj
 }
 export const getAllContant = createAction(GETALLCONTANT, (contant) => {
-    return new Promise(resolve => {
-        let filed = 'com_type,com_scale,job_array,money_array,edu_type';
-        $http('/index/getConstant', {
-            filed
-        }).then(res => {
-            let newData = getKeyValue(res.data)
-            resolve(newData);
-        })
+  return new Promise(resolve => {
+    let filed = 'com_type,com_scale,job_array,money_array,edu_type,social_security';
+    $http('/Constant/getConstant', {
+        filed
+    }).then(res => {
+        let newData = getKeyValue(res.data)
+        resolve(newData);
     })
+  })
 })

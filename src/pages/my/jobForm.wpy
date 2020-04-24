@@ -48,9 +48,9 @@
         <view class="list-row">
           <view class="weui-flex between page_margin">
             <view class="my-text">工作性质</view>
-            <picker @change="bindPickerChange" value="{{index}}" range="{{eduList}}">
+            <picker @change="bindPickerChange" value="{{index}}" range="{{workTypeList}}">
               <view class="my-text-right weui-flex between">
-                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
+                <view class="{{workTypeList[index]?'page__label':'placeholder'}}"> {{workTypeList[index]?workTypeList[index]:'请选择'}}</view>
                 <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
               </view>
             </picker>
@@ -73,12 +73,10 @@
         <view class="list-row">
           <view class="weui-flex between page_margin">
             <view class="my-text">企业福利</view>
-             <picker @change="bindPickerChange" value="{{index}}" range="{{eduList}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <view class="weui-flex end">
+              <view class="{{eduList[index]?'page__label':'placeholder'}}" @tap="selectBnefits">请选择</view>
+              <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+            </view>
           </view>
           <view class="weui-flex between page_margin">
             <view class="my-text">薪资</view>
@@ -130,15 +128,18 @@
       <button class="weui-btn_cell weui-btn_primary" @tap="save">保存</button>
       <!-- <button class="weui-btn_cell weui-btn_warn" @tap="save">结束招聘</button> -->
     </view>
+    <welfareModal :isScaleModal.sync="isModal" @handleOk="handleOk" :height.sync="modalHeight" :benefitsList.sync="benefitsList"></welfareModal>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
+import welfareModal from '@/components/welfareModal'
 import { wxToast, checkMobile, validateIdCard, wxReLaunch } from '@/util.js'
 import { $http } from '@/http.js'
 export default class jobForm extends wepy.page {
 	components = {
+    welfareModal: welfareModal,
 		districtSelet: districtSelet
 	}
 	data = {
@@ -156,16 +157,41 @@ export default class jobForm extends wepy.page {
       job_requirements: '',
       id: ''
 		},
-    disabled:  false
+    disabled:  true,
+    jobId: '',
+    workTypeList: ['全职', '兼职', '实习'],
+    isModal: true,
+    modalHeight: 400,
+    benefitsList: []
 	}
 	config = {
 		navigationBarTitleText: '职位发布'
+  }
+  onLoad(options) {
+    if (options.query) {
+      this.jobId = options.query
+      this.getjobInfo(this.jobId)
+    }
+    this.getBenefitsList()
+  }
+  getBenefitsList() {
+		$http('/Constant/getBenefitsList', {}).then(res => {
+      console.log(res)
+      this.benefitsList = res.data
+      this.$apply()
+		})
 	}
 	events = {
 		selectCity: data => {
-			this.form.provinceid = data[0] ? data[0] : 0
-			this.form.cityid = data[1] ? data[1] : 0
+			this.form.province = data[0] ? data[0] : 0
+			this.form.city = data[1] ? data[1] : 0
 		}
+  }
+  getjobInfo() {
+		$http('/Companyjob/savejob', { id }).then(res => {
+      this.form = res.data
+      this.$apply()
+		})
 	}
   savejob() {
 		this.form.uid = wx.getStorageSync('rendaUid')
@@ -178,6 +204,10 @@ export default class jobForm extends wepy.page {
 		})
 	}
 	methods = {
+    selectBnefits(){
+      this.isModal = !this.isModal
+      this.$apply()
+    },
 		changeInput(e) {
 			let key = e.currentTarget.dataset.name
 			this.form[key] = e.detail.value
