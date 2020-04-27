@@ -47,7 +47,8 @@ export default class jobManage extends wepy.page {
   }
   events = {
     viewJobDetail: data=> {
-      wxNavigateTo('/pages/my/jobForm?query='+data.id)
+      console.log(data)
+      wxNavigateTo('/pages/my/jobForm?query='+ data.id)
     }
   }
   methods = {
@@ -68,8 +69,7 @@ export default class jobManage extends wepy.page {
       this.$apply()
     })
   }
-  onLoad(options) {
-    this.params.com_id = options.query
+  onLoad() {
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     this.getjobList()
   }

@@ -1,6 +1,9 @@
 <style lang="less">
 @import "../../style/hall.less";
 @import "../../style/switch.less";
+.job-box {
+  width: 90%;
+}
 </style>
 <template>
   <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
@@ -85,19 +88,20 @@ export default class hall extends wepy.page {
     },
     routerConcat: data => {
       let rendaPerfect  = wx.getStorageSync('rendaPerfect')
-      if (!rendaPerfect) {
-        this.text = '企业信息不完整，请前往完善'
-        this.isScaleModal = !this.isScaleModal
-        this.$apply()
-      } else {
-        if (wx.getStorageSync('rendaUserType') == 1) {
-          wxNavigateTo('/pages/message/personalDialogBox')
+      if (wx.getStorageSync('rendaUserType') == 1) {
+        if (!rendaPerfect) {
+          this.text = '企业信息不完整，请前往完善'
+          this.isScaleModal = !this.isScaleModal
+          this.$apply()
         } else {
-          wxToast('只有企业才能发起沟通')
+          wxNavigateTo('/pages/message/personalDialogBox')
         }
+      } else {
+        wxToast('只有企业才能发起沟通')
       }
     },
     routerJob: data => {
+      console.log(data)
       let rendaPerfect  = wx.getStorageSync('rendaPerfect')
       if (!rendaPerfect) {
         this.text = '个人简历不完整，请前往完善'
@@ -105,7 +109,7 @@ export default class hall extends wepy.page {
         this.$apply()
       } else {
         if (wx.getStorageSync('rendaUserType') == 2) {
-          wxNavigateTo('/pages/home/jobView')
+          wxNavigateTo('/pages/home/jobView?query='+ data.id)
         } else {
           wxToast('只有求职者才能发起沟通')
         }

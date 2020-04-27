@@ -20,7 +20,7 @@
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
       <view  wx:else class="placeholder" bindtap="$districtSelet$changeCity">请选择地址</view>
-      <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$districtSelet$isScaleModal}}">
       <view bindtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
@@ -46,8 +46,8 @@
                   <view class="picker-view-item">{{item}}</view>
                 </block>
               </picker-view-column>
-              <picker-view-column>
-                <block wx:for="{{$districtSelet$multiArray[2]}}" wx:key="index" wx:if="{{$districtSelet$disabled}}">
+              <picker-view-column wx:if="{{$districtSelet$disabled}}">
+                <block wx:for="{{$districtSelet$multiArray[2]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
                 </block>
               </picker-view-column>
@@ -63,46 +63,140 @@
 				<view class="list-row">
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">所属行业</view>
-						<picker bindchange="bindPickerChange" value="{{jobIndex}}" data-name="trades" range="{{job_array}}">
-							<view class="my-text-require-right weui-flex start">
-								<view class="weui-flex__item {{form.trades!=''?'page__title':'placeholder'}}">
-									{{form.trades!=''?job_array[jobIndex]:'请选择从事行业'}}
-								</view> 
-							</view>
-						</picker>
+					  
+  <view class="districtSelet">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$dataTradesPicker$multiText}}" class="page__title" bindtap="$dataTradesPicker$changeSelect">
+        {{$dataTradesPicker$multiText}}
+      </view>
+      <view  wx:else class="placeholder" bindtap="$dataTradesPicker$changeSelect">{{$dataTradesPicker$text}}</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+    </view>
+    <view hidden="{{$dataTradesPicker$isScaleModal}}">
+      <view bindtap="$dataTradesPicker$handleClose" wx:if="{{$dataTradesPicker$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $dataTradesPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataTradesPicker$height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" bindtap="$dataTradesPicker$selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" bindtap="$dataTradesPicker$selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-style="height: 40px;font-size:16px;" value="{{$dataTradesPicker$multiIndex}}" bindchange="$dataTradesPicker$bindChange">
+              <picker-view-column>
+                <block wx:for="{{$dataTradesPicker$range}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
 					</view>
 				</view>
 				<view class=" list-row">
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">企业性质</view>
-						<picker bindchange="bindPickerChange" value="{{comIndex}}" data-name="nature" range="{{com_type}}">
-							<view class="my-text-require-right weui-flex start">
-								<view class="weui-flex__item {{form.nature!=''?'page__title':'placeholder'}}">
-									{{form.nature!=''?com_type[comIndex]:'请选择企业性质'}}
-								</view>
-							</view>
-						</picker>
+						
+  <view class="districtSelet">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$dataPicker$multiText}}" class="page__title" bindtap="$dataPicker$changeSelect">
+        {{$dataPicker$multiText}}
+      </view>
+      <view  wx:else class="placeholder" bindtap="$dataPicker$changeSelect">{{$dataPicker$text}}</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+    </view>
+    <view hidden="{{$dataPicker$isScaleModal}}">
+      <view bindtap="$dataPicker$handleClose" wx:if="{{$dataPicker$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $dataPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataPicker$height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" bindtap="$dataPicker$selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" bindtap="$dataPicker$selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-style="height: 40px;font-size:16px;" value="{{$dataPicker$multiIndex}}" bindchange="$dataPicker$bindChange">
+              <picker-view-column>
+                <block wx:for="{{$dataPicker$range}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
 					</view>
 				</view>
 				<view class="list-row">
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">企业规模</view>
-						<picker bindchange="bindPickerChange" data-name="scale" value="{{comScaleIndex}}" range="{{com_scale}}">
-							<view class="my-text-require-right weui-flex start">
-								<view class="weui-flex__item {{form.scale!=''?'page__title':'placeholder'}}">
-									{{form.scale!=''?com_scale[comScaleIndex]:'请选择企业规模'}}
-								</view>
-							</view>
-						</picker>
+						
+  <view class="districtSelet">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$dataScalePicker$multiText}}" class="page__title" bindtap="$dataScalePicker$changeSelect">
+        {{$dataScalePicker$multiText}}
+      </view>
+      <view  wx:else class="placeholder" bindtap="$dataScalePicker$changeSelect">{{$dataScalePicker$text}}</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+    </view>
+    <view hidden="{{$dataScalePicker$isScaleModal}}">
+      <view bindtap="$dataScalePicker$handleClose" wx:if="{{$dataScalePicker$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $dataScalePicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataScalePicker$height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" bindtap="$dataScalePicker$selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" bindtap="$dataScalePicker$selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-style="height: 40px;font-size:16px;" value="{{$dataScalePicker$multiIndex}}" bindchange="$dataScalePicker$bindChange">
+              <picker-view-column>
+                <block wx:for="{{$dataScalePicker$range}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
 					</view>
 				</view>
-				<view class=" list-row">
+				<view class="list-row">
+					<view class="weui-flex start">
+						<view class="my-text my-text-require">企业福利</view>
+						<view class="my-text-require-right weui-flex start" bindtap="selectBenefits">
+							<view class="weui-flex__item {{form.benefits!=''?'page__title':'placeholder'}}">
+								{{form.benefits!=''?benefits:'请选择企业福利'}}
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="list-row">
 					<view class="weui-flex start-start">
 						<view class="my-text my-text-require">企业简介</view>
 						<textarea data-name="content" placeholder-class="placeholder" class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" bindinput="changeInput" placeholder="请输入企业简介" auto-height/>
 					</view>
 				</view>
-				<view class=" list-row">
+				<view class="list-row">
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">联系人</view>
 						<input class="weui-input" placeholder-class="placeholder" data-name="link_man" value="{{form.link_man}}" bindinput="changeInput" placeholder="请输入联系人"/>
@@ -121,7 +215,7 @@
 							<view class="page__desc">图像大小不要超过5M</view>
 						</view>
 						<image bindtap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head"  wx:if="{{infoImg}}"/>
-						<image bindtap="uploadImg" src="../../images/upload.png" mode="scaleToFill" class="my-head"  wx:else/>  
+						<image bindtap="uploadImg" src="http://www.ttxsg.com.cn:39009/uploads/images/upload.png" mode="scaleToFill" class="my-head"  wx:else/>  
 					</view>
 				</view>
       </view>
@@ -129,5 +223,23 @@
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" bindtap="save">保存</button>
     </view>
+		
+	<view hidden="{{$welfareModal$isScaleModal}}">
+		<view bindtap="$welfareModal$ handleClose"  wx:if="{{$welfareModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box welfare_modal transition3s {{ $welfareModal$isShow ? 'g_scale1': ''}}" style="height:400rpx">
+			<view class="modal-content">
+				<view class="modal-title weui-flex between">
+          <view class="page__title">企业福利</view>
+          <view class="page__text__active" bindtap="$welfareModal$handleBenefitOk">确定</view>
+        </view>
+        <view class="weui-flex between wrap">
+          <block  wx:for="{{$welfareModal$benefitsList}}" wx:key="index">
+            <view class="card-item {{item.disabled?'active': ''}}" bindtap="$welfareModal$selectBenefit" data-wpyselectbenefit-a="{{item}}" data-wpyselectbenefit-b="{{index}}">{{item.title}}</view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
 		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
   </view>

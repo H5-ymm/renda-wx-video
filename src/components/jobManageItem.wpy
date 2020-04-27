@@ -1,16 +1,17 @@
 
 <template>
-  <view class="list-row weui-flex between" @tap="selectJob({{index}},{{item}})">
+  <view class="list-row weui-flex between">
     <view class="list-col-1 weui-flex__item">
       <view class="weui-flex between weui-flex__item">
         <view class="page__title">{{item.job_name}}</view>
-        <view class="page__desc">待审核</view>
+        <view class="page__desc" wx:if="{{!item.status}}">待审核</view>
+        <view class="page__desc" wx:if="{{item.status}}">{{item.is_up!=1?'招聘中':'已结束'}}</view>
       </view>
       <view class="number">{{item.salary}}</view>
-      <view class="page__desc">全职｜{{item.edu}}｜{{item.province}}{{item.city}}{{item.area}}</view>
+      <view class="page__desc">{{item.nature==3?'实习':item.nature==2?'兼职':'全职'}}｜{{item.edu}}｜{{item.province}}{{item.city}}{{item.area}}</view>
     </view>
     <view class="weui-flex between">
-      <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" />
+      <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" />
     </view>
   </view>
 </template>
@@ -23,15 +24,7 @@ export default class jobManageItem extends wepy.component {
     isShowBtn: {
 			type: Boolean,
 			default: true
-		},
-	}
-	data = {
-	
-	}
-	methods = {
-    routerHall() {
-      wxNavigateTo('/pages/home/hall')
-    }
+		}
 	}
 }
 </script>

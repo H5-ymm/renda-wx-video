@@ -4,11 +4,22 @@
       <view class="page_form">
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作时间</view>
-            <picker mode="date" data-name="time" bindchange="bindDateChange">
+            <view class="my-text  weui-flex__item my-text-require">工作开始时间</view>
+            <picker mode="date" data-name="worktime_start" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+                <view class="{{worktime_start?'page__label':'placeholder'}}"> {{worktime_start?worktime_start:'请选择开始时间'}}</view>
+                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作结束时间</view>
+            <picker mode="date" data-name="worktime_end" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{worktime_end?'page__label':'placeholder'}}"> {{worktime_end?worktime_end:'请选择结束时间'}}</view>
+                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -24,25 +35,54 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作类型</view>
-            <picker mode="region" data-name="job_type" bindchange="bindDateChange">
-              <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png" class="page_right_icon"/>
+            
+  <view class="districtSelet">
+    <view class="my-text-right weui-flex between">
+      <view  wx:if="{{$dataPicker$multiText}}" class="page__title" bindtap="$dataPicker$changeSelect">
+        {{$dataPicker$multiText}}
+      </view>
+      <view  wx:else class="placeholder" bindtap="$dataPicker$changeSelect">{{$dataPicker$text}}</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+    </view>
+    <view hidden="{{$dataPicker$isScaleModal}}">
+      <view bindtap="$dataPicker$handleClose" wx:if="{{$dataPicker$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $dataPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataPicker$height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" bindtap="$dataPicker$selectClose">
+                取消
               </view>
-            </picker>
+              <view class="weui-flex center ok-btn" bindtap="$dataPicker$selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-style="height: 40px;font-size:16px;" value="{{$dataPicker$multiIndex}}" bindchange="$dataPicker$bindChange">
+              <picker-view-column>
+                <block wx:for="{{$dataPicker$range}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">职位名称</view>
             <view class="weui-flex between">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.job_name}}" data-name="job_name" bindinput="changeInput"/>
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入职位名称" value="{{form.job_name}}" data-name="job_name" bindinput="changeInput"/>
             </view>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作职责</view>
+            <view class="my-text weui-flex__item my-text-require">工作职责</view>
           </view>
           <textarea data-name="work_content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea" value="{{form.work_content}}" bindinput="changeInput" placeholder="请输入工作职责" maxlength="-1"/>
         </view>
@@ -50,41 +90,10 @@
     </view>
     <view class="weui-cell_btn weui-flex center">
      	<button class="weui-btn_cell" bindtap="deleteInfo">
-        删除 
+       {{form.id?'删除 ':'取消'}}
       </button>
       <button class="weui-btn_cell weui-btn_primary" bindtap="submit">
         保存
       </button>
     </view>
-    
-	<view hidden="{{$pickerModal$isScaleModal}}">
-		<view bindtap="$pickerModal$ handleClose"  wx:if="{{$pickerModal$isShow}}" class="modal_mask"/>
-		<view class="modal_box transition3s {{ $pickerModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$pickerModal$height}}rpx">
-			<view class="modal-content">
-        <view class="picker">
-					<view class="weui-flex between picker-btn">
-						<view class="weui-flex center" bindtap="$pickerModal$selectClose">
-							取消
-						</view>
-						<view class="weui-flex center ok-btn" bindtap="$pickerModal$selectOk">
-							确定
-						</view>
-					</view>
-					<picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerModal$activeIndex}}" bindchange="$pickerModal$bindChange">
-						<picker-view-column>
-							<block  wx:for="{{$pickerModal$list}}" wx:key="index">
-								<view class="picker-view-item">{{item}}</view>
-							</block>
-						</picker-view-column>
-						<picker-view-column>
-							<block wx:for="{{$pickerModal$list}}" wx:key="index">
-								<view class="picker-view-item">{{item}}</view>
-							</block>
-						</picker-view-column>
-					</picker-view>
-				</view>
-			</view>
-		</view>
-	</view>
-
   </view>

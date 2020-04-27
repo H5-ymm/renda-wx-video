@@ -13,22 +13,27 @@
     <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="view-content">
       <view class="home-view-box">
         <block  wx:for="{{list}}" wx:key="index">
-          <view class="list-row weui-flex between" wx:if="{{list.length}}" bindtap="selectJob" data-wpyselectjob-a="{{index}}" data-wpyselectjob-b="{{item}}">
-            <view class="list-col-1">
-              <view class="page__title">上海市任达网络科技有限公司</view>
-              <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>
-              <view class="number">该公司共有8个职位在招聘</view>
+          <view class="list-row weui-flex between" wx:if="{{list.length}}" bindtap="viewCompany" data-wpyviewcompany-a="{{item}}">
+            <view class="list-col-1 weui-flex__item">
+              <view class="page__title weui-flex between">
+                {{!activeIndex?item.com_name:item.job_name}}
+                <view class="number" wx:if="{{activeIndex}}">{{item.salary}}</view>
+              </view>
+              <view class="page__desc" wx:if="{{!activeIndex}}">{{item.trades}} | {{item.nature}} | {{item.scale}}</view>
+              <view class="number" wx:if="{{!activeIndex}}">该公司共有{{item.job_num}}个职位在招聘</view>
+              <view class="number" wx:if="{{activeIndex}}">{{item.com_name}}</view>
+              <view class="page__desc">记录来源 : {{item.title}}</view>
             </view>
             <view class="weui-flex between">
-              <button class="weui-btn_cell weui-btn_primary" wx:if="{{activeIndex}}">
+              <button class="weui-btn_cell weui-btn_primary" wx:if="{{!activeIndex}}">
                 立即沟通
               </button>
-              <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" wx:else/>
+              <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" wx:else/>
             </view>
           </view>
         </block>
         <view  wx:if="{{!list.length}}" class="page_list">
-          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+          <image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
           <view class="page_noData_text">暂无数据！</view>
         </view>
       </view>

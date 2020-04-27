@@ -2,7 +2,7 @@
 <template>
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-			<view class="list-card shadow" @tap="routerJob({{itemValue}})">
+			<view class="list-card shadow" @tap="routerJob({{item}})">
         <hallItem :itemValue.sync="item"></hallItem>
       </view>
     </repeat>

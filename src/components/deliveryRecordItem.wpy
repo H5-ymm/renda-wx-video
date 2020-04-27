@@ -3,23 +3,24 @@
 	<view class="list-row">
     <view class="list-col-1">
       <view class="page__title weui-flex between">
-        应聘职位：人事专员
-        <view class="time">03-21 11:00</view>
+        应聘职位：{{item.job_name}}
+        <view class="time">{{item.addtime}}</view>
       </view>
       <view class="weui-flex between">
         <view class="weui-flex__item">
-          <view class="number">8k</view>
-          <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>          
+          <view class="number">{{item.salary}}</view>
+          <view class="page__title">{{item.com_name}}</view>         
         </view>
-        <button class="weui-btn_cell weui-btn_primary">
+        <button class="weui-btn_cell weui-btn_primary" @tap="concatCompany({{item}})">
           立即沟通
         </button>
-      </view>
+      </view>  
     </view>
     <view class="weui-flex between">
-      <view class="page__title">上海市任达网络科技有限公司</view>
+      <view class="page__desc company_info">企业信息</view>
       <view class="number" @tap="viewDetail({{item}})">查看详情</view>
     </view>
+    <view class="page__desc">记录来自：{{item.title}}</view>  
   </view>
 </template>
 <script>
@@ -32,8 +33,12 @@ export default class deliveryRecordItem extends wepy.component {
 	data = {
 	}
 	methods = {
-    viewDetail() {
-      wxNavigateTo('/pages/my/resume?query=1')
+    viewDetail(item) {
+      wxNavigateTo('/pages/home/companyDetail?query='+ item.com_id)
+      wx.setStorageSync('rendaJHID', item.jf_id)
+    },
+    concatCompany() {
+      wxNavigateTo('/pages/message/dialogBox')
     }
 	}
 }

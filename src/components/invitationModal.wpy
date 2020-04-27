@@ -80,7 +80,7 @@
   <view hidden='{{isScaleModal}}'>
     <view wx:if="{{isShow}}" class="modal_mask"></view>
     <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
-      <image src="../images/closed.png" class="close_icon" mode="scaleToFill" @tap="handleCloseModal"/>
+      <image src="http://www.ttxsg.com.cn:39009/uploads/images/closed.png" class="close_icon" mode="scaleToFill" @tap="handleCloseModal"/>
       <view class="modal-invitation">
         <view class="modal-title-tab weui-flex center">
           <view class="modal-tab-item {{activeIndex==0?'modal-line':''}}" @tap="switchTab(0)">邀请函</view>

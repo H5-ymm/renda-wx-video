@@ -8,63 +8,62 @@
       <text class="page__title text-line">{{$jobDetailItem$item.job_name}}</text>
       <view class="number">{{$jobDetailItem$item.salary}}</view>
     </view>
-    <view class="page__desc">{{$jobDetailItem$item.number}} | {{$jobDetailItem$item.edu}} | {{$jobDetailItem$item.province}}{{$jobDetailItem$item.city}}{{$jobDetailItem$item.area}}</view>
+    <view class="page__desc">{{$jobDetailItem$item.number}}人 | {{$jobDetailItem$item.edu}} | {{$jobDetailItem$item.province}}{{$jobDetailItem$item.city}}{{$jobDetailItem$item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{$jobDetailItem$item.social_security}}</view></view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobDetailItem$isShowBtn}}" bindtap="$jobDetailItem$deliverResume" data-wpydeliverresume-a="{{$jobDetailItem$item}}">
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobDetailItem$isShowBtn&&$jobDetailItem$item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-wpydeliverresume-a="{{$jobDetailItem$item}}">
         投递简历
       </button>
+      <view class="number"  wx:if="{{$jobDetailItem$isShowBtn&&$jobDetailItem$item.is_apply==1}}">已投递</view>
     </view>
   </view>
 
         <view class="address-box section-box">
-          <view class="page__title">公司地址</view>
-          <view class="page__desc address-detail">上海市交通大学国家科技园</view>
+          <view class="page__title">职位性质</view>
+          <view class="page__desc address-detail">{{jobDetailInfo.nature}}</view>
         </view>
         <view class="section-box">
           <view class="page__title">职位要求</view>
           <view class="page__desc">
             岗位职责： 
-            1、负责公司移动客户端UI界面设计，为公司新产品与新功能提供 创意及设计方案。 
-            2、参与设计讨论，和开发团队共同创建用户界面，跟踪设计效 果，提出设计优化方案。 
-            3、参与移动产品设计体验、流程的制定和规范。 
-            4、熟练使用ppt，c4d，ae。
+            {{jobDetailInfo.job_requirements}}
           </view>
         </view>
         <view class="section-box">
           <view class="page__title">职位描述</view>
           <view class="page__desc">
-            岗位职责： 
-            1、负责公司移动客户端UI界面设计，为公司新产品与新功能提供 创意及设计方案。 
-            2、参与设计讨论，和开发团队共同创建用户界面，跟踪设计效 果，提出设计优化方案。 
-            3、参与移动产品设计体验、流程的制定和规范。 
-            4、熟练使用ppt，c4d，ae。
+           {{jobDetailInfo.content}}
           </view>
         </view>
         <view class="section-box">
-          <view class="weui-flex between">
+          <view class="weui-flex between" bindtap="viewCompany">
             <view class="weui-flex between">
-              <image src="../../images/head.png" class="card-header shadow" mode="scaleToFill"/>
+              <image src="{{companyDetail.logo_url}}"  wx:if="{{companyDetail.logo_url}}" class="card-header shadow" mode="scaleToFill"/>
+              <image src="../../images/company.png"  wx:else class="card-header shadow" mode="scaleToFill"/>
               <view class="com_info">
-                <view class="page__title">任达科技信息有限公司</view>
-                <view class="page__desc">天使轮 · 500人以上 · 软件开发</view>
+                <view class="page__title">{{companyDetail.com_name}}</view>
+                <view class="page__desc">{{companyDetail.nature}} · {{companyDetail.scale}} · {{companyDetail.trades}}</view>
               </view>
             </view>
-            <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png"/>
+            <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"/>
           </view>
         </view>
       </view>
     </scroll-view>
     <view class="footer-box">
       <view class="weui-flex between">
-        <view>
-          <image mode="scaleToFill" class="big_icon" src="../../images/collect.png"/>
-          <image mode="scaleToFill" class="big_icon" src="../../images/share.png"/>
+        <view class="weui-flex between">
+          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/collect-active.png" wx:if="{{jobDetailInfo && jobDetailInfo.is_collect}}" bindtap="JobCollect" data-wpyjobcollect-a="2"/>
+          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/collect.png" wx:else bindtap="JobCollect" data-wpyjobcollect-a="1"/>
+          <button open-type="share" class="share-btn">
+            <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/share.png"/>
+          </button>
         </view>
         <view>
-          <button class="weui-btn_cell weui-btn_primary">
-            立即沟通
+          <button class="weui-btn_cell weui-btn_primary" wx:if="{{jobDetailInfo.is_apply!=1}}" bindtap="deliverResume">
+            投递简历
           </button>
+          <view class="page__text__active" wx:if="{{jobDetailInfo.is_apply==1}}">已投递</view>
         </view>
       </view>
     </view>

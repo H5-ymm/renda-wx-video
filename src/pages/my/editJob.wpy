@@ -8,51 +8,33 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作性质</view>
-            <picker @change="bindPickerChange" data-name="nature_work"  value="{{index}}" range="{{array}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <dataPicker :range.sync="workTypeList" :value.sync="index" @bindPickerChange.user="bindChange"></dataPicker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">工作地点</view>
-            <districtSelet></districtSelet>
-          </view>
-        </view>
-         <view class="page_margin">
-          <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">期望薪资</view>
-            <picker @change="bindPickerChange" data-name="expected_salary"  value="{{index}}" range="{{array}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <districtSelet @selectCity="selectCity" :disabled.sync="disabled" :address.sync="address"></districtSelet>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">期望行业</view>
-            <picker @change="bindPickerChange" data-name="expected_trades" value="{{index}}" range="{{array}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <view class="my-text  weui-flex__item my-text-require">期望薪资</view>
+            <dataMoneyPicker :range.sync="money_array" :value.sync="moneyIndex" @bindPickerChange.user="bindMoneyChange"></dataMoneyPicker>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item my-text-require">期望行业</view>
+            <dataTradesPicker :range.sync="com_type" :value.sync="comIndex" @bindPickerChange.user="bindTradesChange"></dataTradesPicker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">期望职位</view>
-            <picker @change="bindPickerChange" data-name="expected_job"  value="{{index}}" range="{{array}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}">请选择</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入期望职位" value="{{form.expected_job}}" data-name="expected_job" @input="changeInput" />
+            </view>
           </view>
         </view>
       </view>
@@ -60,19 +42,25 @@
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="submit">保存</button>
     </view>
-    <pickerModal :isScaleModal.sync="isPicker" :list.sync="eduList"></pickerModal>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
-import pickerModal from '@/components/pickerModal'
+import dataPicker from '@/components/dataPicker'
 import { $http } from '@/http.js'
-import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
+import { wxToast, wxNavigateTo, wxShowModal } from '@/util.js'
+import { connect, getStore } from 'wepy-redux'
+const store = getStore()
+@connect({
+  list: (state) => state.contant.list
+})
 export default class editJob extends wepy.page {
   components = {
     districtSelet: districtSelet,
-    pickerModal: pickerModal
+    dataPicker: dataPicker,
+    dataMoneyPicker: dataPicker,
+    dataTradesPicker: dataPicker
   }
   data = {
     form: {
@@ -84,24 +72,49 @@ export default class editJob extends wepy.page {
       expected_trades: '',
       expected_job: ''
     },
-    array: ['男', '女'],
-    index: 0,
-    addressIndex: -1,
+    index: -1,
+    comIndex: -1,
+    moneyIndex: -1,
     disabled: false,
-    isPicker: true,
-    depIndex: []
+    address: [],
+    com_type: [],
+    money_array: [],
+    workTypeList: ['全职', '兼职', '实习']
   }
   config = {
     navigationBarTitleText: '求职意向'
   }
-  onLoad(){
-    // this.isPicker = false
-    // this.$apply()
+  onLoad() {
+		let allData = store.getState().contant.list
+    for (let key in allData) {
+      this[key] = allData[key]
+		}
+    this.$apply()
+	}
+  onShow() {
+    if (wx.getStorageSync('expectedInfo')) {
+      this.form = JSON.parse(wx.getStorageSync('expectedInfo'))
+      if (this.form.expected_province) {
+        this.address = [this.form.expected_province, this.form.expected_city]
+      }
+      this.comIndex = this.form.expected_trades ? Number(this.form.expected_trades) - 1 : ''
+      this.moneyIndex = this.form.expected_salary ? Number(this.form.expected_salary) - 1 : ''
+      this.index = this.form.nature_work ? Number(this.form.nature_work) - 1 : ''
+      this.$apply()
+    }
+  }
+  events = {
+		selectCity: data => {
+			this.form.expected_province = data[0] ? data[0] : 0
+      this.form.expected_city = data[1] ? data[1] : 0
+    }
   }
   saveJobExpected() {
     $http('/Personal/add_Jobsearchintention', this.form).then(res => {
  			if (res.data) {
-			  wxToast('保存成功')
+        wxToast('保存成功')
+        wx.setStorageSync('expectedInfo', JSON.stringify(this.form))
+        wxNavigateTo('/pages/my/resume')
 			} else {
 				wxToast('保存失败')
 			}
@@ -113,7 +126,28 @@ export default class editJob extends wepy.page {
       this.form[key] = e.detail.value
     },
     submit() {
-      this.saveJobExpected()
+      if (!this.form.nature_work) {
+				wxToast('请选择工作性质')
+			} else if (!this.form.expected_province) {
+				wxToast('请选择工作地点')
+			} else if (!this.form.expected_salary) {
+				wxToast('请选择期望薪资')
+			} else if (!this.form.expected_trades) {
+				wxToast('请选择期望行业')
+			} else if (!this.form.expected_job) {
+				wxToast('请输入期望职位')
+			} else {
+				this.saveJobExpected()
+			}
+    },
+    bindTradesChange(data) {
+      this.form.expected_trades = Number(data) + 1
+    },
+    bindChange(data) {
+      this.form.nature_work = Number(data) + 1
+    },
+    bindMoneyChange(data){
+      this.form.expected_salary = Number(data) + 1
     }
   }
 }

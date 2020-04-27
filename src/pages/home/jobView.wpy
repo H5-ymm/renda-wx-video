@@ -5,7 +5,7 @@
 }
 </style>
 <template>
-  <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" >
+  <scroll-view scroll-y="true" style="height:100%" >
     <jobList :list.sync="list" class="scroll-view"></jobList>
   </scroll-view>
 </template>
@@ -22,45 +22,22 @@ export default class jobView extends wepy.page {
   data = {
     params: {
 			uid: '',
-			page: 1,
-      limit: 10
+			com_id: ''
     },
-    list: [],
-    count: 0
+    list: []
   }
   config = {
     navigationBarTitleText: '职位列表'
   }
-  methods = {
-    viewInfo (item) {
-      wx.navigateTo({
-        url: item.url
-      })
-    },
-    viewDetail(item) {
-      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
-    },
-    searchScrollLower () {
-			if (this.count > this.list.length && this.count > this.params.limit) {
-				this.params.limit = this.params.limit + 10
-				this.getjobList()
-			}
-    },
-    showModal(index){
-      this.activeIndex = index
-      this.$apply()
-    },
-  }
-  getjobList (uid) {
-    $http('/Companyjob/getjobList', this.params).then(res => {
-      this.list = res.data.data
-      this.count = res.data.count
+  getjobList () {
+    $http('/jobfair/companyjobList', this.params).then(res => {
+      this.list = res.data || []
       this.$apply()
     })
   }
   onLoad(options) {
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    this.params.com_id = options.id
+    this.params.com_id = options.query
     this.getjobList()
   }
 }

@@ -3,7 +3,7 @@
     
   <view class="weui-flex between search-box">
 		<view class="weui-cell weui-flex start weui-flex__item">
-			<image src="../../images/search.png" class="searchIcon"/>
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon"/>
 			<input class="weui-input weui-flex__item search-input" bindinput="$search$inputBind" confirm-type="search" bindfocus="$search$inputFocus" value="{{$search$name}}" placeholder="{{$search$placeholder}}"/>
     </view>
 		<text bindtap="$search$searchValue">搜索</text>
@@ -47,7 +47,7 @@
 				</view>
 				<view class="card-col-2">    
 					<view>时间：{{$jobFairList$item.starttime}} 至 {{$jobFairList$item.endtime}}</view>
-					<view>动态：<text>企业{{$jobFairList$item.companynum}}家 | 岗位10家 | 求职者{{$jobFairList$item.jobnum}}人</text></view>
+					<view>动态：<text>企业{{$jobFairList$item.companynum||1}}家 | 岗位10家 | 求职者{{$jobFairList$item.jobnum}}人</text></view>
 					<view>规模：{{$jobFairList$item.scale||1}}家企业</view>
 				</view>
 				<view class="card-col-3">
@@ -65,7 +65,7 @@
 			</view>
     </block>
 		<view  wx:if="{{!$jobFairList$newList.length}}" class="page_list">
-			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
@@ -78,7 +78,7 @@
     <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="../../images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
         <view wx:if="{{!$actionSheet$title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex around modal-btn">

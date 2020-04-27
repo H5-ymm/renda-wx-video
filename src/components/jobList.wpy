@@ -2,10 +2,12 @@
 <template>
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-      <jobItem :item.sync="item" @deliverResume="deliverResume"></jobItem>
+      <view @tap="deliverResume({{item}})">
+				<jobItem :item.sync="item"></jobItem>
+			</view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
@@ -21,14 +23,9 @@ export default class jobList extends wepy.component {
 	props = {
 		list: Array
 	}
-	events = {
-	  deliverResume: data => {
-		  wxNavigateTo('/pages/home/hall')
-	  }
-	}
 	methods = {
-    deliverResume() {
-      wxNavigateTo('/pages/home/hall')
+    deliverResume(item) {
+      wxNavigateTo('/pages/home/jobDetail?query='+item.id)
     }
 	}
 }

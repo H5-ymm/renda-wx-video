@@ -69,7 +69,7 @@
 				</repeat>
 			</scroll-view>
 			<view wx:else class="page_list" >
-				<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+				<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 				<view class="page_noData_text">暂无消息！</view>
 		   </view>
 		</view>

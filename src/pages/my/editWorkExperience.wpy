@@ -1,4 +1,5 @@
 <style lang="less">
+@import "../../style/form.less";
 .add-view {
   .page_form {
     margin-top: 40rpx;
@@ -46,11 +47,22 @@
       <view class="page_form">
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作时间</view>
-            <picker mode="date" data-name="time" bindchange="bindDateChange">
+            <view class="my-text  weui-flex__item my-text-require">工作开始时间</view>
+            <picker mode="date" data-name="worktime_start" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+                <view class="{{worktime_start?'page__label':'placeholder'}}"> {{worktime_start?worktime_start:'请选择开始时间'}}</view>
+                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text  weui-flex__item my-text-require">工作结束时间</view>
+            <picker mode="date" data-name="worktime_end" bindchange="bindDateChange">
+              <view class="my-text-right weui-flex between">
+                <view class="{{worktime_end?'page__label':'placeholder'}}"> {{worktime_end?worktime_end:'请选择结束时间'}}</view>
+                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
               </view>
             </picker>
           </view>
@@ -66,25 +78,20 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作类型</view>
-            <picker mode="region" data-name="job_type" bindchange="bindDateChange">
-              <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <dataPicker :range.sync="workTypeList" :value.sync="index" @bindPickerChange.user="bindChange"></dataPicker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">职位名称</view>
             <view class="weui-flex between">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入公司名称" value="{{form.job_name}}" data-name="job_name" @input="changeInput" />
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入职位名称" value="{{form.job_name}}" data-name="job_name" @input="changeInput" />
             </view>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作职责</view>
+            <view class="my-text weui-flex__item my-text-require">工作职责</view>
           </view>
           <textarea data-name="work_content" placeholder-class="placeholder"
             disable-default-padding="true"
@@ -95,23 +102,23 @@
     </view>
     <view class="weui-cell_btn weui-flex center">
      	<button class="weui-btn_cell"  @tap="deleteInfo">
-        删除 
+       {{form.id?'删除 ':'取消'}}
       </button>
       <button class="weui-btn_cell weui-btn_primary" @tap="submit">
         保存
       </button>
     </view>
-    <pickerModal :isScaleModal.sync="isPicker" :list.sync="eduList"></pickerModal>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import pickerModal from '@/components/pickerModal'
+import dataPicker from '@/components/dataPicker'
 import { $http } from '@/http.js'
-import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
+import $moment from 'moment'
+import { wxToast, wxNavigateTo, wxShowModal } from '@/util.js'
 export default class editWorkExperience extends wepy.page {
   components = {
-    pickerModal: pickerModal
+    dataPicker: dataPicker
   }
   data = {
     form: {
@@ -121,27 +128,46 @@ export default class editWorkExperience extends wepy.page {
       worktime_start: '',
       worktime_end: '',
       job_type: '',
+      uid: ''
     },
-    array: ['男', '女'],
     index: 0,
-    isPicker: true,
-    depIndex: []
+    worktime_start: '',
+    worktime_end: '',
+    workTypeList: ['全职', '兼职', '实习'],
+    id: ''
   }
   config = {
     navigationBarTitleText: '工作/实习经历'
   }
-  onLoad(){
-    // this.isPicker = false
-    // this.$apply()
+  onLoad(options){
+    this.form.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    if (options.query) {
+      this.id = options.query
+      this.getJobDetail(options.query)
+    }
   }
-   delJobspeciality() {
+  getJobDetail(id) {
     let params = {
-      id: '',
-      uid: ''
+      jid: id,
+      uid: this.form.uid
+    }
+    $http('/personal/jobspecialityDetail', params).then(res => {
+      this.form = res.data
+      this.index = this.form.job_type 
+      this.worktime_start = $moment.unix(this.form.worktime_start).format('YYYY-MM-DD')
+      this.worktime_end = $moment.unix(this.form.worktime_end).format('YYYY-MM-DD')
+      this.$apply()
+    })
+  }
+  delJobspeciality() {
+    let params = {
+      id: this.id,
+      uid: this.form.uid
     }
     $http('/Personal/del_jobspeciality', params).then(res => {
  			if (res.data) {
-			  wxToast('删除成功')
+        wxToast('删除成功')
+        wxNavigateTo('/pages/my/resume')
 			} else {
 				wxToast('删除失败')
 			}
@@ -150,18 +176,32 @@ export default class editWorkExperience extends wepy.page {
   saveJobspeciality() {
     $http('/Personal/save_jobspeciality', this.form).then(res => {
  			if (res.data) {
-			  wxToast('保存成功')
+        wxToast('保存成功')
+        wxNavigateTo('/pages/my/resume')
 			} else {
 				wxToast('保存失败')
 			}
 		})
   }
   methods = {
+    bindDateChange(e) {
+      let key = e.currentTarget.dataset.name
+      this[key] =  e.detail.value
+      let date = $moment(e.detail.value).valueOf() + ''
+      this.form[key] = date.substring(0, 10)
+      this.$apply()
+    },
+    bindChange(data) {
+      this.form.job_type = Number(data) + 1
+    },
     changeInput(e) {
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.value
     },
     deleteInfo() {
+      if (!this.form.id) {
+        wxNavigateTo('/pages/my/resume')
+      }
       wxShowModal('', '确定删除你的工作经历', '确定').then(res => {
 				this.delJobspeciality()
 			}).catch(() => {
@@ -169,7 +209,19 @@ export default class editWorkExperience extends wepy.page {
 			})
     },
     submit() {
-      this.saveJobspeciality()
+      if (!this.form.worktime_start) {
+				wxToast('请选择开始时间')
+			} else if (!this.form.worktime_end) {
+				wxToast('请选择结束时间')
+			} else if (!this.form.company_name) {
+				wxToast('请输入公司名称')
+			} else if (!this.form.job_name) {
+				wxToast('请输入职位名称')
+			} else if (!this.form.work_content) {
+				wxToast('请输入工作职责')
+			} else {
+				this.saveJobspeciality()
+			}
     }
   }
 }

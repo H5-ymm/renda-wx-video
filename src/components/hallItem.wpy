@@ -1,7 +1,8 @@
 
 <template>
   <view class="weui-flex start-start list-card-row">
-    <image src="{{itemValue.logo_url}}" class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany({{itemValue}})"/>
+    <image src="{{itemValue.logo_url}}" wx:if="{{itemValue.logo_url}}" class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany({{itemValue}})"/>
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png" wx:else  class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany({{itemValue}})"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name {{isShowBtn?'text-line':''}}">{{itemValue.com_name}}</text>
@@ -12,7 +13,7 @@
             <view class="card-item weui-flex center">{{benefitsItem}}</view>
           </repeat> 
         </view>
-        <view class="text-line">
+        <view class="text-line job-box">
           <repeat key="index" for="{{itemValue.job_list}}" item="newitem">
             <text class="name" >{{newitem.job_name}}</text>
           </repeat>

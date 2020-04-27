@@ -7,60 +7,65 @@
             <view class="com_info">
               <view class="page__title">
                 杨萌萌
-                <image src="../../images/user/edit.png"  wx:if="{{!resumeId}}" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editResume"/>
+                <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png"  wx:if="{{!resumeId}}" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editResume" data-wpyrouterview-b="0"/>
               </view>
-              <view class="page__desc">1992-12-25 上海市、浦东新区</view>
-              <view class="page__desc">联系电话：15753911234</view>
-              <view class="page__desc">邮箱：429279089@qq.com</view>
+              <view class="page__desc">{{resumeDetail.birthtime || ''}} {{resumeDetail.province}}{{resumeDetail.city}}</view>
+              <view class="page__desc">联系电话：{{resumeDetail.tel}}</view>
+              <view class="page__desc">邮箱：{{resumeDetail.email || '-'}}</view>
             </view>
-            <image src="../../images/head.png" class="company_logo shadow" mode="scaleToFill"/>
+            <image src="{{resumeDetail.head_img}}" class="company_logo shadow" mode="scaleToFill"/>
           </view>
         </view>
         <view class="section-box">
           <view class="page__title weui-flex between">
             求职意向
-            <image src="../../images/user/edit.png"  wx:if="{{!resumeId}}" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editJob"/>
+            <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png"  wx:if="{{!resumeId}}" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editJob" data-wpyrouterview-b="0"/>
           </view>
           <view class="job_detail">
-            <view class="page__title">工作性质：全职</view>
-            <view class="page__title">工作地点：上海交通大学国家科技园（金海路）A 31</view>
-            <view class="page__title">期望薪资：6K-8K</view>
-            <view class="page__title">期望行业：设计、互联网、金融</view>
-            <view class="page__title">期望职位：UI设计师、平面设计</view>
+            <view class="page__title">工作性质：{{resumeDetail.nature_work || '无'}}</view>
+            <view class="page__title">工作地点：{{resumeDetail.expected_province || '无'}}{{resumeDetail.expected_city || '无'}}</view>
+            <view class="page__title">期望薪资：{{resumeDetail.expected_salary || '无'}}</view>
+            <view class="page__title">期望行业：{{resumeDetail.expected_trades || '无'}}</view>
+            <view class="page__title">期望职位：{{resumeDetail.expected_job || '无'}}</view>
           </view>
         </view>
         <view class="section-box">
           <view class="page__title">教育背景</view>
-          <view class="job_detail">
-            <view class="page__title">南京师范大学</view>
-          </view>
-          <view class="page__desc">
-           本科｜汉语言文学
-          </view>
-          <view class="page__desc">
-           毕业时间：2016-06-15
-          </view>
-          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" bindtap="routerView" data-wpyrouterview-a="editEducation">
+          <block wx:for="{{eduList}}" wx:key="index" wx:if="{{eduList.length}}">
+            <view class="job_detail weui-flex between">
+              <view class="page__title">{{item.school}}</view>
+              <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editEducation" data-wpyrouterview-b="{{item}}"/>
+            </view>
+            <view class="page__desc">
+            {{item.edu}}｜{{item.faculty}}{{item.speciality}}
+            </view>
+            <view class="page__desc">
+            毕业时间：{{item.graduation_date}}
+            </view>
+          </block>
+          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" bindtap="routerView" data-wpyrouterview-a="editEducation" data-wpyrouterview-b="0">
             添加教育背景
-            <image src="../../images/user/add.png" class="page_card_icon " mode="scaleToFill"/>
+            <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/add.png" class="page_card_icon " mode="scaleToFill"/>
           </view>
         </view>
         <view class="section-box">
           <view class="page__title">实习/工作经历</view>
-          <view class="job_detail">
-            <view class="page__title weui-flex start">
-              海南智造慧
-              <view class="page__desc">2018.8-至今</view>
+          <block wx:for="{{jobspecialitylist}}" wx:key="index" wx:if="{{jobspecialitylist.length}}">
+            <view class="job_detail">
+              <view class="page__title weui-flex between">
+                <view class="weui-flex start">
+                   {{item.company_name}}
+                   <view class="page__desc">{{item.worktime_start}} - {{item.worktime_end}}</view>
+                </view>
+                <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" bindtap="routerView" class="page_card_icon" mode="scaleToFill" data-wpyrouterview-a="editWorkExperience" data-wpyrouterview-b="{{item}}"/>
+              </view>
+              <view class="page__title">{{item.job_name}}</view>
             </view>
-            <view class="page__title">UI设计师</view>
-          </view>
-          <view class="page__desc">
-            负责产品线运营活动或者 H5 创意等视觉设计工作，与内容运营，流量运营等多部门配合，
-            生产更有视觉化的内容，完成新形态的内容创作。负责app项目的前期功能讨论，交互设计，高保真原型图输出，icon设计，
-            制定设计规范，参与大型运营活动的讨论，并能从视觉和用户体验的角度提出自己的建议。
-            负责运营推广和物料设计，负责部分线下物料产品周边设计。
-          </view>
-          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" bindtap="routerView" data-wpyrouterview-a="editWorkExperience">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill"/></view>
+            <view class="page__desc">
+             {{item.work_content}}
+            </view>
+          </block>
+          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" bindtap="routerView" data-wpyrouterview-a="editWorkExperience" data-wpyrouterview-b="0">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill"/></view>
         </view>
       </view>
     </scroll-view>

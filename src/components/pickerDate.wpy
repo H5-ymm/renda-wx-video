@@ -1,9 +1,9 @@
 <style lang="less">
 @import '../style/modal.less';
-.footer-btn {
-  width: 86%;
-  margin: 0 auto;
-}
+  .footer-btn {
+    width: 86%;
+    margin: 0 auto;
+  }
  .picker {
     height: 420rpx;
     background: #fff;
@@ -41,7 +41,7 @@
             确定
           </view>
         </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{value}}" @change="bindChange">
           <picker-view-column>
             <repeat wx:for="{{years}}" wx:key="index">
               <view class="picker-view-item">{{item}}年</view>
@@ -72,13 +72,10 @@ export default class pickerModal extends wepy.component {
 		height: {
 			type: Number,
 			default: 520
-		},
-		list: Array
+		}
 	}
 	data = {
 		isShow: false,
-		activeIndex: [],
-    rendaUserType: 0,
     years: [],
     year: '',
     months: [],
@@ -112,27 +109,14 @@ export default class pickerModal extends wepy.component {
 			this.$apply()
 			this.$emit('handleClose')
 		},
-		selectType (index) {
-			this.activeIndex = index
-			this.$apply()
-		},
 		handleOk () {
 			this.isShow = false
-			this.$apply()
-			this.$emit('selectOk', this.activeIndex)
+      this.$apply()
+      console.log(this.value)
+			this.$emit('selectOk', this.value)
 		}
 	}
 	watch = {
-		rendaUserType (val) {
-			if (val) {
-				if (this.menus[0].title == '切换团队') {
-					this.activeIndex = val === 2 ? 1 : 0
-				} else {
-					this.activeIndex = 0
-				}
-				this.$apply()
-			}
-		},
 		isScaleModal (val) {
 			if (!val) {
 				this.isShow = true

@@ -16,22 +16,27 @@
     <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content">
       <view class="home-view-box">
         <repeat wx:for="{{list}}" wx:key="index">
-          <view class="list-row weui-flex between" wx:if="{{list.length}}" @tap="selectJob({{index}},{{item}})">
-            <view class="list-col-1">
-              <view class="page__title">上海市任达网络科技有限公司</view>
-              <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>
-              <view class="number">该公司共有8个职位在招聘</view>
+          <view class="list-row weui-flex between" wx:if="{{list.length}}" @tap="viewCompany({{item}})">
+            <view class="list-col-1 weui-flex__item">
+              <view class="page__title weui-flex between">
+                {{!activeIndex?item.com_name:item.job_name}}
+                <view class="number" wx:if="{{activeIndex}}">{{item.salary}}</view>
+              </view>
+              <view class="page__desc" wx:if="{{!activeIndex}}">{{item.trades}} | {{item.nature}} | {{item.scale}}</view>
+              <view class="number" wx:if="{{!activeIndex}}">该公司共有{{item.job_num}}个职位在招聘</view>
+              <view class="number" wx:if="{{activeIndex}}">{{item.com_name}}</view>
+              <view class="page__desc">记录来源 : {{item.title}}</view>
             </view>
             <view class="weui-flex between">
-              <button class="weui-btn_cell weui-btn_primary" wx:if="{{activeIndex}}">
+              <button class="weui-btn_cell weui-btn_primary" wx:if="{{!activeIndex}}">
                 立即沟通
               </button>
-              <image mode="scaleToFill" class="page_card_icon" src="https://a.rsd123.com/image/images/right.png" wx:else/>
+              <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" wx:else/>
             </view>
           </view>
         </repeat>
         <view wx:if="{{!list.length}}" class="page_list">
-          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+          <image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
           <view class="page_noData_text">暂无数据！</view>
         </view>
       </view>
@@ -42,6 +47,7 @@
 import wepy from 'wepy'
 import tabBar from '@/components/tabBar'
 import { $http } from '@/http.js'
+import { wxShowModal, wxToast, wxRedirectTo, wxNavigateTo } from '@/util.js'
 export default class collect extends wepy.page {
   components = {
 		tabBar: tabBar
@@ -49,7 +55,6 @@ export default class collect extends wepy.page {
   data = {
     list: [],
     activeIndex: 0,
-    resumeType: '',
     params: {
       uid: '',
       page: 1,
@@ -67,111 +72,40 @@ export default class collect extends wepy.page {
     switchTab: data => {
       this.activeIndex = data
       this.$apply()
+      this.getCollectList()
     }
   }
-  getGeportOrderList () {
-    $http('/Wxresume/reportOrderList', this.params).then(res => {
-      this.list = res.data.data || []
-      this.count = res.data.count
-      this.$apply()
-    })
+  computed = {
+		urlApi() {
+			return this.activeIndex == 0 ? '/personaljob/collect_company': '/personaljob/collect_job'
+    }
   }
-  getInternalInvoiceList () {
-    $http('/Wxresume/internalInvoiceList', this.params).then(res => {
-      this.list = res.data.data || []
-      this.count = res.data.count
-      this.$apply()
-    })
-  }
- methods = {
-    viewInfo (item) {
-      wx.navigateTo({
-        url: item.url
-      })
-    },
-    switchView(index) {
-      this.hallType = index
-      this.$apply()
-    },
-    viewDetail(item) {
-      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+  methods = {
+    viewCompany(item) {
+      if (!this.activeIndex) {
+        wxNavigateTo('/pages/home/companyDetail?query=' + item.id)
+      } else {
+        wxNavigateTo('/pages/home/jobDetail?query=' + item.id)
+      }
+      wx.setStorageSync('rendaJHID', item.jf_id)
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {
 				this.params.limit = this.params.limit + 10
-				this.getReceiptList()
+				this.getCollectList()
 			}
-    },
-    showModal(index){
-      this.activeIndex = index
-      this.$apply()
-    },
-    applyRecepit(item) {
-      let params = {
-        job_id: item.id,
-        uid: this.params.uid
-      }
-      this.setReceipt(params)
     }
   }
-  setReceipt(params) {
-    $http('/apply/add_apply', params).then(res => {
-      if(res.data) {
-        wxToast('接单成功')
-        wx.setStorageSync('receiptType', 0)
-        wxNavigateTo('/pages/teamView/orderManage/list?query=0')
-      } else {
-        wxToast('接单失败')
-      }
-    })
-  }
-  getReceiptList (uid) {
-    $http('/receipt/receiptList', this.params).then(res => {
-      let arr = []
-      arr = res.data.data ? res.data.data.data : []
-      // arr.forEach(item=>{
-      //   if(item.utime - $moment().valueOf() > 0) {
-      //     item.utime = $moment.unix(item.utime).format('HH:ss')
-      //   } else {
-      //     item.utime = $moment.unix(item.utime).format('YYYY-MM-DD')
-      //   }
-      // })
-      this.list = arr
+  getCollectList () {
+    $http(this.urlApi, this.params).then(res => {
+      this.list = res.data.data ? res.data.data : []
       this.count = res.data.count
       this.$apply()
     })
   }
-  getTeamInfoAPi (uid) {
-    $http('/Userinfo/getteaminfo', { uid }).then(res => {
-      this.rendaUserTeamType = res.data.grade_num
-      wx.setStorageSync('rendaUserTeamId', res.data.team_id)
-      wx.setStorageSync('rendaUserTeamType', res.data.grade_num)
-      wx.setStorageSync('rendaDradeId', res.data.grade_id)
-      this.$apply()
-    })
-  }
-  saveUser(uid) {
-    let userinfo = wx.getStorageSync('wxInfo')
-    let params = {
-      uid,
-      head_img: userinfo.head_img
-    }
-    $http('/userinfo/editUserInfo', params).then(res => {
-      console.log(res)
-    })
-  }
   onLoad(options) {
-    this.isScaleModal = false
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    this.$apply()
-    this.getTeamInfoAPi(this.params.uid)
-  }
-  onShow () {
-    this.getReceiptList()
-    let userInfo = wx.getStorageSync('userInfo') || ''
-		if (!userInfo || (userInfo && !JSON.parse(userInfo).head_img)) {
-      this.saveUser()
-    }
+    this.getCollectList()
   }
 }
 </script>

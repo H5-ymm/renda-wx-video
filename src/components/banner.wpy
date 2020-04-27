@@ -57,7 +57,7 @@ export default class banner extends wepy.component {
     })
   }
   onLoad() {
-    // this.getBanner()
+    this.getBanner()
   }
 }
 </script>

@@ -1,18 +1,11 @@
 
 <template>
 	<view>
-	  <repeat wx:for="{{list}}" wx:key="index" wx:if="{{list.length}}" >
-      <view class="list-row">
-        <view class="page__desc">记录来自：陕西大学招聘会</view>       
-      </view>
-      <view>
-				<repeat wx:for="{{item.data}}" wx:for-item="newitem" wx:key="index">
-					<deliveryRecordItem :item.sync="newitem"></deliveryRecordItem>
-				</repeat>
-			</view>
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+      <deliveryRecordItem :item.sync="item"></deliveryRecordItem>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill" />
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

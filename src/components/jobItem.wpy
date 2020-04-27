@@ -5,18 +5,20 @@
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">{{item.number}} | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
-      <button class="weui-btn_cell weui-btn_primary" wx:if="{{isShowBtn}}" @tap="deliverResume({{item}})">
+      <button class="weui-btn_cell weui-btn_primary" wx:if="{{isShowBtn&&item.is_apply!=1}}" @tap.stop="deliverResume({{item}})">
         投递简历
       </button>
+      <view class="number" wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
     </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
+import { wxToast } from '@/util'
+import { $http } from '@/http.js'
 export default class jobItem extends wepy.component {
 	props = {
     item: Object,
@@ -24,10 +26,24 @@ export default class jobItem extends wepy.component {
 			type: Boolean,
 			default: true
 		},
-	}
+  }
+  applyJob(params) {
+    $http('/personaljob/addapplyJob', params).then(res => {
+      if (res.data) {
+        wxToast('投递成功耐心等待企业回复吧')
+      } else {
+        wxToast('投递失败')
+      }
+    })
+  }
 	methods = {
     deliverResume(item) {
-      this.$emit('deliverResume', item)
+      let params = {
+        uid: wx.getStorageSync('rendaUid') || this.$parent.globalData.uid,
+        job_id: item.id,
+        jf_id: wx.getStorageSync('rendaJHID')
+      }
+      this.applyJob(params)
     }
 	}
 }

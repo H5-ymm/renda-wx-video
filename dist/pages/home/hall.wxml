@@ -27,7 +27,7 @@
     
   <view class="weui-flex between search-box">
 		<view class="weui-cell weui-flex start weui-flex__item">
-			<image src="../../images/search.png" class="searchIcon"/>
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon"/>
 			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" placeholder="{{$searchHall$placeholder}}"/>
     </view>
 		<text bindtap="$searchHall$searchValue">搜索</text>
@@ -36,10 +36,11 @@
     
 	<view wx:if="{{hallType==1}}">
 	  <block  wx:if="{{$hallList$list.length}}" wx:for="{{$hallList$list}}" wx:for-index="$hallList$index" wx:for-item="$hallList$item" wx:key="$hallList$index">
-			<view class="list-card shadow" bindtap="$hallList$routerJob" data-wpyrouterjob-a="{{$hallList$itemValue}}">
+			<view class="list-card shadow" bindtap="$hallList$routerJob" data-wpyrouterjob-a="{{$hallList$item}}">
         
   <view class="weui-flex start-start list-card-row">
-    <image src="{{$hallList$item.logo_url}}" class="list-card-header" mode="scaleToFill" catchtap="$hallList$hallItem$viewCompany" data-com-index="{{$hallList$index}}" data-wpyviewcompany-a="{{$hallList$item}}"/>
+    <image src="{{$hallList$item.logo_url}}"  wx:if="{{$hallList$item.logo_url}}" class="list-card-header" mode="scaleToFill" catchtap="$hallList$hallItem$viewCompany" data-com-index="{{$hallList$index}}" data-wpyviewcompany-a="{{$hallList$item}}"/>
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png"  wx:else class="list-card-header" mode="scaleToFill" catchtap="$hallList$hallItem$viewCompany" data-com-index="{{$hallList$index}}" data-wpyviewcompany-a="{{$hallList$item}}"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name {{$hallList$hallItem$isShowBtn?'text-line':''}}">{{$hallList$item.com_name}}</text>
@@ -50,7 +51,7 @@
             <view class="card-item weui-flex center">{{$hallList$hallItem$benefitsItem}}</view>
           </block> 
         </view>
-        <view class="text-line">
+        <view class="text-line job-box">
           <block wx:for="{{$hallList$item.job_list}}" wx:for-index="$hallList$hallItem$index" wx:for-item="$hallList$hallItem$newitem" wx:key="$hallList$hallItem$index">
             <text class="name">{{$hallList$hallItem$newitem.job_name}}</text>
           </block>
@@ -67,7 +68,7 @@
 
       </view>
     </block>
-		<view  wx:if="{{!$hallList$list.length}}" class="page_list">
+		<view wx:if="{{!$hallList$list.length}}" class="page_list">
 			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
@@ -80,7 +81,8 @@
         
   <view class="list-card shadow">
     <view class="weui-flex start-start list-card-row">
-      <image src="../../images/head.png" class="list-card-header" mode="scaleToFill"/>
+      <image src="{{$jobHallList$item.head_img}}"  wx:if="{{$jobHallList$item.head_img}}" class="list-card-header" mode="scaleToFill"/>
+      <image src="../../images/user.png"  wx:else class="list-card-header" mode="scaleToFill"/>
       <view class="list-card-content">
         <view class="weui-flex start card-col-1">    
           <text class="name {{$jobHallList$jobHallItem$isShowBtn?'text-line':''}}">{{$jobHallList$item.nickname}}</text>
@@ -89,7 +91,7 @@
           <view class="weui-flex start text-line">
             <view class="page__desc">{{$jobHallList$item.sex==1?'男':'女'}}｜{{$jobHallList$item.age||1}}岁</view>
           </view>
-          <view class="text-line"><text class="name"><text  wx:if="{{$jobHallList$item.edu}}">{{$jobHallList$item.edu}} /</text><text  wx:if="{{$jobHallList$item.speciality}}">{{$jobHallList$item.speciality || ''}}</text></text></view>
+          <view class="text-line"><text class="name"><text wx:if="{{$jobHallList$item.edu}}">{{$jobHallList$item.edu}} /</text><text wx:if="{{$jobHallList$item.speciality}}">{{$jobHallList$item.speciality || ''}}</text></text></view>
           <view class="weui-flex between">
             <view class="card-text weui-flex__item">意向：{{$jobHallList$item.expected_job || '无'}}</view>
             <button class="weui-btn_cell weui-btn_primary_plain">
@@ -114,7 +116,7 @@
   <view hidden="{{$invitationModal$isScaleModal}}">
     <view  wx:if="{{$invitationModal$isShow}}" class="modal_mask"/>
     <view class="modal_box transition3s {{ $invitationModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$invitationModal$height}}rpx">
-      <image src="../../images/closed.png" class="close_icon" mode="scaleToFill" bindtap="$invitationModal$handleCloseModal"/>
+      <image src="http://www.ttxsg.com.cn:39009/uploads/images/closed.png" class="close_icon" mode="scaleToFill" bindtap="$invitationModal$handleCloseModal"/>
       <view class="modal-invitation">
         <view class="modal-title-tab weui-flex center">
           <view class="modal-tab-item {{$invitationModal$activeIndex==0?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="0">邀请函</view>
@@ -137,7 +139,7 @@
     <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="../../images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
         <view wx:if="{{!$actionSheet$title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex around modal-btn">

@@ -15,29 +15,18 @@
   }
 }
 </style>
-<wxs module="tools">
-  var checkHas = function(day, arr) {
-    var flag = arr.indexOf(day)
-    if (flag == -1) {
-      return false
-    } else {
-      return true
-    }
-  }
- module.exports.checkHas = checkHas;
-</wxs>
 <template>
 	<view hidden='{{isScaleModal}}'>
 		<view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
-		<view class="modal_box welfare_modal transition3s {{ isShow ? 'g_scale1': ''}}" style="height:{{height}}rpx">
+		<view class="modal_box welfare_modal transition3s {{ isShow ? 'g_scale1': ''}}" style="height:400rpx">
 			<view class="modal-content">
 				<view class="modal-title weui-flex between">
           <view class="page__title">企业福利</view>
-          <view class="page__text__active">确定</view>
+          <view class="page__text__active" @tap="handleBenefitOk">确定</view>
         </view>
         <view class="weui-flex between wrap">
-          <repeat for="{{benefitsList}}" key="index">
-            <view class="card-item {{tools.checkHas(item.id, idList)?'active': ''}}" @tap="select({{item}})">{{item.title}}</view>
+          <repeat  wx:for="{{benefitsList}}" wx:key="index">
+            <view class="card-item {{item.disabled?'active': ''}}" @tap="selectBenefit({{item}}, {{index}})">{{item.title}}</view>
           </repeat>
         </view>
       </view>
@@ -46,43 +35,83 @@
 </template>
 <script>
 import wepy from 'wepy'
+import { $http } from '@/http.js'
 export default class welfareModal extends wepy.component {
 	props = {
 		isScaleModal: Boolean,
-    height: Number,
-    benefitsList: Array
+    benefitsArr: Array
 	}
 	data = {
     isShow: false,
-    idList: []
-	}
+    idList: [],
+    benefitsNameList: [],
+    benefitsList: []
+  }
+  getBenefitsList() {
+		$http('/Constant/getBenefitsList', {}).then(res => {
+      let arr = res.data
+      this.benefitsList = arr.map(item =>{
+        item.disabled = false
+        return item
+      })
+      if (this.benefitsArr.length) {
+        this.idList = this.benefitsArr
+        this.benefitsArr.forEach(ele => {
+            this.benefitsList.forEach(val => {
+             if(ele == val.id) {
+               val.disabled = true
+               this.benefitsNameList.push(val.title)
+             }
+          })
+        })
+        let params = {
+          benefitsNameList: this.benefitsNameList.join(','),
+          idList: this.benefitsArr.join(',')
+        }
+        this.$emit('handleBenefitOk', params)
+      }
+      this.$apply()
+		})
+  }
+  watch = {
+    benefitsArr(val) {
+      if (val && val.length) {
+        this.idList = val
+        this.$apply()
+      }
+    }
+  }
+  onLoad() {
+    this.getBenefitsList()
+  }
 	methods = {
 		handleClose () {
 			this.isShow = false
 			this.$apply()
 			this.$emit('handleClose')
 		},
-		handleOk () {
+		handleBenefitOk () {
 			this.isShow = false
-			this.$apply()
-			let params = {}
-			this.$emit('handleOk', params)
+      this.$apply()
+      let params = {
+        benefitsNameList: this.benefitsNameList.join(','),
+        idList: this.idList.join(',')
+      }
+			this.$emit('handleBenefitOk', params)
     },
-    select(item) {
-      let arr = []
-			if (arr.indexOf(item.id) === -1) {
-        arr.push(item.id)
-        console.log(arr)
+    selectBenefit(item, index) {
+      this.benefitsList[index].disabled = !item.disabled
+			if (this.idList.indexOf(item.id) === -1) {
+        this.idList.push(item.id)
+        this.benefitsNameList.push(item.title)
 			} else {
-				let ret = arr.findIndex(v => {
+				let ret = this.idList.findIndex(v => {
 					return v === item.id
 				})
-				arr.splice(ret, 1)
+        this.idList.splice(ret, 1)
+        this.benefitsNameList.splice(ret, 1)
       }
-      console.log(arr)
-			arr = Array.from(new Set(arr))
-      this.idList = arr
-      console.log(this.idList)
+			this.idList = Array.from(new Set(this.idList))
       this.$apply()
     }
 	}

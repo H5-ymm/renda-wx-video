@@ -38,12 +38,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">学历</view>
-            <picker @change="bindPickerChange" data-name="edu" value="{{index}}" range="{{eduList}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{eduList[index]?'page__label':'placeholder'}}"> {{eduList[index]?eduList[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <dataPicker :range.sync="eduList" :value.sync="eduIndex" @bindPickerChange.user="bindEduChange"></dataPicker>
           </view>
         </view>
         <view class="page_margin">
@@ -51,8 +46,8 @@
             <view class="my-text  weui-flex__item my-text-require">毕业时间</view>
             <picker mode="date" data-name="graduation_date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
-                <view class="{{array[index]?'page__label':'placeholder'}}"> {{array[index]?array[index]:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
+                <view class="{{graduation_date?'page__label':'placeholder'}}"> {{graduation_date?graduation_date:'请选择'}}</view>
+                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
               </view>
             </picker>
           </view>
@@ -60,12 +55,9 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">学校名称</view>
-            <picker @change="bindPickerChange" data-name="school" value="{{index}}" range="{{eduList}}">
-              <view class="my-text-right weui-flex between">
-                <view class="{{form.graduation_date?'page__label':'placeholder'}}"> {{form.graduation_date?form.graduation_date:'请选择'}}</view>
-                <image mode="scaleToFill" src="../../images/right.png"  class="page_right_icon" />
-              </view>
-            </picker>
+            <view class="weui-flex between">
+              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入学校名称" value="{{form.school}}" data-name="school" @input="changeInput" />
+            </view>
           </view>
         </view>
         <view class="page_margin">
@@ -88,23 +80,23 @@
     </view>
     <view class="weui-cell_btn weui-flex center">
      	<button class="weui-btn_cell"  @tap="deleteInfo">
-        删除 
+        {{form.id?'删除 ':'取消'}}
       </button>
       <button class="weui-btn_cell weui-btn_primary" @tap="submit">
         保存
       </button>
     </view>
-    <pickerModal :isScaleModal.sync="isPicker" :list.sync="eduList"></pickerModal>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import pickerModal from '@/components/pickerModal'
+import dataPicker from '@/components/dataPicker'
 import { $http } from '@/http.js'
-import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
+import $moment from 'moment'
+import { wxToast, wxNavigateTo, wxShowModal } from '@/util.js'
 export default class editEducation extends wepy.page {
   components = {
-    pickerModal: pickerModal
+    dataPicker: dataPicker
   }
   data = {
     form: {
@@ -116,31 +108,50 @@ export default class editEducation extends wepy.page {
       uid: ''
     },
     eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
-    eduIndex: 0,
+    eduIndex: -1,
     disabled: false,
-    isPicker: true
+    isPicker: true,
+    graduation_date: '',
+    id: ''
   }
-  onLoad(){
-    // this.isPicker = false
-    // this.$apply()
+  onLoad(options){
+   this.form.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+   if (options.query) {
+      this.id = options.query
+      this.getEduDetail(options.query)
+   }
   }
   delUseredu() {
     let params = {
-      id: '',
-      uid: ''
+      id: this.id ,
+      uid: this.form.uid
     }
     $http('/Personal/del_useredu', params).then(res => {
  			if (res.data) {
-			  wxToast('删除成功')
+        wxToast('删除成功')
+        wxNavigateTo('/pages/my/resume')
 			} else {
 				wxToast('删除失败')
 			}
 		})
   }
+  getEduDetail(id) {
+    let params = {
+      eid: id,
+      uid: this.form.uid
+    }
+    $http('/personal/eduDetail', params).then(res => {
+      this.form = res.data
+      this.eduIndex = this.form.edu 
+      this.graduation_date = $moment.unix(this.form.graduation_date).format('YYYY-MM-DD')
+      this.$apply()
+    })
+  }
   saveUserEdu() {
     $http('/Personal/save_useredu', this.form).then(res => {
  			if (res.data) {
-			  wxToast('保存成功')
+        wxToast('保存成功')
+        wxNavigateTo('/pages/my/resume')
 			} else {
 				wxToast('保存失败')
 			}
@@ -151,7 +162,20 @@ export default class editEducation extends wepy.page {
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.value
     },
+    bindEduChange(data) {
+     this.form.edu = data
+    },
+    bindDateChange(e) {
+      let key = e.currentTarget.dataset.name
+      this.graduation_date = e.detail.value
+      let date = $moment(e.detail.value).valueOf() + ''
+      this.form[key] = date.substring(0, 10)
+      this.$apply()
+    },
     deleteInfo() {
+      if (!this.form.id) {
+        wxNavigateTo('/pages/my/resume')
+      }
       wxShowModal('', '确定删除你的教育背景', '确定').then(res => {
 				this.delUseredu()
 			}).catch(() => {
@@ -159,7 +183,19 @@ export default class editEducation extends wepy.page {
 			})
     },
     submit() {
-      this.saveUserEdu()
+       if (!this.form.edu) {
+				wxToast('请选择学历')
+			} else if (!this.form.graduation_date) {
+				wxToast('请选择毕业时间')
+			} else if (!this.form.school) {
+				wxToast('请输入学校名称')
+			} else if (!this.form.faculty) {
+				wxToast('请输入院系')
+			} else if (!this.form.speciality) {
+				wxToast('请输入专业')
+			} else {
+			  this.saveUserEdu()
+			}
     }
   }
 }

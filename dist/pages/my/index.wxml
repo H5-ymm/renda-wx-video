@@ -3,22 +3,24 @@
     <view class="view-content1">
       <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="{{head_img}}" class="my-avatar shadow"  wx:if="{{head_img}}" mode="scaleToFill"/>
-          <image src="https://a.rsd123.com/image/images/header.png"  wx:else alt="" mode="aspectFit" class="my-avatar"/>
+          <image src="{{head_img}}" class="my-avatar shadow" mode="scaleToFill" bindtap="uploadImg"/>
         </view>
         <view class="userInfo-row">
-          <view class="my-user-name">{{userInfo.user_name}}</view>
-          <view class="page__desc">{{userInfo.link_tel}}</view>
+          <view class="my-user-name">{{userInfo.nickname}}</view>
+          <view class="page__desc">{{userInfo.tel}}</view>
         </view>
       </view>
       <view class="view-content">
         <view class="my-view-box">
-          <block wx:for="{{menusList}}" wx:key="index">
+          <block  wx:for="{{menusList}}" wx:key="index">
             <view class="list-row">
               <view class="list-row-col1" bindtap="viewInfo" data-wpyviewinfo-a="{{item}}">
                 <view class="weui-flex between">
                   <view class="page__title">{{item.title}}</view>
-                  <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon"/>
+                  <view class="weui-flex end">
+                    <view class="page__desc" wx:if="{{usertype==2&&item.title=='我的简历'}}">简历完善度{{userInfo.resume_count}}%</view>
+                    <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon"/>
+                  </view>
                 </view>
               </view>
             </view>
@@ -29,6 +31,7 @@
     <view class="weui-cell_btn weui-flex between page_margin login-out">
       <button class="weui-btn_cell weui-btn_primary" bindtap="outLogin">退出登录</button>
     </view>
+    <canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
     
   <view hidden="{{$modal$isScaleModal}}">
     <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>

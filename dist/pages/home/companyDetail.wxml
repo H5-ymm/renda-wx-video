@@ -6,18 +6,17 @@
           <view class="weui-flex between">
             <view class="com_info">
               <view class="page__title">{{companyDetail.com_name}}</view>
-              <view class="page__desc">天使轮 · 500人以上 · 软件开发</view>
+              <view class="page__desc">{{companyDetail.nature}} · {{companyDetail.scale}} · {{companyDetail.trades}}</view>
             </view>
             <image src="{{companyDetail.logo_url}}" class="company_logo shadow" mode="scaleToFill"/>
           </view>
           <view class="page__title">
-            <text>上午9:00-下午6:00</text>
-            <text>双休</text>
-            <text>弹性工作</text>
+            <text>{{companyDetail.link_man}}</text>
+            <text>{{companyDetail.link_tel}}</text>
           </view>
-          <view class="welfare_swiper">
+          <view class="welfare_swiper"  wx:if="{{benefits.length}}">
             <swiper class="swiper" circular="true" previous-margin="100px" next-margin="50px">
-              <block  wx:for="{{welfareList}}" wx:key="index">
+              <block wx:for="{{benefits}}" wx:key="index">
                 <swiper-item class="swiper-item">
                   <view class="welfare-item weui-flex between">
                     <image src="{{item.icon}}" alt="" class="samll_card_icon" mode="aspectFill"/>
@@ -49,12 +48,13 @@
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">{{item.number}} | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn}}" bindtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
         投递简历
       </button>
+      <view class="number"  wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
     </view>
   </view>
 
@@ -65,27 +65,29 @@
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">{{item.number}} | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn}}" bindtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
         投递简历
       </button>
+      <view class="number"  wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
     </view>
   </view>
 
             </view>
           </block>
-          <view class="page__text__active" bindtap="viewMoreJob"  wx:if="{{!showMore&&jobList.length>1}}">查看更多</view>
+          <view class="page__text__active" bindtap="viewMoreJob" wx:if="{{!showMore&&jobList.length>1}}">查看更多</view>
         </view>
       </view>
     </scroll-view>
     <view class="footer-box">
       <view class="weui-flex between">
         <view class="weui-flex between">
-          <image mode="scaleToFill" class="big_icon" src="../../images/company/collect-active.png"/>
+          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/collect-active.png" wx:if="{{companyDetail && companyDetail.is_collect}}" bindtap="companyCollect" data-wpycompanycollect-a="2"/>
+          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/collect.png" wx:else bindtap="companyCollect" data-wpycompanycollect-a="1"/>
           <button open-type="share" class="share-btn">
-            <image mode="scaleToFill" class="big_icon" src="../../images/company/share.png"/>
+            <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/share.png"/>
           </button>
         </view>
         <view bindtap="communicateCompany">
@@ -100,7 +102,7 @@
     <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="../../images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
         <view wx:if="{{!$actionSheet$title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex around modal-btn">

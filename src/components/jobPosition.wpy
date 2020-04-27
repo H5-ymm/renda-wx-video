@@ -1,0 +1,218 @@
+<style lang="less">
+@import '../style/modal.less';
+.footer-btn {
+  width: 86%;
+  margin: 0 auto;
+}
+.districtSelet {
+ .picker {
+    height: 520rpx;
+    background: #fff;
+    width: 100%;
+    .picker-btn {
+      height: 80rpx;
+      border-bottom: 1px solid #eee;
+      padding: 0 24rpx;
+      color: #6a6a6a;
+      .ok-btn {
+        color: #1890FF;
+      }
+    }
+    .picker-view {
+      text-align: center;
+      width: 100%;
+      height: 400rpx;
+      .picker-view-item {
+        line-height: 80rpx;
+      }
+    }
+  }
+}
+</style>
+<template>
+  <view class="districtSelet">
+    <view class="my-text-right weui-flex between">
+      <view wx:if="{{options.length}}" class="page__title">
+        {{multiArray[0][multiIndex[0]]}}
+        {{multiArray[1][multiIndex[1]]}}
+        {{multiArray[2][multiIndex[2]]}}
+      </view>
+      <view wx:else class="placeholder" @tap="changeCity">请选择岗位类别</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+    </view>
+    <view hidden='{{isScaleModal}}'>
+      <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+      <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:400rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" @tap="selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" @tap="selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+              <picker-view-column>
+                <repeat wx:for="{{multiArray[0]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+              <picker-view-column>
+                <repeat wx:for="{{multiArray[1]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+              <picker-view-column>
+                <repeat wx:for="{{multiArray[2]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+let lock = false
+export default class jobPosition extends wepy.component {
+  props = {
+    jobList: Array
+  }
+  data = {
+    options: [],
+    multiArray: [],
+    multiIndex: [0, 0, 0],
+    idList: [],
+    isScaleModal: true,
+    isShow: false
+  }
+  getIdList(list) {
+    return list.map(item => {
+      return item.id
+    })
+  }
+  getList(list) {
+    return list.map(item => {
+      return item.type_name
+    })
+  }
+  getJobList(value) {
+    $http('/Constant/getJobType', { parentId: '' })
+      .then(res => {
+        let arr = this.getList(res.data)
+        this.idList[0] = this.getIdList(res.data)
+        this.multiArray[0] = arr
+        this.getCityList(value)
+      })
+      .catch(error => {
+        if (error) {
+          this.$message.warning(error.status.remind)
+        }
+      })
+  }
+  getCityList(value) {
+    let id = ''
+    if (!value.length) {
+      id = 1
+    } else {
+      id = value[0]
+    }
+    $http('/Constant/getJobType', { parentId: id }).then(res => {
+      let arr = this.getList(res.data)
+      this.idList[1] = this.getIdList(res.data)
+      this.multiArray[1] = arr
+      this.$apply()
+      this.getAreaList(value)
+    })
+  }
+  getAreaList(value) {
+    let id = ''
+    if (!value[1]) {
+      id = this.idList[1][0]
+    } else {
+      id = value[1]
+    }
+    $http('/Constant/getJobType', { parentId: id }).then(res => {
+      let arr = this.getList(res.data)
+      this.idList[2] = this.getIdList(res.data)
+      this.multiArray[2] = arr
+      if (lock && (this.jobList && this.jobList.length)) {
+        lock = false
+        this.multiIndex = this.idList.map((val, ind) => {
+          let flag = val.indexOf(this.jobList[ind])
+          return flag === -1 ? 0 : val.indexOf(this.jobList[ind])
+        })
+      }
+      this.$apply()
+    })
+  }
+  onLoad() {
+    // if (!this.jobList || (this.jobList && this.jobList.length == 0)) {
+    //   this.getJobList([])
+    // }
+  }
+  watch = {
+    jobList(val) {
+      if (val && val[0] != 0) {
+        this.options = val
+        lock = true
+        this.$apply()
+        this.getJobList(val)
+      }
+    },
+    isScaleModal(val) {
+      if (!val) {
+        this.isShow = true
+        this.getJobList([])
+      } else {
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+  methods = {
+    changeCity() {
+      this.isScaleModal = !this.isScaleModal 
+      this.isShow = true
+      this.$apply()
+    },
+    selectOk() {
+      this.idList.forEach((item, index) => {
+        this.options[index] = item[this.multiIndex[index]]
+          ? item[this.multiIndex[index]]
+          : 0
+      })
+      if (this.options.length) {
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+        this.$emit('selectJobType', this.options[2])
+      }
+    },
+    bindChange(e) {
+      this.multiIndex = e.detail.value
+      this.getCityList([this.idList[0][this.multiIndex[0]], 0])
+    },
+    selectClose() {
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    },
+    cancelPickerChange(e) {
+      if (!this.jobList || (this.jobList && this.jobList.length === 0)) {
+        this.multiIndex = [0, 0, 0]
+        this.options = []
+        this.$apply()
+        this.getJobList([])
+      } else {
+        lock = true
+        this.getJobList(this.jobList)
+      }
+    }
+  }
+}
+</script>

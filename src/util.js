@@ -8,7 +8,6 @@ const manglingFormatCardNumber = (cardNumber) => {
             cardNumber.length % 4 ? ' ' : ''
             }${cardNumber.slice(-4)}`;
     }
-    // eslint-disable-next-line semi
     return cardNumber
 };
 const validateIdCard = idCard => {
@@ -213,23 +212,6 @@ const ageList = () => {
     }
     return arr
 }
-const rewardTypeText = () => {
-    let text = ''
-    switch (number) {
-        case 1:
-            text = '时'
-            break;
-        case 2:
-            text = '日'
-            break;
-        case 3:
-            text = '月'
-            break;
-        default:
-            text = ''
-    }
-    return '元/人/' + text
-}
 const wxShowModal = (title, content, confirmText) => {
     return new Promise((resove, rejcet) => {
         wx.showModal({
@@ -275,7 +257,6 @@ module.exports = {
     getKeyValue: getKeyValue,
     weekList: weekList,
     ageList: ageList,
-    rewardTypeText: rewardTypeText,
     wxShowModal: wxShowModal,
     getList: getList
 };

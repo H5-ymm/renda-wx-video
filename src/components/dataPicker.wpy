@@ -1,0 +1,135 @@
+<style lang="less">
+@import '../style/modal.less';
+.footer-btn {
+  width: 86%;
+  margin: 0 auto;
+}
+.districtSelet {
+ .picker {
+    height: 520rpx;
+    background: #fff;
+    width: 100%;
+    .picker-btn {
+      height: 80rpx;
+      border-bottom: 1px solid #eee;
+      padding: 0 24rpx;
+      color: #6a6a6a;
+      .ok-btn {
+        color: #1890FF;
+      }
+    }
+    .picker-view {
+      text-align: center;
+      width: 100%;
+      height: 400rpx;
+      .picker-view-item {
+        line-height: 80rpx;
+      }
+    }
+  }
+}
+</style>
+<template>
+  <view class="districtSelet">
+    <view class="my-text-right weui-flex between">
+      <view wx:if="{{multiText}}" class="page__title" @tap="changeSelect">
+        {{multiText}}
+      </view>
+      <view wx:else class="placeholder" @tap="changeSelect">{{text}}</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+    </view>
+    <view hidden='{{isScaleModal}}'>
+      <view @tap="handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+      <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+        <view class="modal-content">
+          <view class="picker">
+            <view class="weui-flex between picker-btn">
+              <view class="weui-flex center" @tap="selectClose">
+                取消
+              </view>
+              <view class="weui-flex center ok-btn" @tap="selectOk">
+                确定
+              </view>
+            </view>
+            <picker-view class="picker-view" indicator-style="height: 40px;font-size:16px;" value="{{multiIndex}}" @change="bindChange">
+              <picker-view-column>
+                <repeat wx:for="{{range}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </repeat>
+              </picker-view-column>
+            </picker-view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+let lock = false
+export default class districtSelet extends wepy.component {
+  props = {
+    value: Number,
+    range: Array,
+    text: {
+      type: String,
+			default: '请选择'
+    }
+  }
+  data = {
+    multiIndex: 0,
+    isScaleModal: true,
+    isShow: false,
+    multiText: ''
+  }
+  onLoad() {
+    
+  }
+  watch = {
+    value(val) {
+      console.log(val)
+      this.multiIndex = val
+      this.multiText = this.range[val]
+      this.$apply()
+    },
+     isScaleModal(val) {
+      if (!val) {
+        this.isShow = true
+      }
+      else {
+        this.isShow = false
+      }
+      this.$apply()
+    }
+  }
+  methods = {
+    changeSelect() {
+      this.isScaleModal = !this.isScaleModal 
+      this.isShow = true
+      this.$apply()
+    },
+    selectOk() {
+      this.isScaleModal = !this.isScaleModal 
+      this.isShow = true
+      console.log(this.multiIndex)
+      if (this.multiIndex == -1 ) {
+        this.multiIndex = 0
+      }
+      this.multiText = this.range[this.multiIndex]
+      this.$apply()
+      this.$emit('bindPickerChange', this.multiIndex)
+    },
+    bindChange(e) {
+      this.multiIndex = e.detail.value
+    },
+    selectClose() {
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    },
+    cancelPickerChange(e) {
+      
+    }
+  }
+}
+</script>

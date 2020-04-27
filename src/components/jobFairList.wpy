@@ -11,7 +11,7 @@
 				</view>
 				<view class="card-col-2">    
 					<view>时间：{{item.starttime}} 至 {{item.endtime}}</view>
-					<view>动态：<text>企业{{item.companynum}}家 | 岗位10家 | 求职者{{item.jobnum}}人</text></view>
+					<view>动态：<text>企业{{item.companynum||1}}家 | 岗位10家 | 求职者{{item.jobnum}}人</text></view>
 					<view>规模：{{item.scale||1}}家企业</view>
 				</view>
 				<view class="card-col-3">
@@ -31,7 +31,7 @@
 			</view>
     </repeat>
 		<view wx:if="{{!newList.length}}" class="page_list">
-			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

@@ -4,48 +4,38 @@
       <view class="home-view-box">
         
 	<view>
-	  <block  wx:for="{{$deliveryRecordList$list}}" wx:key="index" wx:if="{{$deliveryRecordList$list.length}}">
-      <view class="list-row">
-        <view class="page__desc">记录来自：陕西大学招聘会</view>       
-      </view>
-      <view>
-				<block wx:for="{{item.data}}" wx:for-item="newitem" wx:key="index">
-					
+	  <block  wx:if="{{$deliveryRecordList$list.length}}" wx:for="{{$deliveryRecordList$list}}" wx:for-index="$deliveryRecordList$index" wx:for-item="$deliveryRecordList$item" wx:key="$deliveryRecordList$index">
+      
 	<view class="list-row">
     <view class="list-col-1">
       <view class="page__title weui-flex between">
-        应聘职位：人事专员
-        <view class="time">03-21 11:00</view>
+        应聘职位：{{$deliveryRecordList$item.job_name}}
+        <view class="time">{{$deliveryRecordList$item.addtime}}</view>
       </view>
       <view class="weui-flex between">
         <view class="weui-flex__item">
-          <view class="number">8k</view>
-          <view class="page__desc">IT/电子/互联网/国企｜10人以上</view>          
+          <view class="number">{{$deliveryRecordList$item.salary}}</view>
+          <view class="page__title">{{$deliveryRecordList$item.com_name}}</view>         
         </view>
-        <button class="weui-btn_cell weui-btn_primary">
+        <button class="weui-btn_cell weui-btn_primary" bindtap="$deliveryRecordList$deliveryRecordItem$concatCompany" data-com-index="{{$deliveryRecordList$index}}" data-wpyconcatcompany-a="{{$deliveryRecordList$item}}">
           立即沟通
         </button>
-      </view>
+      </view>  
     </view>
     <view class="weui-flex between">
-      <view class="page__title">上海市任达网络科技有限公司</view>
-      <view class="number" bindtap="$deliveryRecordList$deliveryRecordItem$viewDetail" data-com-index="{{$deliveryRecordList$undefined}}" data-wpyviewdetail-a="{{$deliveryRecordList$newitem}}">查看详情</view>
+      <view class="page__desc company_info">企业信息</view>
+      <view class="number" bindtap="$deliveryRecordList$deliveryRecordItem$viewDetail" data-com-index="{{$deliveryRecordList$index}}" data-wpyviewdetail-a="{{$deliveryRecordList$item}}">查看详情</view>
     </view>
+    <view class="page__desc">记录来自：{{$deliveryRecordList$item.title}}</view>  
   </view>
 
-				</block>
-			</view>
     </block>
 		<view  wx:if="{{!$deliveryRecordList$list.length}}" class="page_list">
-			<image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
 
-        <view  wx:if="{{!list.length}}" class="page_list">
-          <image src="https://a.rsd123.com/image/images/noBg.png" class="page_noData" mode="scaleToFill"/>
-          <view class="page_noData_text">暂无数据！</view>
-        </view>
       </view>
     </scroll-view>
  </view>

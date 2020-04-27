@@ -7,12 +7,11 @@
     <view class="view-content1">
       <view class="my-view-header weui-flex start page_bottom">
         <view class="my-avatar-box">
-          <image src="{{head_img}}" class="my-avatar shadow" wx:if="{{head_img}}" mode="scaleToFill" />
-          <image src="https://a.rsd123.com/image/images/header.png" wx:else alt="" mode="aspectFit" class="my-avatar" />
+          <image src="{{head_img}}" class="my-avatar shadow" mode="scaleToFill" @tap="uploadImg"/>
         </view>
         <view class="userInfo-row">
-          <view class="my-user-name">{{userInfo.user_name}}</view>
-          <view class="page__desc">{{userInfo.link_tel}}</view>
+          <view class="my-user-name">{{userInfo.nickname}}</view>
+          <view class="page__desc">{{userInfo.tel}}</view>
         </view>
       </view>
       <view class="view-content">
@@ -22,7 +21,10 @@
               <view class="list-row-col1" @tap="viewInfo({{item}})">
                 <view class="weui-flex between">
                   <view class="page__title">{{item.title}}</view>
-                  <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
+                  <view class="weui-flex end">
+                    <view class="page__desc" wx:if="{{usertype==2&&item.title=='我的简历'}}">简历完善度{{userInfo.resume_count}}%</view>
+                    <image mode="scaleToFill" src="https://a.rsd123.com/image/images/right.png" class="page_card_icon" />
+                  </view>
                 </view>
               </view>
             </view>
@@ -33,13 +35,14 @@
     <view class="weui-cell_btn weui-flex between page_margin login-out">
       <button class="weui-btn_cell weui-btn_primary" @tap="outLogin">退出登录</button>
     </view>
+    <canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
     <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" :modalObj.sync="modalObj" @handleClose="handleClose" @handleOk="handleOk"></modal>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import { $http } from '@/http.js'
-import { getImgUrl, wxToast, wxRedirectTo, getErrorTip, wxShowModal } from '@/util.js'
+import { $http, uploadFile } from '@/http.js'
+import { getImgUrl, wxToast, wxRedirectTo, compressImg, wxShowModal, wxNavigateTo } from '@/util.js'
 import modal from '@/components/modal'
 import { getStore, connect } from 'wepy-redux'
 import { getAllUser } from '@/store/actions/user.js'
@@ -69,9 +72,11 @@ export default class my extends wepy.page {
   }
   events = {
     handleOk: data => {
-      console.log(data)
-      this.isModal = !this.isModal
-      this.$apply()
+      let params = {
+        uid: this.uid,
+        content: data
+      }
+      this.add_feedback(params)
     },
     handleClose: ()=> {
       this.isModal = !this.isModal
@@ -97,6 +102,9 @@ export default class my extends wepy.page {
         : ''
       return this.userInfo.user_name ? this.userInfo.user_name : name
     },
+    urlApi() { 
+      return this.usertype == 1 ? '/company/com_logo':'/personal/head_img'
+    },
     menusList () {
       let arr = []
       if (this.usertype ==  1) {
@@ -107,7 +115,7 @@ export default class my extends wepy.page {
       },
       {
         title: '职位管理',
-        url: `/pages/my/jobManage?query=${this.com_id}`
+        url: `/pages/my/jobManage`
       },
       {
         title: '应聘简历',
@@ -139,29 +147,50 @@ export default class my extends wepy.page {
       return arr
     }
   }
-  getUser () {
-    $http('/Userinfo/getUserInfo', { uid: this.uid }).then(res => {
+  add_feedback(params) {
+    $http('/personaljob/add_feedback', params).then(res => {
+       if(res.data) {
+         this.isModal = !this.isModal
+         wxToast('感谢你的宝贵意见，我们会认真改进的')
+         this.$apply()
+       }
+    })
+  }
+  getUser() {
+    $http('/personal/getuserinfo', { uid: this.uid }).then(res => {
       this.userInfo = res.data || {}
-      if (res.data.mobile) {
-        wx.setStorageSync('userInfo', JSON.stringify(this.userInfo))
-      }
-      if (res.data.head_img) {
-        if (res.data.head_img.indexOf('http') > -1) {
-          this.head_img = res.data.head_img
-        } else {
-          this.head_img = getImgUrl(res.data.head_img)
-        }    
-      } else {
-        this.head_img = this.wxInfo ? JSON.parse(this.wxInfo).head_img : ''
+      this.head_img =  res.data.head_img
+      if (res.data.nickname) {
+        let params = {
+          nickname: res.data.nickname,
+          edu: res.data.edu || '',
+          sex: res.data.sex || '',
+          birthtime: res.data.birthtime || '',
+          province: res.data.province,
+          city: res.data.city,
+          tel: res.data.tel,
+          email: res.data.email,
+          job_search_status: res.data.job_search_status || ''
+        }
+        let expectedParams = {
+          nature_work: res.data.nature_work || '',
+          expected_salary: res.data.expected_salary || '',
+          expected_city: res.data.expected_city || '',
+          expected_province: res.data.expected_province || '',
+          expected_job: res.data.expected_job || '',
+          expected_trades: res.data.expected_trades || '',
+          uid: this.uid
+        }
+        wx.setStorageSync('expectedInfo', JSON.stringify(expectedParams))
       }
       this.$apply()
     })
   }
-  getCompanyInfo () {
+  getCompanyInfo() {
     $http('/Company/getcompanyinfobyuid', { uid: this.uid }).then(res => {
       let data = res.data || {}
-      this.userInfo.user_name = data.com_name
-      this.userInfo.link_tel = data.link_tel
+      this.userInfo.nickname = data.com_name
+      this.userInfo.tel = data.link_tel
       this.com_id = data.id
       if (data.logo_url) {
         this.head_img = data.logo_url
@@ -170,31 +199,38 @@ export default class my extends wepy.page {
       wx.setStorageSync('userInfo', JSON.stringify(data))
     })
   }
-  getDetail (val) {
+  getDetail(val) {
     if (val == 2) {
       this.getUser()
     } else {
       this.getCompanyInfo()
     }
   }
-  methods = {
-    viewInfo (item) {
-      if (item.title=='意见反馈') {
-        this.isModal = false
-        this.$apply()
-      } else {
-        wx.navigateTo({
-          url: item.url
-        })
-      }
-    },
-    outLogin () {
-      wxShowModal('退出登录', `确定退出登录吗?`, '确定').then(res => {
-        this.loginOut()
-      }).catch(() => {
-        console.log('取消')
-      })
+  updateImg(head_img) {
+    let params = {
+      uid: this.uid
     }
+    if (this.usertype == 1) {
+      params.logo_url = head_img
+    } else {
+      params.img = head_img
+    }
+    $http(this.urlApi, params).then(res => {
+      if(res.data) {
+        this.head_img = head_img
+        this.$apply()
+        wxToast('修改头像成功')
+      }
+    })
+  }
+  getImg(tempFilePaths) {
+		uploadFile(tempFilePaths).then(res => {
+			if (res.data && res.data.url) {
+        this.updateImg(getImgUrl(res.data.url))
+			} else {
+				wxToast('图片获取失败')
+			}
+		})
   }
   loginOut () {
     $http('/login/UntyingOpenid', { uid: this.uid }).then(res => {
@@ -205,6 +241,40 @@ export default class my extends wepy.page {
     }).catch(error => {
       console.log(error)
     })
+  }
+  methods = {
+    uploadImg() {
+			wx.chooseImage({
+				sizeType: ['compressed'],
+				success: res => {
+					compressImg(res.tempFilePaths[0]).then(res => {
+						this.getImg([res.url])
+					})
+				}
+			})
+		},
+    viewInfo(item) {
+      if (item.title=='意见反馈') {
+        this.isModal = false
+        this.$apply()
+      } else if(item.title == '职位管理') {
+        if (!wx.getStorageSync('rendaPerfect')) {
+          wxToast('请先完善企业资料')
+          wxNavigateTo('/pages/my/companyForm')
+        } else {
+          wxNavigateTo(item.url)
+        }
+      } else {
+       wxNavigateTo(item.url)
+      }
+    },
+    outLogin () {
+      wxShowModal('退出登录', `确定退出登录吗?`, '确定').then(res => {
+        this.loginOut()
+      }).catch(() => {
+        console.log('取消')
+      })
+    }
   }
 }
 </script>

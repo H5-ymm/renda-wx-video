@@ -38,7 +38,7 @@
         {{disabled?multiArray[2][multiIndex[2]]:''}}
       </view>
       <view wx:else class="placeholder" @tap="changeCity">请选择地址</view>
-      <image mode="scaleToFill" src="../images/right.png"  class="page_right_icon" />
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>
       <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
@@ -64,8 +64,8 @@
                   <view class="picker-view-item">{{item}}</view>
                 </repeat>
               </picker-view-column>
-              <picker-view-column>
-                <repeat wx:for="{{multiArray[2]}}" wx:key="index" wx:if="{{disabled}}">
+              <picker-view-column wx:if="{{disabled}}">
+                <repeat wx:for="{{multiArray[2]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
                 </repeat>
               </picker-view-column>

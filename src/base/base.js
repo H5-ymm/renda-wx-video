@@ -65,19 +65,6 @@
 //     selectedIconPath: '/images/my-active.png'
 // }
 // ]
-export const welfareList = [{
-    label: '是',
-    value: 1
-}, {
-    label: '否',
-    value: 2
-},
-{
-    label: '试用期后',
-    value: 3
-}
-]
-
 export const moneyTypeList = [{
     label: '月薪',
     value: 1
@@ -127,63 +114,71 @@ export const moneyTypeList1 = [
     { label: '女', value: 2 },
     { label: '男女不限', value: 3 }
   ]
-  export const cityList = [
-    { name: '全国', value: '' },
+  export const jobStatusList =  ['应届毕业生', '离职寻找机会', '在职寻找机会', '暂不考虑']
+
+  export const welfareList = [
     {
-      name: '上海',
-      value: '310100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon1.png',
+      title: '五险一金'
     },
     {
-      name: '北京',
-      value: '110100'
+     icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon2.png',
+      title: '周末双休'
     },
     {
-      name: '郑州',
-      value: '410100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon3.png',
+      title: '年底双薪'
     },
     {
-      name: '广州',
-      value: '440100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon4.png',
+      title: '定期体检'
     },
     {
-      name: '杭州',
-      value: '330100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon5.png',
+      title: '包吃包住'
     },
     {
-      name: '天津',
-      value: '120000'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon6.png',
+      title: '带薪年假'
     },
     {
-      name: '西安',
-      value: '610100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon7.png',
+      title: '扁平管理' 
     },
     {
-      name: '苏州',
-      value: '320500'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon8.png',
+      title: '餐补' 
     },
     {
-      name: '武汉',
-      value: '430100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon9.png',
+      title: '岗前培训' 
     },
     {
-      name: '厦门',
-      value: '350200'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon10.png',
+      title: '岗位晋升' 
     },
     {
-      name: '长沙',
-      value: '430100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon11.png',
+      title: '股权变更' 
     },
     {
-      name: '成都',
-      value: '510100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon12.png',
+      title: '绩效奖金' 
     },
     {
-      name: '湖南',
-      value: '420100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon13.png',
+      title: '交通补贴' 
     },
     {
-      name: '福建',
-      value: '423100'
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon14.png',
+      title: '节日礼物' 
+    },
+    {
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon15.png',
+      title: '年底旅游' 
+    },
+    {
+      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon16.png',
+      title: '住房补贴' 
     }
   ]
-  

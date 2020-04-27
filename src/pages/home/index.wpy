@@ -124,6 +124,7 @@ export default class teamView extends wepy.page {
         this.$apply()
       } else {
         this.addjfUser(data.id)
+        wx.setStorageSync('rendaJHID', data.id)
         wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
       }
     }
@@ -201,18 +202,21 @@ export default class teamView extends wepy.page {
     },
     showModal(index){
       this.activeIndex = index
-      this.params.status = index ? index : ''
+      if (index == 0){
+        this.params.status = ''
+      } else if (index == 1) {
+        this.params.status = index
+      } else {
+        this.params.status = 0
+      }
       this.getJobfairList()
-      // this.$apply()
     }
   }
   onLoad () {
-    console.log(wx.getStorageSync('rendaOpenId'))
     if (wx.getStorageSync('rendaOpenId')) {
       this.openid = wx.getStorageSync('rendaOpenId')
     } else {
       this.openid = this.$parent.getOpenId()
-      console.log(  this.openid + '11')
     } 
     this.checkUserLogin(this.openid)
   } 

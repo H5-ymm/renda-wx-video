@@ -1,13 +1,13 @@
 
 	<view class="dialogBox-view page personal-message">
-		<view class="page_margin view-content">
+		<view class="page">
 			<scroll-view scroll-y="true" style="height:100%" bindscrolltolower="searchScrollLower">
-				<view class="dialogBox-row">
+				<view class="page_margin dialogBox-row dialogBox-row1">
 					<view>
 						<view class="weui-flex end dialogBox-col weui-flex__item">
 							<view class="dialogBox-content weui-flex between dialogBox-content-right" bindtap="videoView">
 								视频面试
-								<image mode="scaleToFill" src="../../images/video.png" class="dialogBox_icon"/>
+								<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon"/>
 							</view>
 							<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header"  wx:if="{{messageDetail.logo_url}}"/>
 							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header"  wx:else/>
@@ -15,25 +15,25 @@
 					</view>
 					<view class="weui-flex start dialogBox-col weui-flex__item">
 						<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header" wx:if="{{messageDetail.header_img}}"/>
-					    <image mode="scaleToFill" src="../../images/header.png" class="dialogBox-col-header" wx:else/>
+					  <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/header.png" class="dialogBox-col-header" wx:else/>
 						<view class="dialogBox-content dialogBox-content-left">已完成面试</view>
 					</view>
 				</view>
 			 <view class="message-input-box shadow">
 				<view class="weui-flex between page_margin">
 					<input class="weui-input weui-flex__item" bindinput="inputBind" placeholder="请输入...."/>
-					<image mode="scaleToFill" src="../../images/company/add.png" class="dialogBox_icon"/>
+					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon"/>
 				</view>
 				<view class="weui-flex start message-menus">
 					<view class="page_margin">
 						<view class="weui-flex center message-item">
-							<image mode="scaleToFill" src="../../images/company/video1.png" class="dialogBox_icon"/>
+							<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon"/>
 						</view>
 						<view class="page__desc">视频面试</view>
 					</view>
 					<view class="page_margin">
 						<view class="weui-flex center message-item">
-							<image mode="scaleToFill" src="../../images/company/phone.png" class="dialogBox_icon"/>
+							<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/phone.png" class="dialogBox_icon"/>
 						</view>
 						<view class="page__desc">图片</view>
 					</view>

@@ -8,7 +8,7 @@
         <view>Hi,</view>
         <view class="login-title-col">欢迎使用人事达视频招聘会</view>
       </view>
-       <image src="../../images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
+       <image src="http://www.ttxsg.com.cn:39009/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
       <view class="welcome-view-box">
           <view class="welcome-view-form login-view-form">
           <view class="weui-cell_btn weui-flex center wrap">
@@ -153,6 +153,13 @@ export default class Welcome extends wepy.page {
       this.title = ''
       this.$apply()
       this.saveUserType()
+    },
+    handleOk: data => {
+      if (this.usertype == 1) {
+        wxNavigateTo('/pages/my/companyForm') 
+      } else {
+        wxNavigateTo('/pages/my/resume')
+      }
     }
   }
   methods = {
