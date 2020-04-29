@@ -57,11 +57,11 @@ export default class welfareModal extends wepy.component {
       if (this.benefitsArr.length) {
         this.idList = this.benefitsArr
         this.benefitsArr.forEach(ele => {
-            this.benefitsList.forEach(val => {
-             if(ele == val.id) {
-               val.disabled = true
-               this.benefitsNameList.push(val.title)
-             }
+          this.benefitsList.forEach(val => {
+            if(ele == val.id) {
+              val.disabled = true
+              this.benefitsNameList.push(val.title)
+            }
           })
         })
         let params = {
@@ -75,6 +75,7 @@ export default class welfareModal extends wepy.component {
   }
   watch = {
     benefitsArr(val) {
+      console.log(val)
       if (val && val.length) {
         this.idList = val
         this.$apply()

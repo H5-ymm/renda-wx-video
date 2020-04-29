@@ -9,7 +9,7 @@
 			text-align: left;
 			&.weui-textarea {
 				border: none;
-				margin: 8rpx;
+				margin: 0 8rpx;
 			}
 		}
 		.page_right_icon {
@@ -180,22 +180,46 @@ export default class companyForm extends wepy.page {
 		comIndex: -1,
 		comScaleIndex: -1,
 		benefits: '',
-		benefitsArr: []
+		benefitsArr: [],
+		uid: ''
 	}
 	config = {
 		navigationBarTitleText: '企业信息'
 	}
 	onLoad() {
+		this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 		let allData = store.getState().contant.list
     for (let key in allData) {
       this[key] = allData[key]
 		}
-		if(wx.getStorageSync('userInfo')) {
-			let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
-			for(let key in userInfo) {
+		this.getCompanyInfo()
+		// if(wx.getStorageSync('userInfo')) {
+		// 	let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
+		// 	for(let key in userInfo) {
+		// 		this.form[key] = userInfo[key]
+		// 	}
+		// 	this.infoImg = userInfo.license_url
+		// 	this.form.benefits = ''
+		// 	this.benefitsArr = userInfo.benefits || []
+		// 	this.jobIndex = this.form.trades ? Number(this.form.trades) - 1 : ''
+    //   this.comIndex = this.form.nature ? Number(this.form.nature) - 1 : ''
+    //   this.comScaleIndex = this.form.scale ? Number(this.form.scale) - 1 : ''
+		// 	if (userInfo.province) {
+	  //     this.address = [userInfo.province, userInfo.city, userInfo.area]
+		// 	}	
+		// } else {
+		// 	this.getCompanyInfo()
+		// }
+    this.$apply()
+	}
+	getCompanyInfo() {
+    $http('/Company/getcompanyinfobyuid', { uid: this.uid }).then(res => {
+			console.log(res)
+			let userInfo = res.data
+     	for(let key in userInfo) {
 				this.form[key] = userInfo[key]
 			}
-			this.infoImg = userInfo.license_url
+			this.infoImg = userInfo.license_url || ''
 			this.form.benefits = ''
 			this.benefitsArr = userInfo.benefits || []
 			this.jobIndex = this.form.trades ? Number(this.form.trades) - 1 : ''
@@ -204,9 +228,9 @@ export default class companyForm extends wepy.page {
 			if (userInfo.province) {
 	      this.address = [userInfo.province, userInfo.city, userInfo.area]
 			}	
-		}
-    this.$apply()
-	}
+      this.$apply()
+    })
+  }
 	events = {
 		selectCity: data => {
 			this.form.province = data[0] ? data[0] : 0

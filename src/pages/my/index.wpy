@@ -233,7 +233,7 @@ export default class my extends wepy.page {
 		})
   }
   loginOut () {
-    $http('/login/UntyingOpenid', { uid: this.uid }).then(res => {
+    $http('/login/outbindopenid', { uid: this.uid }).then(res => {
       wx.clearStorageSync()
       wxToast('退出登录成功')
       wxRedirectTo('/pages/login/welcome?query=loginout')

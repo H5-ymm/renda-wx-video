@@ -37,7 +37,8 @@ export default class extends wepy.app {
       'pages/home/companyDetail',
       'pages/home/jobView',
       'pages/login/welcome',
-      'pages/login/login'
+      'pages/login/login',
+      'pages/login/rule'
     ],
     window: {
       navigationBarTextStyle: 'white',

@@ -213,7 +213,11 @@ export default class jobForm extends wepy.page {
     this.form.uid = wx.getStorageSync('rendaUid')
 		$http('/Companyjob/savejob', this.form).then(res => {
 			if (res.data) {
-        wxToast('保存成功')
+        if (this.form.status == 1) {
+          wxToast('修改成功，需要后台审核通过之后才能投递')
+        } else {
+          wxToast('保存成功')
+        }
         wxNavigateTo('/pages/my/jobManage')
 			} else {
 				wxToast('保存失败')
@@ -266,7 +270,7 @@ export default class jobForm extends wepy.page {
 		},
 		save() {
       if (this.form.is_up==1 || !this.form.id) {
-         if (!this.form.job_name) {
+        if (!this.form.job_name) {
           wxToast('请输入职位名称')
         } else if (!this.form.province) {
           wxToast('请选择工作地点')
@@ -274,7 +278,7 @@ export default class jobForm extends wepy.page {
           wxToast('请选择工作性质')
         } else if (!this.form.number) {
           wxToast('请输入招聘人数')
-        } else if (this.form.edu!='') {
+        } else if (this.form.edu=='') {
           wxToast('请选择学历')
         } else if (!this.form.salary) {
           wxToast('请选择薪资')

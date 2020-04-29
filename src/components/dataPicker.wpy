@@ -81,7 +81,8 @@ export default class districtSelet extends wepy.component {
     multiIndex: 0,
     isScaleModal: true,
     isShow: false,
-    multiText: ''
+    multiText: '',
+    isSelect: false
   }
   onLoad() {
     
@@ -112,8 +113,7 @@ export default class districtSelet extends wepy.component {
     selectOk() {
       this.isScaleModal = !this.isScaleModal 
       this.isShow = true
-      console.log(this.multiIndex)
-      if (this.multiIndex == -1 ) {
+      if (this.multiIndex == -1 ||!this.isSelect) {
         this.multiIndex = 0
       }
       this.multiText = this.range[this.multiIndex]
@@ -121,7 +121,9 @@ export default class districtSelet extends wepy.component {
       this.$emit('bindPickerChange', this.multiIndex)
     },
     bindChange(e) {
+      this.isSelect = true
       this.multiIndex = e.detail.value
+      this.$apply()
     },
     selectClose() {
       this.isScaleModal = !this.isScaleModal

@@ -26,7 +26,7 @@
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
+import { getImgUrl, wxToast, wxNavigateTo, wxRedirectTo } from '@/util.js'
 import jobManageList from '@/components/jobManageList'
 export default class jobManage extends wepy.page {
   components = {
@@ -48,12 +48,12 @@ export default class jobManage extends wepy.page {
   events = {
     viewJobDetail: data=> {
       console.log(data)
-      wxNavigateTo('/pages/my/jobForm?query='+ data.id)
+      wxRedirectTo('/pages/my/jobForm?query='+ data.id)
     }
   }
   methods = {
     releaseJob() {
-      wxNavigateTo('/pages/my/jobForm')
+      wxRedirectTo('/pages/my/jobForm')
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

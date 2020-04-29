@@ -50,7 +50,7 @@
         <view class="address-box section-box">
           <view class="page__title">公司地址</view>
           <view class="page__desc address-detail">
-            {{companyDetail.provincename}}{{companyDetail.cityname}}{{companyDetail.areaname}}{{companyDetail.address}}
+            {{companyDetail.provincename}}{{companyDetail.cityname}}{{companyDetail.areaname}}{{companyDetail.address||''}}
           </view>
         </view>
         <view class="section-box">

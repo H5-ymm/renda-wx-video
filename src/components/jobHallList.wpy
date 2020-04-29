@@ -1,11 +1,13 @@
 
 <template>
 	<view>
-	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-			<view @tap="routerConcat({{item}})">
-        <jobHallItem :item.sync="item"></jobHallItem>
-      </view>
-    </repeat>
+		<view class="weui-flex between wrap page_margin">
+			<repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+				<view @tap="routerConcat({{item}})" class="list-card shadow hall-row">
+					<jobHallItem :item.sync="item"></jobHallItem>
+				</view>
+			</repeat>
+		 </view>
 		<view wx:if="{{!list.length}}" class="page_list">
 			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>

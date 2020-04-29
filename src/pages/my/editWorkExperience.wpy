@@ -134,13 +134,15 @@ export default class editWorkExperience extends wepy.page {
     worktime_start: '',
     worktime_end: '',
     workTypeList: ['全职', '兼职', '实习'],
-    id: ''
+    id: '',
+    uid: ''
   }
   config = {
     navigationBarTitleText: '工作/实习经历'
   }
   onLoad(options){
     this.form.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     if (options.query) {
       this.id = options.query
       this.getJobDetail(options.query)
@@ -149,7 +151,7 @@ export default class editWorkExperience extends wepy.page {
   getJobDetail(id) {
     let params = {
       jid: id,
-      uid: this.form.uid
+      uid: this.uid
     }
     $http('/personal/jobspecialityDetail', params).then(res => {
       this.form = res.data
@@ -162,7 +164,7 @@ export default class editWorkExperience extends wepy.page {
   delJobspeciality() {
     let params = {
       id: this.id,
-      uid: this.form.uid
+      uid: this.uid
     }
     $http('/Personal/del_jobspeciality', params).then(res => {
  			if (res.data) {
@@ -174,6 +176,7 @@ export default class editWorkExperience extends wepy.page {
 		})
   }
   saveJobspeciality() {
+    this.form.uid = this.uid
     $http('/Personal/save_jobspeciality', this.form).then(res => {
  			if (res.data) {
         wxToast('保存成功')

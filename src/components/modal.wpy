@@ -68,7 +68,7 @@
         <view class="modal-textarea weui-flex center">
             <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
             class="weui-input weui-textarea modal-col page__desc" @input="changeInput" 
-            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/>
+            placeholder="请输入你的宝贵意见" maxlength="-1" value="{{content}}"/>
          </view>
          <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" @tap="handleClose">取消</view>

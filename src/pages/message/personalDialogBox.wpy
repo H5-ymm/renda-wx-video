@@ -94,7 +94,6 @@ export default class personalDialogBox extends wepy.page {
 		navigationBarTitleText: '消息'
 	}
 	onLoad (options) {
-		wx.setStorageSync('isView', false)
 		this.params.uid = options.query
 		this.params.id = options.query
 	}

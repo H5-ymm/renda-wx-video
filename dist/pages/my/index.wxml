@@ -39,7 +39,7 @@
       <view class="modal-content">
         <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
-            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}" maxlength="-1" value="{{$modal$content}}"/>
+            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="请输入你的宝贵意见" maxlength="-1" value="{{$modal$content}}"/>
          </view>
          <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" bindtap="$modal$handleClose">取消</view>

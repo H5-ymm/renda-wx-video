@@ -7,10 +7,16 @@
       </view>
        <image src="http://www.ttxsg.com.cn:39009/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg"/>
       <view class="welcome-view-box">
-          <view class="welcome-view-form login-view-form">
+        <view class="welcome-view-form login-view-form">
+           <view class="rule-view weui-flex start wrap" bindtap="checkedRule" data-wpycheckedrule-a="{{checked}}">
+            <image  wx:if="{{!checked}}" src="http://www.ttxsg.com.cn:39009/uploads/images/radio.png" mode="scaleToFill" class="check-icon"/>
+            <image  wx:else src="http://www.ttxsg.com.cn:39009/uploads/images/selected.png" mode="scaleToFill" class="check-icon"/>
+             我已阅读并同意<view class="text">《应届生用户协议》</view>和
+             <view class="text">《应届生隐私政策》</view>
+            </view>
           <view class="weui-cell_btn weui-flex center wrap">
-            <button lang="zh_CN" class="weui-btn_cell weui-btn_primary" bindgetuserinfo="getUserInfo" data-id="1" open-type="getUserInfo"  wx:if="{{!authorize}}">微信账号快捷登录</button>
-            <button class="weui-btn_cell weui-flex center weui-btn_cell-gradient" bindgetphonenumber="bindgetphonenumber" open-type="getPhoneNumber"  wx:else>
+            <button lang="zh_CN" class="weui-btn_cell weui-btn_primary {{!isRead?'weui-btn_cell-disabled':''}}" disabled="{{!isRead}}" bindgetuserinfo="getUserInfo" data-id="1" open-type="getUserInfo" wx:if="{{!authorize}}">微信账号快捷登录</button>
+            <button class="weui-btn_cell weui-flex center weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" disabled="{{!isRead}}" bindgetphonenumber="bindgetphonenumber" open-type="getPhoneNumber" wx:else>
               获取微信手机号
             </button>
             <button lang="zh_CN" class="other-login other-login1" bindgetuserinfo="getUserInfo" data-id="2" open-type="getUserInfo">输入手机号码登录/注册</button>
@@ -25,7 +31,7 @@
       <view class="modal-content">
         <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
-            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}" maxlength="-1" value="{{$modal$content}}"/>
+            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="请输入你的宝贵意见" maxlength="-1" value="{{$modal$content}}"/>
          </view>
          <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" bindtap="$modal$handleClose">取消</view>

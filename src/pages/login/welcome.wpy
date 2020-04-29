@@ -10,10 +10,16 @@
       </view>
        <image src="http://www.ttxsg.com.cn:39009/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
       <view class="welcome-view-box">
-          <view class="welcome-view-form login-view-form">
+        <view class="welcome-view-form login-view-form">
+           <view class="rule-view weui-flex start wrap" @tap="checkedRule({{checked}})" >
+            <image wx:if="{{!checked}}" src="http://www.ttxsg.com.cn:39009/uploads/images/radio.png" mode="scaleToFill" class="check-icon" />
+            <image wx:else src="http://www.ttxsg.com.cn:39009/uploads/images/selected.png" mode="scaleToFill" class="check-icon" />
+             我已阅读并同意<view class="text">《应届生用户协议》</view>和
+             <view class="text">《应届生隐私政策》</view>
+            </view>
           <view class="weui-cell_btn weui-flex center wrap">
-            <button lang='zh_CN' class="weui-btn_cell weui-btn_primary" @getuserinfo="getUserInfo" data-id="1" open-type="getUserInfo" wx:if="{{!authorize}}">微信账号快捷登录</button>
-            <button class="weui-btn_cell weui-flex center weui-btn_cell-gradient" @getphonenumber="bindgetphonenumber" open-type="getPhoneNumber" wx:else>
+            <button lang='zh_CN' class="weui-btn_cell weui-btn_primary {{!isRead?'weui-btn_cell-disabled':''}}" disabled="{{!isRead}}" @getuserinfo="getUserInfo" data-id="1" open-type="getUserInfo" wx:if="{{!authorize}}">微信账号快捷登录</button>
+            <button class="weui-btn_cell weui-flex center weui-btn_cell-gradient {{!isRead?'weui-btn_cell-disabled':''}}" disabled="{{!isRead}}" @getphonenumber="bindgetphonenumber" open-type="getPhoneNumber" wx:else>
               获取微信手机号
             </button>
             <button lang='zh_CN' class="other-login other-login1" @getuserinfo="getUserInfo" data-id="2" open-type="getUserInfo">输入手机号码登录/注册</button>
@@ -62,7 +68,15 @@ export default class Welcome extends wepy.page {
     usertype: 0,
     phoneNumber: ''
   }
-  onLoad () {
+  onLoad (options) {
+    if (options && options.query) {
+      this.checked = options.query
+      this.isRead = true
+    } else {
+      this.isRead = false
+      this.isLoginOut = false
+    }
+    this.$apply()
     this.openid = wx.getStorageSync('rendaOpenId') || this.$parent.globalData.openid 
     wx.getSetting({
       success: res => {
@@ -76,6 +90,13 @@ export default class Welcome extends wepy.page {
         this.$apply()
       }
     })
+
+  }
+  onShow() {
+    if (!this.isRead) {
+      this.checked = false
+      this.$apply()
+    }
   }
   saveUserType() {
     let params = {
@@ -88,7 +109,8 @@ export default class Welcome extends wepy.page {
     $http('/login/saveusertype', params).then(res => {
       if (res.data) {
         // this.isLoginModal = !this.isLoginModal
-         if (this.usertype == 1 ) {
+        wx.setStorageSync('userInfo', JSON.stringify(params))
+        if (this.usertype == 1 ) {
           this.text = '企业信息不完整，请前往完善'
         } else {
           this.text = '个人简历不完整，请前往完善'
@@ -163,7 +185,17 @@ export default class Welcome extends wepy.page {
     }
   }
   methods = {
+    checkedRule(checked) {
+      this.checked = !this.checked
+      if (this.checked) {
+        wxReLaunch('/pages/login/rule')
+      } else {
+        this.isRead = false
+      }
+      this.$apply()
+    },
     getUserInfo (e) {
+      if (!this.isRead) return
       this.userInfo = e.detail.userInfo
       if (this.userInfo) {
         let params = {

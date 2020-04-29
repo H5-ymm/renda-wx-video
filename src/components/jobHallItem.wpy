@@ -1,27 +1,24 @@
 
 <template>
-  <view class="list-card shadow">
-    <view class="weui-flex start-start list-card-row">
-      <image src="{{item.head_img}}" wx:if="{{item.head_img}}" class="list-card-header" mode="scaleToFill" />
-      <image src="../images/user.png" wx:else class="list-card-header" mode="scaleToFill" />
-      <view class="list-card-content">
-        <view class="weui-flex start card-col-1">    
-          <text class="name {{isShowBtn?'text-line':''}}">{{item.nickname}}</text>
+  <view class="list-card-row">
+    <image src="{{item.head_img}}" wx:if="{{item.head_img}}" class="list-card-header" mode="scaleToFill" />
+    <image src="../images/user.png" wx:else class="list-card-header" mode="scaleToFill" />
+    <view class="list-card-content">
+      <view class="weui-flex start card-col-1">    
+        <text class="name">{{item.nickname}}</text>
+      </view>
+      <view class="card-col-2">    
+        <view class="weui-flex start text-line">
+          <view class="page__desc">{{item.sex==1?'男':'女'}}｜{{item.age||0}}岁</view>
         </view>
-        <view class="card-col-2">    
-          <view class="weui-flex start text-line">
-            <view class="page__desc">{{item.sex==1?'男':'女'}}｜{{item.age||1}}岁</view>
-          </view>
-          <view class="text-line"><text class="name"><text wx:if="{{item.edu}}">{{item.edu}} /</text><text wx:if="{{item.speciality}}">{{item.speciality || ''}}</text></text></view>
-          <view class="weui-flex between">
-            <view class="card-text weui-flex__item">意向：{{item.expected_job || '无'}}</view>
-            <button class="weui-btn_cell weui-btn_primary_plain">
-              立即沟通
-            </button>
-          </view>
+        <view class="text-line"><text class="name"><text wx:if="{{item.edu}}">{{item.edu}} /</text><text wx:if="{{item.speciality}}">{{item.speciality || ''}}</text></text></view>
+        <view class="card-text weui-flex__item">意向：{{item.expected_job || '无'}}</view>
+        <view class="weui-flex between">
+          <button class="weui-btn_cell weui-btn_primary_plain">
+            立即沟通
+          </button>
         </view>
       </view>
-      <!-- <view class="online">在线</view> -->
     </view>
   </view>
 </template>

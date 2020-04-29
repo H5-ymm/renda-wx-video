@@ -33,9 +33,8 @@
 </style>
 <template>
   <view class="page-home">
-    <search @searchValue="searchValue"></search>
     <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content">
-      <banner></banner>
+      <live-player src="https://domain/pull_stream" mode="RTC" autoplay bindstatechange="statechange" binderror="error" style="width: 300px; height: 225px;" />
       <view class="section">
         <view class="job-box">
           <view class="job-title weui-flex start">
@@ -54,7 +53,6 @@
         </view>
       </view>
     </scroll-view>
-    <actionSheet :isScaleModal.sync="isScaleModal" text="企业信息正在审核中，请联系 客服021-8943895"   @handleClose="handleClose"></actionSheet>
   </view>
 </template>
 <script>
@@ -70,10 +68,8 @@ import { getStore } from 'wepy-redux'
 import { getAllUser } from '@/store/actions/user.js'
 import { getAllContant } from '@/store/actions/contant.js'
 import { GETALLUSER } from '@/store/types/user.js'
-import TIM from '@/lib/tim-wx.js'
-const IM_CONV_C2C = TIM.TYPES.CONV_C2C
 const store = getStore()
-export default class teamView extends wepy.page {
+export default class store extends wepy.page {
   components = {
     search: search,
     banner: banner,
@@ -95,8 +91,7 @@ export default class teamView extends wepy.page {
     statusList: ['全部', '进行中','待举办'],
     openid: '',
     uid: '',
-    usertype: 0,
-    tim: {}
+    usertype: 0
   }
   config = {
     navigationBarTitleText: '首页',
@@ -142,7 +137,6 @@ export default class teamView extends wepy.page {
     }
     $http('/Jobfair/addjobfair', params).then(res => {
       if (res.data) {
-        this.getJobfairList()
         wxToast('申请订展成功')
       } else {
         wxToast('申请订展失败')
@@ -243,60 +237,17 @@ export default class teamView extends wepy.page {
       this.getJobfairList()
     }
   }
-  getUserSig() {
-    $http('/autograph/getAutograph', {uid: this.openid}).then(res => {
-      console.log(res.data)
-      let options = {
-        SDKAppID: 1400335565 // 接入时需要将0替换为您的云通信应用的 SDKAppID
-      };
-      this.tim = TIM.create(options);
-      let promise = this.tim.login({userID: this.openid, userSig: res.data});
-      promise.then(imResponse => {
-        console.log(imResponse.data); // 登录成功
-        console.log('登录成功');
-        // this.sendC2CTextMessage()
-        let onSdkReady = function(event) {
-          let message = tim.createTextMessage({ to: 'user1', conversationType: sendC2CTextMessage, payload: { text: 'Hello world!' }});
-          tim.sendMessage(message);
-        };
-        tim.on(TIM.EVENT.SDK_READY, onSdkReady);
-        if (imResponse.data.repeatLogin === true) {
-          // 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
-          console.log(imResponse.data.errorInfo);
-        }
-      }).catch( imError=> {
-        console.warn('login error:', imError); // 登录失败的相关信息
-      });
-    })
-  }
-  sendC2CTextMessage () {
-    const message = this.tim.createTextMessage({
-      to: 'dddddd',
-      conversationType: IM_CONV_C2C,
-      payload: {
-        text: 'hi',
-      },
-    })
-    let promise1 = this.tim.sendMessage(message)
-    promise1.then(function (imResponse) {
-      // 发送成功
-      console.log('发送成功')
-      console.log(TAG_NAME, 'sendC2CTextMessage success', imResponse)
-    }).catch(function (imError) {
-      // 发送失败
-      console.warn(TAG_NAME, 'sendC2CTextMessage error:', imError)
-    })
-    return promise1
-  }
-  onShow() {
+  onLoad () {
     if (wx.getStorageSync('rendaOpenId')) {
       this.openid = wx.getStorageSync('rendaOpenId')
     } else {
       this.openid = this.$parent.getOpenId()
-    }
+    } 
     this.checkUserLogin(this.openid)
+  } 
+  onShow() {
     store.dispatch(getAllContant())
-    // this.getUserSig()
+    this.downloadFile('http://storage.xuetangx.com/public_assets/xuetangx/PDF/PlayerAPI_v1.0.6.pdf')
   }
 }
 </script>
