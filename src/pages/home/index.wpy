@@ -1,35 +1,35 @@
 <style lang="less">
-  .page-home {
-    height: 100%;
-    overflow: hidden;
-    .section {
-      padding-bottom: 20rpx;
-     .job-box {
-        .job-title {
-          height: 88rpx;
-          font-size: 30rpx;
-          color: #111111;
-          padding: 0 30rpx;
-          font-weight:500;
+.page-home {
+  height: 100%;
+  overflow: hidden;
+  .section {
+    padding-bottom: 20rpx;
+    .job-box {
+      .job-title {
+        height: 88rpx;
+        font-size: 30rpx;
+        color: #111111;
+        padding: 0 30rpx;
+        font-weight: 500;
+      }
+      .job-search {
+        .job-search-query {
+          padding: 26rpx 0;
+          margin: 0 30rpx;
         }
-        .job-search {
-          .job-search-query {
-            padding: 26rpx 0;
-            margin: 0 30rpx;
-          }
-          .job-search-item {
-            font-size:24rpx;
-            color:rgba(17,17,17,.6);
-            .card-item {
-              padding: 4rpx 16rpx;
-              font-size: 23rpx;
-              margin-right: 60rpx;
-            }
+        .job-search-item {
+          font-size: 24rpx;
+          color: rgba(17, 17, 17, 0.6);
+          .card-item {
+            padding: 4rpx 16rpx;
+            font-size: 23rpx;
+            margin-right: 60rpx;
           }
         }
       }
     }
   }
+}
 </style>
 <template>
   <view class="page-home">
@@ -77,14 +77,14 @@ export default class teamView extends wepy.page {
   components = {
     search: search,
     banner: banner,
-    jobFairList:jobFairList,
+    jobFairList: jobFairList,
     actionSheet: actionSheet
   }
   data = {
     rendaUserTeamType: 0,
     params: {
-			uid: '',
-			page: 1,
+      uid: '',
+      page: 1,
       limit: 10,
       status: ''
     },
@@ -92,7 +92,7 @@ export default class teamView extends wepy.page {
     isScaleModal: true,
     count: 0,
     activeIndex: 0,
-    statusList: ['全部', '进行中','待举办'],
+    statusList: ['全部', '进行中', '待举办'],
     openid: '',
     uid: '',
     usertype: 0,
@@ -112,13 +112,13 @@ export default class teamView extends wepy.page {
       this.$apply()
     },
     booking: data => {
-      if (!data.applyinfo && data.is_finish!=1) {
+      if (!data.applyinfo && data.is_finish != 1) {
         this.addjobfair(data.id)
       }
-      if(data.applyinfo && !applyinfo.status) {
+      if (data.applyinfo && !applyinfo.status) {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
-      } 
+      }
     },
     routerHall: data => {
       if (!this.usertype) {
@@ -132,7 +132,7 @@ export default class teamView extends wepy.page {
       }
     }
   }
-  onPullDownRefresh () {
+  onPullDownRefresh() {
     this.openid = this.$parent.getOpenId()
   }
   addjobfair(jf_id) {
@@ -149,8 +149,8 @@ export default class teamView extends wepy.page {
       }
     })
   }
-  addjfUser (jf_id) {
-     let params = {
+  addjfUser(jf_id) {
+    let params = {
       uid: this.params.uid,
       jf_id
     }
@@ -158,9 +158,10 @@ export default class teamView extends wepy.page {
       console.log(res)
     })
   }
-  checkUserLogin (openid) {
-    store.dispatch(getAllUser({openid})).then(res => {
+  checkUserLogin(openid) {
+    store.dispatch(getAllUser({ openid })).then(res => {
       this.params.uid = res.payload.id
+      this.getUserSig()
       this.usertype = res.payload.usertype
       this.$apply()
       if (!res.payload.usertype) {
@@ -172,15 +173,15 @@ export default class teamView extends wepy.page {
       }
     }).catch(error => {
       if (error && error.code) {
-   
+
       }
     })
   }
-  getJobfairList () {
+  getJobfairList() {
     $http('/Jobfair/getJobfairList', this.params).then(res => {
       let arr = []
       arr = res.data.data ? res.data.data : []
-      arr.forEach(item=>{
+      arr.forEach(item => {
         item.endtime = $moment.unix(item.endtime).format('YYYY-MM-DD HH:ss')
         item.starttime = $moment.unix(item.starttime).format('YYYY-MM-DD HH:ss')
       })
@@ -189,51 +190,24 @@ export default class teamView extends wepy.page {
       this.$apply()
     })
   }
-  downloadFile(url) {
-    let _this = this
-    wx.downloadFile({
-      url: url,
-      success: function(res) {
-        var filePath = res.tempFilePath;
-        console.log(filePath);
-        wx.openDocument({
-          filePath: filePath,
-          fileType: 'pdf',
-          success: function(res) {
-              console.log(res);
-          },
-          fail: function(res) {
-              console.log(res);
-          },
-          complete: function(res) {
-              console.log(res);
-          }
-        })
-      },
-      fail: function(res) {
-          console.log('文件下载失败');
-      },
-      complete: function(res) {},
-    })
-  }
   methods = {
-    viewInfo (item) {
+    viewInfo(item) {
       wx.navigateTo({
         url: item.url
       })
     },
     viewDetail(item) {
-      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
+      wxNavigateTo('/pages/companyView/viewJob?query=' + item.id + '&apply=1')
     },
-    searchScrollLower () {
-			if (this.count > this.list.length && this.count > this.params.limit) {
-				this.params.limit = this.params.limit + 10
-				this.getJobfairList()
-			}
+    searchScrollLower() {
+      if (this.count > this.list.length && this.count > this.params.limit) {
+        this.params.limit = this.params.limit + 10
+        this.getJobfairList()
+      }
     },
-    showModal(index){
+    showModal(index) {
       this.activeIndex = index
-      if (index == 0){
+      if (index == 0) {
         this.params.status = ''
       } else if (index == 1) {
         this.params.status = index
@@ -244,32 +218,38 @@ export default class teamView extends wepy.page {
     }
   }
   getUserSig() {
-    $http('/autograph/getAutograph', {uid: this.openid}).then(res => {
+    $http('/autograph/getAutograph', { uid: this.openid }).then(res => {
       console.log(res.data)
       let options = {
         SDKAppID: 1400335565 // 接入时需要将0替换为您的云通信应用的 SDKAppID
       };
       this.tim = TIM.create(options);
-      let promise = this.tim.login({userID: this.openid, userSig: res.data});
+      let promise = this.tim.login({ userID: this.openid, userSig: res.data });
       promise.then(imResponse => {
         console.log(imResponse.data); // 登录成功
         console.log('登录成功');
         // this.sendC2CTextMessage()
-        let onSdkReady = function(event) {
-          let message = tim.createTextMessage({ to: 'user1', conversationType: sendC2CTextMessage, payload: { text: 'Hello world!' }});
-          tim.sendMessage(message);
-        };
-        tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+        // let onSdkReady = function (event) {
+        //   let message = tim.createTextMessage({ to: 'user1', conversationType: sendC2CTextMessage, payload: { text: 'Hello world!' } });
+        //   tim.sendMessage(message);
+        // };
+        // tim.on(TIM.EVENT.SDK_READY, onSdkReady);
         if (imResponse.data.repeatLogin === true) {
           // 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
           console.log(imResponse.data.errorInfo);
         }
-      }).catch( imError=> {
+      }).catch(imError => {
         console.warn('login error:', imError); // 登录失败的相关信息
+      });
+      let promise1 = this.tim.getConversationList();
+      promise1.then(function (imResponse) {
+        const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
+      }).catch(function (imError) {
+        console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
       });
     })
   }
-  sendC2CTextMessage () {
+  sendC2CTextMessage() {
     const message = this.tim.createTextMessage({
       to: 'dddddd',
       conversationType: IM_CONV_C2C,
@@ -296,7 +276,6 @@ export default class teamView extends wepy.page {
     }
     this.checkUserLogin(this.openid)
     store.dispatch(getAllContant())
-    // this.getUserSig()
   }
 }
 </script>
