@@ -14,6 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-plugin-transform-node-env-inline": "^0.4.3",
+    "cos-wx-sdk-v5": "^0.7.10",
     "less": "^3.10.3",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
@@ -21,6 +22,7 @@
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
     "redux-promise": "^0.6.0",
+    "tim-wx-sdk": "^2.6.3",
     "wepy": "^1.7.2",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.1",

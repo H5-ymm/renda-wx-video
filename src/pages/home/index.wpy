@@ -161,7 +161,7 @@ export default class teamView extends wepy.page {
   checkUserLogin(openid) {
     store.dispatch(getAllUser({ openid })).then(res => {
       this.params.uid = res.payload.id
-      this.getUserSig()
+      // this.getUserSig()
       this.usertype = res.payload.usertype
       this.$apply()
       if (!res.payload.usertype) {

@@ -1,49 +1,49 @@
 <style lang="less">
 // @import '../../style/resume.less';
-  .message-view {
-		background: #fff;
-		.view-content {
-			margin: 0 30rpx;
-		}
-		.message-row {
-			font-size: 32rpx;
-			color: #333;
-		}
-		.message-col-1 {
-			width: 120rpx;
-			height: 120rpx;
-			border-radius: 50%;
-			background: #eeeeee;
-			position: relative;
-			.message-col-header {
-				height: 100%;
-				width: 100%;
-				border-radius: 50%;
-				border:1px solid rgba(24,144,255,0.2);
-			}
-			.bage {
-				width: 16rpx;
-				height: 16rpx;
-				color: #fff;
-				background: #f41800;
-				border-radius: 50%;
-				position: absolute;
-				top: 8rpx;
-				right: 0;
-			}
-		}
-		.message-col-2 {
-			// line-height: 50rpx;
-			margin-left: 20rpx;
-			padding: 30rpx 0;
-			.message-col-small {
-				font-size: 26rpx;
-			}
-			.message-col-time {
-				margin-top: 10rpx;
-			}
-		}
+.message-view {
+  background: #fff;
+  .view-content {
+    margin: 0 30rpx;
   }
+  .message-row {
+    font-size: 32rpx;
+    color: #333;
+  }
+  .message-col-1 {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: 50%;
+    background: #eeeeee;
+    position: relative;
+    .message-col-header {
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      border: 1px solid rgba(24, 144, 255, 0.2);
+    }
+    .bage {
+      width: 16rpx;
+      height: 16rpx;
+      color: #fff;
+      background: #f41800;
+      border-radius: 50%;
+      position: absolute;
+      top: 8rpx;
+      right: 0;
+    }
+  }
+  .message-col-2 {
+    // line-height: 50rpx;
+    margin-left: 20rpx;
+    padding: 30rpx 0;
+    .message-col-small {
+      font-size: 26rpx;
+    }
+    .message-col-time {
+      margin-top: 10rpx;
+    }
+  }
+}
 </style>
 <template>
 	<view class="message-view shadow page">
@@ -78,7 +78,15 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
+// import TIM from 'tim-wx-sdk'
+import TIM from '@/lib/tim-wx.js'
+import COS from 'cos-wx-sdk-v5'
 import { getImgUrl, wxNavigateTo, getList } from '@/util.js'
+const tim = TIM.create({
+	SDKAppID: 1400335565
+})
+tim.setLogLevel(0)
+tim.registerPlugin({ 'cos-wx-sdk': COS });
 export default class message extends wepy.page {
 	data = {
 		teamData: {},
@@ -100,14 +108,14 @@ export default class message extends wepy.page {
 		navigationBarTitleText: '消息管理'
 	}
 	computed = {
-		urlApi () {
+		urlApi() {
 			return this.usertype == 1 ? '/personinfo/getcom_msglist' : '/personinfo/getMsg'
 		},
-		newList () {
+		newList() {
 			return getList(this.list, 'view_time', 'YYYY-MM-DD HH:mm')
 		}
 	}
-	onLoad () {
+	onLoad() {
 		this.usertype = wx.getStorageSync('rendaUserType')
 		if (this.usertype == 1) {
 			this.tabBarIndex = 2
@@ -115,10 +123,47 @@ export default class message extends wepy.page {
 		this.$apply()
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 	}
-	onShow () {
-		// this.getMsglist()
+	onShow() {
+		this.getUserSig()
 	}
-	getMsglist () {
+	getUserSig() {
+		$http('/autograph/getAutograph', { uid: wx.getStorageSync('rendaOpenId') }).then(res => {
+			console.log(res.data)
+			let promise = tim.login({ userID: wx.getStorageSync('rendaOpenId'), userSig: res.data });
+			promise.then(imResponse => {
+				console.log(imResponse.data); // 登录成功
+				console.log('登录成功');
+				if (imResponse.data.repeatLogin === true) {
+					// 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
+					console.log(imResponse.data.errorInfo);
+				}
+			}).catch(imError => {
+				console.warn('login error:', imError); // 登录失败的相关信息
+			});
+			let onSdkReady = function (event) {
+				let message = tim.createTextMessage({ to: '31', conversationType: TIM.TYPES.CONV_C2C, payload: { text: 'Hello world!' } });
+				let promise1 = tim.sendMessage(message);
+				promise1.then(function (imResponse) {
+					console.log(imResponse)
+					console.log('发送成功')
+				}).catch(function (imError) {
+					console.warn('sendMessage error:', imError); // 获取会话列表失败的相关信息
+				});
+			};
+			tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+			// let onSdkReady = function (event) {
+			// 	let promise1 = tim.getConversationList();
+			// 	promise1.then(function (imResponse) {
+			// 		const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
+			// 		console.log(conversationList)
+			// 	}).catch(function (imError) {
+			// 		console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
+			// 	});
+			// };
+			// tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+		})
+	}
+	getMsglist() {
 		$http(this.urlApi, this.params).then(res => {
 			this.list = res.data.data || []
 			this.list.forEach(item => {
@@ -131,14 +176,14 @@ export default class message extends wepy.page {
 		})
 	}
 	methods = {
-		viewMessage (item) {
+		viewMessage(item) {
 			if (this.usertype == 1) {
 				wxNavigateTo('/pages/message/dialogBox?query=' + item.id)
 			} else {
 				wxNavigateTo('/pages/message/personalDialogBox?query=' + item.id)
 			}
 		},
-		searchScrollLower () {
+		searchScrollLower() {
 			if (this.count > this.list.length && this.count > this.params.limit) {
 				this.params.limit = this.params.limit + 10
 				this.getMsglist()

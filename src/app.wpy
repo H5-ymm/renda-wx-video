@@ -1,5 +1,5 @@
 <style lang="less">
-@import './style/common.less';
+@import "./style/common.less";
 </style>
 <script>
 import wepy from 'wepy';
@@ -10,19 +10,64 @@ import 'wepy-async-function';
 import { setStore } from 'wepy-redux'
 import configStore from './store'
 import { $http } from '@/http.js'
+// import TIM from 'tim-wx-sdk'
+// import COS from 'cos-wx-sdk-v5'
 moment.locale('zh-cn');
 const store = configStore()
 setStore(store)
+// const tim = TIM.create({
+//   SDKAppID: 1400335565
+// })
+// tim.setLogLevel(0)
+// tim.registerPlugin({ 'cos-js-sdk': COS });
+// wx.TIM = TIM
+// let userSig
+// $http('/autograph/getAutograph',
+//   { uid: wx.getStorageSync('rendaOpenId') }).then(res => {
+//     console.log(res.data)
+//     userSig = res.data
+//   })
+// let onSdkNotReady = function (event) {
+//   // 如果想使用发送消息等功能，接入侧需驱动 SDK 进入 ready 状态，重新调用 login 接口即可，如下所示：
+//   tim.login({ userID: wx.getStorageSync('rendaUid'), userSig: userSig });
+// };
+// tim.on(TIM.EVENT.SDK_NOT_READY, onSdkNotReady);
+// let onSdkReady = function (event) {
+//   let message = tim.createTextMessage({ to: 'user1', conversationType: 'C2C', payload: { text: 'Hello world!' } });
+//   let promise = tim.sendMessage(message);
+//   promise.then(function (imResponse) {
+//     // 发送成功
+//     console.log('发送');
+//     console.log(imResponse);
+//   }).catch(function (imError) {
+//     // 发送失败
+//     console.log('发送失败');
+//     console.warn('sendMessage error:', imError);
+//   });
+// };
+// tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+// tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate, this)
+// tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate, this)
+
+// tim.on(TIM.EVENT.KICKED_OUT, kickOut, this)
+// // 出错统一处理
+// tim.on(TIM.EVENT.ERROR, onError, this)
+
+// tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived, this)
+// tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate, this)
+// tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate, this)
+// tim.on(TIM.EVENT.BLACKLIST_UPDATED, blackListUpdate, this)
+// tim.on(TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, groupSystemNoticeUpdate, this)
 export default class extends wepy.app {
   config = {
-    pages: [  
+    pages: [
       'pages/home/index',
       'pages/message/index',
       'pages/my/index',
       'pages/home/hall',
       'pages/my/resume',
       'pages/my/deliveryRecord',
-      'pages/my/resumeList', 
+      'pages/my/resumeList',
       'pages/my/editJob',
       'pages/my/jobForm',
       'pages/my/jobManage',
@@ -75,25 +120,24 @@ export default class extends wepy.app {
       downloadFile: 10000
     }
   };
-  onLaunch (options) {
+  onLaunch(options) {
     this.removeData()
     this.autoUpdate()
     this.isCheckSession()
-    wx.loadFontFace ({
+    wx.loadFontFace({
       family: 'PingFangSC-Medium',
       source: 'url("https://www.your-server.com/PingFangSC-Medium.ttf")',
-      success: function(){console.log('load font success')}
+      success: function () { console.log('load font success') }
     })
   }
-  removeData () {
+  removeData() {
     wx.removeStorageSync('preForm')
     wx.removeStorageSync('resumeType');
     wx.removeStorageSync('sendAuthCode');
   }
-  onShow (options) {
-    
+  onShow(options) {
   }
-  autoUpdate () {
+  autoUpdate() {
     var self = this
     // 获取小程序更新机制兼容
     if (wx.canIUse('getUpdateManager')) {
@@ -137,7 +181,7 @@ export default class extends wepy.app {
       })
     }
   }
-  downLoadAndUpdate (updateManager) {
+  downLoadAndUpdate(updateManager) {
     wx.showLoading();
     // 静默下载更新小程序新版本
     updateManager.onUpdateReady(function () {
@@ -204,7 +248,7 @@ export default class extends wepy.app {
     }
     // 处理tabBar中点击, 被点击,将当前的数据对象中 selected 改成true, 其余的就得改成 false;  这里的id是标识, 在
   };
-  tabBarClickHandle (id, that) {
+  tabBarClickHandle(id, that) {
     let tbList = this.globalData.tabBar.list;
     tbList.forEach((item, index) => {
       if (id === index) {
@@ -216,7 +260,7 @@ export default class extends wepy.app {
     that.$apply();
     return this.globalData.tabBar;
   }
-  isCheckSession () {
+  isCheckSession() {
     wx.checkSession({
       success: () => {
         console.log('没有过期')
@@ -226,10 +270,10 @@ export default class extends wepy.app {
       }
     })
   }
-  getOpenId () {
+  getOpenId() {
     let that = this
     wx.login({
-      success (res) {
+      success(res) {
         if (res.code) {
           $http('/Login/getopenid', { code: res.code }).then(res => {
             let data = JSON.parse(res.data)
