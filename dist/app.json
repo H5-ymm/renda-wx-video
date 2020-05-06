@@ -14,6 +14,7 @@
     "pages/my/companyForm",
     "pages/message/dialogBox",
     "pages/message/personalDialogBox",
+    "pages/room/room",
     "pages/my/editWorkExperience",
     "pages/my/editEducation",
     "pages/my/editResume",
@@ -60,5 +61,5 @@
     "uploadFile": 10000,
     "downloadFile": 10000
   },
-  "sitemapLocation": "sitemap87.json"
+  "sitemapLocation": "sitemap85.json"
 }

@@ -1,22 +1,19 @@
 
 	<view class="message-view shadow page">
 		<view class="page_margin view-content">
-			<scroll-view scroll-y="true" style="height:100%"  wx:if="{{list.length}}" bindscrolltolower="searchScrollLower">
-				<block wx:for="{{list}}" wx:key="index">
+			<scroll-view scroll-y="true" style="height:100%"  wx:if="{{newList.length}}" bindscrolltolower="searchScrollLower">
+				<block wx:for="{{newList}}" wx:key="index">
 					<view class="weui-flex start message-row" bindtap="viewMessage" data-wpyviewmessage-a="{{item}}">
 						<view class="message-col-1">
-							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.header_img&&usertype==1}}"/>
-							<image mode="scaleToFill" src="{{item.header_img}}" class="message-col-header" wx-if="{{item.header_img}}"/>
-							<image mode="scaleToFill" src="{{item.logo_url}}" class="message-col-header" wx:if="{{item.logo_url}}"/>
-							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="message-col-header" wx:if="{{!item.logo_url&&usertype!=1}}"/>
-							<view class="bage" wx:if="{{item.person_read==1||item.com_read==1}}"/>
+							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.avatar}}"/>
+							<image mode="scaleToFill" src="{{item.avatar}}" class="message-col-header" wx-if="{{item.avatar}}"/>
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
 							<view>
-								<view class="page__title">{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
-								<view class="message-col-small page__desc">{{item.job_name}}</view>
+								<view class="page__title">{{item.nick}}</view>
+								<view class="message-col-small page__desc">{{item.messageForShow}}</view>
 							</view>
-							<view class="message-col-small message-col-time page__desc">{{item.view_time}}</view>
+							<view class="message-col-small message-col-time page__desc">{{item.lastTime}}</view>
 						</view>
 					</view>
 				</block>

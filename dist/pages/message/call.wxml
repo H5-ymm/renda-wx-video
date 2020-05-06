@@ -1,0 +1,51 @@
+
+	 <view class="bg-logo">
+    <view class="bg">
+      <view class="choose"  wx:if="{{!isCalling}}">
+        <template wx:if="{{type === 'call'}}">
+          <view class="title">呼叫{{to}}中</view>
+          <view class="btn">
+            <view bindtap="handleCloseRoom" class="close">
+              <image src="../../images/close.png" class="operation"/>
+            </view>
+          </view>
+        </template>
+        <template wx:if="type === 'onCall'">
+          <view class="title">{{from}}正在呼叫</view>
+          <view class="btn">
+            <view bindtap="receive" class="close answer">
+              <image src="../../images/call.png" class="operation"/>
+            </view>
+            <view bindtap="handleRefuse" class="close">
+              <image src="../../images/close.png" class="operation"/>
+            </view>
+          </view>
+        </template>
+      </view>
+      <view class="call {{isCalling?'isCalling2': 'isCalling1'}}">
+        <view class="room">
+          <!-- <webrtc-room
+            id="webrtcroom" v-bind:autoplay.once="true" v-bind:enableCamera.once="true" v-bind:roomID.once="roomID" v-bind:userID.once="userID" v-bind:userSig.once="userSig" v-bind:sdkAppID.once="sdkAppID" v-bind:beauty.once="beauty" v-bind:muted.once="muted" bindRoomEvent="onRoomEvent"
+            smallViewLeft="calc(100vw - 30vw - 2vw)"
+            smallViewTop="20vw"
+            smallViewWidth="30vw"
+            smallViewHeight="30vh">
+          </webrtc-room> -->
+          <view class="panel">
+            <view class="close-btn">
+              <view bindtap="microphone" class="normal">
+                <image  wx:if="!muted" src="../../images/voice.png" class="operation"/>
+                <image wx:else src="../../images/voice-muted.png" class="operation"/>
+              </view>
+              <view bindtap="handleCloseRoom" class="close">
+                <image src="../../images/close.png" class="operation"/>
+              </view>
+              <view bindtap="monitor" class="normal">
+                <image src="../../images/monitor.png" class="operation"/>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>

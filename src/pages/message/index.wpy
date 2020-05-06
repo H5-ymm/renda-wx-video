@@ -48,22 +48,19 @@
 <template>
 	<view class="message-view shadow page">
 		<view class="page_margin view-content">
-			<scroll-view scroll-y="true" style="height:100%" wx:if="{{list.length}}" @scrolltolower="searchScrollLower">
-				<repeat wx:for="{{list}}" wx:key="index">
+			<scroll-view scroll-y="true" style="height:100%" wx:if="{{newList.length}}" @scrolltolower="searchScrollLower">
+				<repeat wx:for="{{newList}}" wx:key="index">
 					<view class="weui-flex start message-row" @tap="viewMessage({{item}})">
 						<view class="message-col-1">
-							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.header_img&&usertype==1}}" />
-							<image mode="scaleToFill" src="{{item.header_img}}" class="message-col-header" wx-if="{{item.header_img}}" />
-							<image mode="scaleToFill" src="{{item.logo_url}}" class="message-col-header" wx:if="{{item.logo_url}}" />
-							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="message-col-header" wx:if="{{!item.logo_url&&usertype!=1}}"/>
-							<view class="bage" wx:if="{{item.person_read==1||item.com_read==1}}"></view>
+							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.avatar}}" />
+							<image mode="scaleToFill" src="{{item.avatar}}" class="message-col-header" wx-if="{{item.avatar}}" />
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
 							<view>
-								<view class="page__title">{{usertype==1?(item.user_name||'-'):item.com_name}}</view>
-								<view class="message-col-small page__desc">{{item.job_name}}</view>
+								<view class="page__title">{{item.nick}}</view>
+								<view class="message-col-small page__desc">{{item.messageForShow}}</view>
 							</view>
-							<view class="message-col-small message-col-time page__desc">{{item.view_time}}</view>
+							<view class="message-col-small message-col-time page__desc">{{item.lastTime}}</view>
 						</view>
 					</view>
 				</repeat>
@@ -78,8 +75,8 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
-// import TIM from 'tim-wx-sdk'
-import TIM from '@/lib/tim-wx.js'
+import TIM from 'tim-wx-sdk'
+// import TIM from '@/lib/tim-wx.js'
 import COS from 'cos-wx-sdk-v5'
 import { getImgUrl, wxNavigateTo, getList } from '@/util.js'
 const tim = TIM.create({
@@ -94,14 +91,7 @@ export default class message extends wepy.page {
 		params: {
 			uid: ''
 		},
-		list: [{
-			header_img: '',
-			com_read: 1,
-			job_name: '前端开发',
-			view_time: 1532384000,
-			user_name: '杨萌萌',
-			com_name: '仁达'
-		}],
+		list: [],
 		count: 0
 	}
 	config = {
@@ -112,67 +102,49 @@ export default class message extends wepy.page {
 			return this.usertype == 1 ? '/personinfo/getcom_msglist' : '/personinfo/getMsg'
 		},
 		newList() {
-			return getList(this.list, 'view_time', 'YYYY-MM-DD HH:mm')
+			return getList(this.list, 'lastTime', 'YYYY-MM-DD HH:mm')
 		}
-	}
-	onLoad() {
-		this.usertype = wx.getStorageSync('rendaUserType')
-		if (this.usertype == 1) {
-			this.tabBarIndex = 2
-		}
-		this.$apply()
-		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 	}
 	onShow() {
+		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 		this.getUserSig()
 	}
 	getUserSig() {
-		$http('/autograph/getAutograph', { uid: wx.getStorageSync('rendaOpenId') }).then(res => {
-			console.log(res.data)
-			let promise = tim.login({ userID: wx.getStorageSync('rendaOpenId'), userSig: res.data });
+		$http('/autograph/getAutograph', { uid: this.params.uid }).then(res => {
+			let promise = tim.login({ userID: this.params.uid + '', userSig: res.data });
 			promise.then(imResponse => {
-				console.log(imResponse.data); // 登录成功
 				console.log('登录成功');
 				if (imResponse.data.repeatLogin === true) {
 					// 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
-					console.log(imResponse.data.errorInfo);
 				}
 			}).catch(imError => {
 				console.warn('login error:', imError); // 登录失败的相关信息
 			});
-			let onSdkReady = function (event) {
-				let message = tim.createTextMessage({ to: '31', conversationType: TIM.TYPES.CONV_C2C, payload: { text: 'Hello world!' } });
-				let promise1 = tim.sendMessage(message);
-				promise1.then(function (imResponse) {
-					console.log(imResponse)
-					console.log('发送成功')
+			let onSdkReady = event=> {
+				let promise1 = tim.getConversationList();
+				promise1.then(imResponse => {
+					const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
+					let arr = conversationList.map(item=>{
+						console.log(item)
+						const { lastMessage, userProfile, conversationID } = item
+						let obj = {
+							lastTime: lastMessage.lastTime,
+							messageForShow:lastMessage.messageForShow,
+							nick: userProfile.nick,
+							avatar: userProfile.avatar,
+							userID: userProfile.userID,
+							conversationID: conversationID
+						}
+						return obj
+					})
+					console.log(arr)
+					this.list = arr
+					this.$apply()
 				}).catch(function (imError) {
-					console.warn('sendMessage error:', imError); // 获取会话列表失败的相关信息
+					console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
 				});
 			};
 			tim.on(TIM.EVENT.SDK_READY, onSdkReady);
-			// let onSdkReady = function (event) {
-			// 	let promise1 = tim.getConversationList();
-			// 	promise1.then(function (imResponse) {
-			// 		const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
-			// 		console.log(conversationList)
-			// 	}).catch(function (imError) {
-			// 		console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
-			// 	});
-			// };
-			// tim.on(TIM.EVENT.SDK_READY, onSdkReady);
-		})
-	}
-	getMsglist() {
-		$http(this.urlApi, this.params).then(res => {
-			this.list = res.data.data || []
-			this.list.forEach(item => {
-				if (item.logo_url) {
-					item.logo_url = getImgUrl(item.logo_url)
-				}
-			})
-			this.count = res.data.count
-			this.$apply()
 		})
 	}
 	methods = {
@@ -180,13 +152,12 @@ export default class message extends wepy.page {
 			if (this.usertype == 1) {
 				wxNavigateTo('/pages/message/dialogBox?query=' + item.id)
 			} else {
-				wxNavigateTo('/pages/message/personalDialogBox?query=' + item.id)
+				wxNavigateTo('/pages/message/personalDialogBox?query=' + item.conversationID+ '&userID=' + item.userID + '&isLogin=true')
 			}
 		},
 		searchScrollLower() {
 			if (this.count > this.list.length && this.count > this.params.limit) {
 				this.params.limit = this.params.limit + 10
-				this.getMsglist()
 			}
 		}
 	}

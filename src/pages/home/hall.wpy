@@ -87,6 +87,7 @@ export default class hall extends wepy.page {
       this.$apply()
     },
     routerConcat: data => {
+      console.log(data)
       let rendaPerfect  = wx.getStorageSync('rendaPerfect')
       if (wx.getStorageSync('rendaUserType') == 1) {
         if (!rendaPerfect) {
@@ -94,7 +95,8 @@ export default class hall extends wepy.page {
           this.isScaleModal = !this.isScaleModal
           this.$apply()
         } else {
-          wxNavigateTo('/pages/message/personalDialogBox')
+          let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+          wxNavigateTo('/pages/message/personalDialogBox?toUser=' + data.uid+ '&userID=' + uid)
         }
       } else {
         wxToast('只有企业才能发起沟通')

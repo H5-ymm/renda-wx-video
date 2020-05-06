@@ -23,42 +23,47 @@
 				</view>
 			</view>
 			<view class="dialogBox-row page_margin">
-				<view>
-					<view class="weui-flex start dialogBox-col weui-flex__item">
-						<image mode="scaleToFill" src="{{messageDetail.header_img}}" class="dialogBox-col-header" wx:if="{{messageDetail.header_img}}"/>
-						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
-						<view class="dialogBox-content dialogBox-content-left weui-flex start">
-							进入视频面试
-              <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" />
+				<repeat wx:for="{{messageList}}" wx:key="index">
+					<view wx:if="{{params.uid!=item.from}}">
+						<view class="weui-flex start dialogBox-col weui-flex__item">
+							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
+							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+							<view class="dialogBox-content dialogBox-content-left weui-flex start">
+							  {{item.text}}
+								<!-- <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" /> -->
+							</view>
 						</view>
+						<!-- <view class="dialogBox-btn weui-flex between" wx:if="{{isView || messageDetail.status}}">
+							<button class="weui-btn_cell weui-btn_primary" @tap="videoView">重新进入</button>
+							<button class="weui-btn_cell weui-btn_primary_plain">已完成面试</button>
+						</view> -->
 					</view>
-					<view class="dialogBox-btn weui-flex between" wx:if="{{isView || messageDetail.status}}">
-						<button class="weui-btn_cell weui-btn_primary" @tap="videoView">重新进入</button>
-						<button class="weui-btn_cell weui-btn_primary_plain">已完成面试</button>
+					<view class="weui-flex end wrap dialogBox-col weui-flex__item" wx:else>
+						<view class="dialogBox-content dialogBox-content-right weui-flex start">
+							<view wx:if="{{item.text}}" >{{item.text}}</view>
+							<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
+							<view wx:if="{{!item.text&&!item.img}}" >挂断视频</view>
+							<!-- <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" /> -->
+						</view>
+					
+						<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header" wx:if="{{messageDetail.logo_url}}"/>
+						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
 					</view>
-				</view>
-				<view class="weui-flex end wrap dialogBox-col weui-flex__item">
-					<view class="dialogBox-content dialogBox-content-right weui-flex start">
-						已完成面试
-						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" />
-					</view>
-					<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header" wx:if="{{messageDetail.logo_url}}"/>
-					<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
-				</view>
+				</repeat>
 			</view>
 			<view class="message-input-box shadow">
 				<view class="weui-flex between page_margin">
-					<input class="weui-input weui-flex__item" @input='inputBind'  placeholder="请输入...."/>
+					<input class="weui-input weui-flex__item" @confirm="inputBind" confirm-type="send" placeholder="请输入...."/>
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon" />
 				</view>
 				<view class="weui-flex start message-menus">
-					<view class="page_margin">
+					<view class="page_margin" @tap="videoCall">
 						<view class="weui-flex center message-item">
 							<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon" />
 						</view>
 						<view  class="page__desc">视频面试</view>
 					</view>
-					<view class="page_margin">
+					<view class="page_margin" @tap="uploadImage">
 						<view class="weui-flex center message-item">
 							<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/phone.png" class="dialogBox_icon" />
 						</view>
@@ -74,9 +79,16 @@ import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
 import { getImgUrl, wxShowModal, wxNavigateTo } from '@/util.js'
+import TIM from 'tim-wx-sdk'
+// import TIM from '@/lib/tim-wx.js'
+import COS from 'cos-wx-sdk-v5'
+const tim = TIM.create({
+	SDKAppID: 1400335565
+})
+tim.setLogLevel(0)
+tim.registerPlugin({ 'cos-wx-sdk': COS });
 export default class personalDialogBox extends wepy.page {
 	data = {
-		rendaUserTeamType: 0,
 		params: {
 			uid: '',
 			id: ''
@@ -88,14 +100,45 @@ export default class personalDialogBox extends wepy.page {
 		},
 		count: 0,
 		isView: false,
-		id: ''
+		id: '',
+		isLogin: false,
+		conversationID: '',
+		toUserId: '',
+		userProfile: {},
+		setSdkReady: false,
+		messageList: [],
+		uid: ''
 	}
 	config = {
 		navigationBarTitleText: '消息'
 	}
 	onLoad (options) {
-		this.params.uid = options.query
-		this.params.id = options.query
+		// tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate, this)
+		// tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate, this)
+		// function onReadyStateUpdate ({ name }) {
+		// 	console.log(name)
+		// 	const isSDKReady = (name === TIM.EVENT.SDK_READY)
+		// 	if (isSDKReady) {
+		// 	let promise = tim.getMyProfile();
+		// 		promise.then(function(imResponse) {
+		// 			console.log(imResponse.data); // 个人资料 - Profile 实例
+		// 		}).catch(function(imError) {
+		// 			console.warn('getMyProfile error:', imError); // 获取个人资料失败的相关信息
+		// 		});
+		// 	}
+		// 	wx.setStorageSync('setSdkReady', isSDKReady)
+		// }
+		this.params.uid = options.userID
+		this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		if (options.toUser) {
+			this.toUserId = options.toUser
+			this.conversationID = 'C2C' + this.toUserId
+			this.getUserSig()
+		} else {
+			this.conversationID = options.query
+			this.isLogin = options.isLogin
+			this.getMessage()
+		}
 	}
 	onShow () {
 		if (wx.getStorageSync('isView')) {
@@ -104,14 +147,71 @@ export default class personalDialogBox extends wepy.page {
 			this.isView = false
 		}
 		this.$apply()
-		// this.getMsgDetail()
-	}
-	getuserSig (params) {
-		$http('/Tencentcloud/createQuanjian', { name: params.room_name }).then(res => {
-			params.userSig = res.data
-			wx.setStorageSync('viewList', '')
-			this.routerView(params)
+		// this.getConversationProfile()
+ }
+ getMessage() {
+		let promise2 = tim.getMessageList({conversationID: this.conversationID, count: 15});
+		promise2.then(imResponse => {
+			const messageList = imResponse.data.messageList; // 消息列表。
+			let messageObj = {}
+			let img
+			let arr = messageList.map( item=> {
+				const { payload, to, from } = item
+				if (payload.imageInfoArray && payload.imageInfoArray.length) {
+					img = payload.imageInfoArray[0].imageUrl
+					messageObj =	Object.assign({ to, from, img, text: '' })
+				} else {
+				  messageObj =	Object.assign(payload, { to, from })
+				}
+				return messageObj
+			})
+			this.messageList = arr
+			console.log(arr)
+			this.$apply()
+			this.getConversationProfile()
+			const nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
+			const isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
+		}).catch(imError => {
+			console.log(imError)
+			console.warn('messageList error:', imError); // 登录失败的相关信息
+		});
+ }
+ getUserSig() {
+		$http('/autograph/getAutograph', { uid: this.params.uid }).then(res => {
+			let promise = tim.login({ userID: this.params.uid + '', userSig: res.data });
+			promise.then(imResponse => {
+				if (!this.setSdkReady) {
+					this.getMsgDetail()
+				} else {
+					this.getMessageList()
+				}	
+				if (imResponse.data.repeatLogin === true) {
+					console.log('登录成功');
+					this.getMessage()
+				}
+			}).catch(imError => {
+				console.warn('login error:', imError); // 登录失败的相关信息
+			});
 		})
+	}
+	getMsgDetail () {
+		let onSdkReady = event=> {
+			wx.setStorageSync('setSdkReady', true)
+			this.getMessage()
+		};
+		tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+	}
+	getConversationProfile() {
+		let promise = tim.getConversationProfile(this.conversationID);
+		promise.then(imResponse => {
+			// 获取成功
+			const { userProfile } = imResponse.data.conversation
+			this.userProfile = userProfile
+			console.log(this.userProfile)
+			this.$apply() // 会话资料
+		}).catch(function(imError) {
+			console.warn('getConversationProfile error:', imError); // 获取会话资料失败的相关信息
+		});
 	}
 	routerView (params) {
 		const url = `/pages/room/room?roomID=${params.room_num}` +
@@ -135,20 +235,96 @@ export default class personalDialogBox extends wepy.page {
 			url: url
 		})
 	}
-	getMsgDetail () {
-		$http('/personinfo/getperson_msgdetail', this.params).then(res => {
-			this.messageDetail = res.data
-			if (this.messageDetail && this.messageDetail.logo_url) {
-        if (this.messageDetail.logo_url.indexOf('http')==-1) {
-          this.messageDetail.logo_url = getImgUrl(this.messageDetail.logo_url)
-				}
-			}
-			this.messageDetail.view_time = $moment.unix(this.messageDetail.view_time).format('YYYY/MM/DD HH:mm')
-			this.messageDetail.addtime = $moment.unix(this.messageDetail.addtime).format('YYYY-MM-DD HH:mm')
-			this.$apply()
-		})
+	getRandomInt (min, max) {
+		min = Math.ceil(min)
+		max = Math.floor(max)
+		return Math.floor(Math.random() * (max - min)) + min
 	}
 	methods = {
+		inputBind(e) {
+			let value = e.detail.value
+			let _this = this
+			let message = tim.createTextMessage({ to: _this.toUserId, conversationType: TIM.TYPES.CONV_C2C, payload: { text: value } });
+			let promise1 = tim.sendMessage(message);
+			promise1.then(imResponse => {
+				console.log('发送成功')
+				// this.getMessage()
+				let message = {
+					to: _this.toUserId,
+					from: this.params.uid,
+					text: value,
+					type: 1
+				}
+				this.messageList.push(message)
+				this.$apply()
+			}).catch(function (imError) {
+				console.warn('sendMessage error:', imError); // 获取会话列表失败的相关信息
+			});
+		},
+		uploadImage() {
+			wx.chooseImage({
+				sourceType: ['album'], // 从相册选择
+				count: 1, // 只选一张，目前 SDK 不支持一次发送多张图片
+				success: res => {
+					// 2. 创建消息实例，接口返回的实例可以上屏
+					let message = tim.createImageMessage({
+						to: this.toUserId,
+						conversationType: TIM.TYPES.CONV_C2C,
+						payload: { file: res },
+						onProgress: function(event) { console.log('file uploading:', event) }
+					});
+					// 3. 发送图片
+					console.log(res)
+					let promise = tim.sendMessage(message);
+					promise.then(imResponse => {
+						// 发送成功
+		      	this.getMessage()
+						console.log(imResponse);
+					}).catch(function(imError) {
+						// 发送失败
+						console.warn('sendMessage error:', imError);
+					});
+				}
+			})
+		},
+		viewImage(item) {
+			wx.previewImage({
+				current: item.img, // 当前显示图片的http链接
+				urls: [item.img] // 需要预览的图片http链接列表
+			})
+		},
+		videoCall () {
+      const options = {
+        call_id: '',
+        version: 3,
+        room_id: this.getRandomInt(0, 42949),
+        action: 0,
+        duration: 0,
+        invited_list: []
+      }
+      let args = JSON.stringify(options)
+      const message = tim.createCustomMessage({
+        to: this.toUserId,
+        conversationType: TIM.TYPES.CONV_C2C,
+        payload: {
+          data: args,
+          description: '',
+          extension: ''
+        }
+      })
+     let promise = tim.sendMessage(message);
+			promise.then(imResponse => {
+				// 发送成功
+				this.getMessage()
+				console.log(imResponse);
+			}).catch(function(imError) {
+				// 发送失败
+				console.warn('sendMessage error:', imError);
+			});
+      let url = `/pages/room/room?args=${args}&from=${this.params.uid}&to=${this.toUserId}&uid=${this.uid}`
+      wx.navigateTo({url})
+      // this.handleClose()
+    },
 		videoView () {
 			let params = {
 				room_name: wx.getStorageSync('phone'),

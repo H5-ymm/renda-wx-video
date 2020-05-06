@@ -10,8 +10,7 @@ import 'wepy-async-function';
 import { setStore } from 'wepy-redux'
 import configStore from './store'
 import { $http } from '@/http.js'
-// import TIM from 'tim-wx-sdk'
-// import COS from 'cos-wx-sdk-v5'
+import TIM from 'tim-wx-sdk'
 moment.locale('zh-cn');
 const store = configStore()
 setStore(store)
@@ -19,45 +18,21 @@ setStore(store)
 //   SDKAppID: 1400335565
 // })
 // tim.setLogLevel(0)
-// tim.registerPlugin({ 'cos-js-sdk': COS });
-// wx.TIM = TIM
-// let userSig
-// $http('/autograph/getAutograph',
-//   { uid: wx.getStorageSync('rendaOpenId') }).then(res => {
-//     console.log(res.data)
-//     userSig = res.data
-//   })
-// let onSdkNotReady = function (event) {
-//   // 如果想使用发送消息等功能，接入侧需驱动 SDK 进入 ready 状态，重新调用 login 接口即可，如下所示：
-//   tim.login({ userID: wx.getStorageSync('rendaUid'), userSig: userSig });
-// };
-// tim.on(TIM.EVENT.SDK_NOT_READY, onSdkNotReady);
-// let onSdkReady = function (event) {
-//   let message = tim.createTextMessage({ to: 'user1', conversationType: 'C2C', payload: { text: 'Hello world!' } });
-//   let promise = tim.sendMessage(message);
-//   promise.then(function (imResponse) {
-//     // 发送成功
-//     console.log('发送');
-//     console.log(imResponse);
-//   }).catch(function (imError) {
-//     // 发送失败
-//     console.log('发送失败');
-//     console.warn('sendMessage error:', imError);
-//   });
-// };
-// tim.on(TIM.EVENT.SDK_READY, onSdkReady);
 // tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate, this)
 // tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate, this)
-
-// tim.on(TIM.EVENT.KICKED_OUT, kickOut, this)
-// // 出错统一处理
-// tim.on(TIM.EVENT.ERROR, onError, this)
-
-// tim.on(TIM.EVENT.MESSAGE_RECEIVED, messageReceived, this)
-// tim.on(TIM.EVENT.CONVERSATION_LIST_UPDATED, convListUpdate, this)
-// tim.on(TIM.EVENT.GROUP_LIST_UPDATED, groupListUpdate, this)
-// tim.on(TIM.EVENT.BLACKLIST_UPDATED, blackListUpdate, this)
-// tim.on(TIM.EVENT.GROUP_SYSTEM_NOTICE_RECEIVED, groupSystemNoticeUpdate, this)
+// function  onReadyStateUpdate ({ name }) {
+//   console.log(name)
+//   const isSDKReady = (name === TIM.EVENT.SDK_READY)
+//   if (isSDKReady) {
+//   let promise = tim.getMyProfile();
+//     promise.then(function(imResponse) {
+//       console.log(imResponse.data); // 个人资料 - Profile 实例
+//     }).catch(function(imError) {
+//       console.warn('getMyProfile error:', imError); // 获取个人资料失败的相关信息
+//     });
+//   }
+//   wx.setStorageSync('setSdkReady', isSDKReady)
+// }
 export default class extends wepy.app {
   config = {
     pages: [
@@ -75,6 +50,7 @@ export default class extends wepy.app {
       'pages/my/companyForm',
       'pages/message/dialogBox',
       'pages/message/personalDialogBox',
+      'pages/message/call',
       'pages/my/editWorkExperience',
       'pages/my/editEducation',
       'pages/my/editResume',
