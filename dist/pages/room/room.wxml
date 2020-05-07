@@ -1,15 +1,15 @@
 	 <view class="bg-logo">
     <view class="bg">
       <view class="choose" wx:if="{{!isCalling}}">
-        <template wx:if="{{type === 'call'}}">
+        <view wx:if="{{type === 'call'}}" class="choose">
           <view class="title">呼叫{{to}}中</view>
           <view class="btn">
             <view bindtap="handleCloseRoom" class="close">
               <image src="../../images/close.png" class="operation"/>
             </view>
           </view>
-        </template>
-        <template wx:if="type === 'onCall'">
+        </view>
+        <view wx:if="{{type === 'onCall'}}" class="choose">
           <view class="title">{{from}}正在呼叫</view>
           <view class="btn">
             <view bindtap="receive" class="close answer">
@@ -19,7 +19,7 @@
               <image src="../../images/close.png" class="operation"/>
             </view>
           </view>
-        </template>
+        </view>
       </view>
       <view class="call {{isCalling?'isCalling2': 'isCalling1'}}">
         <view class="room">

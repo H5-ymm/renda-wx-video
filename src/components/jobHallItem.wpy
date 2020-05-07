@@ -2,7 +2,7 @@
 <template>
   <view class="list-card-row">
     <image src="{{item.head_img}}" wx:if="{{item.head_img}}" class="list-card-header" mode="scaleToFill" />
-    <image src="../images/user.png" wx:else class="list-card-header" mode="scaleToFill" />
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" wx:else class="list-card-header" mode="scaleToFill" />
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{item.nickname}}</text>

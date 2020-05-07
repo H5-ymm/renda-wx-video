@@ -16,7 +16,7 @@
   background: rgba(0, 0, 0, 0.5);
   transition: 0.2s;
 }
-.modal_box {
+.modal_box1 {
   position: fixed;
   z-index: 1001;
   right: 0;
@@ -27,34 +27,35 @@
   margin: auto;
   background: #fff;
   border-radius: 10rpx;
-}
-.modal-content {
-  width: 86%;
-  margin: 20rpx auto;
-  line-height: 100rpx;
-  .modal-title {
-    text-align: center;
-    font-size: 40rpx;
-    margin-bottom: 10rpx;
-  }
-  .modal-textarea {
-    width: 90%;
-    margin: 0 auto;
-  }
-  .weui-input {
-    text-align: left;
-    &.weui-textarea {
-      min-height: 240rpx;
-      padding: 20rpx;
-      border-radius: 16rpx;
+  height: 640rpx;
+  .modal-content {
+    width: 86%;
+    margin: 20rpx auto;
+    line-height: 100rpx;
+    .modal-title {
+      text-align: center;
+      font-size: 40rpx;
+      margin-bottom: 10rpx;
     }
-  }
-  .weui-cell_btn {
-    width: 100%;
-    margin: 30rpx auto;
-    .text {
-      margin-top: 0;
-      font-size: 32rpx;
+    .modal-textarea {
+      width: 90%;
+      margin: 0 auto;
+    }
+    .weui-input {
+      text-align: left;
+      &.weui-textarea {
+        min-height: 240rpx;
+        padding: 20rpx;
+        border-radius: 16rpx;
+      }
+    }
+    .weui-cell_btn {
+      width: 100%;
+      margin: 30rpx auto;
+      .text {
+        margin-top: 0;
+        font-size: 32rpx;
+      }
     }
   }
 }
@@ -62,13 +63,13 @@
 <template>
   <view hidden='{{isScaleModal}}'>
     <view @tap="handleOk" wx:if="{{isShow}}" class="modal_mask"></view>
-    <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+    <view class="modal_box1 transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box">
       <view class="modal-content">
         <view class="modal-title page__title">{{modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
             <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
             class="weui-input weui-textarea modal-col page__desc" @input="changeInput" 
-            placeholder="请输入你的宝贵意见" maxlength="-1" value="{{content}}"/>
+            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/>
          </view>
          <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" @tap="handleClose">取消</view>
@@ -83,7 +84,6 @@ import wepy from 'wepy'
 export default class modal extends wepy.component {
   props = {
     isScaleModal: Boolean,
-    height: Number,
     modalObj: Object
   }
   data = {

@@ -242,6 +242,16 @@ const getList = (list, key, formatType) => {
         return item
     })
 }
+const isJSON = (str) => {
+    if (typeof str === 'string') {
+      try {
+        let obj = JSON.parse(str)
+        return !!(typeof obj === 'object' && obj)
+      } catch (e) {
+        return false
+      }
+    }
+  }
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,
     validateIdCard: validateIdCard,
@@ -258,5 +268,6 @@ module.exports = {
     weekList: weekList,
     ageList: ageList,
     wxShowModal: wxShowModal,
-    getList: getList
+    getList: getList,
+    isJSON: isJSON
 };

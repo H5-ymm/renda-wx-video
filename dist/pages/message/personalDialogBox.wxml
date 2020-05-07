@@ -1,8 +1,8 @@
 
-	<view class="dialogBox-view page">
-		<scroll-view scroll-y="true" style="height:100%" bindscrolltolower="searchScrollLower">
-			<view class="weui-flex between message-header">
-				<view>
+	<view class="dialogBox-view dialogBox-row {{!is_apply&&isShow ? 'dialogBox-row1':''}} {{!isShow&&is_apply ? 'dialogBox-row2':''}} {{isShow&&is_apply ? 'dialogBox-row3':''}}" id="chat">
+		<view class="message-header">
+			<view class="weui-flex between message-header-content"  wx:if="{{is_apply}}">
+				<view bindtap="videoCall">
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon"/>
 					<view class="page__title">视频面试</view>
 				</view>
@@ -10,63 +10,130 @@
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/view.png" class="dialogBox_icon"/>
 					<view class="page__title">查看简历</view>
 				</view>
-				<view>
+				<view bindtap="noticeEntry" wx:if="{{!isEntry}}">
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/notice.png" class="dialogBox_icon"/>
 					<view class="page__title">通知入职</view>
 				</view>
-				<view>
+				<view bindtap="handleImproper">
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/close.png" class="dialogBox_icon"/>
 					<view class="page__title">不合适</view>
 				</view>
 			</view>
-			<view class="dialogBox-row page_margin">
+		</view>
+		<scroll-view scroll-y="true" style="height:100%">
+			<view class="page_margin">
 				<block  wx:for="{{messageList}}" wx:key="index">
-					<view wx:if="{{params.uid!=item.from}}">
-						<view class="weui-flex start dialogBox-col weui-flex__item">
+					<view wx:if="{{(uid!=item.from&&rendaUserType==1) || (params.uid==item.from&&rendaUserType==2)}}">
+						<view class="page__desc date">{{item.time}}</view>
+						<view class="weui-flex dialogBox-col weui-flex__item start">
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
 							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
 							<view class="dialogBox-content dialogBox-content-left weui-flex start">
-							  {{item.text}}
-								<!-- <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" /> -->
+							  <view wx:if="{{item.text}}">{{item.text}}</view>
+								<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" bindtap="viewImage" class="dialogBox_icon" data-wpyviewimage-a="{{item}}"/>
+								<view wx:if="{{!item.text&&!item.img}}">挂断视频</view>
+								<image mode="scaleToFill" wx:if="{{!item.text&&!item.img}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon"/>
 							</view>
 						</view>
-						<!-- <view class="dialogBox-btn weui-flex between" wx:if="{{isView || messageDetail.status}}">
-							<button class="weui-btn_cell weui-btn_primary" bindtap="videoView">重新进入</button>
-							<button class="weui-btn_cell weui-btn_primary_plain">已完成面试</button>
-						</view> -->
 					</view>
-					<view class="weui-flex end wrap dialogBox-col weui-flex__item" wx:else>
-						<view class="dialogBox-content dialogBox-content-right weui-flex start">
+					<view class="weui-flex wrap dialogBox-col weui-flex__item end" wx:else>
+						<view class="page__desc date">{{item.time}}</view>
+						<view class="dialogBox-content weui-flex start dialogBox-content-right">
 							<view wx:if="{{item.text}}">{{item.text}}</view>
 							<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" bindtap="viewImage" class="dialogBox_icon" data-wpyviewimage-a="{{item}}"/>
 							<view wx:if="{{!item.text&&!item.img}}">挂断视频</view>
-							<!-- <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" /> -->
+							<image mode="scaleToFill" wx:if="{{!item.text&&!item.img}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon"/>
 						</view>
-					
-						<image mode="scaleToFill" src="{{messageDetail.logo_url}}" class="dialogBox-col-header" wx:if="{{messageDetail.logo_url}}"/>
+						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
 						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
 					</view>
 				</block>
 			</view>
-			<view class="message-input-box shadow">
-				<view class="weui-flex between page_margin">
-					<input class="weui-input weui-flex__item" bindconfirm="inputBind" confirm-type="send" placeholder="请输入...."/>
-					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon"/>
+		</scroll-view>
+		<view class="message-input-box shadow">
+			<view class="weui-flex between page_margin">
+				<input class="weui-input weui-flex__item" value="{{message}}" bindblur="blurInput" bindconfirm="inputBind" confirm-type="send" placeholder="请输入...."/>
+				<image mode="scaleToFill" bindtap="showMessageBtn" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon"/>
+			</view>
+			<view class="weui-flex start message-menus" wx:if="{{isShow}}">
+				<view class="page_margin" bindtap="videoCall">
+					<view class="weui-flex center message-item">
+						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon"/>
+					</view>
+					<view class="page__desc">视频面试</view>
 				</view>
-				<view class="weui-flex start message-menus">
-					<view class="page_margin" bindtap="videoCall">
-						<view class="weui-flex center message-item">
-							<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon"/>
-						</view>
-						<view class="page__desc">视频面试</view>
+				<view class="page_margin" bindtap="uploadImage">
+					<view class="weui-flex center message-item">
+						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/phone.png" class="dialogBox_icon"/>
 					</view>
-					<view class="page_margin" bindtap="uploadImage">
-						<view class="weui-flex center message-item">
-							<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/phone.png" class="dialogBox_icon"/>
-						</view>
-						<view class="page__desc">图片</view>
-					</view>
+					<view class="page__desc">图片</view>
 				</view>
 			</view>
-		</scroll-view>
+		</view>
+		
+	<view hidden="{{$noticeModal$isScaleModal}}">
+		<view bindtap="$noticeModal$ handleClose"  wx:if="{{$noticeModal$isShow}}" class="modal_mask"/>
+		<view class="modal_box modal-notice_box transition3s {{ $noticeModal$isShow ? 'g_scale1': ''}}">
+			<view class="modal-content">
+				<view class="modal-title">通知入职</view>
+				<view class="modal-view-box">
+					<view class="modal-row">
+						<text>入职时间</text>
+						
+	<view class="weui-cell weui-flex between">
+		<picker mode="date" value="{{$noticeModal$datePicker$dateValue}}" start="{{$noticeModal$datePicker$startValue}}" bindchange="$noticeModal$datePicker$bindDateChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!$noticeModal$datePicker$params.date?'placeholder':''}}">{{$noticeModal$datePicker$dateValue}}</view>
+					<image src="https://a.rsd123.com/image/images/orderTaking/date.png" class="dateIcon"/>
+				</view>
+			</view>
+		</picker>
+		<picker mode="time" value="{{$noticeModal$datePicker$timeValue}}" start="09:00" end="21:00" bindchange="$noticeModal$datePicker$timeChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!$noticeModal$datePicker$params.time?'placeholder':''}}">{{$noticeModal$datePicker$timeValue}}</view>
+					<image src="https://a.rsd123.com/image/images/orderTaking/time.png" class="dateIcon"/>
+				</view>
+			</view>
+		</picker>
+	</view>
+
+					</view>
+					<view class="modal-row">
+						<text>入职地址</text>
+						<view class="modal-col modal-col-input">
+							<input class="weui-input" placeholder-class="placeholder" data-name="entry_address" value="{{$noticeModal$form.entry_address}}" bindinput="$noticeModal$changeInput" placeholder="请输入详细地址"/>
+						</view>
+					</view>
+					<view class="modal-row">
+						<text>通知内容</text>
+						<textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col" value="{{$noticeModal$form.content}}" bindinput="$noticeModal$changeInput" placeholder="请输入{{$noticeModal$title}}通知的内容" maxlength="-1"/>
+					</view>
+		    </view>
+        <view class="weui-cell_btn weui-flex between create-btn">
+          <button class="weui-btn_cell weui-btn_primary_plain" bindtap="$noticeModal$handleClose">取消</button>
+					<button class="weui-btn_cell weui-btn_primary" bindtap="$noticeModal$handleOk">确定</button>
+        </view>
+      </view>
+    </view>
+  </view>
+
+	  
+  <view hidden="{{$modal$isScaleModal}}">
+    <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
+    <view class="modal_box1 transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box">
+      <view class="modal-content">
+        <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
+        <view class="modal-textarea weui-flex center">
+            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}" maxlength="-1" value="{{$modal$content}}"/>
+         </view>
+         <view class="weui-cell_btn weui-flex around">
+          <view class="text page__desc" bindtap="$modal$handleClose">取消</view>
+          <view class="text page__text__active" bindtap="$modal$handleOk">确定</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
 	</view>

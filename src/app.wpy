@@ -11,28 +11,20 @@ import { setStore } from 'wepy-redux'
 import configStore from './store'
 import { $http } from '@/http.js'
 import TIM from 'tim-wx-sdk'
+import COS from 'cos-wx-sdk-v5'
+import { isJSON } from './util'
+import { SDKAPPID } from './debug/GenerateTestUserSig'
+console.log(SDKAPPID)
+const tim = TIM.create({
+  SDKAppID: SDKAPPID
+})
+tim.setLogLevel(0)
+wepy.tim = tim
+wepy.tim.registerPlugin({'cos-wx-sdk': COS})
 moment.locale('zh-cn');
+wepy.$moment = moment
 const store = configStore()
 setStore(store)
-// const tim = TIM.create({
-//   SDKAppID: 1400335565
-// })
-// tim.setLogLevel(0)
-// tim.on(TIM.EVENT.SDK_READY, onReadyStateUpdate, this)
-// tim.on(TIM.EVENT.SDK_NOT_READY, onReadyStateUpdate, this)
-// function  onReadyStateUpdate ({ name }) {
-//   console.log(name)
-//   const isSDKReady = (name === TIM.EVENT.SDK_READY)
-//   if (isSDKReady) {
-//   let promise = tim.getMyProfile();
-//     promise.then(function(imResponse) {
-//       console.log(imResponse.data); // 个人资料 - Profile 实例
-//     }).catch(function(imError) {
-//       console.warn('getMyProfile error:', imError); // 获取个人资料失败的相关信息
-//     });
-//   }
-//   wx.setStorageSync('setSdkReady', isSDKReady)
-// }
 export default class extends wepy.app {
   config = {
     pages: [
@@ -50,7 +42,6 @@ export default class extends wepy.app {
       'pages/my/companyForm',
       'pages/message/dialogBox',
       'pages/message/personalDialogBox',
-      'pages/message/call',
       'pages/my/editWorkExperience',
       'pages/my/editEducation',
       'pages/my/editResume',
@@ -110,8 +101,118 @@ export default class extends wepy.app {
     wx.removeStorageSync('preForm')
     wx.removeStorageSync('resumeType');
     wx.removeStorageSync('sendAuthCode');
+    wx.removeStorageSync('setSdkReady')
   }
   onShow(options) {
+    // tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event )=> {
+		// 	for (let i = 0; i < event.data.length; i++) {
+    //     let item = event.data[i]
+    //     console.log(item)
+    //     if (item.type === TYPES.MSG_CUSTOM) {
+    //       if (isJSON(item.payload.data)) {
+    //         const videoCustom = JSON.parse(item.payload.data)
+    //         if (videoCustom.version === 3) {
+    //           switch (videoCustom.action) {
+    //             // 对方呼叫我
+    //             case 0:
+    //               if (true) {
+    //                 let url = `/pages/room/room?args=${item.payload.data}&&from=${item.from}&&to=${item.to}`
+    //                 wx.navigateTo({url})
+    //               } else {
+    //                 // $bus.$emit('isCalling', item)
+    //               }
+    //               break
+    //             // 对方取消
+    //             case 1:
+    //               wx.navigateBack({
+    //                 delta: 1
+    //               })
+    //               break
+    //             // 对方拒绝
+    //             case 2:
+    //               $bus.$emit('onRefuse')
+    //               break
+    //             // 对方不接1min
+    //             case 3:
+    //               wx.navigateBack({
+    //                 delta: 1
+    //               })
+    //               break
+    //             // 对方接听
+    //             case 4:
+    //               // $bus.$emit('onCall', videoCustom)
+    //               break
+    //             // 对方挂断
+    //             case 5:
+    //               // $bus.$emit('onClose')
+    //               break
+    //             // 对方正在通话中
+    //             case 6:
+    //               // $bus.$emit('onBusy')
+    //               break
+    //             default:
+    //               break
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // })
+  }
+  messageReceived (event) {
+  console.log(event.data)
+    for (let i = 0; i < event.data.length; i++) {
+      let item = event.data[i]
+      if (item.type === TYPES.MSG_CUSTOM) {
+        if (isJSON(item.payload.data)) {
+          const videoCustom = JSON.parse(item.payload.data)
+          if (videoCustom.version === 3) {
+            switch (videoCustom.action) {
+              // 对方呼叫我
+              case 0:
+                if (!store.getters.isCalling) {
+                  let url = `/pages/room/room?args=${item.payload.data}&&from=${item.from}&&to=${item.to}`
+                  wx.navigateTo({url})
+                } else {
+                  // $bus.$emit('isCalling', item)
+                }
+                break
+              // 对方取消
+              case 1:
+                wx.navigateBack({
+                  delta: 1
+                })
+                break
+              // 对方拒绝
+              case 2:
+                $bus.$emit('onRefuse')
+                break
+              // 对方不接1min
+              case 3:
+                wx.navigateBack({
+                  delta: 1
+                })
+                break
+              // 对方接听
+              case 4:
+                // $bus.$emit('onCall', videoCustom)
+                break
+              // 对方挂断
+              case 5:
+                // $bus.$emit('onClose')
+                break
+              // 对方正在通话中
+              case 6:
+                // $bus.$emit('onBusy')
+                break
+              default:
+                break
+            }
+          }
+        }
+      }
+    }
+  // store.dispatch('onMessageEvent', event)
   }
   autoUpdate() {
     var self = this

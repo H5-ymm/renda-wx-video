@@ -3,6 +3,11 @@
 .picker-col {
   width: 38%;
 }
+.dateIcon{
+	width:32rpx;
+	height:32rpx;
+	line-height:30rpx;
+}
 </style>
 <template>
 	<view class="weui-cell weui-flex between">
@@ -29,9 +34,6 @@ import wepy from 'wepy'
 import $moment from 'moment'
 import { wxToast } from '@/util.js'
 export default class datePicker extends wepy.component {
-	props = {
-		date: String
-	}
 	data = {
 		dateValue: '请选择日期',
 		timeValue: '请选择时间',
@@ -39,8 +41,7 @@ export default class datePicker extends wepy.component {
 		params: {
 			date: '',
 			time: ''
-		},
-		viewType: 1
+		}
 	}
 	watch = {
 		params (val) {
@@ -48,31 +49,15 @@ export default class datePicker extends wepy.component {
 				let newDate = val.date + ' ' + val.time
 				newDate = newDate + ''
 				let date = $moment(newDate).valueOf() + ''
-				console.log(date + 'kkkkk')
-				if (this.viewType == 2 && date - new Date().getTime() < 0) {
-					return wxToast('不能选择小于当前的时间')
-				}
 				date = date.substr(0, 10)
 				this.$emit('setDate', date)
-				this.viewType = 1
 				this.$apply()
 			} 
-		},
-		date(val) {
-			if(val) {
-				this.dateValue = $moment(val).format('YYYY-MM-DD')
-				this.timeValue = $moment(val).format('HH:ss')
-				this.$apply()
-			}
 		}
 	}
 	onLoad () {
 		this.viewType = wx.getStorageSync('rendaViewType')
-		if (this.viewType == 1) {
-			this.dateValue = $moment().add(1, 'days').format('YYYY-MM-DD')
-		} else {
-			this.dateValue = $moment().format('YYYY-MM-DD')
-		}
+		this.dateValue = $moment().add(1, 'days').format('YYYY-MM-DD')
 		this.params.date = this.dateValue
 		this.startValue = this.dateValue
 		this.$apply()
@@ -84,11 +69,6 @@ export default class datePicker extends wepy.component {
 				this.dateValue = this.startValue
 				this.params.date = this.startValue
 				return wxToast('请选择大于当天的时间')
-			}
-			if (this.viewType == 2 && $moment(date).valueOf() - $moment(this.startValue).valueOf() < 0) {
-				this.dateValue = this.startValue
-				this.params.date = this.startValue
-				return wxToast('不能选择小于当天的时间')
 			}
 			this.dateValue = date
 			this.params.date = date

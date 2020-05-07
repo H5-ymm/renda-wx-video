@@ -9,14 +9,15 @@
           <view class="weui-flex between">
             <view class="com_info">
               <view class="page__title">
-                杨萌萌
+                {{resumeDetail.nickname}}
                 <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editResume',0)" class="page_card_icon" mode="scaleToFill" />
               </view>
-              <view class="page__desc">{{resumeDetail.birthtime || ''}} {{resumeDetail.province}}{{resumeDetail.city}}</view>
+              <view class="page__desc">{{resumeDetail.birthtime || ''}} {{resumeDetail.province || '-'}}{{resumeDetail.city|| '-'}}</view>
               <view class="page__desc">联系电话：{{resumeDetail.tel}}</view>
               <view class="page__desc">邮箱：{{resumeDetail.email || '-'}}</view>
             </view>
-            <image src="{{resumeDetail.head_img}}" class="company_logo shadow" mode="scaleToFill" />
+            <image src="{{resumeDetail.head_img}}" wx:if="{{resumeDetail.head_img}}" class="company_logo shadow" mode="scaleToFill" />
+            <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" wx:else class="company_logo shadow" mode="scaleToFill" />
           </view>
         </view>
         <view class="section-box">
@@ -68,7 +69,7 @@
              {{item.work_content}}
             </view>
           </repeat>
-          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" @tap="routerView('editWorkExperience',0)">添加实习/工作经历<image src="../../images/user/add.png" class="page_card_icon" mode="scaleToFill" /></view>
+          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" @tap="routerView('editWorkExperience',0)">添加实习/工作经历<image src="http://www.ttxsg.com.cn:39009/uploads/images/user/add.png" class="page_card_icon" mode="scaleToFill" /></view>
         </view>
       </view>
     </scroll-view>
@@ -98,9 +99,11 @@ export default class resume extends wepy.page {
   onLoad(options) {
     if (options.query) {
       this.resumeId = options.query
+      this.uid = options.query
       this.$apply()
+    } else {
+      this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     }
-    this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
   }
   onShow() {
     this.getuserdetail()
@@ -108,7 +111,7 @@ export default class resume extends wepy.page {
   getuserdetail() {
     $http('/personal/getuserdetail', {uid: this.uid}).then(res => {
       this.resumeDetail = res.data
-      this.resumeDetail.birthtime = $moment.unix(res.data.birthtime).format('YYYY-MM-DD')
+      this.resumeDetail.birthtime = res.data.birthtime ? $moment.unix(res.data.birthtime).format('YYYY-MM-DD'): ''
       if (this.resumeDetail.edulist) {
         this.eduList = this.resumeDetail.edulist.map(item =>{
           item.graduation_date = $moment.unix(item.graduation_date).format('YYYY-MM-DD')

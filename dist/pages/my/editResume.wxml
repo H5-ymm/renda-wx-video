@@ -199,7 +199,7 @@
         </view>
          <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text weui-flex__item">邮箱</view>
+            <view class="my-text weui-flex__item my-text-require">邮箱</view>
             <view class="weui-flex between">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.email}}" data-name="email" bindinput="changeInput"/>
             </view>

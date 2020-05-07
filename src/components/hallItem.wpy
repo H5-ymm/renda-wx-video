@@ -1,8 +1,8 @@
 
 <template>
   <view class="list-card-row">
-    <image src="{{itemValue.logo_url}}" wx:if="{{itemValue.logo_url}}" class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany({{itemValue}})"/>
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png" wx:else  class="list-card-header" mode="scaleToFill" @tap.stop="viewCompany({{itemValue}})"/>
+    <image src="{{itemValue.logo_url}}" wx:if="{{itemValue.logo_url}}" class="list-card-header" mode="scaleToFill" />
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png" wx:else  class="list-card-header" mode="scaleToFill"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{itemValue.com_name}}</text>
@@ -45,10 +45,6 @@ export default class hallItem extends wepy.component {
 	methods = {
     routerJob(item) {
       this.$emit('routerJob', item)
-    },
-    viewCompany(item) {
-      if (wx.getStorageSync('rendaUserType') == 1) return
-      wxNavigateTo('/pages/home/companyDetail?query=' + item.id)
     }
 	}
 }

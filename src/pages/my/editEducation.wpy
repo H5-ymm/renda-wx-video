@@ -183,7 +183,7 @@ export default class editEducation extends wepy.page {
 			})
     },
     submit() {
-       if (!this.form.edu) {
+       if (this.form.edu!='') {
 				wxToast('请选择学历')
 			} else if (!this.form.graduation_date) {
 				wxToast('请选择毕业时间')

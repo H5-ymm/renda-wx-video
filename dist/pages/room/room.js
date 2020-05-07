@@ -41,7 +41,7 @@ Page({
     const loginOptions = genTestUserSig(this.data.userID)
     this.setData({
       userSig: loginOptions.userSig,
-      // isCalling: false,
+      isCalling: false,
       isPending: true
     })
     // 发起方发起通话，1分钟超时时间
@@ -90,17 +90,71 @@ Page({
   onLoad(options) {
     // onLoad的时候监听，在收到某些message的时候会触发的事件，可在main.js里查看事件 emit 条件
     console.log(options)
+    let type = (options.uid === options.from) ? 'call' : 'onCall'
     this.setData({
       args: JSON.parse(options.args),
       userID: options.uid + '',
       from: options.from,
       to: options.to,
-      type: (this.data.userID === this.data.from) ? 'call' : 'onCall',
+      type: type,
       roomID: JSON.parse(options.args).room_id,
-      isCalling: true,
+      isCalling: false,
       isPending: false,
       startTime: new Date().getTime()
     })
+    // tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event) => {
+    //   for (let i = 0; i < event.data.length; i++) {
+    //     let item = event.data[i]
+    //     console.log(item)
+    //     if (item.type === TYPES.MSG_CUSTOM) {
+    //       if (isJSON(item.payload.data)) {
+    //         const videoCustom = JSON.parse(item.payload.data)
+    //         if (videoCustom.version === 3) {
+    //           switch (videoCustom.action) {
+    //             // 对方呼叫我
+    //             case 0:
+    //               if (true) {
+    //                console.log('kdkdkdkd')
+    //               } else {
+    //                 // $bus.$emit('isCalling', item)
+    //               }
+    //               break
+    //             // 对方取消
+    //             case 1:
+    //               wx.navigateBack({
+    //                 delta: 1
+    //               })
+    //               break
+    //             // 对方拒绝
+    //             case 2:
+    //               // $bus.$emit('onRefuse')
+    //               break
+    //             // 对方不接1min
+    //             case 3:
+    //               wx.navigateBack({
+    //                 delta: 1
+    //               })
+    //               break
+    //             // 对方接听
+    //             case 4:
+    //               // $bus.$emit('onCall', videoCustom)
+    //               break
+    //             // 对方挂断
+    //             case 5:
+    //               // $bus.$emit('onClose')
+    //               break
+    //             // 对方正在通话中
+    //             case 6:
+    //               // $bus.$emit('onBusy')
+    //               break
+    //             default:
+    //               break
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // })
     // this.$bus.$on('onCall', () => {
     //   this.isCalling = true
     //   this.isPending = false
@@ -130,8 +184,7 @@ Page({
     //   })
     // })
   },
-  methods: {
-    onRoomEvent(e) {
+  onRoomEvent(e) {
       if ([ERROR_OPEN_CAMERA,
         ERROR_OPEN_MIC,
         ERROR_PUSH_DISCONNECT,
@@ -139,8 +192,7 @@ Page({
         ERROR_EXCEEDS_THE_MAX_MEMBER,
         ERROR_REQUEST_ROOM_SIG,
         ERROR_JOIN_ROOM].includes(e.target.code)) {
-        this.webrtcroomComponent = this.selectComponent('#webrtcroom')
-        this.webrtcroomComponent.stop()
+        this.selectComponent('#webrtcroom').stop()
         let args = {
           action: -2,
           code: e.target.code 
@@ -149,7 +201,7 @@ Page({
           args: args,
           userID: options.uid, 
         })
-        const data = JSON.stringify(this.args)
+        const data = JSON.stringify(this.data.args)
         // 对方发起视频，接通成功后如果是我挂断的，这时挂断消息应该发给视频发起方
         let to = (this.data.to === this.data.userID) ? this.data.from : this.data.to
         const message = tim.createCustomMessage({
@@ -172,14 +224,18 @@ Page({
       }
     },
     handleCloseRoom() {
-      this.closeFlag = true
+      this.setData({
+        closeFlag: true
+      })
       this.closeRoom()
       wx.navigateBack({
         delta: 1
       })
     },
     handleRefuse() {
-      this.refuseFlag = true
+      this.setData({
+        refuseFlag: true
+      })
       this.refuse()
       wx.navigateBack({
         delta: 1
@@ -188,14 +244,15 @@ Page({
     // 发起方等待时挂断
     closeRoom() {
       this.webrtcroomComponent = this.selectComponent('#webrtcroom')
-      this.webrtcroomComponent.stop()
+      if (this.webrtcroomComponent) {
+        this.webrtcroomComponent.stop()
+      }
       var args = {
         action: 5
       }
       this.setData({
         args: args
       })
-      this.args.action = 5
       if (this.data.startTime === 0) {
         var args = {
           action: 1
@@ -210,9 +267,9 @@ Page({
           duration: Math.round((endTime - this.startTime) / 1000)
         }
         this.setData({
-          args: args
+          args: args,
+          startTime: 0
         })
-        this.data.startTime = 0
       }
       const data = JSON.stringify(this.data.args)
       // 对方发起视频，接通成功后如果是我挂断的，这时挂断消息应该发给视频发起方
@@ -257,20 +314,24 @@ Page({
       var args = {
         action: 4
       }
-      const data = JSON.stringify(this.args)
+      const data = JSON.stringify(this.data.args)
       this.setData({
         args: args,
-        startTime: new Date().getTime()
+        startTime: new Date().getTime(),
+        isCalling: true
       })
-      const message = tim.createCustomMessage({
-        to: this.data.from,
-        conversationType: TIM.TYPES.CONV_C2C,
-        payload: {
-          data: data,
-          description: '',
-          extension: ''
-        }
-      })
+      let onSdkReady = event => {
+        const message = tim.createCustomMessage({
+          to: this.data.from,
+          conversationType: TIM.TYPES.CONV_C2C,
+          payload: {
+            data: data,
+            description: '',
+            extension: ''
+          }
+        })
+        wx.setStorageSync('setSdkReady', true)
+      }
       tim.sendMessage(message)
       clearTimeout(this.data.timeoutId)
       this.isCalling = true
@@ -331,7 +392,5 @@ Page({
       this.webrtcroomComponent = this.selectComponent('#webrtcroom')
       this.webrtcroomComponent.switchCamera()
     }
-  },
-  destory() { }
 })
 

@@ -59,4 +59,5 @@ function genTestUserSig (userID) {
 
 module.exports = {
   genTestUserSig,
+  SDKAPPID:SDKAPPID
 }

@@ -1,59 +1,41 @@
 <style lang="less">
 @import '../style/modal.less';
 @import '../style/form.less';
-.modal-view-box {
-  padding: 20rpx 0 70rpx;
-  position: relative;
-  margin-bottom: 30rpx;
-  &.modal-view-box1 {
-    height: 460rpx;
-    margin-bottom: 10rpx;
-  }
-  .notice-tip {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    left: 32rpx;
-    margin-left: -50rpx;
-    margin-right: -40rpx;
-    .tipIcon {
-      width: 22rpx;
-      height: 22rpx;
-      margin-right: 10rpx;
-    }
-    .tip {
-      color: #6a6a6a;
-      font-size: 24rpx;
-    }
-  }
-}
-.create-btn {
-  .weui-btn_cell {
-    width: 46%;
-    border: 1px solid #1890ff;
-  }
-}
-.modal-row {
-  margin-bottom: 16rpx;
-  .modal-col {
-    border: 1px solid #eee;
-    border-radius: 5rpx;
-    padding: 16rpx 24rpx;
-    margin-top: 10rpx;
-    font-size: 26rpx;
-    &.modal-col-input {
-      padding: 14rpx 24rpx;
-      margin-top: 10rpx;
-    }
-    &.weui-textarea {
-      width: 90%;
-    }
+.modal-notice_box {
+	.modal-view-box {
+		padding: 20rpx 0;
+		position: relative;
+		margin-bottom: 30rpx;
 	}
+	.create-btn {
+		margin-bottom: 40rpx;
+		.weui-btn_cell {
+			width: 46%;
+			border: 1px solid #1890ff;
+		}
+	}
+	.modal-row {
+		margin-bottom: 16rpx;
+		.modal-col {
+			border: 1px solid #eee;
+			border-radius: 5rpx;
+			padding: 16rpx 24rpx;
+			margin-top: 10rpx;
+			font-size: 26rpx;
+			&.modal-col-input {
+				padding: 14rpx 24rpx;
+				margin-top: 10rpx;
+			}
+			&.weui-textarea {
+				width: 90%;
+			}  
+		}
+  }
 	.weui-input {
 		text-align: left;
 		&.weui-textarea {
 			height: 100rpx;
-			line-height: 100rpx;
+			line-height: auto;
 			margin: 10rpx 0;
 			text-align: left;
 		}
@@ -63,91 +45,60 @@
 <template>
 	<view hidden='{{isScaleModal}}'>
 		<view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
-		<view class="modal_box modal-notice_box transition3s {{ isShow ? 'g_scale1': ''}}" style="height:{{height}}rpx">
+		<view class="modal_box modal-notice_box transition3s {{ isShow ? 'g_scale1': ''}}">
 			<view class="modal-content">
-				<view class="modal-title">设置{{title}}通知</view>
-				<view class="modal-view-box {{type==2?'modal-view-box1':''}}">
+				<view class="modal-title">通知入职</view>
+				<view class="modal-view-box">
 					<view class="modal-row">
-						<text>{{title}}时间</text>
-						<datePicker @setDate="setDate" :date.sync="time"></datePicker>
+						<text>入职时间</text>
+						<datePicker @setDate="setDate"></datePicker>
 					</view>
-					<view class="modal-row" wx:if="{{type==1}}">
-						<text>{{title}}地址</text>
-						<districtSelet @selectCityText="selectCityText" @selectCity="selectCity" :address.sync="addressList" :disabled.sync="disabled" class="modal-col"></districtSelet>
+					<view class="modal-row">
+						<text>入职地址</text>
 						<view class="modal-col modal-col-input">
-							<input class="weui-input" placeholder-class="placeholder" data-name="address" value="{{form.address}}" @input="changeInput" placeholder="请输入详细地址" />
+							<input class="weui-input" placeholder-class="placeholder" data-name="entry_address" value="{{form.entry_address}}" @input="changeInput" placeholder="请输入详细地址" />
 						</view>
 					</view>
 					<view class="modal-row">
 						<text>通知内容</text>
 						<textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col" value="{{form.content}}" @input="changeInput" placeholder="请输入{{title}}通知的内容" maxlength="-1" />
-						</view>
-					<view class="weui-flex start notice-tip" wx:if="{{type==1}}">
-						<image src="https://a.rsd123.com/image/images/orderTaking/warn.png" class="tipIcon" />
-						<text class="tip">审核通过简历会直接发送短信通知{{title}}，谨慎操作</text>
-					</view>
-					<view class="weui-flex start notice-tip" wx:else>
-						<image src="https://a.rsd123.com/image/images/orderTaking/warn.png" class="tipIcon" />
-					 <view>
-						 	<text class="tip">1.筛选通过简历直接短信通知视频面试信息，谨慎 操作</text>
-						<view class="tip">2.可根据实际情况修改面试通知，分批面试</view>
-					 </view>
 					</view>
 		    </view>
         <view class="weui-cell_btn weui-flex between create-btn">
           <button class="weui-btn_cell weui-btn_primary_plain" @tap="handleClose">取消</button>
-					<button class="weui-btn_cell weui-btn_primary" @tap="handleOk">{{timeInfo&&type==1?'修改':'确定'}}</button>
+					<button class="weui-btn_cell weui-btn_primary" @tap="handleOk">确定</button>
         </view>
       </view>
-      <image src="https://a.rsd123.com/image/images/close.png" @tap="handleClose" class="close-icon" />
     </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import datePicker from './datePicker'
-import districtSelet from './districtSelet'
 import $moment from 'moment'
 export default class noticeModal extends wepy.component {
 	props = {
-		isScaleModal: Boolean,
-		height: Number,
-		title: String,
-		type: String,
-		timeInfo: Object
+		isScaleModal: Boolean
 	}
 	components = {
-		datePicker: datePicker,
-		districtSelet: districtSelet
+		datePicker: datePicker
 	}
 	data = {
 		isShow: false,
 		form: {
 			content: '',
-			address: '',
-			time: ''
+			entry_address: '',
+			entry_time: ''
 		},
-		address: '',
-		disabled: true,
-		addressList: [],
 		time: '',
-		statusObj: {}
 	}
 	events = {
 		setDate: data => {
-			this.form.time = data
-		},
-		selectCityText: data => {
-			this.address = data
-		},
-		selectCity: data => {
-			this.addressList = data
+			this.form.entry_time = data
+			console.log(data)
+			this.$apply()
 		}
 	}
-	// onLoad() {
-	// 	this.statusObj = JSON.parse(wx.getStorageSync('statusObj'))
-	// 	this.$apply()
-	// }
 	methods = {
 		changeInput (e) {
 			let key = e.currentTarget.dataset.name
@@ -159,59 +110,12 @@ export default class noticeModal extends wepy.component {
 			this.$emit('handleClose')
 		},
 		handleOk () {
+			this.$emit('setAllTime', this.form)
 			this.isShow = false
 			this.$apply()
-			let params = {}
-			console.log(this.type)
-			console.log(this.form.time)
-			if (this.type == 1) {
-				let time = ''
-				if (this.form.time.toString().indexOf('-') == -1) {
-					time = this.form.time
-				} else {
-					time = $moment(this.form.time).valueOf() + ''
-					time = time.substr(0, 10)
-				}
-				params = {
-					time: time,
-					content: this.address +'/'+this.form.address+'&'+this.form.content,
-					provindeid: this.addressList[0],
-					cityid: this.addressList[1],
-					threecity: this.addressList[2]
-				}
-			} else {
-				console.log(this.form.time)
-				params = {
-					view_time: this.form.time,
-					content: this.form.content,
-					room_num: this.form.time,
-					room_name: wx.getStorageSync('phone'),
-					type: 1
-				}
-			}
-			this.$emit('setAllTime', params)
 		}
 	}
 	watch = {
-		timeInfo (val) {
-			if (val && val.content) {
-				if (val.time.toString().indexOf('-') == -1) {
-          this.form.time = $moment.unix(val.time).format('YYYY-MM-DD HH:mm')		
-				} else {
-			  	this.form.time = val.time
-				}
-				if (val.provinceid) {
-          this.addressList = [val.provinceid, val.cityid, val.three_cityid]
-				}
-				this.time = this.form.time 
-				let arr = val.content.split('&')
-				this.form.content = arr[1]
-				let address = arr[0].split('/')
-				this.address = address[0] + '/' + address[1] + '/' + address[2]
-				this.form.detailAddress = address[3]
-				this.$apply()
-			}
-    },
 		isScaleModal (val) {
 			if (!val) {
 				this.isShow = true

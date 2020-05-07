@@ -86,11 +86,11 @@
           <view class="modal-tab-item {{activeIndex==0?'modal-line':''}}" @tap="switchTab(0)">邀请函</view>
           <view class="modal-tab-item {{activeIndex==1?'modal-line':''}}" @tap="switchTab(1)">参展企业</view>
         </view>
-        <text selectable='true' decode="{{true}}" class="modal-subTitle" wx:if="{{!activeIndex}}">
-          {{invitationContent}}
+        <text selectable='true' decode="{{true}}" class="modal-subTitle" wx:if="{{activeIndex==0}}">
+          {{content}}
         </text>
         <view wx:else class="companyList">
-          <repeat for="{{companyList}}" key="index">
+          <repeat for="{{list}}" key="index">
             <view>{{item}}</view>
           </repeat>
         </view>
@@ -112,7 +112,9 @@ export default class invitationModal extends wepy.component {
   }
   data = {
     isShow: false,
-    activeIndex: 0
+    activeIndex: 0,
+    list: [],
+    content: ''
   }
   methods = {
     switchTab(index) {
@@ -126,6 +128,18 @@ export default class invitationModal extends wepy.component {
     }
   }
   watch = {
+    invitationContent(val) {
+      if(val) {
+        this.content = val
+        this.$apply()
+      }
+    },
+    companyList(val) {
+      if(val) {
+       this.list = val
+       this.$apply()
+      }
+    },
     isScaleModal (val) {
       if (!val) {
         this.isShow = true

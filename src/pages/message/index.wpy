@@ -107,27 +107,30 @@ export default class message extends wepy.page {
 	}
 	onShow() {
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-		this.getUserSig()
+		console.log(wx.getStorageSync('setSdkReady'))
+		if (wx.getStorageSync('setSdkReady')) {
+			this.getUserList()
+		} else {
+			this.getUserSig()
+		}
 	}
-	getUserSig() {
-		$http('/autograph/getAutograph', { uid: this.params.uid }).then(res => {
-			let promise = tim.login({ userID: this.params.uid + '', userSig: res.data });
-			promise.then(imResponse => {
-				console.log('登录成功');
-				if (imResponse.data.repeatLogin === true) {
-					// 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
-				}
-			}).catch(imError => {
-				console.warn('login error:', imError); // 登录失败的相关信息
-			});
-			let onSdkReady = event=> {
-				let promise1 = tim.getConversationList();
-				promise1.then(imResponse => {
-					const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
-					let arr = conversationList.map(item=>{
-						console.log(item)
+	getConversation() {
+		let onSdkReady = event=> {
+			this.getUserList()
+			wx.setStorageSync('setSdkReady', true)
+		}
+		tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+	}
+	getUserList() {
+   let promise1 = tim.getConversationList();
+			promise1.then(imResponse => {
+				let arr =  []
+				const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
+				conversationList.forEach(item=>{
+					let obj = {}
+					if (item.type == 'C2C') {
 						const { lastMessage, userProfile, conversationID } = item
-						let obj = {
+						obj = {
 							lastTime: lastMessage.lastTime,
 							messageForShow:lastMessage.messageForShow,
 							nick: userProfile.nick,
@@ -135,25 +138,34 @@ export default class message extends wepy.page {
 							userID: userProfile.userID,
 							conversationID: conversationID
 						}
-						return obj
-					})
-					console.log(arr)
-					this.list = arr
-					this.$apply()
-				}).catch(function (imError) {
-					console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
-				});
-			};
-			tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+						arr.push(obj)
+					}
+				})
+				this.list = arr
+				console.log(arr)
+				this.$apply()
+			}).catch(function (imError) {
+				console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
+			});
+	}
+	getUserSig() {
+		$http('/autograph/getAutograph', { uid: this.params.uid }).then(res => {
+			let promise = tim.login({ userID: this.params.uid + '', userSig: res.data });
+			promise.then(imResponse => {
+				console.log('登录成功');
+				this.getConversation()
+				// if (imResponse.data.repeatLogin === true) {
+				// 	// 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
+				// }
+			}).catch(imError => {
+				console.warn('login error:', imError); // 登录失败的相关信息
+			});
 		})
 	}
 	methods = {
 		viewMessage(item) {
-			if (this.usertype == 1) {
-				wxNavigateTo('/pages/message/dialogBox?query=' + item.id)
-			} else {
-				wxNavigateTo('/pages/message/personalDialogBox?query=' + item.conversationID+ '&userID=' + item.userID + '&isLogin=true')
-			}
+			console.log(item)
+			wxNavigateTo('/pages/message/personalDialogBox?query=' + item.conversationID + '&userID=' + item.userID + '&isLogin=true')
 		},
 		searchScrollLower() {
 			if (this.count > this.list.length && this.count > this.params.limit) {

@@ -144,7 +144,6 @@ export default class hall extends wepy.page {
     }
   }
   getHallList (params) {
-    this.list = []
     $http(this.urlApi, params).then(res => {
       this.list = res.data.data
       this.count = res.data.count

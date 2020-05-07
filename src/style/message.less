@@ -1,5 +1,23 @@
 .dialogBox-view {
-  background: #F6F7FA;
+	background: #F6F7FA;
+	width: 100%;
+	&.dialogBox-row {
+    color:rgba(17,17,17, 0.6);
+		text-align: center;
+		padding-bottom: 160rpx;
+    .dialogBox-row-time {
+      font-size: 22rpx;
+    }
+	}
+	&.dialogBox-row1 {
+		padding-bottom: 460rpx;
+	}
+	&.dialogBox-row2 {
+		padding-bottom: 500rpx;
+	}
+	&.dialogBox-row3 {
+		padding-bottom: 700rpx;
+	}
 	.register-btn {
 		margin: 0 24rpx;
 		.weui-btn_cell {
@@ -13,18 +31,16 @@
 	}
 	.message-header {
 		background: #fff;
-		padding: 30rpx 40rpx;
-		text-align: center;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 999;
+		.message-header-content {
+			padding: 30rpx 40rpx;
+			text-align: center;
+		}
 	}
-  .dialogBox-row {
-    color:rgba(17,17,17, 0.6);
-		text-align: center;
-		height: calc(100% - 580rpx);
-		overflow: auto;
-    .dialogBox-row-time {
-      font-size: 22rpx;
-    }
-  }
   .dialogBox-col-header {
     width: 94rpx;
     height: 94rpx;
@@ -65,7 +81,13 @@
     }
 	}
 	.message-input-box {
-		padding-top: 14rpx;
+		padding: 20rpx 0;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		z-index: 9999;
+		background: #F6F7FA;
 		>.page_margin {
 			margin: 20rpx 30rpx 10rpx;
 		} 

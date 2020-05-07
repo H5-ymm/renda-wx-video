@@ -54,7 +54,7 @@
         </view>
          <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text weui-flex__item">邮箱</view>
+            <view class="my-text weui-flex__item my-text-require">邮箱</view>
             <view class="weui-flex between">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入邮箱" value="{{form.email}}" data-name="email" @input="changeInput" />
             </view>
@@ -156,7 +156,7 @@ export default class editResume extends wepy.page {
     bindChange(data) {
       this.form.job_search_status = Number(data) + 1
     },
-    bindDateChange() {
+    bindDateChange(e) {
       // this.isPicker = !this.isPicker
       let key = e.currentTarget.dataset.name
       this.birthtime = e.detail.value
@@ -175,8 +175,10 @@ export default class editResume extends wepy.page {
 				wxToast('请选择现居地址')
 			} else if (!this.form.job_search_status) {
 				wxToast('请选择求职状态')
-			} else if (!this.form.edu) {
+			} else if (this.form.edu!='') {
 				wxToast('请选择学历')
+			} else if (this.form.email!='') {
+				wxToast('请输入邮箱')
 			} else {
 				this.updateResume()
 			}

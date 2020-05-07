@@ -160,6 +160,12 @@ export default class my extends wepy.page {
     $http('/personal/getuserinfo', { uid: this.uid }).then(res => {
       this.userInfo = res.data || {}
       this.head_img =  res.data.head_img
+      let personal = {
+        head_img: res.data.head_img,
+        nickname: res.data.nickname,
+        tel: res.data.tel
+      }
+      wx.setStorageSync('userInfo', JSON.stringify(personal))
       if (res.data.nickname) {
         let params = {
           nickname: res.data.nickname,

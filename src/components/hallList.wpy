@@ -3,13 +3,13 @@
 	<view>
 	  <view class="weui-flex between wrap page_margin">
 			<repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-				<view @tap="routerJob({{item}})" class="list-card shadow hall-row">
+				<view @tap="viewCompany({{item}})" class="list-card shadow hall-row">
 					<hallItem :itemValue.sync="item"></hallItem>
 				</view>
 			</repeat>
 		</view>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="../images/noData.png" class="page_noData" mode="scaleToFill" />
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

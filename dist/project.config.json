@@ -27,7 +27,7 @@
 		"bundle": true
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.10.1",
+	"libVersion": "2.9.5",
 	"appid": "wxd97a5cbf8b12b324",
 	"projectname": "dist",
 	"cloudfunctionTemplateRoot": "",
