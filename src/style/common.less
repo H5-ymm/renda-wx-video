@@ -5,6 +5,12 @@ page {
   height: 100%;
   font-family:PingFangSC-Medium;
 }
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+  display: none;
+}
 .page {
   height: 100%;
   .home-view-box {
@@ -31,7 +37,7 @@ page {
   height: calc(100% - 120px);
 }
 .page_margin {
-   margin: 30rpx;
+  margin: 30rpx;
 }
 .login_page {
   background-color: @weuiBgColorWhite;
@@ -86,13 +92,17 @@ page {
 .weui-input {
   text-align: right;
   &.weui-textarea {
+    -webkit-user-select: text;
+    user-select: text;
     margin: 20rpx 0;
-    min-height: 130rpx;
+    min-height: auto;
     text-align: left;
-    height: 140rpx;
     width: 100%;
     display: block;
     border-radius: 16rpx;
+    height: auto;
+    padding: 10rpx 0 100rpx;
+    z-index: 2;
     border: 1px solid @weuiLineColorLight;
   }
   &.settlement_time_input {
@@ -151,7 +161,7 @@ page {
   .card-col-3 {
     position: absolute;
     right: 30rpx;
-    bottom: 18rpx;
+    bottom: 16rpx;
     .weui-btn_cell {
       margin-left: 20rpx;
     }
@@ -209,4 +219,23 @@ page {
   width: 60rpx;
   height: 60rpx;
   margin-right: 40rpx;
+}
+.select-btn {
+  background: #fff;
+  border-top: 1px solid #F6F7FA;
+  padding: 30rpx 0;
+  .weui-btn_cell {
+    border-radius:16rpx;
+    background: #F6F6F6;
+    color:rgba(17,17,17,.6);
+    padding: 32rpx 10rpx;
+    width: 30%;
+    margin: 0 24rpx;
+    &.weui-btn_primary {
+      width: 50%;
+      padding: 32rpx 50rpx;
+      background: #1890FF;
+      color:#fff;
+    }
+  }
 }

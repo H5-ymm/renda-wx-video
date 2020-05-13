@@ -119,7 +119,7 @@
           <view class="modal_text weui-flex center">{{text}}</view>
           <view class="weui-flex center modal-btn wrap">
             <view class="col weui-flex center" @tap="selectUser(1)">我是企业招聘者</view>
-            <view class="col weui-flex center" @tap="selectUser(2)">我是求职者</view>
+            <view class="col weui-flex center" @tap="selectUser(2)">我是个人求职者</view>
           </view>
         </view>
       </view>

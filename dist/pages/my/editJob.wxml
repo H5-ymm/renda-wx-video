@@ -4,14 +4,14 @@
       <view class="page_form">
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作性质</view>
+            <view class="my-text weui-flex__item my-text-requir">工作性质</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataPicker$multiText}}" class="page__title" bindtap="$dataPicker$changeSelect">
+    <view class="my-text-right weui-flex between" bindtap="$dataPicker$changeSelect">
+      <view  wx:if="{{$dataPicker$multiText}}" class="page__title">
         {{$dataPicker$multiText}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataPicker$changeSelect">{{$dataPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">
@@ -44,32 +44,32 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text weui-flex__item my-text-require">工作地点</view>
+            <view class="my-text weui-flex__item my-text-requir">工作地点</view>
             
-  <view class="districtSelet">
+  <view class="districtSelet" bindtap="$districtSelet$changeCity">
     <view class="my-text-right weui-flex between">
       <view  wx:if="{{$districtSelet$options.length}}" class="page__title">
         {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
         {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$districtSelet$changeCity">请选择地址</view>
+      <view  wx:else class="placeholder">请选择地址</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$districtSelet$isScaleModal}}">
-      <view bindtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
+      <view catchtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
       <view class="modal_box transition3s {{ $districtSelet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$districtSelet$height}}rpx">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
-              <view class="weui-flex center" bindtap="$districtSelet$selectClose">
+              <view class="weui-flex center" catchtap="$districtSelet$selectClose">
                 取消
               </view>
-              <view class="weui-flex center ok-btn" bindtap="$districtSelet$selectOk">
+              <view class="weui-flex center ok-btn" catchtap="$districtSelet$selectOk">
                 确定
               </view>
             </view>
-            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$districtSelet$activeIndex}}" bindchange="$districtSelet$bindChange">
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$districtSelet$multiIndex}}" bindchange="$districtSelet$bindChange">
               <picker-view-column>
                 <block wx:for="{{$districtSelet$multiArray[0]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
@@ -96,14 +96,14 @@
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">期望薪资</view>
+            <view class="my-text  weui-flex__item my-text-requir">期望薪资</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataMoneyPicker$multiText}}" class="page__title" bindtap="$dataMoneyPicker$changeSelect">
+    <view class="my-text-right weui-flex between" bindtap="$dataMoneyPicker$changeSelect">
+      <view  wx:if="{{$dataMoneyPicker$multiText}}" class="page__title">
         {{$dataMoneyPicker$multiText}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataMoneyPicker$changeSelect">{{$dataMoneyPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$dataMoneyPicker$text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataMoneyPicker$isScaleModal}}">
@@ -134,34 +134,52 @@
 
           </view>
         </view>
+        <!-- <view class="page_margin">
+          <view class="weui-flex between">
+            <view class="my-text weui-flex__item">期望行业</view>
+            <dataTradesPicker v-bind:range.sync="job_array" v-bind:value.sync="comIndex" v-on:bindPickerChange="bindTradesChange"></dataTradesPicker>
+          </view>
+        </view> -->
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text weui-flex__item my-text-require">期望行业</view>
+            <view class="my-text  weui-flex__item my-text-requir">期望职位</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataTradesPicker$multiText}}" class="page__title" bindtap="$dataTradesPicker$changeSelect">
-        {{$dataTradesPicker$multiText}}
+    <view class="my-text-right weui-flex between" bindtap="$jobPosition$changeCity">
+      <view  wx:if="{{$jobPosition$options.length}}" class="page__title">
+        {{$jobPosition$multiArray[0][$jobPosition$multiIndex[0]]}}
+        {{$jobPosition$multiArray[1][$jobPosition$multiIndex[1]]}}
+        {{$jobPosition$multiArray[2][$jobPosition$multiIndex[2]]}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataTradesPicker$changeSelect">{{$dataTradesPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$jobPosition$placeholder}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
-    <view hidden="{{$dataTradesPicker$isScaleModal}}">
-      <view bindtap="$dataTradesPicker$handleClose" wx:if="{{$dataTradesPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataTradesPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataTradesPicker$height}}rpx">
+    <view hidden="{{$jobPosition$isScaleModal}}">
+      <view bindtap="$jobPosition$ handleClose" wx:if="{{$jobPosition$isShow}}" class="modal_mask"/>
+      <view class="modal_box transition3s {{ $jobPosition$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:400rpx">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
-              <view class="weui-flex center" bindtap="$dataTradesPicker$selectClose">
+              <view class="weui-flex center" bindtap="$jobPosition$selectClose">
                 取消
               </view>
-              <view class="weui-flex center ok-btn" bindtap="$dataTradesPicker$selectOk">
+              <view class="weui-flex center ok-btn" bindtap="$jobPosition$selectOk">
                 确定
               </view>
             </view>
-            <picker-view class="picker-view" indicator-style="height: 40px;font-size:16px;" value="{{$dataTradesPicker$multiIndex}}" bindchange="$dataTradesPicker$bindChange">
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$jobPosition$activeIndex}}" bindchange="$jobPosition$bindChange">
               <picker-view-column>
-                <block wx:for="{{$dataTradesPicker$range}}" wx:key="index">
+                <block wx:for="{{$jobPosition$multiArray[0]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+              <picker-view-column>
+                <block wx:for="{{$jobPosition$multiArray[1]}}" wx:key="index">
+                  <view class="picker-view-item">{{item}}</view>
+                </block>
+              </picker-view-column>
+              <picker-view-column>
+                <block wx:for="{{$jobPosition$multiArray[2]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
                 </block>
               </picker-view-column>
@@ -172,14 +190,6 @@
     </view>
   </view>
 
-          </view>
-        </view>
-        <view class="page_margin">
-          <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">期望职位</view>
-            <view class="weui-flex between">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入期望职位" value="{{form.expected_job}}" data-name="expected_job" bindinput="changeInput"/>
-            </view>
           </view>
         </view>
       </view>

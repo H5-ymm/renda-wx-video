@@ -27,9 +27,9 @@
           </view>
           <view class="job_detail">
             <view class="page__title">工作性质：{{resumeDetail.nature_work || '无'}}</view>
-            <view class="page__title">工作地点：{{resumeDetail.expected_province || '无'}}{{resumeDetail.expected_city || '无'}}</view>
+            <view class="page__title">工作地点：{{resumeDetail.expected_province || '无'}}{{resumeDetail.expected_city || ''}}</view>
             <view class="page__title">期望薪资：{{resumeDetail.expected_salary || '无'}}</view>
-            <view class="page__title">期望行业：{{resumeDetail.expected_trades || '无'}}</view>
+            <!-- <view class="page__title">期望行业：{{resumeDetail.expected_trades || '无'}}</view> -->
             <view class="page__title">期望职位：{{resumeDetail.expected_job || '无'}}</view>
           </view>
         </view>
@@ -110,11 +110,12 @@ export default class resume extends wepy.page {
   }
   getuserdetail() {
     $http('/personal/getuserdetail', {uid: this.uid}).then(res => {
+      console.log(res)
       this.resumeDetail = res.data
       this.resumeDetail.birthtime = res.data.birthtime ? $moment.unix(res.data.birthtime).format('YYYY-MM-DD'): ''
       if (this.resumeDetail.edulist) {
         this.eduList = this.resumeDetail.edulist.map(item =>{
-          item.graduation_date = $moment.unix(item.graduation_date).format('YYYY-MM-DD')
+          item.graduation_date = $moment.unix(item.graduation_date).format('YYYY-MM')
           return item
         })
       }
@@ -130,7 +131,6 @@ export default class resume extends wepy.page {
   }
   methods = {
     routerView(url, item) {
-      console.log(item)
       if (item!=0) {
         wxNavigateTo(`/pages/my/${url}?query=${item.id}`)
       } else {

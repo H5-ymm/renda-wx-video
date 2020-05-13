@@ -7,34 +7,32 @@
       <view class="page_form">
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">工作性质</view>
+            <view class="my-text weui-flex__item my-text-requir">工作性质</view>
             <dataPicker :range.sync="workTypeList" :value.sync="index" @bindPickerChange.user="bindChange"></dataPicker>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text weui-flex__item my-text-require">工作地点</view>
+            <view class="my-text weui-flex__item my-text-requir">工作地点</view>
             <districtSelet @selectCity="selectCity" :disabled.sync="disabled" :address.sync="address"></districtSelet>
           </view>
         </view>
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">期望薪资</view>
+            <view class="my-text  weui-flex__item my-text-requir">期望薪资</view>
             <dataMoneyPicker :range.sync="money_array" :value.sync="moneyIndex" @bindPickerChange.user="bindMoneyChange"></dataMoneyPicker>
           </view>
         </view>
-        <view class="page_margin">
+        <!-- <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text weui-flex__item my-text-require">期望行业</view>
-            <dataTradesPicker :range.sync="com_type" :value.sync="comIndex" @bindPickerChange.user="bindTradesChange"></dataTradesPicker>
+            <view class="my-text weui-flex__item">期望行业</view>
+            <dataTradesPicker :range.sync="job_array" :value.sync="comIndex" @bindPickerChange.user="bindTradesChange"></dataTradesPicker>
           </view>
-        </view>
+        </view> -->
         <view class="page_margin">
           <view class="weui-flex between">
-            <view class="my-text  weui-flex__item my-text-require">期望职位</view>
-            <view class="weui-flex between">
-              <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入期望职位" value="{{form.expected_job}}" data-name="expected_job" @input="changeInput" />
-            </view>
+            <view class="my-text  weui-flex__item my-text-requir">期望职位</view>
+            <jobPosition @selectJobType="selectJobType" placeholder="请选择期望职位" :jobList.sync="jobList"></jobPosition>
           </view>
         </view>
       </view>
@@ -48,8 +46,9 @@
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
 import dataPicker from '@/components/dataPicker'
+import jobPosition from '@/components/jobPosition'
 import { $http } from '@/http.js'
-import { wxToast, wxNavigateTo, wxShowModal } from '@/util.js'
+import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
 import { connect, getStore } from 'wepy-redux'
 const store = getStore()
 @connect({
@@ -60,7 +59,8 @@ export default class editJob extends wepy.page {
     districtSelet: districtSelet,
     dataPicker: dataPicker,
     dataMoneyPicker: dataPicker,
-    dataTradesPicker: dataPicker
+    // dataTradesPicker: dataPicker,
+    jobPosition: jobPosition
   }
   data = {
     form: {
@@ -69,7 +69,6 @@ export default class editJob extends wepy.page {
       expected_province: '',
       expected_city: '',
       expected_salary: '',
-      expected_trades: '',
       expected_job: ''
     },
     index: -1,
@@ -77,7 +76,8 @@ export default class editJob extends wepy.page {
     moneyIndex: -1,
     disabled: false,
     address: [],
-    com_type: [],
+    job_array: [],
+    jobList: [],
     money_array: [],
     workTypeList: ['全职', '兼职', '实习']
   }
@@ -88,7 +88,7 @@ export default class editJob extends wepy.page {
 		let allData = store.getState().contant.list
     for (let key in allData) {
       this[key] = allData[key]
-		}
+    }
     this.$apply()
 	}
   onShow() {
@@ -97,7 +97,10 @@ export default class editJob extends wepy.page {
       if (this.form.expected_province) {
         this.address = [this.form.expected_province, this.form.expected_city]
       }
-      this.comIndex = this.form.expected_trades ? Number(this.form.expected_trades) - 1 : ''
+      if (this.form.first_pid) {
+        this.jobList = [this.form.first_pid, this.form.second_pid, this.form.expected_job]
+      }
+      // this.comIndex = this.form.expected_trades ? Number(this.form.expected_trades) - 1: ''
       this.moneyIndex = this.form.expected_salary ? Number(this.form.expected_salary) - 1 : ''
       this.index = this.form.nature_work ? Number(this.form.nature_work) - 1 : ''
       this.$apply()
@@ -107,14 +110,20 @@ export default class editJob extends wepy.page {
 		selectCity: data => {
 			this.form.expected_province = data[0] ? data[0] : 0
       this.form.expected_city = data[1] ? data[1] : 0
+    },
+    selectJobType: data => {
+      this.form.expected_job = data
     }
   }
   saveJobExpected() {
+    this.form.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     $http('/Personal/add_Jobsearchintention', this.form).then(res => {
  			if (res.data) {
         wxToast('保存成功')
         wx.setStorageSync('expectedInfo', JSON.stringify(this.form))
-        wxNavigateTo('/pages/my/resume')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
 			} else {
 				wxToast('保存失败')
 			}
@@ -132,16 +141,11 @@ export default class editJob extends wepy.page {
 				wxToast('请选择工作地点')
 			} else if (!this.form.expected_salary) {
 				wxToast('请选择期望薪资')
-			} else if (!this.form.expected_trades) {
-				wxToast('请选择期望行业')
 			} else if (!this.form.expected_job) {
 				wxToast('请输入期望职位')
 			} else {
 				this.saveJobExpected()
-			}
-    },
-    bindTradesChange(data) {
-      this.form.expected_trades = Number(data) + 1
+      }
     },
     bindChange(data) {
       this.form.nature_work = Number(data) + 1

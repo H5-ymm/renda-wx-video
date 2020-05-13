@@ -1,7 +1,7 @@
 
 	<view class="message-view shadow page">
 		<view class="page_margin view-content">
-			<scroll-view scroll-y="true" style="height:100%"  wx:if="{{newList.length}}" bindscrolltolower="searchScrollLower">
+			<scroll-view scroll-y="true" style="height:100%"  wx:if="{{newList.length}}">
 				<block wx:for="{{newList}}" wx:key="index">
 					<view class="weui-flex start message-row" bindtap="viewMessage" data-wpyviewmessage-a="{{item}}">
 						<view class="message-col-1">

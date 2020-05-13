@@ -1,7 +1,8 @@
+<wxs src="../../filterWxs/actionFilter.wxs" module="wxs"/>
 
-	<view class="dialogBox-view dialogBox-row {{!is_apply&&isShow ? 'dialogBox-row1':''}} {{!isShow&&is_apply ? 'dialogBox-row2':''}} {{isShow&&is_apply ? 'dialogBox-row3':''}}" id="chat">
+	<view style="height: {{scrollHeight}}" class="dialogBox-view dialogBox-row {{!is_apply&&isShow ? 'dialogBox-row1':''}} {{!isShow&&is_apply ? 'dialogBox-row2':''}} {{isShow&&is_apply ? 'dialogBox-row3':''}}" id="chat">
 		<view class="message-header">
-			<view class="weui-flex between message-header-content"  wx:if="{{is_apply}}">
+			<view class="weui-flex between message-header-content"  wx:if="{{is_apply&&rendaUserType==1}}">
 				<view bindtap="videoCall">
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon"/>
 					<view class="page__title">视频面试</view>
@@ -20,10 +21,10 @@
 				</view>
 			</view>
 		</view>
-		<scroll-view scroll-y="true" style="height:100%">
-			<view class="page_margin">
+		<scroll-view scroll-y="true" id="scroll">
+			<view class="page_margin {{is_apply?'page_top':''}}">
 				<block  wx:for="{{messageList}}" wx:key="index">
-					<view wx:if="{{(uid!=item.from&&rendaUserType==1) || (params.uid==item.from&&rendaUserType==2)}}">
+					<view wx:if="{{(uid!=item.from)}}">
 						<view class="page__desc date">{{item.time}}</view>
 						<view class="weui-flex dialogBox-col weui-flex__item start">
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
@@ -41,7 +42,7 @@
 						<view class="dialogBox-content weui-flex start dialogBox-content-right">
 							<view wx:if="{{item.text}}">{{item.text}}</view>
 							<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" bindtap="viewImage" class="dialogBox_icon" data-wpyviewimage-a="{{item}}"/>
-							<view wx:if="{{!item.text&&!item.img}}">挂断视频</view>
+							<view wx:if="{{!item.text&&!item.img&&item.action}}">{{wxs.checkText(item.action)}}</view>
 							<image mode="scaleToFill" wx:if="{{!item.text&&!item.img}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon"/>
 						</view>
 						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
@@ -56,7 +57,7 @@
 				<image mode="scaleToFill" bindtap="showMessageBtn" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon"/>
 			</view>
 			<view class="weui-flex start message-menus" wx:if="{{isShow}}">
-				<view class="page_margin" bindtap="videoCall">
+				<view class="page_margin" bindtap="videoCall" wx:if="{{is_apply}}">
 					<view class="weui-flex center message-item">
 						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon"/>
 					</view>
@@ -126,7 +127,10 @@
       <view class="modal-content">
         <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
-            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}" maxlength="-1" value="{{$modal$content}}"/>
+          	<input class="weui-input weui-textarea modal-col page__desc" data-name="content" placeholder-class="placeholder" value="{{$modal$content}}" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}"/>
+            <!-- <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
+            class="weui-input weui-textarea modal-col page__desc" bindinput="changeInput" 
+            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/> -->
          </view>
          <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" bindtap="$modal$handleClose">取消</view>

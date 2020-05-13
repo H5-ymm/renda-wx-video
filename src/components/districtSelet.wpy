@@ -30,30 +30,30 @@
 }
 </style>
 <template>
-  <view class="districtSelet">
+  <view class="districtSelet"  @tap="changeCity">
     <view class="my-text-right weui-flex between">
       <view wx:if="{{options.length}}" class="page__title">
         {{multiArray[0][multiIndex[0]]}}
         {{multiArray[1][multiIndex[1]]}}
         {{disabled?multiArray[2][multiIndex[2]]:''}}
       </view>
-      <view wx:else class="placeholder" @tap="changeCity">请选择地址</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+      <view wx:else class="placeholder">请选择地址</view>
+      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>
-      <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
+      <view @tap.stop=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
       <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
-              <view class="weui-flex center" @tap="selectClose">
+              <view class="weui-flex center" @tap.stop="selectClose">
                 取消
               </view>
-              <view class="weui-flex center ok-btn" @tap="selectOk">
+              <view class="weui-flex center ok-btn" @tap.stop="selectOk">
                 确定
               </view>
             </view>
-            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{multiIndex}}" @change="bindChange">
               <picker-view-column>
                 <repeat wx:for="{{multiArray[0]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
@@ -132,7 +132,7 @@ export default class districtSelet extends wepy.component {
       if (this.disabled) {
         this.getAreaList(value)
       }
-      if (lock && (this.address && this.address.length && !this.address[2])) {
+      if (lock && (this.address && this.address.length )) {
         lock = false
         this.multiIndex = this.codeList.map((val, ind) => {
           let flag = val.indexOf(this.address[ind])
@@ -153,12 +153,9 @@ export default class districtSelet extends wepy.component {
       let arr = this.getList(res.data)
       this.codeList[2] = this.getCode(res.data)
       this.multiArray[2] = arr
-      if (lock && (this.address && this.address.length)) {
-        lock = false
-        this.multiIndex = this.codeList.map((val, ind) => {
-          let flag = val.indexOf(this.address[ind])
-          return flag === -1 ? 0 : val.indexOf(this.address[ind])
-        })
+      if ((this.address && this.address.length)) {
+        let flag = this.codeList[2].indexOf(this.address[2])
+        this.multiIndex[2] = flag
       }
       this.$apply()
     })

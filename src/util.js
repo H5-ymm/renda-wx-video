@@ -32,6 +32,16 @@ const checkMobile = mobile => {
     }
     return flag;
 };
+const checkNum = num => {
+    let reg = /^[1-9]\d*$/;
+    let flag = false;
+    if (!reg.test(num)) {
+        flag = false;
+    } else {
+        flag = true;
+    }
+    return flag;
+};
 const getErrorTip = code => {
     let text = '联系客服人员：021-51991869，\n 微信：18621532378 QQ：529350865';
     let obj = {
@@ -147,6 +157,13 @@ const wxRedirectTo = url => {
         })
     }, 300)
 }
+const wxSwitchTab = url => {
+    setTimeout(() => {
+        wx.switchTab({
+            url: url // 页面 A
+        })
+    }, 300)
+}
 const wxReLaunch = url => {
     setTimeout(() => {
         wx.reLaunch({
@@ -168,49 +185,6 @@ const getKeyValue = obj => {
         }
     }
     return obj
-}
-const weekList = () => {
-    let arr = []
-    for (let i = 1; i < 8; i++) {
-        arr.push(replaceWeek(i))
-    }
-    return arr
-}
-const replaceWeek = (number) => {
-    let text = ''
-    switch (number) {
-        case 1:
-            text = '周一'
-            break;
-        case 2:
-            text = '周二'
-            break;
-        case 3:
-            text = '周三'
-            break;
-        case 4:
-            text = '周四'
-            break;
-        case 5:
-            text = '周五'
-            break;
-        case 6:
-            text = '周六'
-            break;
-        case 7:
-            text = '周日'
-            break;
-        default:
-            text = ''
-    }
-    return text
-}
-const ageList = () => {
-    let arr = []
-    for (let i = 16; i < 66; i++) {
-        arr.push(i)
-    }
-    return arr
 }
 const wxShowModal = (title, content, confirmText) => {
     return new Promise((resove, rejcet) => {
@@ -252,6 +226,20 @@ const isJSON = (str) => {
       }
     }
   }
+  const contactPhone = (phone) => {
+    let mobile = phone ? phone : '021-51991869'
+    wx.showActionSheet({
+      itemList: ['拨打' + mobile],
+      success (res) {
+          wx.makePhoneCall({
+          phoneNumber: mobile
+          })
+      },
+      fail (res) {
+          console.log(res.errMsg)
+      }
+    })
+ }
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,
     validateIdCard: validateIdCard,
@@ -262,12 +250,13 @@ module.exports = {
     compressImg: compressImg,
     wxNavigateTo: wxNavigateTo,
     wxRedirectTo: wxRedirectTo,
+    wxSwitchTab: wxSwitchTab,
     wxReLaunch: wxReLaunch,
     getArray: getArray,
     getKeyValue: getKeyValue,
-    weekList: weekList,
-    ageList: ageList,
     wxShowModal: wxShowModal,
     getList: getList,
-    isJSON: isJSON
+    isJSON: isJSON,
+    checkNum: checkNum,
+    contactPhone: contactPhone
 };

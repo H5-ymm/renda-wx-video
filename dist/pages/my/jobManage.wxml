@@ -24,7 +24,7 @@
 			</view>
     </block>
 		<view wx:if="{{!$jobManageList$list.length}}" class="page_list">
-			<image src="../../images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

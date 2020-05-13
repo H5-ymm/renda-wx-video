@@ -48,7 +48,7 @@
 <template>
 	<view class="message-view shadow page">
 		<view class="page_margin view-content">
-			<scroll-view scroll-y="true" style="height:100%" wx:if="{{newList.length}}" @scrolltolower="searchScrollLower">
+			<scroll-view scroll-y="true" style="height:100%" wx:if="{{newList.length}}">
 				<repeat wx:for="{{newList}}" wx:key="index">
 					<view class="weui-flex start message-row" @tap="viewMessage({{item}})">
 						<view class="message-col-1">
@@ -75,15 +75,14 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
-import TIM from 'tim-wx-sdk'
-// import TIM from '@/lib/tim-wx.js'
-import COS from 'cos-wx-sdk-v5'
+// import TIM from 'tim-wx-sdk'
+// import COS from 'cos-wx-sdk-v5'
 import { getImgUrl, wxNavigateTo, getList } from '@/util.js'
-const tim = TIM.create({
-	SDKAppID: 1400335565
-})
-tim.setLogLevel(0)
-tim.registerPlugin({ 'cos-wx-sdk': COS });
+// const tim = TIM.create({
+// 	SDKAppID: 1400335565
+// })
+// tim.setLogLevel(0)
+// tim.registerPlugin({ 'cos-wx-sdk': COS });
 export default class message extends wepy.page {
 	data = {
 		teamData: {},
@@ -107,29 +106,17 @@ export default class message extends wepy.page {
 	}
 	onShow() {
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-		console.log(wx.getStorageSync('setSdkReady'))
-		if (wx.getStorageSync('setSdkReady')) {
-			this.getUserList()
-		} else {
-			this.getUserSig()
-		}
-	}
-	getConversation() {
-		let onSdkReady = event=> {
-			this.getUserList()
-			wx.setStorageSync('setSdkReady', true)
-		}
-		tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+		this.getUserList()
 	}
 	getUserList() {
-   let promise1 = tim.getConversationList();
+   let promise1 = wx.$app.getConversationList();
 			promise1.then(imResponse => {
 				let arr =  []
 				const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
 				conversationList.forEach(item=>{
 					let obj = {}
-					if (item.type == 'C2C') {
-						const { lastMessage, userProfile, conversationID } = item
+					const { lastMessage, userProfile, conversationID, type } = item
+					if (type == 'C2C'&& userProfile.userID!= this.params.uid) {
 						obj = {
 							lastTime: lastMessage.lastTime,
 							messageForShow:lastMessage.messageForShow,
@@ -148,29 +135,9 @@ export default class message extends wepy.page {
 				console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
 			});
 	}
-	getUserSig() {
-		$http('/autograph/getAutograph', { uid: this.params.uid }).then(res => {
-			let promise = tim.login({ userID: this.params.uid + '', userSig: res.data });
-			promise.then(imResponse => {
-				console.log('登录成功');
-				this.getConversation()
-				// if (imResponse.data.repeatLogin === true) {
-				// 	// 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
-				// }
-			}).catch(imError => {
-				console.warn('login error:', imError); // 登录失败的相关信息
-			});
-		})
-	}
 	methods = {
 		viewMessage(item) {
-			console.log(item)
-			wxNavigateTo('/pages/message/personalDialogBox?query=' + item.conversationID + '&userID=' + item.userID + '&isLogin=true')
-		},
-		searchScrollLower() {
-			if (this.count > this.list.length && this.count > this.params.limit) {
-				this.params.limit = this.params.limit + 10
-			}
+			wxNavigateTo('/pages/message/personalDialogBox?query=' + item.conversationID + '&userID=' + item.userID)
 		}
 	}
 }

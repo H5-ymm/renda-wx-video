@@ -42,32 +42,18 @@
         <view class="section-box">
           <view class="page__title">该公司职位</view>
           <block wx:for="{{jobList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
-            
-  <view class="list-row" wx:if="{{index==0&&!showMore}}">
-    <view class="weui-flex between list-col-1">    
-      <text class="page__title text-line">{{item.job_name}}</text>
-      <view class="number">{{item.salary}}</view>
-    </view>
-    <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
-    <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
-        投递简历
-      </button>
-      <view class="number"  wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
-    </view>
-  </view>
-
-            <view class="job-box {{showMore?'page_bottom':''}}">
+            <view class="job-box page_bottom">
               
-  <view class="list-row" wx:if="{{showMore}}">
+  <view class="list-row">
     <view class="weui-flex between list-col-1">    
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
     <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{item.social_security}}</view></view>
+      <view class="weui-flex start weui-flex__item">
+        <view class="card-item weui-flex center">{{item.social_security}}</view>
+      </view>
       <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
         投递简历
       </button>
@@ -77,7 +63,6 @@
 
             </view>
           </block>
-          <view class="page__text__active" bindtap="viewMoreJob" wx:if="{{!showMore&&jobList.length>1}}">查看更多</view>
         </view>
       </view>
     </scroll-view>
@@ -115,7 +100,7 @@
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex center modal-btn wrap">
             <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
-            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是求职者</view>
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是个人求职者</view>
           </view>
         </view>
       </view>

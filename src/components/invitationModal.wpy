@@ -137,6 +137,7 @@ export default class invitationModal extends wepy.component {
     companyList(val) {
       if(val) {
        this.list = val
+       console.log(this.list)
        this.$apply()
       }
     },

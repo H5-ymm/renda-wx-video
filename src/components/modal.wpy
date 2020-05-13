@@ -44,8 +44,7 @@
     .weui-input {
       text-align: left;
       &.weui-textarea {
-        min-height: 240rpx;
-        padding: 20rpx;
+        padding: 20rpx 20rpx 240rpx;
         border-radius: 16rpx;
       }
     }
@@ -67,9 +66,11 @@
       <view class="modal-content">
         <view class="modal-title page__title">{{modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
-            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
+          	<input class="weui-input weui-textarea modal-col page__desc" data-name="content" placeholder-class="placeholder" 
+						value="{{content}}" @input="changeInput" placeholder="{{modalObj.subTitle}}" />
+            <!-- <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
             class="weui-input weui-textarea modal-col page__desc" @input="changeInput" 
-            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/>
+            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/> -->
          </view>
          <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" @tap="handleClose">取消</view>
@@ -81,6 +82,7 @@
 </template>
 <script>
 import wepy from 'wepy'
+import { wxToast } from '@/util.js'
 export default class modal extends wepy.component {
   props = {
     isScaleModal: Boolean,
@@ -97,9 +99,13 @@ export default class modal extends wepy.component {
       this.$emit('handleClose')
     },
     handleOk () {
+       if (!this.content) {
+        return wxToast('请输入内容')
+      }
       this.isShow = false
-      this.$apply()
       this.$emit('handleOk', this.content)
+      this.content = ''
+      this.$apply()
     },
     changeInput(e) {
       this.content = e.detail.value

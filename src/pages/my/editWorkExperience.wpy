@@ -35,8 +35,8 @@
   .weui-input {
     &.weui-textarea {
       width: 94%;
-      padding: 20rpx;
-      border: 1px solid #eeeeee;
+      padding: 20rpx 0 100rpx;
+      border: none;
     }
   }
 }
@@ -93,10 +93,12 @@
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">工作职责</view>
           </view>
-          <textarea data-name="work_content" placeholder-class="placeholder"
+          <input class="weui-input weui-textarea" data-name="work_content" placeholder-class="placeholder" 
+						value="{{form.work_content}}" @input="changeInput" placeholder="请输入工作职责" />
+          <!-- <textarea data-name="work_content" placeholder-class="placeholder"
             disable-default-padding="true"
             class="weui-input weui-textarea" value="{{form.work_content}}" @input="changeInput"
-            placeholder="请输入工作职责" maxlength="-1"/>
+            placeholder="请输入工作职责" maxlength="-1"/> -->
         </view>
       </view>
     </view>
@@ -115,7 +117,7 @@ import wepy from 'wepy'
 import dataPicker from '@/components/dataPicker'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { wxToast, wxNavigateTo, wxShowModal } from '@/util.js'
+import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
 export default class editWorkExperience extends wepy.page {
   components = {
     dataPicker: dataPicker
@@ -169,7 +171,9 @@ export default class editWorkExperience extends wepy.page {
     $http('/Personal/del_jobspeciality', params).then(res => {
  			if (res.data) {
         wxToast('删除成功')
-        wxNavigateTo('/pages/my/resume')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
 			} else {
 				wxToast('删除失败')
 			}
@@ -180,7 +184,9 @@ export default class editWorkExperience extends wepy.page {
     $http('/Personal/save_jobspeciality', this.form).then(res => {
  			if (res.data) {
         wxToast('保存成功')
-        wxNavigateTo('/pages/my/resume')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
 			} else {
 				wxToast('保存失败')
 			}
@@ -203,13 +209,16 @@ export default class editWorkExperience extends wepy.page {
     },
     deleteInfo() {
       if (!this.form.id) {
-        wxNavigateTo('/pages/my/resume')
-      }
-      wxShowModal('', '确定删除你的工作经历', '确定').then(res => {
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
+      } else {
+        wxShowModal('', '确定删除你的工作经历', '确定').then(res => {
 				this.delJobspeciality()
-			}).catch(() => {
-				console.log('取消')
-			})
+        }).catch(() => {
+          console.log('取消')
+        })
+      }
     },
     submit() {
       if (!this.form.worktime_start) {

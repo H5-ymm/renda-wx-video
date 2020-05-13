@@ -25,20 +25,26 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
+import { wxNavigateTo, wxToast } from '@/util'
 export default class deliveryRecordItem extends wepy.component {
 	props = {
     item: Object
-	}
-	data = {
-	}
+  }
 	methods = {
     viewDetail(item) {
+      if (item.com_status == 1) {
+        return wxToast('该企业已删除')
+      }
       wxNavigateTo('/pages/home/companyDetail?query='+ item.com_id)
       wx.setStorageSync('rendaJHID', item.jf_id)
     },
-    concatCompany() {
-      wxNavigateTo('/pages/message/dialogBox')
+    concatCompany(item) {
+      if (item.com_status == 1) {
+        return wxToast('该企业已删除')
+      }
+      let uid = wx.getStorageSync('rendaUid')
+      let conversationID = 'C2C' + item.com_id
+      wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.com_id}`)
     }
 	}
 }

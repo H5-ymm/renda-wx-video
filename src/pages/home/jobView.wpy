@@ -6,7 +6,7 @@
 </style>
 <template>
   <scroll-view scroll-y="true" style="height:100%" >
-    <jobList :list.sync="list" class="scroll-view"></jobList>
+    <jobList :list.sync="list" @deliverResume="deliverResume" class="scroll-view"></jobList>
   </scroll-view>
 </template>
 <script>
@@ -34,6 +34,26 @@ export default class jobView extends wepy.page {
       this.list = res.data || []
       this.$apply()
     })
+  }
+  applyJob(params, item) {
+    $http('/personaljob/addapplyJob', params).then(res => {
+      if (res.data) {
+        this.getjobList()
+        wxToast('投递成功耐心等待企业回复吧')
+      } else {
+        wxToast('投递失败')
+      }
+    })
+  }
+  events = {
+    deliverResume: data => {
+       let params = {
+        uid: this.params.uid,
+        job_id: data.id,
+        jf_id: wx.getStorageSync('rendaJHID')
+      }
+      this.applyJob(params, data)
+    }
   }
   onLoad(options) {
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid

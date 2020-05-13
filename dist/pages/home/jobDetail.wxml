@@ -10,7 +10,9 @@
     </view>
     <view class="page__desc">{{$jobDetailItem$item.number}}人 | {{$jobDetailItem$item.edu}} | {{$jobDetailItem$item.province}}{{$jobDetailItem$item.city}}{{$jobDetailItem$item.area}}</view>
     <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{$jobDetailItem$item.social_security}}</view></view>
+      <view class="weui-flex start weui-flex__item">
+        <view class="card-item weui-flex center">{{$jobDetailItem$item.social_security}}</view>
+      </view>
       <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobDetailItem$isShowBtn&&$jobDetailItem$item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-wpydeliverresume-a="{{$jobDetailItem$item}}">
         投递简历
       </button>
@@ -39,7 +41,7 @@
           <view class="weui-flex between" bindtap="viewCompany">
             <view class="weui-flex between">
               <image src="{{companyDetail.logo_url}}"  wx:if="{{companyDetail.logo_url}}" class="card-header shadow" mode="scaleToFill"/>
-              <image src="../../images/company.png"  wx:else class="card-header shadow" mode="scaleToFill"/>
+              <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png"  wx:else class="card-header shadow" mode="scaleToFill"/>
               <view class="com_info">
                 <view class="page__title">{{companyDetail.com_name}}</view>
                 <view class="page__desc">{{companyDetail.nature}} · {{companyDetail.scale}} · {{companyDetail.trades}}</view>

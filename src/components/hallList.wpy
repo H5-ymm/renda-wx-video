@@ -1,10 +1,10 @@
 
 <template>
-	<view>
+	<view class="hall-item">
 	  <view class="weui-flex between wrap page_margin">
 			<repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
 				<view @tap="viewCompany({{item}})" class="list-card shadow hall-row">
-					<hallItem :itemValue.sync="item"></hallItem>
+					<hallItem :itemValue.sync="item" @routerJob.user="routerJob"></hallItem>
 				</view>
 			</repeat>
 		</view>
@@ -29,9 +29,9 @@ export default class hallList extends wepy.component {
     routerJob(item) {
       this.$emit('routerJob', item)
     },
-    viewCompany() {
+    viewCompany(item) {
 			if (wx.getStorageSync('rendaUserType') == 1) return
-      wxNavigateTo('/pages/home/companyDetail')
+			this.$emit('viewCompany', item)
     }
 	}
 }

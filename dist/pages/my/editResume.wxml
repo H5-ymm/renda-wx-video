@@ -5,7 +5,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">姓名</view>
-            <view class="weui-flex between">
+            <view class="my-text-right">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.nickname}}" data-name="nickname" bindinput="changeInput"/>
             </view>
           </view>
@@ -15,11 +15,11 @@
             <view class="my-text  weui-flex__item my-text-require">性别</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataSexPicker$multiText}}" class="page__title" bindtap="$dataSexPicker$changeSelect">
+    <view class="my-text-right weui-flex between" bindtap="$dataSexPicker$changeSelect">
+      <view  wx:if="{{$dataSexPicker$multiText}}" class="page__title">
         {{$dataSexPicker$multiText}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataSexPicker$changeSelect">{{$dataSexPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$dataSexPicker$text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataSexPicker$isScaleModal}}">
@@ -69,30 +69,30 @@
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">现居地址</view>
             
-  <view class="districtSelet">
+  <view class="districtSelet" bindtap="$districtSelet$changeCity">
     <view class="my-text-right weui-flex between">
       <view  wx:if="{{$districtSelet$options.length}}" class="page__title">
         {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
         {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$districtSelet$changeCity">请选择地址</view>
+      <view  wx:else class="placeholder">请选择地址</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$districtSelet$isScaleModal}}">
-      <view bindtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
+      <view catchtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
       <view class="modal_box transition3s {{ $districtSelet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$districtSelet$height}}rpx">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
-              <view class="weui-flex center" bindtap="$districtSelet$selectClose">
+              <view class="weui-flex center" catchtap="$districtSelet$selectClose">
                 取消
               </view>
-              <view class="weui-flex center ok-btn" bindtap="$districtSelet$selectOk">
+              <view class="weui-flex center ok-btn" catchtap="$districtSelet$selectOk">
                 确定
               </view>
             </view>
-            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$districtSelet$activeIndex}}" bindchange="$districtSelet$bindChange">
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$districtSelet$multiIndex}}" bindchange="$districtSelet$bindChange">
               <picker-view-column>
                 <block wx:for="{{$districtSelet$multiArray[0]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
@@ -122,11 +122,11 @@
             <view class="my-text  weui-flex__item my-text-require">求职状态</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataPicker$multiText}}" class="page__title" bindtap="$dataPicker$changeSelect">
+    <view class="my-text-right weui-flex between" bindtap="$dataPicker$changeSelect">
+      <view  wx:if="{{$dataPicker$multiText}}" class="page__title">
         {{$dataPicker$multiText}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataPicker$changeSelect">{{$dataPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">
@@ -162,11 +162,11 @@
             <view class="my-text weui-flex__item my-text-require">学历</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataEduPicker$multiText}}" class="page__title" bindtap="$dataEduPicker$changeSelect">
+    <view class="my-text-right weui-flex between" bindtap="$dataEduPicker$changeSelect">
+      <view  wx:if="{{$dataEduPicker$multiText}}" class="page__title">
         {{$dataEduPicker$multiText}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataEduPicker$changeSelect">{{$dataEduPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$dataEduPicker$text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataEduPicker$isScaleModal}}">

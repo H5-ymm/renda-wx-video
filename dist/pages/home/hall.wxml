@@ -25,31 +25,38 @@
       <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="2">求职大厅</view>
     </view>
     
-  <view class="weui-flex between search-box">
+  <view class="weui-flex between search-box" wx:if="{{hallType==1}}">
 		<view class="weui-cell weui-flex start weui-flex__item">
 			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon"/>
-			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" placeholder="{{$searchHall$placeholder}}"/>
+			<input class="weui-input weui-flex__item search-input" bindinput="$searchJobHall$inputBind" confirm-type="search" bindfocus="$searchJobHall$inputFocus" value="{{$searchJobHall$name}}" bindblur="$searchJobHall$inputBlur" placeholder="{{$searchJobHall$placeholder}}"/>
     </view>
-		<text bindtap="$searchHall$searchValue">搜索</text>
 	</view>
 
     
-	<view wx:if="{{hallType==1}}">
+  <view class="weui-flex between search-box" wx:else>
+		<view class="weui-cell weui-flex start weui-flex__item">
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon"/>
+			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" bindblur="$searchHall$inputBlur" placeholder="{{$searchHall$placeholder}}"/>
+    </view>
+	</view>
+
+    
+	<view class="hall-item" wx:if="{{hallType==1}}">
 	  <view class="weui-flex between wrap page_margin">
 			<block  wx:if="{{$hallList$list.length}}" wx:for="{{$hallList$list}}" wx:for-index="$hallList$index" wx:for-item="$hallList$item" wx:key="$hallList$index">
 				<view bindtap="$hallList$viewCompany" class="list-card shadow hall-row" data-wpyviewcompany-a="{{$hallList$item}}">
 					
   <view class="list-card-row">
-    <image src="{{$hallList$item.logo_url}}"  wx:if="{{$hallList$item.logo_url}}" class="list-card-header" mode="scaleToFill"/>
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png"  wx:else class="list-card-header" mode="scaleToFill"/>
+    <image src="{{$hallList$item.logo_url}}"  wx:if="{{$hallList$item.logo_url}}" class="list-card-header shadow" mode="scaleToFill"/>
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png"  wx:else class="list-card-header shadow" mode="scaleToFill"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{$hallList$item.com_name}}</text>
       </view>
       <view class="card-col-2">    
-        <view class="weui-flex start text-line ">
+        <view class="weui-flex start text-line">
           <block wx:for="{{$hallList$item.benefits}}" wx:for-index="$hallList$hallItem$index" wx:for-item="$hallList$hallItem$benefitsItem" wx:key="$hallList$hallItem$index">
-            <view class="card-item weui-flex center">{{$hallList$hallItem$benefitsItem}}</view>
+            <view class="card-item weui-flex center" wx:if="{{$hallList$hallItem$index<2}}">{{$hallList$hallItem$benefitsItem}}</view>
           </block> 
         </view>
         <view class="weui-flex start-start wrap job-box">
@@ -60,7 +67,7 @@
         <view class="card-text weui-flex__item">共有{{$hallList$item.job_num}}个职位在招聘</view>
         <view class="weui-flex between wrap">
           <button class="weui-btn_cell weui-btn_primary_plain" catchtap="$hallList$hallItem$routerJob" data-com-index="{{$hallList$index}}" data-wpyrouterjob-a="{{$hallList$item}}">
-            立即沟通
+            投递简历
           </button>
         </view>
       </view>
@@ -77,14 +84,14 @@
 	</view>
 
     
-	<view wx:else>
+	<view class="hall-item" wx:else>
 		<view class="weui-flex between wrap page_margin">
 			<block  wx:if="{{$jobHallList$list.length}}" wx:for="{{$jobHallList$list}}" wx:for-index="$jobHallList$index" wx:for-item="$jobHallList$item" wx:key="$jobHallList$index">
-				<view bindtap="$jobHallList$routerConcat" class="list-card shadow hall-row" data-wpyrouterconcat-a="{{$jobHallList$item}}">
+				<view bindtap="$jobHallList$viewResume" class="list-card shadow hall-row" data-wpyviewresume-a="{{$jobHallList$item}}">
 					
   <view class="list-card-row">
-    <image src="{{$jobHallList$item.head_img}}"  wx:if="{{$jobHallList$item.head_img}}" class="list-card-header" mode="scaleToFill"/>
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png"  wx:else class="list-card-header" mode="scaleToFill"/>
+    <image src="{{$jobHallList$item.head_img}}"  wx:if="{{$jobHallList$item.head_img}}" class="list-card-header shadow" mode="scaleToFill"/>
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png"  wx:else class="list-card-header shadow" mode="scaleToFill"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{$jobHallList$item.nickname}}</text>
@@ -93,9 +100,9 @@
         <view class="weui-flex start text-line">
           <view class="page__desc">{{$jobHallList$item.sex==1?'男':'女'}}｜{{$jobHallList$item.age||0}}岁</view>
         </view>
-        <view class="text-line"><text class="name"><text wx:if="{{$jobHallList$item.edu}}">{{$jobHallList$item.edu}} /</text><text wx:if="{{$jobHallList$item.speciality}}">{{$jobHallList$item.speciality || ''}}</text></text></view>
-        <view class="card-text weui-flex__item">意向：{{$jobHallList$item.expected_job || '无'}}</view>
-        <view class="weui-flex between">
+        <view class="text-line"><text class="name">{{$jobHallList$item.edu || ''}}/{{$jobHallList$item.speciality || ''}}</text></view>
+        <view class="card-text weui-flex__item">意向：{{$jobHallList$item.job_name || '无'}}</view>
+        <view class="weui-flex between" catchtap="$jobHallList$jobHallItem$routerConcat" data-com-index="{{$jobHallList$index}}" data-wpyrouterconcat-a="{{$jobHallList$item}}">
           <button class="weui-btn_cell weui-btn_primary_plain">
             立即沟通
           </button>
@@ -153,7 +160,7 @@
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex center modal-btn wrap">
             <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
-            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是求职者</view>
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是个人求职者</view>
           </view>
         </view>
       </view>

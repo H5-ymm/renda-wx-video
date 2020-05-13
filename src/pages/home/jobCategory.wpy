@@ -1,0 +1,168 @@
+<style lang="less">
+@import "../../style/list.less";
+.scroll-view {
+  margin-bottom: 30rpx;
+  height: 100%;
+  .page_card_icon {
+    width: 26rpx;
+    height: 26rpx;
+  }
+}
+.show {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  animation: myfirst_show 1s;
+  background:rgba(0,0,0,.4);
+  overflow: hidden;
+ }
+  @keyframes myfirst_show {
+    0% {
+      right:-100%;
+    }
+    100% {
+      right: 0;
+    }
+  }
+  .hide {
+    position: fixed;
+    top: 0;
+    width:90%;
+    height: 100%;
+    animation: myfirst_hide 1s;
+    background:rgba(0,0,0,.4);
+  }
+  .content {
+    width:90%;
+    height: 100%;
+    background: #fff;
+    margin-left: 10%;
+    .content-row {
+      height: 100%;
+      line-height: 100rpx;
+      padding-left: 40rpx;
+      overflow: auto;
+      .active {
+        color: #1890FF;
+      }
+    }
+    .content-left {
+      background: #F3F5FF;
+    }
+  }
+  @keyframes myfirst_hide
+  {
+    0% {
+      right:0;
+    }
+    100% {
+      right: -100%;
+    }
+  }
+</style>
+<template>
+  <scroll-view scroll-y="true" style="height:100%" >
+    <view class="scroll-view">
+      <view class="weui-flex between list-row" @tap="showMoreContent({{item}})" wx:for="{{list}}" wx:key="index">
+        <view class="page__title">{{item.type_name}}</view>
+        <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"/>
+      </view>
+    </view>
+    <view wx:if="{{if_show}}" class="{{show_centent?'show':'hide'}}" @tap="switchShow">
+      <view class="content weui-flex between">
+        <view class="content-left content-row weui-flex__item" >
+          <view wx:for="{{multiArray[0]}}" class="{{index==multiIndex[0]?'active': ''}}" wx:key="index" @tap.stop="showSecondData(1,{{item}},{{index}})">{{item.type_name}}</view>
+        </view>
+        <view class="content-right content-row weui-flex__item">
+          <view  wx:for="{{multiArray[1]}}" class="{{index==multiIndex[1]?'active': ''}}" wx:key="index" @tap.stop="showSecondData(2,{{item}},{{index}})">{{item.type_name}}</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
+import jobList from '@/components/jobList'
+export default class jobCategory extends wepy.page {
+  components = {
+    jobList: jobList,
+  }
+  data = {
+    params: {
+			uid: '',
+			com_id: ''
+    },
+    list: [],
+    if_show: false,
+    show_centent:false,
+    multiArray: [],
+    multiIndex: [0, 0],
+    type: 0
+  }
+  config = {
+    navigationBarTitleText: '职位列表'
+  }
+  getJobList(value) {
+    $http('/Constant/getJobType', { parentId: value }).then(res => {
+      if (value) {
+        if (res.data && this.type == 0) {
+          this.multiArray[0] = res.data
+          this.type = 1
+          this.getJobList(res.data[0].id)
+        }
+        if (res.data && this.type== 1) {
+          this.multiArray[1] = res.data
+        }
+      } else {
+        this.list = res.data
+      }
+      this.$apply()
+    }).catch(error => {
+    })
+  }
+  onLoad() {
+    this.getJobList('')
+  }
+  methods = {
+    showSecondData(type, item, index){
+      console.log(type, item, index)
+      this.type = type
+      if (type==1) {
+        this.multiIndex[0] = index
+        this.$apply()
+        this.getJobList(item.id)
+      } else {
+        this.multiIndex[1] = index
+        wx.setStorageSync('jobCategory', JSON.stringify(item));
+        wx.navigateBack({
+          delta: 1,
+        })
+        // this.$emit('selectJob', item)
+      } 
+    },
+    showMoreContent(item) {
+      this.getJobList(item.id)
+      if (!this.show_centent) {
+        this.if_show = true
+        this.show_centent = true
+      } else {
+       this.show_centent = false
+        setTimeout( () => {
+          this.if_show = false
+        },1000)
+      }
+      this.$apply()
+    },
+    switchShow() {
+      this.show_centent = false
+      this.if_show = false
+      this.multiIndex = [0, 0]
+      this.$apply()
+    }
+  }
+}
+</script>

@@ -3,7 +3,7 @@
     <view class="login-view welcome-view">
       <view class="login-title">
         <view>Hi,</view>
-        <view class="login-title-col">欢迎使用人事达视频招聘会</view>
+        <view class="login-title-col">欢迎使用应届生云端视频</view>
       </view>
        <image src="http://www.ttxsg.com.cn:39009/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg"/>
       <view class="welcome-view-box">
@@ -25,23 +25,6 @@
       </view>
     </view>
     
-  <view hidden="{{$modal$isScaleModal}}">
-    <view bindtap="$modal$handleOk"  wx:if="{{$modal$isShow}}" class="modal_mask"/>
-    <view class="modal_box1 transition3s {{ $modal$isShow ? 'g_scale1': ''}}" id="modal-box">
-      <view class="modal-content">
-        <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
-        <view class="modal-textarea weui-flex center">
-            <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" class="weui-input weui-textarea modal-col page__desc" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}" maxlength="-1" value="{{$modal$content}}"/>
-         </view>
-         <view class="weui-cell_btn weui-flex around">
-          <view class="text page__desc" bindtap="$modal$handleClose">取消</view>
-          <view class="text page__text__active" bindtap="$modal$handleOk">确定</view>
-        </view>
-      </view>
-    </view>
-  </view>
-
-    
   <view hidden="{{$actionLoginSheet$isScaleModal}}">
     <view bindtap="$actionLoginSheet$handleClose"  wx:if="{{$actionLoginSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionLoginSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionLoginSheet$height}}rpx">
@@ -59,7 +42,7 @@
           <view class="modal_text weui-flex center">{{$actionLoginSheet$text}}</view>
           <view class="weui-flex center modal-btn wrap">
             <view class="col weui-flex center" bindtap="$actionLoginSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
-            <view class="col weui-flex center" bindtap="$actionLoginSheet$selectUser" data-wpyselectuser-a="2">我是求职者</view>
+            <view class="col weui-flex center" bindtap="$actionLoginSheet$selectUser" data-wpyselectuser-a="2">我是个人求职者</view>
           </view>
         </view>
       </view>

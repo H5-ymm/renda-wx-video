@@ -7,11 +7,11 @@
             <view class="my-text  weui-flex__item my-text-require">学历</view>
             
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$dataPicker$multiText}}" class="page__title" bindtap="$dataPicker$changeSelect">
+    <view class="my-text-right weui-flex between" bindtap="$dataPicker$changeSelect">
+      <view  wx:if="{{$dataPicker$multiText}}" class="page__title">
         {{$dataPicker$multiText}}
       </view>
-      <view  wx:else class="placeholder" bindtap="$dataPicker$changeSelect">{{$dataPicker$text}}</view>
+      <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">

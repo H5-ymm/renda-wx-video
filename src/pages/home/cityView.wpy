@@ -1,0 +1,219 @@
+<style lang="less">
+  .page-team-home {
+    height: 100%;
+    background: #fff;
+    .city-title {
+      padding: 30rpx 22rpx;
+      .addressText {
+        width: 70%;
+        text-align: left;
+      }
+    }
+    .city_icon {
+      width: 48rpx;
+      height: 48rpx;
+    }
+    .city-content {
+      height: 100%;
+      overflow: hidden;
+      > view {
+        height: 100%;
+        padding: 0 10rpx 0 40rpx;
+        overflow: auto;
+        color: #111111;
+        font-size: 28rpx;
+        line-height: 60rpx;
+        .active {
+          color: #1890FF;
+        }
+      }
+      .city-col1 {
+        background: #F6F6F6;
+      }
+      .city-col2 {
+        border-right: 1px solid #F0F2FA;
+      }
+    }
+  }
+</style>
+<template>
+  <view class="page-team-home">
+    <view class="city-title weui-flex between">
+      <image src="../../images/clear.png" alt="" class="city_icon" @tap="close"/>
+      <view class="addressText">{{address?address:addressText}}</view>
+    </view>
+    <view class="view-list">
+      <view class="city-content weui-flex between">
+        <view class="city-col1 weui-flex__item">
+          <view class="name {{code?'':'active'}}" @tap="selectCity('', 0)">全国</view>
+          <repeat wx:for="{{multiArray[0]}}" wx:key="index">
+            <view class="name {{code==item.value?'active':''}}" @tap="selectCity({{item}}, 1)">{{item.name}}</view>
+          </repeat>
+        </view>
+        <view class="city-col2 weui-flex__item" wx:if="{{code}}">
+          <repeat wx:for="{{multiArray[1]}}" wx:key="index">
+            <view class="name {{cityCode==item.value?'active':''}}" @tap="selectCity({{item}}, 2)">{{item.name}}</view>
+          </repeat>
+        </view>
+        <view class="city-col2 weui-flex__item" wx:if="{{!code}}">
+          <repeat wx:for="{{cityList}}" wx:key="index">
+            <view class="name {{cityCode==item.value||(address == '全国'&&index==0)?'active':''}}" @tap="selectCity({{item}}, 2)">{{item.name}}</view>
+          </repeat>
+        </view>
+        <view class="city-col3 weui-flex__item" wx:if="{{address!='全国'}}">
+          <repeat wx:for="{{multiArray[2]}}" wx:key="index">
+            <view class="name weui-flex between {{areaCode==item.value?'active':''}}" @tap="selectCity({{item}}, 3)">
+              {{item.name}}
+              <image src="../../images/selected.png" alt="" class="city_icon" wx:if="{{areaCode == item.value}}"/>
+            </view>
+          </repeat>
+        </view>
+      </view>
+    </view>
+    <view class="select-btn">
+			<view class="weui-flex center">
+				<button class="weui-btn_cell"  @tap="close">
+					取消 
+				</button>
+				<button class="weui-btn_cell weui-btn_primary" @tap="save">
+					确定
+				</button>
+			</view>
+		</view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { cityList} from '@/base/base'
+import { wxNavigateTo } from '@/util.js'
+let flag = false
+export default class cityView extends wepy.page {
+  data = {
+    multiArray: [],
+    cityList,
+    code: '',
+    cityCode: '',
+    areaCode: '',
+    areaName: '',
+    provinceName: '',
+    cityName: '',
+    address: '全国',
+    options: []
+  }
+  computed = {
+    addressText() {
+      return this.provinceName + this.cityName + this.areaName
+    }
+  }
+  getList(list) {
+    return list.map(item => {
+      let obj = {
+        name : item.area_name,
+        value : item.id
+      }
+      return obj
+    })
+  }
+  getRegion(value) {
+    $http('/Constant/selectAddress', { parentId: ''})
+      .then(res => {
+        let arr = this.getList(res.data)
+        this.multiArray[0] = arr
+        this.$apply()
+        this.getCityList(value)
+      })
+      .catch(error => {
+       
+      })
+  }
+  getCityList(value) {
+    let code = ''
+    if (!value.length) {
+      code = '110000'
+    } else {
+      code = value[0]
+    }
+    $http('/Constant/selectAddress', { parentId: code }).then(res => {
+      let arr = this.getList(res.data)
+      if (arr.length) {
+        this.multiArray[1] = arr
+        if (!value[1]) {
+          value[1]  = arr[0].value
+        }
+        this.getAreaList(value)
+      } else {
+        this.multiArray[1] = []
+        this.multiArray[2] = []
+      }
+      this.$apply()
+    })
+  }
+  getAreaList(value) {
+    let code = ''
+    if (!value[1]) {
+      code = '110100'
+    } else {
+      code = value[1]
+    }
+    $http('/Constant/selectAddress', { parentId: code }).then(res => {
+      let arr = this.getList(res.data)
+      this.multiArray[2] = arr
+      this.$apply()
+    })
+  }
+  onLoad() {
+    this.getRegion([])
+  }
+  config = {
+    navigationBarTitleText: '选择城市'
+  }
+  methods = {
+    selectCity(item, index){
+      flag = true
+      if (index == 0) {
+        this.code = ''
+        this.address = '全国'
+        this.options = []
+      } else if (index == 1) {
+        this.address = ''
+        this.code = item.value
+        this.provinceName = item.name
+        let arr = [item.value, '']
+        this.getCityList(arr)
+      } else if (index == 2) {
+        if (item.value) {
+          this.cityName = item.name
+          this.cityCode = item.value
+          let arr = [this.code ,item.value]
+          this.getAreaList(arr)
+        } else {
+          this.address = '全国'
+          this.areaCode = item.value
+          this.areaName = item.name
+        }
+      } else {
+        this.areaCode = item.value
+        this.areaName = item.name
+      }
+      if (index && item.value) {
+        if (this.address=='全国') {
+          this.address = ''
+        }
+      }
+      this.$apply()
+    },
+    save() {
+      wx.setStorageSync('codeObj', JSON.stringify({code: this.areaCode, name : this.areaName}))
+      wx.navigateBack({
+       delta: 1,
+      })
+    },
+    close() {
+      wx.navigateBack({
+       delta: 1,
+      })
+    }
+  }
+}
+</script>

@@ -11,7 +11,7 @@
 				</view>
 				<view class="card-col-2">    
 					<view>时间：{{item.starttime}} 至 {{item.endtime}}</view>
-					<view>动态：<text>企业{{item.companynum||1}}家 | 岗位10家 | 求职者{{item.jobnum}}人</text></view>
+					<view>动态：<text>企业{{item.companynum}}家 | 岗位{{item.jobnum}}个 | 求职者{{item.usernum}}人</text></view>
 					<view>规模：{{item.scale||1}}家企业</view>
 				</view>
 				<view class="card-col-3">
@@ -22,7 +22,9 @@
 							企业订展
 						</button>
 						<view class="page__desc" wx:if="{{!item.applyinfo&&item.is_finish==1}}">订展结束</view>
-						<view class="page__desc" wx:if="{{item.applyinfo}}">企业已订展</view>
+						<view class="page__desc" wx:if="{{item.applyinfo&&item.is_audit!=1}}">企业已订展</view>
+						<view class="page__desc" wx:if="{{item.is_audit==1&&item.applyinfo&&!item.applyinfo.status}}">企业订展审核中</view>
+						<view class="page__desc" wx:if="{{item.is_audit==1&&item.applyinfo&&item.applyinfo.status}}">企业已订展</view>
 						<button class="weui-btn_cell weui-btn_primary" @tap="routerHall({{item}})">
 						 进入会场
 						</button>

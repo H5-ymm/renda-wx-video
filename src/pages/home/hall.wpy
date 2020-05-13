@@ -9,21 +9,22 @@
   <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
     <jobFairItemHall :itemValue.sync="jobFairInfo" :isShowBtn.sync="isShowBtn" @viewDetail="viewDetail"></jobFairItemHall>
     <view class="hall-switch weui-flex between shadow">
-      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView('1')">招聘大厅</view>
-      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView('2')">求职大厅</view>
+      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView(1)">招聘大厅</view>
+      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView(2)">求职大厅</view>
     </view>
-    <searchHall placeholder="搜索意向职位"></searchHall>
-    <hallList :list.sync="list" wx:if="{{hallType==1}}" @routerJob="routerJob"></hallList>
-    <jobHallList :list.sync="list" wx:else @routerConcat="routerConcat"></jobHallList>
+    <searchJobHall placeholder="搜索职位" @inputFocus.user="inputFocus" wx:if="{{hallType==1}}" @inputBlur="inputBlur"></searchJobHall>
+    <searchHall  @searchValue="searchValue" wx:else placeholder="搜索意向职位"></searchHall>
+    <hallList :list.sync="list" wx:if="{{hallType==1}}" @viewCompany="viewCompany" @routerJob="routerJob"></hallList>
+    <jobHallList :list.sync="list" wx:else @viewResume="viewResume" @routerConcat="routerConcat" ></jobHallList>
     <invitationModal :isScaleModal.sync="isInvitationModal" @handleCloseModal="handleCloseModal" :companyList.sync="companyList" :invitationContent.sync="invitationContent"></invitationModal>
-    <actionSheet :isScaleModal.sync="isScaleModal" :text.sync="text" @handleOk="handleOk" okText="完善信息" @handleClose="handleClose"></actionSheet>
+    <actionSheet :isScaleModal.sync="isScaleModal" :text.sync="text" @handleOk="handleOk" :okText.sync="okText" @handleClose="handleClose"></actionSheet>
   </scroll-view>
 </template>
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
+import { getImgUrl, wxToast, wxNavigateTo, contactPhone } from '@/util.js'
 import jobFairItem from '@/components/jobFairItem'
 import search from '@/components/search'
 import hallList from '@/components/hallList'
@@ -36,6 +37,7 @@ export default class hall extends wepy.page {
     hallList: hallList,
     jobHallList: jobHallList,
     actionSheet: actionSheet,
+    searchJobHall: search,
     searchHall: search,
     invitationModal: invitationModal
   }
@@ -65,21 +67,22 @@ export default class hall extends wepy.page {
       limit: 10,
       keywords: ''
     },
-    companyList: []
+    companyList: [],
+    rendaUserType: '',
+    okText: '完善信息'
   }
   events = {
     searchValue: keywords => {
-      let params = {}
-      if (this.hallType == 1) {
-        params = Object.assign(this.companyParams, { keywords })
-      } else {
-        params = Object.assign(this.params, keywords)
+      if (this.hallType == 2) {
+        this.searchList(keywords)
       }
-      this.getHallList(params)
     },
     handleCloseModal: ()=>{
       this.isInvitationModal = !this.isInvitationModal
       this.$apply()
+    },
+    viewCompany: data => {
+      this.checkRouter(this.rendaUserType, data, 1)
     },
     viewDetail: ()=>{
       this.getCompanyList()
@@ -87,38 +90,93 @@ export default class hall extends wepy.page {
       this.$apply()
     },
     routerConcat: data => {
-      console.log(data)
-      let rendaPerfect  = wx.getStorageSync('rendaPerfect')
-      if (wx.getStorageSync('rendaUserType') == 1) {
-        if (!rendaPerfect) {
-          this.text = '企业信息不完整，请前往完善'
-          this.isScaleModal = !this.isScaleModal
-          this.$apply()
-        } else {
-          let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-          wxNavigateTo('/pages/message/personalDialogBox?toUser=' + data.uid+ '&userID=' + uid)
-        }
-      } else {
-        wxToast('只有企业才能发起沟通')
-      }
+      this.checkRouter(this.rendaUserType, data)
+    },
+    viewResume: data => {
+      this.checkRouter(this.rendaUserType, data, 1)
     },
     routerJob: data => {
-      console.log(data)
-      let rendaPerfect  = wx.getStorageSync('rendaPerfect')
-      if (!rendaPerfect) {
-        this.text = '个人简历不完整，请前往完善'
-        this.isScaleModal = !this.isScaleModal
-        this.$apply()
-      } else {
-        if (wx.getStorageSync('rendaUserType') == 2) {
-          wxNavigateTo('/pages/home/jobView?query='+ data.id)
-        } else {
-          wxToast('只有求职者才能发起沟通')
-        }
-      }
+      this.checkRouter(this.rendaUserType, data)
     },
     handleOk: () => {
-      wxNavigateTo('/pages/my/resume')
+      if (this.okText == '完善信息') {
+        if (this.rendaUserType == 1) {
+          wxNavigateTo('/pages/my/companyForm') 
+        } else {
+          wxNavigateTo('/pages/my/resume')
+        }   
+      } else {
+        contactPhone()
+      }
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    },
+    inputBlur: () => {
+      this.params.name = ''
+    }
+  }
+  searchList(jobname) {
+    let params = Object.assign(this.params, { jobname })
+    this.getHallList(params)
+  }
+  checkRouter(rendaUserType, data, index) {
+    let rendaPerfect  = wx.getStorageSync('rendaPerfect')
+    if (!rendaPerfect) {
+      if (rendaUserType == 2) {
+         if (this.hallType == 2) {        
+          wxToast('只有企业才能发起沟通')
+        } else {
+          this.text = '个人简历不完整，请前往完善'
+          this.okText = '完善信息'
+          this.isScaleModal = !this.isScaleModal
+          this.$apply()
+        }
+      } else {
+        if (this.hallType == 1) {        
+          wxToast('只有求职者才能投递简历')
+        } else {
+          this.text = '企业信息不完整，请前往完善'
+          this.okText = '完善信息'
+          this.isScaleModal = !this.isScaleModal
+          this.$apply()
+        }
+      }
+    } else if (rendaUserType == 1 && rendaPerfect && !this.jobFairInfo.applyinfo) {
+        this.text = '企业未订展，请联系客服021-51991869'
+        this.okText = '联系客服'
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+      } 
+      else if (rendaPerfect && this.jobFairInfo.applyinfo && !this.jobFairInfo.applyinfo.status) {
+        this.text = '企业订展正在审核中，请联系客服021-51991869'
+        this.okText = '联系客服'
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+    } else {
+      if (this.hallType == 1) {       
+        if (rendaUserType == 2&&data.job_num!=0) {
+          if (index) {
+            wxNavigateTo('/pages/home/companyDetail?query=' + data.id)
+          } else {
+            wxNavigateTo('/pages/home/jobView?query='+ data.id)
+          }  
+        } else if (rendaUserType == 2&&data.job_num==0) {
+          wxToast('该企业下没有发布职位')
+        } else {
+          wxToast('只有求职者才能投递简历')
+        }
+      } else {
+        if (rendaUserType == 1) {
+          if (index) {
+            wxNavigateTo('/pages/my/resume?query=' + data.uid)
+          } else {
+            let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+            wxNavigateTo('/pages/message/personalDialogBox?toUser=' + data.uid+ '&userID=' + uid)
+          } 
+        } else {
+          wxToast('只有企业才能发起沟通')
+        }
+      }
     }
   }
   onLoad(options) {
@@ -128,7 +186,11 @@ export default class hall extends wepy.page {
     this.jf_id = options.query
     this.params.jf_id = options.query
     this.companyParams.id = options.query
-    this.hallType = wx.getStorageSync('rendaUserType') == 1 ? 2 : 1
+    this.rendaUserType = wx.getStorageSync('rendaUserType')
+    this.hallType = this.rendaUserType == 1 ? 2 : 1
+    if (wx.getStorageSync('codeName')) {
+      this.city = JSON.parse(wx.getStorageSync('codeName')).name
+    }
     this.$apply()
     this.getJobfairinfo(this.jf_id)
   }
@@ -152,12 +214,16 @@ export default class hall extends wepy.page {
   }
   getCompanyList() {
      $http('/Jobfair/companylist', { id: this.jf_id }).then(res => {
-      this.companyList = res.data.concat(res.data)
+      this.companyList = res.data
       this.$apply()
     })
   }
   getJobfairinfo (id) {
-    $http('/Jobfair/getJobfairinfo', { id }).then(res => {
+    let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    if (this.rendaUserType == 1) {
+      wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    }
+    $http('/Jobfair/getJobfairinfo', { id, uid }).then(res => {
       this.jobFairInfo = res.data
       this.invitationContent = res.data.invitation_letter
       this.jobFairInfo.endtime = $moment.unix(res.data.endtime).format('YYYY-MM-DD HH:ss')
@@ -166,6 +232,11 @@ export default class hall extends wepy.page {
     })
   }
   methods = {
+    inputFocus() {
+      if (this.hallType == 1 ) {
+        wxNavigateTo('/pages/home/jobSearch')
+      } 
+    },
     switchView(index) {
       this.hallType = index
       this.$apply()

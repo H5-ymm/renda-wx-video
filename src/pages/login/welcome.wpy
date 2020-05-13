@@ -6,7 +6,7 @@
     <view class="login-view welcome-view">
       <view class="login-title">
         <view>Hi,</view>
-        <view class="login-title-col">欢迎使用人事达视频招聘会</view>
+        <view class="login-title-col">欢迎使用应届生云端视频</view>
       </view>
        <image src="http://www.ttxsg.com.cn:39009/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
       <view class="welcome-view-box">
@@ -27,34 +27,25 @@
         </view>
       </view>
     </view>
-    <modal :isScaleModal.sync="isModal" :height.sync="modalHeight" :modalObj.sync="modalObj"></modal>
     <actionLoginSheet :isScaleModal.sync="isLoginModal" text="明确身份后提供更准确的服务" :title.sync="title" okText="完善信息" @selectUser="selectUser"  @handleClose="handleClose"></actionLoginSheet>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
-import modal from '@/components/modal'
 import actionSheet from '@/components/actionSheet'
 import { $http } from '@/http.js'
-import { wxToast, wxReLaunch, wxNavigateTo, getErrorTip, wxShowModal } from '@/util.js'
+import { wxToast, wxReLaunch, wxNavigateTo, getErrorTip, wxShowModal, wxRedirectTo, wxSwitchTab } from '@/util.js'
 import { getStore } from 'wepy-redux'
 import { getAllContant } from '@/store/actions/contant.js'
 import { GETALLUSER } from '@/store/types/user.js'
 const store = getStore()
 export default class Welcome extends wepy.page {
   components = {
-    modal: modal,
     actionLoginSheet: actionSheet
   }
   data = {
     userInfo: null,
-    isModal: true,
     modalHeight: 640,
-    modalObj: {
-      title: '',
-      subTitle: '',
-      imgBg: 'https://a.rsd123.com/image/images/modalIcon.png'
-    },
     checked: false,
     authorize: false,
     isRead: false,
@@ -76,8 +67,7 @@ export default class Welcome extends wepy.page {
       this.isRead = false
       this.isLoginOut = false
     }
-    this.$apply()
-    this.openid = wx.getStorageSync('rendaOpenId') || this.$parent.globalData.openid 
+    this.$apply() 
     wx.getSetting({
       success: res => {
         // 没有授权
@@ -85,7 +75,7 @@ export default class Welcome extends wepy.page {
           this.authorize = false
         } else {
           this.authorize = true
-          this.userInfo = JSON.parse(wx.getStorageSync('wxInfo'))
+          this.userInfo = wx.getStorageSync('wxInfo') ? JSON.parse(wx.getStorageSync('wxInfo')) : {}
         }
         this.$apply()
       }
@@ -93,10 +83,16 @@ export default class Welcome extends wepy.page {
 
   }
   onShow() {
+    if (wx.getStorageSync('rendaOpenId')) {
+      this.openid =  wx.getStorageSync('rendaOpenId') 
+    } else {
+      this.openid = this.$parent.getOpenId()
+    }
+    console.log(this.openid)
     if (!this.isRead) {
       this.checked = false
-      this.$apply()
     }
+    this.$apply()
   }
   saveUserType() {
     let params = {
@@ -109,7 +105,9 @@ export default class Welcome extends wepy.page {
     $http('/login/saveusertype', params).then(res => {
       if (res.data) {
         // this.isLoginModal = !this.isLoginModal
+        params.head_img = this.userInfo.avatarUrl 
         wx.setStorageSync('userInfo', JSON.stringify(params))
+        this.title = ''
         if (this.usertype == 1 ) {
           this.text = '企业信息不完整，请前往完善'
         } else {
@@ -130,6 +128,7 @@ export default class Welcome extends wepy.page {
     }
   }
   viewRouter (res) {
+    console.log(res.usertype)
     if (!res.usertype) {
       this.title = "选择身份"
       this.isLoginModal = !this.isLoginModal
@@ -138,7 +137,7 @@ export default class Welcome extends wepy.page {
       if (res.is_perfect == 1) {
         wxReLaunch('/pages/home/index')
       } else {
-        this.title = "选择身份"
+        this.title = ""
         this.isLoginModal = !this.isLoginModal
       }
     }
@@ -156,7 +155,7 @@ export default class Welcome extends wepy.page {
   getWxPhoneLogin (phoneNumber) {
     let params = {
       tel: phoneNumber,
-      openid: this.openid
+      openid: this.openid || wx.getStorageSync('rendaOpenId')
     }
     $http('/Login/is_resgister_auto', params).then(res => {
       this.checkRouterView(res.data)
@@ -169,6 +168,13 @@ export default class Welcome extends wepy.page {
     handleClose: () => {
       this.isLoginModal = !this.isLoginModal
       this.$apply()
+      console.log(this.title=='')
+      if (this.title=='') {
+        console.log('取消')
+        wxReLaunch('/pages/home/index?is_perfect=0')
+      } else {
+        wxToast('请选择身份')
+      }
     },
     selectUser: data => {
       this.usertype = data
@@ -178,9 +184,9 @@ export default class Welcome extends wepy.page {
     },
     handleOk: data => {
       if (this.usertype == 1) {
-        wxNavigateTo('/pages/my/companyForm') 
+        wxRedirectTo('/pages/my/companyForm') 
       } else {
-        wxNavigateTo('/pages/my/resume')
+        wxRedirectTo('/pages/my/resume')
       }
     }
   }

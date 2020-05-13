@@ -3,7 +3,7 @@
     <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="page">
       <view class="home-view-box">
         <block  wx:for="{{list}}" wx:key="index">
-          <view class="list-row" wx:if="{{list.length}}" bindtap="selectJob" data-wpyselectjob-a="{{index}}" data-wpyselectjob-b="{{item}}">
+          <view class="list-row" wx:if="{{list.length}}" bindtap="viewJob" data-wpyviewjob-a="{{item}}">
             <view class="list-col-1">
               <view class="weui-flex between">
                 <view class="page__text__active">应聘职位：{{item.job_name}} {{item.salary}}</view>
@@ -11,11 +11,11 @@
               </view>
               <view class="page__title">
                 <view class="page__title">{{item.nickname}}</view>
-                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age||1}}岁</view>          
+                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age}}岁</view>          
               </view>
               <view class="weui-flex between">
-                <view class="page__title weui-flex__item">{{item.edu||''}}</view>
-                <button class="weui-btn_cell weui-btn_primary">
+                <view class="page__title weui-flex__item">{{item.edu||''}}/{{item.speciality}}</view>
+                <button class="weui-btn_cell weui-btn_primary" catchtap="concatUser" data-wpyconcatuser-a="{{item}}">
                   立即沟通
                 </button>
               </view>

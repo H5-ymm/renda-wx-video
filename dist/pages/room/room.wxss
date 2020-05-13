@@ -1,4 +1,10 @@
 /* miniprogram/pages/room/room.wxss */
+.page-room{
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+/* miniprogram/pages/room/room.wxss */
  .bg-logo
   {
     width :100%;

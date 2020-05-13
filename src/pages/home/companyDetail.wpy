@@ -62,12 +62,10 @@
         <view class="section-box">
           <view class="page__title">该公司职位</view>
           <repeat for="{{jobList}}" key="index">
-            <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="communicateCompany" wx:if="{{index==0&&!showMore}}"></jobDetailItem>
-            <view class="job-box {{showMore?'page_bottom':''}}">
-              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="communicateCompany" wx:if="{{showMore}}"></jobDetailItem>
+            <view class="job-box page_bottom">
+              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="communicateCompany"></jobDetailItem>
             </view>
           </repeat>
-          <view class="page__text__active" @tap="viewMoreJob" wx:if="{{!showMore&&jobList.length>1}}">查看更多</view>
         </view>
       </view>
     </scroll-view>
@@ -108,7 +106,6 @@ export default class jobDetail extends wepy.page {
     welfareList: welfareList,
     companyDetail: {},
     jobList: [],
-    showMore: false,
     uid: [],
     benefits: []
   }
@@ -117,7 +114,9 @@ export default class jobDetail extends wepy.page {
   }
   getcompanyinfo (params) {
     $http('/personaljob/getcompanyinfo', params).then(res => {
-      this.companyDetail = res.data
+      this.companyDetail = res.data || {}
+      console.log(res.data)
+      this.companyDetail.address = res.data.address!='null' ?  res.data.address : ''
       res.data.benefits.forEach(item => {
         this.welfareList.forEach(val => {
           if (item == val.title) {
@@ -146,17 +145,14 @@ export default class jobDetail extends wepy.page {
       if (res.data) {
         this.companyDetail.is_collect = params.status == 2 ? 0 : 1
         this.$apply()
-        wxToast('操作成功')
+        let text = params.status==2 ? '取消收藏' : '收藏成功'
+        wxToast(text)
       } else {
         wxToast('操作失败')
       }
     }) 
   }
   methods = {
-    viewMoreJob(){
-      this.showMore = true
-      this.$apply()
-    },
     companyCollect(status) {
       let params = {
         uid: this.uid,
@@ -172,6 +168,7 @@ export default class jobDetail extends wepy.page {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
       } else {
+         wxNavigateTo('/pages/message/personalDialogBox?toUser=' + this.companyDetail.uid + '&userID=' + this.uid)
         // 聊天页面
       }
     }

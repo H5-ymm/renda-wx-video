@@ -31,13 +31,13 @@
 </style>
 <template>
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
+    <view class="my-text-right weui-flex between" @tap="changeCity">
       <view wx:if="{{options.length}}" class="page__title">
         {{multiArray[0][multiIndex[0]]}}
         {{multiArray[1][multiIndex[1]]}}
         {{multiArray[2][multiIndex[2]]}}
       </view>
-      <view wx:else class="placeholder" @tap="changeCity">请选择岗位类别</view>
+      <view wx:else class="placeholder">{{placeholder}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>
@@ -82,7 +82,11 @@ import { $http } from '@/http.js'
 let lock = false
 export default class jobPosition extends wepy.component {
   props = {
-    jobList: Array
+    jobList: Array,
+    placeholder: {
+      type: String,
+      default: '请选择岗位类别'
+    }
   }
   data = {
     options: [],
@@ -108,15 +112,12 @@ export default class jobPosition extends wepy.component {
         let arr = this.getList(res.data)
         this.idList[0] = this.getIdList(res.data)
         this.multiArray[0] = arr
-        this.getCityList(value)
+        this.getJobList1(value)
       })
       .catch(error => {
-        if (error) {
-          this.$message.warning(error.status.remind)
-        }
       })
   }
-  getCityList(value) {
+  getJobList1(value) {
     let id = ''
     if (!value.length) {
       id = 1
@@ -128,10 +129,10 @@ export default class jobPosition extends wepy.component {
       this.idList[1] = this.getIdList(res.data)
       this.multiArray[1] = arr
       this.$apply()
-      this.getAreaList(value)
+      this.getJobList3(value)
     })
   }
-  getAreaList(value) {
+  getJobList3(value) {
     let id = ''
     if (!value[1]) {
       id = this.idList[1][0]
@@ -151,11 +152,6 @@ export default class jobPosition extends wepy.component {
       }
       this.$apply()
     })
-  }
-  onLoad() {
-    // if (!this.jobList || (this.jobList && this.jobList.length == 0)) {
-    //   this.getJobList([])
-    // }
   }
   watch = {
     jobList(val) {
@@ -196,7 +192,7 @@ export default class jobPosition extends wepy.component {
     },
     bindChange(e) {
       this.multiIndex = e.detail.value
-      this.getCityList([this.idList[0][this.multiIndex[0]], 0])
+      this.getJobList1([this.idList[0][this.multiIndex[0]], 0])
     },
     selectClose() {
       this.isScaleModal = !this.isScaleModal

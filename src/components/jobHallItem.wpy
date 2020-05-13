@@ -1,8 +1,8 @@
 
 <template>
   <view class="list-card-row">
-    <image src="{{item.head_img}}" wx:if="{{item.head_img}}" class="list-card-header" mode="scaleToFill" />
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" wx:else class="list-card-header" mode="scaleToFill" />
+    <image src="{{item.head_img}}" wx:if="{{item.head_img}}" class="list-card-header shadow" mode="scaleToFill" />
+    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" wx:else class="list-card-header shadow" mode="scaleToFill" />
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{item.nickname}}</text>
@@ -11,9 +11,9 @@
         <view class="weui-flex start text-line">
           <view class="page__desc">{{item.sex==1?'男':'女'}}｜{{item.age||0}}岁</view>
         </view>
-        <view class="text-line"><text class="name"><text wx:if="{{item.edu}}">{{item.edu}} /</text><text wx:if="{{item.speciality}}">{{item.speciality || ''}}</text></text></view>
-        <view class="card-text weui-flex__item">意向：{{item.expected_job || '无'}}</view>
-        <view class="weui-flex between">
+        <view class="text-line"><text class="name">{{item.edu || ''}}/{{item.speciality || ''}}</text></view>
+        <view class="card-text weui-flex__item">意向：{{item.job_name || '无'}}</view>
+        <view class="weui-flex between" @tap.stop="routerConcat({{item}})">
           <button class="weui-btn_cell weui-btn_primary_plain">
             立即沟通
           </button>

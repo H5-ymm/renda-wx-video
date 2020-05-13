@@ -11,7 +11,8 @@
     }
   }
   .time {
-    font-size: 26rpx; 
+    font-size: 26rpx;
+    padding-top: 10rpx;
   }
 }
 </style>
@@ -20,7 +21,7 @@
     <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="page">
       <view class="home-view-box">
         <repeat wx:for="{{list}}" wx:key="index">
-          <view class="list-row" wx:if="{{list.length}}" @tap="selectJob({{index}},{{item}})">
+          <view class="list-row" wx:if="{{list.length}}" @tap="viewJob({{item}})">
             <view class="list-col-1">
               <view class="weui-flex between">
                 <view class="page__text__active">应聘职位：{{item.job_name}} {{item.salary}}</view>
@@ -28,11 +29,11 @@
               </view>
               <view class="page__title">
                 <view class="page__title">{{item.nickname}}</view>
-                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age||1}}岁</view>          
+                <view class="page__title">{{item.sex==1?'男':'女'}}/{{item.age}}岁</view>          
               </view>
               <view class="weui-flex between">
-                <view class="page__title weui-flex__item">{{item.edu||''}}</view>
-                <button class="weui-btn_cell weui-btn_primary">
+                <view class="page__title weui-flex__item">{{item.edu||''}}/{{item.speciality}}</view>
+                <button class="weui-btn_cell weui-btn_primary" @tap.stop="concatUser({{item}})">
                   立即沟通
                 </button>
               </view>
@@ -50,12 +51,11 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
+import { wxNavigateTo } from '@/util.js'
 import $moment from 'moment'
 export default class resumeList extends wepy.page {
   data = {
     list: [],
-    activeIndex: 0,
-    resumeType: '',
     params: {
       uid: '',
       page: 1,
@@ -66,50 +66,9 @@ export default class resumeList extends wepy.page {
   config = {
     navigationBarTitleText: '应聘简历'
   }
-  getGeportOrderList () {
-    $http('/Wxresume/reportOrderList', this.params).then(res => {
-      this.list = res.data.data || []
-      this.count = res.data.count
-      this.$apply()
-    })
-  }
-  getInternalInvoiceList () {
-    $http('/Wxresume/internalInvoiceList', this.params).then(res => {
-      this.list = res.data.data || []
-      this.count = res.data.count
-      this.$apply()
-    })
-  }
- methods = {
-    viewInfo (item) {
-      wx.navigateTo({
-        url: item.url
-      })
-    },
-    switchView(index) {
-      this.hallType = index
-      this.$apply()
-    },
-    viewDetail(item) {
-      wxNavigateTo('/pages/companyView/viewJob?query=' +item.id + '&apply=1')
-    },
-    searchScrollLower () {
-			if (this.count > this.list.length && this.count > this.params.limit) {
-				this.params.limit = this.params.limit + 10
-				this.getReceiptList()
-			}
-    },
-    showModal(index){
-      this.activeIndex = index
-      this.$apply()
-    },
-    applyRecepit(item) {
-      let params = {
-        job_id: item.id,
-        uid: this.params.uid
-      }
-      this.setReceipt(params)
-    }
+  onShow () {
+    this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+    this.getResumeList()
   }
   getResumeList () {
     $http('/Companyjob/getresume_list', this.params).then(res => {
@@ -123,13 +82,25 @@ export default class resumeList extends wepy.page {
       this.$apply()
     })
   }
-  onLoad(options) {
-    this.isScaleModal = false
-    this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    this.$apply()
-  }
-  onShow () {
-    this.getResumeList()
+  methods = {
+    viewJob(item) {
+      if (item.delete == 1) {
+        return wxToast('该求职者已删除')
+      }
+      wxNavigateTo('/pages/home/jobDetail?query=' +item.apply_uid)
+    },
+    searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+				this.params.limit = this.params.limit + 10
+				this.getReceiptList()
+			}
+    },
+    concatUser(item) {
+      if (item.delete == 1) {
+        return wxToast('该求职者已删除')
+      }
+      wxNavigateTo('/pages/message/personalDialogBox?toUser=' + item.apply_uid + '&userID=' + this.params.uid)
+    }
   }
 }
 </script>

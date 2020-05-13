@@ -8,7 +8,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text weui-flex__item my-text-require">姓名</view>
-            <view class="weui-flex between">
+            <view class="my-text-right">
               <input class="weui-input page__label" placeholder-class="placeholder" placeholder="请输入姓名" value="{{form.nickname}}" data-name="nickname" @input="changeInput" />
             </view>
           </view>
@@ -76,7 +76,7 @@ import pickerDate from '@/components/pickerDate'
 import $moment from 'moment'
 import { $http } from '@/http.js'
 import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
-import { jobStatusList } from '@/base/base'
+import { jobStatusList, eduList } from '@/base/base'
 export default class editResume extends wepy.page {
   components = {
     districtSelet: districtSelet,
@@ -98,9 +98,9 @@ export default class editResume extends wepy.page {
       edu: ''
     },
     array: ['男', '女'],
-    eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
-    index: 0,
-    eduIndex: 0,
+    eduList:["高中以下", "高中", "中专", "大专", "本科", "硕士"],
+    index: -1,
+    eduIndex: -1,
     disabled: false,
     isPicker: true,
     address: [],
@@ -113,14 +113,21 @@ export default class editResume extends wepy.page {
   }
   onShow() {
     if (wx.getStorageSync('userInfo')) {
-      this.form = JSON.parse(wx.getStorageSync('userInfo'))
-      if (this.form.province) {
-        this.address = [this.form.province, this.form.city]
+      let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
+      for(let key in this.form) {
+        if (!userInfo[key]) {
+          this.form[key] = ''
+        } else {
+          this.form[key] = userInfo[key]
+        }
       }
-      this.birthtime = this.form.birthtime ? $moment.unix(this.form.birthtime).format('YYYY-MM-DD') : ''
-      this.eduIndex = this.form.edu ? this.form.edu : ''
-      this.jobStatusIndex = this.form.job_search_status ? Number(this.form.job_search_status) - 1 : ''
-      this.index = this.form.sex ? Number(this.form.sex) - 1 : ''
+      if (userInfo.province) {
+        this.address = [userInfo.province, userInfo.city]
+      }
+      this.birthtime = userInfo.birthtime ? $moment.unix(this.form.birthtime).format('YYYY-MM-DD') : ''
+      this.jobStatusIndex = userInfo.job_search_status ? Number(userInfo.job_search_status) - 1 : ''
+      this.eduIndex = userInfo.edu || -1
+      this.index = userInfo.sex ? Number(userInfo.sex) - 1 : ''
       this.$apply()
     }
   }
@@ -136,7 +143,9 @@ export default class editResume extends wepy.page {
       if (res.data) {
         wxToast('保存成功')
         wx.setStorageSync('userInfo', JSON.stringify(this.form))
-        wxRedirectTo('/pages/my/resume')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
 			} else {
 				wxToast('保存失败')
 			}
@@ -151,6 +160,7 @@ export default class editResume extends wepy.page {
       this.form.sex =  Number(data) + 1
     },
     bindEduChange(data) {
+      console.log(data)
       this.form.edu = data
     },
     bindChange(data) {
@@ -175,9 +185,9 @@ export default class editResume extends wepy.page {
 				wxToast('请选择现居地址')
 			} else if (!this.form.job_search_status) {
 				wxToast('请选择求职状态')
-			} else if (this.form.edu!='') {
+			} else if ((this.form.edu + '')=='') {
 				wxToast('请选择学历')
-			} else if (this.form.email!='') {
+			} else if (this.form.email=='') {
 				wxToast('请输入邮箱')
 			} else {
 				this.updateResume()

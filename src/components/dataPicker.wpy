@@ -31,11 +31,11 @@
 </style>
 <template>
   <view class="districtSelet">
-    <view class="my-text-right weui-flex between">
-      <view wx:if="{{multiText}}" class="page__title" @tap="changeSelect">
+    <view class="my-text-right weui-flex between"  @tap="changeSelect">
+      <view wx:if="{{multiText}}" class="page__title">
         {{multiText}}
       </view>
-      <view wx:else class="placeholder" @tap="changeSelect">{{text}}</view>
+      <view wx:else class="placeholder">{{text}}</view>
       <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>

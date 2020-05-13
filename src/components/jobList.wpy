@@ -2,8 +2,8 @@
 <template>
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-      <view @tap="deliverResume({{item}})">
-				<jobItem :item.sync="item"></jobItem>
+      <view @tap="viewResume({{item}})">
+				<jobItem :item.sync="item"  @deliverResume.user="deliverResume"></jobItem>
 			</view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
@@ -24,9 +24,12 @@ export default class jobList extends wepy.component {
 		list: Array
 	}
 	methods = {
-    deliverResume(item) {
+    viewResume(item) {
       wxNavigateTo('/pages/home/jobDetail?query='+item.id)
-    }
+		},
+		deliverResume(item) {
+			this.$emit('deliverResume', item)
+		}
 	}
 }
 </script>

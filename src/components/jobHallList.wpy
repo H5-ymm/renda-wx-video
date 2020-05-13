@@ -1,10 +1,10 @@
 
 <template>
-	<view>
+	<view class="hall-item">
 		<view class="weui-flex between wrap page_margin">
 			<repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
-				<view @tap="routerConcat({{item}})" class="list-card shadow hall-row">
-					<jobHallItem :item.sync="item"></jobHallItem>
+				<view @tap="viewResume({{item}})" class="list-card shadow hall-row">
+					<jobHallItem :item.sync="item" @routerConcat.user="routerConcat"></jobHallItem>
 				</view>
 			</repeat>
 		 </view>
@@ -29,6 +29,10 @@ export default class jobHallList extends wepy.component {
     routerConcat(item) {
       console.log(item)
       this.$emit('routerConcat', item)
+		},
+		viewResume(item) {
+			if (wx.getStorageSync('rendaUserType') == 2) return
+			this.$emit('viewResume', item)
     }
 	}
 }

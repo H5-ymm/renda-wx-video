@@ -1,7 +1,10 @@
 <style lang="less">
  @import '../../style/message.less';
  page {
-	 height: auto;
+	height: auto;
+	.dialogBox-view {
+		box-sizing: border-box;
+	}
  }
  .date {
 	 width: 100%;
@@ -10,9 +13,9 @@
  }
 </style>
 <template>
-	<view class="dialogBox-view dialogBox-row {{!is_apply&&isShow ? 'dialogBox-row1':''}} {{!isShow&&is_apply ? 'dialogBox-row2':''}} {{isShow&&is_apply ? 'dialogBox-row3':''}}" id="chat" >
+	<view  style="height: {{scrollHeight}}" class="dialogBox-view dialogBox-row {{!is_apply&&isShow ? 'dialogBox-row1':''}} {{!isShow&&is_apply ? 'dialogBox-row2':''}} {{isShow&&is_apply ? 'dialogBox-row3':''}}" id="chat" >
 		<view class="message-header">
-			<view class="weui-flex between message-header-content" wx:if="{{is_apply}}">
+			<view class="weui-flex between message-header-content" wx:if="{{is_apply&&rendaUserType==1}}">
 				<view @tap="videoCall">
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" />
 					<view  class="page__title">视频面试</view>
@@ -31,10 +34,10 @@
 				</view>
 			</view>
 		</view>
-		<scroll-view scroll-y="true" style="height:100%">
-			<view class="page_margin">
+		<scroll-view scroll-y="true" id="scroll">
+			<view class="page_margin {{is_apply?'page_top':''}}">
 				<repeat wx:for="{{messageList}}" wx:key="index">
-					<view wx:if="{{(uid!=item.from&&rendaUserType==1) || (params.uid==item.from&&rendaUserType==2)}}">
+					<view wx:if="{{(uid!=item.from)}}">
 						<view class="page__desc date">{{item.time}}</view>
 						<view class="weui-flex dialogBox-col weui-flex__item start">
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
@@ -52,7 +55,7 @@
 						<view class="dialogBox-content weui-flex start dialogBox-content-right">
 							<view wx:if="{{item.text}}">{{item.text}}</view>
 							<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
-							<view wx:if="{{!item.text&&!item.img}}" >挂断视频</view>
+							<view wx:if="{{!item.text&&!item.img&&item.action}}">{{wxs.checkText(item.action)}}</view>
 							<image mode="scaleToFill" wx:if="{{!item.text&&!item.img}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" />
 						</view>
 						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
@@ -67,7 +70,7 @@
 				<image mode="scaleToFill" @tap="showMessageBtn" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon" />
 			</view>
 			<view class="weui-flex start message-menus" wx:if="{{isShow}}">
-				<view class="page_margin" @tap="videoCall">
+				<view class="page_margin" @tap="videoCall" wx:if="{{is_apply}}">
 					<view class="weui-flex center message-item">
 						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon" />
 					</view>
@@ -92,14 +95,8 @@ import $moment from 'moment'
 import noticeModal from '@/components/noticeModal'
 import modal from '@/components/modal'
 import { getImgUrl, wxShowModal, wxNavigateTo, wxToast } from '@/util.js'
-import TIM from 'tim-wx-sdk'
-// import TIM from '@/lib/tim-wx.js'
-import COS from 'cos-wx-sdk-v5'
-const tim = TIM.create({
-	SDKAppID: 1400335565
-})
-tim.setLogLevel(0)
-tim.registerPlugin({ 'cos-wx-sdk': COS });
+import wxs from '../../filterWxs/actionFilter.wxs'
+wxs = { wxs }
 export default class personalDialogBox extends wepy.page {
 	components = {
 		noticeModal: noticeModal,
@@ -137,7 +134,10 @@ export default class personalDialogBox extends wepy.page {
 		nextReqMessageID: '',
 		height: 0,
 		isClear: false,
-		scrollTop: 100
+		scrollTop: 100,
+		scrollHeight: 'auto',
+		TIM: null,
+		windowHeight: 0
 	}
 	config = {
 		navigationBarTitleText: '消息',
@@ -145,108 +145,109 @@ export default class personalDialogBox extends wepy.page {
 	}
 	onPullDownRefresh() {
     this.getMessage()
+	}
+  _initIM () {
+    wx.$app.off( this.TIM.EVENT.SDK_READY, this._onIMMessageReceived);
+    wx.$app.on(this.TIM.EVENT.MESSAGE_RECEIVED, this._onIMMessageReceived, this)
   }
 	onLoad (options) {
+		this.TIM = this.$parent.globalData.TIM
 		this.params.uid = options.userID
 		this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		this.userInfo = wx.getStorageSync('userInfo')?JSON.parse(wx.getStorageSync('userInfo')):{}
+		this.rendaUserType = wx.getStorageSync('rendaUserType')
+		this.setSdkReady = wx.getStorageSync('setSdkReady')
+		this.$apply()
 		if (options.toUser) {
 			this.toUserId = options.toUser
 			this.conversationID = 'C2C' + this.toUserId
-			this.getUserSig()
 		} else {
 			this.conversationID = options.query
-			this.isLogin = options.isLogin
 			this.toUserId = options.userID
-			this.getMessage()
 		}
-		this.userInfo = wx.getStorageSync('userInfo')?JSON.parse(wx.getStorageSync('userInfo')):{}
-		this.rendaUserType = wx.getStorageSync('rendaUserType')
-		this.$apply()
-		if (this.rendaUserType == 1) {
-			this.getCommunicate()
-		} else {
-			this.getPersonal()
+		if (this.rendaUserType ==2) {
+		  this.getPersonal()
 		}
-	}  // 滚动到列表bottom
+		this.getCommunicate()
+		this.getMessage()	
+	} 
+	// 滚动到列表bottom
   scrollToBottom () {
-		if (this.isClear) {
-			console.log(222)
-			let query = wx.createSelectorQuery()
-			query.select('#chat').boundingClientRect(res => {
-				wx.pageScrollTo({
-					scrollTop: 99999
-				})
-			}).exec()
-		}
+	  wx.pageScrollTo({
+			scrollTop: 99999
+		})
+	}
+	onReady() {
+		wx.getSystemInfo({
+			success: (res) => {
+				console.log(res.windowHeight)
+				this.windowHeight = res.windowHeight
+      }
+		})
+	}
+	_onIMMessageReceived(event) {
+	  this.scrollToBottom()
+		let interval = setInterval(() => {
+		if (this.messageList.length !== 0) {
+				this.scrollToBottom()
+				clearInterval(interval)
+			}
+		}, 600)
+		event.data.forEach(item => {
+			if (item.type == 'TIMCustomElem') {
+				let action = JSON.parse(item._elements[0].content.data).action
+				if ( action == 0 ) {
+					let params = {
+						args: item._elements[0].content.data,
+						to: item.to,
+						fromId: item.from,
+						room_id: JSON.parse(item._elements[0].content.data).room_id
+					}
+					this.getuserSig(params)
+				}
+				//  else {
+				// 	this.getMessage()
+				// }
+			} else {
+				this.getMessage()
+			}
+			this.$apply()
+		})
 	}
 	onShow () {
-		this.isClear = true
-		this.$apply()
-		tim.on(TIM.EVENT.MESSAGE_RECEIVED, (event )=> {
-			console.log(event.data)
-			let query = wx.createSelectorQuery()
-			query.select('#chat').boundingClientRect(res => {
-        if (res.bottom - this.height < 150) {
-          this.scrollToBottom()
-        }
-			}).exec()
-			let interval = setInterval(() => {
-      if (this.messageList.length !== 0) {
-					this.scrollToBottom()
-					clearInterval(interval)
-				}
-			}, 600)
-			let arr = []
-			event.data.forEach(item => {
-				if (item.type == 'TIMCustomElem') {
-					let args = JSON.stringify(item._elements[0].content)
-					console.log(args)
-					let url = `/pages/room/room?args=${args}&from=${item.from}&to=${item.to}&uid=${this.uid}`
-          wx.navigateTo({url})
-				} else {
-						let message = {
-						to: item.to,
-						from: item.from,
-						text:item._elements[0].content.text,
-						time: $moment.unix(item.time).format('YYYY-MM-DD HH:mm')
-					}
-					arr.push(message)
-				}
-				this.messageList = this.messageList.concat(arr)
-		   	this.$apply()
-			})
-		
-			// 收到推送的单聊、群聊、群提示、群系统通知的新消息，可通过遍历 event.data 获取消息列表数据并渲染到页面
-			// event.name - TIM.EVENT.MESSAGE_RECEIVED
-			// event.data - 存储 Message 对象的数组 - [Message]
-		});
- }
-onUnload () {
-	this.isClear = false
-}
-onReachBottom() {
-  // if(!this.isCompleted) {
-	// 	this.getMessage(this.nextReqMessageID)
-	// }
-}
-getPersonal(){
-	let params = {
-		com_id: this.params.uid,
-		uid: this.uid
+		this._initIM()
 	}
-	$http('/autograph/CommunicateImmediately_personal', params).then(res => {
-		this.is_apply = ''
-		this.$apply()
-	})
+	onUnload () {
+		this.isClear = false
+	}
+	onReachBottom() {
+		// if(!this.isCompleted) {
+		// 	this.getMessage(this.nextReqMessageID)
+		// }
+	}
+	getPersonal(){
+		let params = {
+			com_id: this.rendaUserType== 2 ?  this.toUserId : this.uid,
+			uid: this.rendaUserType== 2 ? this.uid : this.toUserId 
+		}
+		$http('/autograph/CommunicateImmediately_personal', params).then(res => {
+			console.log(res.data)
+			console.log('获取信息')
+			this.$apply()
+		})
  }
  getCommunicate(){
 	let params = {
-		apply_uid: this.toUserId,
-		uid: this.params.uid
+		apply_uid: this.rendaUserType== 1 ?  this.toUserId : this.uid,
+		uid: this.rendaUserType== 1 ? this.uid : this.toUserId 
 	}
 	$http('/autograph/CommunicateImmediately_company', params).then(res => {
-		this.is_apply = res.data.is_apply
-		this.isEntry = res.data.is_entrymsg
+		this.is_apply = Number(res.data.is_apply)
+		this.isEntry = Number(res.data.is_entrymsg)
+	  if (this.rendaUserType==1) {
+			this.userInfo.head_img = res.data.logo_url
+	  	this.userInfo.nickname = res.data.nickname
+		}
 		this.$apply()
 	})
  }
@@ -254,102 +255,107 @@ getPersonal(){
 		let messageObj = {}
 		let img
 		let arr = list.map(item=> {
-			const { payload, to, from, time } = item
+			const { payload, to, from, time, type } = item
 			let date = time
 			date = $moment.unix(date).format('YYYY-MM-DD HH:mm')
 			if (payload.imageInfoArray && payload.imageInfoArray.length) {
 				img = payload.imageInfoArray[0].imageUrl
 				messageObj =	Object.assign({ to, from, img, text: '', time: date })
 			} else {
-				messageObj =	Object.assign(payload, { to, from, time: date })
+				if (type == 'TIMCustomElem') {
+					let data = JSON.parse(payload.data)
+          messageObj =	Object.assign(data, { to, from, time: date })
+				} else {
+          messageObj =	Object.assign(payload, { to, from, time: date })
+				}
 			}
 			return messageObj
 		})
 		return arr
 	}
- getMessage(params) {
+	changeHeight(){
+		let query = wx.createSelectorQuery()
+		query.select('#scroll').boundingClientRect(res => {
+			this.scrollHeight = 'auto'
+			this.$apply()
+		}).exec()
+	}
+  getMessage() {
+		this.getConversationProfile()
 	  let query = {conversationID: this.conversationID, count: 15}
-	  if (params) {
-      query.nextReqMessageID = params
-		}
-		let promise2 = tim.getMessageList(query)
+		let promise2 = wx.$app.getMessageList(query)
 		promise2.then(imResponse => {
 			const messageList = imResponse.data.messageList; // 消息列表。
+			if (!messageList.length) {
+				this.scrollHeight =  this.windowHeight + 'px'
+			} else {
+			  this.changeHeight()
+			}
 			this.messageList = this.getNewList(messageList)
-			// this.messageList = this.messageList.concat(this.messageList)
-			this.nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
-			this.isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
+			console.log(this.messageList)
 			this.scrollToBottom()
+			// this.nextReqMessageID = imResponse.data.nextReqMessageID; // 用于续拉，分页续拉时需传入该字段。
+			// this.isCompleted = imResponse.data.isCompleted; // 表示是否已经拉完所有消息。
 			this.$apply()
-			// if (!this.isCompleted) {
-			// 	this.getMessage(this.nextReqMessageID)
-			// } else {
-			// 	this.scrollToBottom()
-			// 	return
-			// }
-			this.getConversationProfile()
+			let interval = setInterval(() => {
+				if (this.messageList.length !== 0) {
+					this.scrollToBottom()
+					clearInterval(interval)
+				}
+			}, 600)
 		}).catch(imError => {
 			console.warn('messageList error:', imError); // 登录失败的相关信息
 		});
  }
  getUserSig() {
 		$http('/autograph/getAutograph', { uid: this.uid }).then(res => {
-			let promise = tim.login({ userID: this.uid + '', userSig: res.data });
+			let promise = tim.login({ userID: this.uid + '', userSig: res.data })
 			promise.then(imResponse => {
 				if (!this.setSdkReady) {
 					this.getMsgDetail()
 				} else {
-					this.getMessageList()
+					this.getMessage()
 				}	
 				if (imResponse.data.repeatLogin === true) {
 					console.log('登录成功');
-					this.getMessage()
+					// this.getMessage()
 				}
 			}).catch(imError => {
 				console.warn('login error:', imError); // 登录失败的相关信息
 			});
 		})
 	}
-	getMsgDetail() {
-		let onSdkReady = event=> {
-			wx.setStorageSync('setSdkReady', true)
-			this.getMessage()
-		};
-		tim.on(TIM.EVENT.SDK_READY, onSdkReady);
-	}
 	getConversationProfile() {
 		let conversationID = 'C2C' + this.uid
-		let promise = tim.getConversationProfile(this.conversationID);
+		let promise =  wx.$app.getConversationProfile(this.conversationID);
 		promise.then(imResponse => {
 			// 获取成功
 			const { userProfile } = imResponse.data.conversation
 			this.userProfile = userProfile
+			console.log(this.userProfile)
 			this.$apply() // 会话资料
 		}).catch(function(imError) {
 			console.warn('getConversationProfile error:', imError); // 获取会话资料失败的相关信息
 		});
 	}
-	routerView (params) {
-		const url = `/pages/room/room?roomID=${params.room_num}` +
-			`&userSig=${params.userSig}` +
-			`&template=grid&debugMode=false&cloudenv=PRO` +
-			`&localVideo=true` +
-			`&localAudio=true` +
-			`&enableEarMonitor=false` +
-			`&enableAutoFocus=true` +
-			`&localMirror=auto` +
-			`&enableAgc=true` +
-			`&enableAns=true` +
-			`&encsmall=true` +
-			`&frontCamera=front` +
-			`&videoWidth=360` +
-			`&videoHeight=640` +
-			`&scene=rtc` +
-			`&userID=${params.room_name}` +
-			`&minBitrate=600&maxBitrate=900`
-		wx.navigateTo({
-			url: url
+	getuserSig (params) {
+		$http('/autograph/getAutograph', { uid: this.uid }).then(res => {
+			params.userSig = res.data
+			this.routerView(params)
 		})
+	}
+	routerView (params) {
+		console.log(params)
+		const url = `/pages/room/room?roomID=${params.room_id}&userSig=${params.userSig}` +
+			`&to=${params.to}` +
+			`&args=${params.args}`+
+			`&fromId=${params.fromId}` +
+			`&userID=${this.uid}`+
+			`&nick=${this.userProfile.nick}` +
+			`&name=${this.userInfo.nickname}`
+			wx.navigateTo({
+				url: url
+			})
 	}
 	getRandomInt (min, max) {
 		min = Math.ceil(min)
@@ -382,8 +388,8 @@ getPersonal(){
     }
 	}
 	sendMessageApi(value) {
-		let message = tim.createTextMessage({ to: this.toUserId, conversationType: TIM.TYPES.CONV_C2C, payload: { text: value } });
-		let promise1 = tim.sendMessage(message);
+		let message = wx.$app.createTextMessage({ to: this.toUserId, conversationType: this.TIM.TYPES.CONV_C2C, payload: { text: value } });
+		let promise1 = wx.$app.sendMessage(message);
 		promise1.then(imResponse => {
 			console.log('发送成功')
 			// this.getMessage()
@@ -394,7 +400,8 @@ getPersonal(){
 				time: $moment().format('YYYY-MM-DD HH:mm')
 			}
 			this.messageList.push(message)
-		  this.scrollToBottom()
+			this.scrollToBottom()
+			this.changeHeight()
 			this.message = ''
 			this.$apply()
 		}).catch(function (imError) {
@@ -432,15 +439,15 @@ getPersonal(){
 				count: 1, // 只选一张，目前 SDK 不支持一次发送多张图片
 				success: res => {
 					// 2. 创建消息实例，接口返回的实例可以上屏
-					let message = tim.createImageMessage({
+					let message =  wx.$app.createImageMessage({
 						to: this.toUserId,
-						conversationType: TIM.TYPES.CONV_C2C,
+						conversationType: this.TIM.TYPES.CONV_C2C,
 						payload: { file: res },
 						onProgress: function(event) { console.log('file uploading:', event) }
 					});
 					// 3. 发送图片
 					console.log(res)
-					let promise = tim.sendMessage(message);
+					let promise = wx.$app.sendMessage(message);
 					promise.then(imResponse => {
 						// 发送成功
 						let message = {
@@ -476,26 +483,28 @@ getPersonal(){
         invited_list: []
       }
       let args = JSON.stringify(options)
-      const message = tim.createCustomMessage({
+      const message = wx.$app.createCustomMessage({
         to: this.toUserId,
-        conversationType: TIM.TYPES.CONV_C2C,
+        conversationType: this.TIM.TYPES.CONV_C2C,
         payload: {
           data: args,
           description: '',
           extension: ''
         }
-      })
-     let promise = tim.sendMessage(message);
+			})
+     let promise = wx.$app.sendMessage(message);
 			promise.then(imResponse => {
 				// 发送成功
-				this.getMessage()
+				// this.getMessage()
+				let query = Object.assign({args,to: this.toUserId,fromId: this.uid,room_id:options.room_id})
+				this.getuserSig(query)
 				console.log(imResponse);
 			}).catch(function(imError) {
 				// 发送失败
 				console.warn('sendMessage error:', imError);
 			});
-      let url = `/pages/room/room?args=${args}&from=${this.uid}&to=${this.toUserId}&uid=${this.uid}`
-      wx.navigateTo({url})
+      // let url = `/pages/room/room?args=${args}&from=${this.uid}&to=${this.toUserId}&uid=${this.uid}`
+      // wx.navigateTo({url})
       // this.handleClose()
     },
 		viewResume() {

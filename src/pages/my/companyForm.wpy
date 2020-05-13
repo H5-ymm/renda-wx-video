@@ -81,9 +81,9 @@
 				<view class="list-row">
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">企业福利</view>
-						<view class="my-text-require-right weui-flex start" @tap="selectBenefits">
-							<view class="weui-flex__item {{form.benefits!=''?'page__title':'placeholder'}}">
-								{{form.benefits!=''?benefits:'请选择企业福利'}}
+						<view class="weui-flex start weui-flex__item" @tap="selectBenefits">
+							<view class="weui-flex__item {{benefits!=''?'page__title':'placeholder'}}">
+								{{benefits!=''?benefits:'请选择企业福利'}}
 							</view>
 						</view>
 					</view>
@@ -91,9 +91,11 @@
 				<view class="list-row">
 					<view class="weui-flex start-start">
 						<view class="my-text my-text-require">企业简介</view>
-						<textarea data-name="content" placeholder-class="placeholder"
+						<input class="weui-input weui-textarea weui-flex__item" data-name="content" placeholder-class="placeholder" 
+						value="{{form.content}}" @input="changeInput" placeholder="请输入企业简介" />
+						<!-- <textarea data-name="content" placeholder-class="placeholder"
 						class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" @input="changeInput"
-						placeholder="请输入企业简介" auto-height />
+						placeholder="请输入企业简介" auto-height /> -->
 					</view>
 				</view>
 				<view class="list-row">
@@ -125,7 +127,7 @@
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="save">保存</button>
     </view>
-		<welfareModal :isScaleModal.sync="isModal" :benefitsArr.sync="benefitsArr" @handleBenefitOk="handleBenefitOk"></welfareModal>
+		<welfareModal :isScaleModal.sync="isModal" @handleBenefitOk="handleBenefitOk"></welfareModal>
 		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
   </view>
 </template>
@@ -193,41 +195,25 @@ export default class companyForm extends wepy.page {
       this[key] = allData[key]
 		}
 		this.getCompanyInfo()
-		// if(wx.getStorageSync('userInfo')) {
-		// 	let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
-		// 	for(let key in userInfo) {
-		// 		this.form[key] = userInfo[key]
-		// 	}
-		// 	this.infoImg = userInfo.license_url
-		// 	this.form.benefits = ''
-		// 	this.benefitsArr = userInfo.benefits || []
-		// 	this.jobIndex = this.form.trades ? Number(this.form.trades) - 1 : ''
-    //   this.comIndex = this.form.nature ? Number(this.form.nature) - 1 : ''
-    //   this.comScaleIndex = this.form.scale ? Number(this.form.scale) - 1 : ''
-		// 	if (userInfo.province) {
-	  //     this.address = [userInfo.province, userInfo.city, userInfo.area]
-		// 	}	
-		// } else {
-		// 	this.getCompanyInfo()
-		// }
     this.$apply()
 	}
 	getCompanyInfo() {
     $http('/Company/getcompanyinfobyuid', { uid: this.uid }).then(res => {
-			console.log(res)
 			let userInfo = res.data
      	for(let key in userInfo) {
 				this.form[key] = userInfo[key]
 			}
+			this.benefitsArr = userInfo.benefits || []
+			console.log(this.benefitsArr)
+			this.$broadcast('getBenefitsArr', this.benefitsArr)
 			this.infoImg = userInfo.license_url || ''
 			this.form.benefits = ''
-			this.benefitsArr = userInfo.benefits || []
 			this.jobIndex = this.form.trades ? Number(this.form.trades) - 1 : ''
       this.comIndex = this.form.nature ? Number(this.form.nature) - 1 : ''
       this.comScaleIndex = this.form.scale ? Number(this.form.scale) - 1 : ''
 			if (userInfo.province) {
 	      this.address = [userInfo.province, userInfo.city, userInfo.area]
-			}	
+			}
       this.$apply()
     })
   }
@@ -238,8 +224,11 @@ export default class companyForm extends wepy.page {
 			this.form.area = data[2] ? data[2] : 0
 		},
 		handleBenefitOk: data => {
+			console.log(data)
 			this.benefits = data.benefitsNameList
+			console.log(this.benefits)
 			this.form.benefits = data.idList
+			this.$apply()
 		}
 	}
 	getImg(tempFilePaths) {

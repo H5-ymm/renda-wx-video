@@ -1,7 +1,6 @@
 <style lang="less">
 .page-home {
   height: 100%;
-  overflow: hidden;
   .section {
     padding-bottom: 20rpx;
     .job-box {
@@ -33,8 +32,8 @@
 </style>
 <template>
   <view class="page-home">
-    <search @searchValue="searchValue"></search>
-    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content">
+    <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"  @refresherrefresh="bindrefresherrefresh"
+     class="page" >
       <banner></banner>
       <view class="section">
         <view class="job-box">
@@ -52,17 +51,16 @@
           </view>
           <jobFairList :list.sync="list" :usertype.sync="usertype" @routerHall="routerHall" @booking="booking"></jobFairList>
         </view>
-      </view>
+      </view>  
     </scroll-view>
-    <actionSheet :isScaleModal.sync="isScaleModal" text="企业信息正在审核中，请联系 客服021-8943895"   @handleClose="handleClose"></actionSheet>
-  </view>
+  <actionSheet :isScaleModal.sync="isScaleModal" :text.sync="text" :okText.sync="okText" @handleClose="handleClose" @handleOk="handleOk"></actionSheet>
+ </view>
 </template>
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
-import search from '@/components/search'
+import { getImgUrl, wxToast, wxNavigateTo, wxRedirectTo, contactPhone } from '@/util.js'
 import banner from '@/components/banner'
 import actionSheet from '@/components/actionSheet'
 import jobFairList from '@/components/jobFairList'
@@ -70,12 +68,9 @@ import { getStore } from 'wepy-redux'
 import { getAllUser } from '@/store/actions/user.js'
 import { getAllContant } from '@/store/actions/contant.js'
 import { GETALLUSER } from '@/store/types/user.js'
-import TIM from '@/lib/tim-wx.js'
-const IM_CONV_C2C = TIM.TYPES.CONV_C2C
 const store = getStore()
 export default class teamView extends wepy.page {
   components = {
-    search: search,
     banner: banner,
     jobFairList: jobFairList,
     actionSheet: actionSheet
@@ -96,7 +91,9 @@ export default class teamView extends wepy.page {
     openid: '',
     uid: '',
     usertype: 0,
-    tim: {}
+    TIM: null,
+    text: '',
+    okText: ''
   }
   config = {
     navigationBarTitleText: '首页',
@@ -109,16 +106,35 @@ export default class teamView extends wepy.page {
     },
     handleClose: () => {
       wx.showTabBar()
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    },
+    handleOk: () => {
+      if (!wx.getStorageSync('rendaPerfect')) {
+        wxNavigateTo('/pages/my/companyForm') 
+      } else {
+        contactPhone()
+      }
+      wx.showTabBar()
+      this.isScaleModal = !this.isScaleModal
       this.$apply()
     },
     booking: data => {
-      if (!data.applyinfo && data.is_finish != 1) {
-        this.addjobfair(data.id)
-      }
-      if (data.applyinfo && !applyinfo.status) {
+      // 订展先判断是否完善信息
+      // 完善信息之后企业订展是否审核
+      // 审核之后
+      if (!wx.getStorageSync('rendaPerfect')) {
+        wx.hideTabBar()
+        this.okText = '完善信息'
+        this.text = '企业信息不完整，请前往完善'
         this.isScaleModal = !this.isScaleModal
         this.$apply()
+        return
       }
+      if (!data.applyinfo && data.is_finish != 1) {
+        this.addjobfair(data)
+      }
+      wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
     },
     routerHall: data => {
       if (!this.usertype) {
@@ -126,24 +142,41 @@ export default class teamView extends wepy.page {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
       } else {
-        this.addjfUser(data.id)
-        wx.setStorageSync('rendaJHID', data.id)
-        wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
+        if (data.is_audit == 1 && data.applyinfo && !data.applyinfo.status) {
+          wx.hideTabBar()
+          this.text = '企业订展正在审核中，请联系客服021-51991869'
+          this.isScaleModal = !this.isScaleModal
+          this.okText = '联系客服'
+          this.$apply()
+        } else {
+          this.addjfUser(data.id)
+          wx.setStorageSync('rendaJHID', data.id)
+          wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
+          wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
+        }   
       }
     }
   }
-  onPullDownRefresh() {
-    this.openid = this.$parent.getOpenId()
+  bindrefresherrefresh() {
+    console.log('bindrefresherrefresh')
+    this.onShow()
   }
-  addjobfair(jf_id) {
+  addjobfair(data) {
     let params = {
       uid: this.params.uid,
-      jf_id
+      jf_id: data.id
     }
     $http('/Jobfair/addjobfair', params).then(res => {
       if (res.data) {
         this.getJobfairList()
-        wxToast('申请订展成功')
+        if (data.is_audit == 1) {
+          this.text = '企业订展正在审核中，请联系客服021-51991869'
+          this.isScaleModal = !this.isScaleModal
+          this.okText = '联系客服'
+          this.$apply()
+        } else {
+          wxToast('申请订展成功')
+        }    
       } else {
         wxToast('申请订展失败')
       }
@@ -161,14 +194,15 @@ export default class teamView extends wepy.page {
   checkUserLogin(openid) {
     store.dispatch(getAllUser({ openid })).then(res => {
       this.params.uid = res.payload.id
-      // this.getUserSig()
       this.usertype = res.payload.usertype
       this.$apply()
       if (!res.payload.usertype) {
+        wx.clearStorageSync();
         wxToast('请授权登录')
         wxNavigateTo('/pages/login/welcome')
       } else {
         this.getJobfairList()
+        this.getUserSig()
         this.$parent.globalData.rendaUserType = res.payload.usertype
       }
     }).catch(error => {
@@ -217,23 +251,25 @@ export default class teamView extends wepy.page {
       this.getJobfairList()
     }
   }
+   _initIM () {
+    wx.$app.off( this.TIM.EVENT.SDK_READY, this._onIMReady);
+    wx.$app.off( this.TIM.EVENT.ERROR, this._onIMError)
+    // 监听事件)
+    wx.$app.on( this.TIM.EVENT.SDK_READY, this._onIMReady, this);
+    wx.$app.on( this.TIM.EVENT.ERROR, this._onIMError, this)
+  }
+  _onIMError (event) {
+    // 网络错误不弹toast && sdk未初始化完全报错
+    if (event.data.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
+      wxToast(event.data.message)
+    }
+  }
   getUserSig() {
-    $http('/autograph/getAutograph', { uid: this.openid }).then(res => {
-      console.log(res.data)
-      let options = {
-        SDKAppID: 1400335565 // 接入时需要将0替换为您的云通信应用的 SDKAppID
-      };
-      this.tim = TIM.create(options);
-      let promise = this.tim.login({ userID: this.openid, userSig: res.data });
+    $http('/autograph/getAutograph', { uid: this.params.uid + '' }).then(res => {
+      let promise = wx.$app.login({ userID: this.params.uid + '', userSig: res.data });
       promise.then(imResponse => {
-        console.log(imResponse.data); // 登录成功
         console.log('登录成功');
-        // this.sendC2CTextMessage()
-        // let onSdkReady = function (event) {
-        //   let message = tim.createTextMessage({ to: 'user1', conversationType: sendC2CTextMessage, payload: { text: 'Hello world!' } });
-        //   tim.sendMessage(message);
-        // };
-        // tim.on(TIM.EVENT.SDK_READY, onSdkReady);
+        this._initIM()
         if (imResponse.data.repeatLogin === true) {
           // 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
           console.log(imResponse.data.errorInfo);
@@ -241,41 +277,76 @@ export default class teamView extends wepy.page {
       }).catch(imError => {
         console.warn('login error:', imError); // 登录失败的相关信息
       });
-      let promise1 = this.tim.getConversationList();
-      promise1.then(function (imResponse) {
-        const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
-      }).catch(function (imError) {
-        console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
-      });
     })
   }
-  sendC2CTextMessage() {
-    const message = this.tim.createTextMessage({
-      to: 'dddddd',
-      conversationType: IM_CONV_C2C,
-      payload: {
-        text: 'hi',
-      },
-    })
-    let promise1 = this.tim.sendMessage(message)
-    promise1.then(function (imResponse) {
-      // 发送成功
-      console.log('发送成功')
-      console.log(TAG_NAME, 'sendC2CTextMessage success', imResponse)
-    }).catch(function (imError) {
-      // 发送失败
-      console.warn(TAG_NAME, 'sendC2CTextMessage error:', imError)
-    })
-    return promise1
-  }
-  onShow() {
-    if (wx.getStorageSync('rendaOpenId')) {
-      this.openid = wx.getStorageSync('rendaOpenId')
+  _onIMReady() {
+    let userInfo = wx.getStorageSync('userInfo')?JSON.parse(wx.getStorageSync('userInfo')): null
+    let params = {}
+    if (!userInfo) {
+      userInfo = JSON.parse(wx.getStorageSync('wxInfo'))
+      params = {
+        nick: userInfo.nickName,
+        avatar: userInfo.avatarUrl,
+      }
     } else {
-      this.openid = this.$parent.getOpenId()
+      if (wx.getStorageSync('rendaUserType') == 2) {
+        params = {
+          nick: userInfo.nickname,
+          avatar: userInfo.head_img,
+        }
+      } else {
+        params = {
+          nick: userInfo.com_name,
+          avatar: userInfo.logo_url
+        }
+      }
     }
-    this.checkUserLogin(this.openid)
-    store.dispatch(getAllContant())
+    let promise = wx.$app.updateMyProfile(params)
+    promise.then(function(imResponse) {
+      console.log(imResponse.data); // 更新资料成功
+    }).catch(function(imError) {
+      console.warn('updateMyProfile error:', imError); // 更新资料失败的相关信息
+    });
   }
+  getOpenId() {
+    wx.login({
+      success: res=> {
+        if (res.code) {
+          $http('/Login/getopenid', { code: res.code }).then(res => {
+            let data = JSON.parse(res.data)
+            this.openid = data.openid || ''
+            if (this.openid) {
+              this.$parent.globalData.openId = data.openid
+              this.$parent.globalData.sessionKey = data.session_key
+              wx.setStorageSync('session_key', data.session_key)
+              wx.setStorageSync('rendaOpenId', data.openid)
+              this.checkUserLogin(this.openid)
+            } else {
+              wx.clearStorageSync();
+              wxToast('请授权登录')
+              wx.redirectTo({
+                url: '/pages/login/welcome' // 页面 A
+              });
+            } 
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          console.log('获取失败！' + res.errMsg)
+        }
+      }
+    })
+  }
+  onShow() {
+    wx.showTabBar()
+    this.TIM = this.$parent.globalData.TIM
+    if (wx.getStorageSync('rendaOpenId') && wx.getStorageSync('session_key')) {
+      this.openid = wx.getStorageSync('rendaOpenId')
+      this.checkUserLogin(this.openid)
+    } else {
+      this.getOpenId()
+    }
+    store.dispatch(getAllContant())
+  }
 }
 </script>

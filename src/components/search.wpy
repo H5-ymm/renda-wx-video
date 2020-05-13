@@ -28,9 +28,8 @@
 		<view class="weui-cell weui-flex start weui-flex__item">
 			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon" />
 			<input class="weui-input weui-flex__item search-input" @input='inputBind' confirm-type="search" @focus="inputFocus"
-			value="{{name}}" placeholder="{{placeholder}}"/>
+			value="{{name}}" @blur="inputBlur" placeholder="{{placeholder}}"/>
     </view>
-		<text @tap="searchValue">搜索</text>
 	</view>
 </template>
 <script>
@@ -47,13 +46,18 @@ export default class search extends wepy.component {
 	}
 	methods = {
 		inputBind(e) {
-			this.name = e.detail.value		
-		},
-		searchValue() {
-      this.$emit('searchValue', this.name)
+			this.name = e.detail.value
+			this.$emit('searchValue', this.name)
+			if (!e.detail.value) {
+        this.$emit('searchValue', '')
+			}	
 		},
 		inputFocus() {
 			this.$emit('inputFocus')
+		},
+		inputBlur() {
+			this.name = ''
+			this.$emit('inputBlur')
 		}
 	}
 }

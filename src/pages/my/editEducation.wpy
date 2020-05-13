@@ -93,7 +93,7 @@ import wepy from 'wepy'
 import dataPicker from '@/components/dataPicker'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { wxToast, wxNavigateTo, wxShowModal } from '@/util.js'
+import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
 export default class editEducation extends wepy.page {
   components = {
     dataPicker: dataPicker
@@ -114,6 +114,9 @@ export default class editEducation extends wepy.page {
     graduation_date: '',
     id: ''
   }
+  config = {
+    navigationBarTitleText: '教育背景'
+  }
   onLoad(options){
    this.form.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
    if (options.query) {
@@ -129,7 +132,10 @@ export default class editEducation extends wepy.page {
     $http('/Personal/del_useredu', params).then(res => {
  			if (res.data) {
         wxToast('删除成功')
-        wxNavigateTo('/pages/my/resume')
+        // wxRedirectTo('/pages/my/resume')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
 			} else {
 				wxToast('删除失败')
 			}
@@ -151,7 +157,9 @@ export default class editEducation extends wepy.page {
     $http('/Personal/save_useredu', this.form).then(res => {
  			if (res.data) {
         wxToast('保存成功')
-        wxNavigateTo('/pages/my/resume')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        });
 			} else {
 				wxToast('保存失败')
 			}
@@ -175,15 +183,16 @@ export default class editEducation extends wepy.page {
     deleteInfo() {
       if (!this.form.id) {
         wxNavigateTo('/pages/my/resume')
+      } else {
+        wxShowModal('', '确定删除你的教育背景', '确定').then(res => {
+          this.delUseredu()
+        }).catch(() => {
+          console.log('取消')
+        })
       }
-      wxShowModal('', '确定删除你的教育背景', '确定').then(res => {
-				this.delUseredu()
-			}).catch(() => {
-				console.log('取消')
-			})
     },
     submit() {
-       if (this.form.edu!='') {
+       if ((this.form.edu+'')=='') {
 				wxToast('请选择学历')
 			} else if (!this.form.graduation_date) {
 				wxToast('请选择毕业时间')

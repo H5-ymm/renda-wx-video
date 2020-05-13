@@ -38,8 +38,7 @@ import wepy from 'wepy'
 import { $http } from '@/http.js'
 export default class welfareModal extends wepy.component {
 	props = {
-		isScaleModal: Boolean,
-    benefitsArr: Array
+		isScaleModal: Boolean
 	}
 	data = {
     isShow: false,
@@ -54,32 +53,28 @@ export default class welfareModal extends wepy.component {
         item.disabled = false
         return item
       })
-      if (this.benefitsArr.length) {
-        this.idList = this.benefitsArr
-        this.benefitsArr.forEach(ele => {
+      this.$apply()
+		})
+  }
+  events = {
+    getBenefitsArr: data => {
+       this.idList = data
+        data.forEach(ele => {
           this.benefitsList.forEach(val => {
             if(ele == val.id) {
               val.disabled = true
               this.benefitsNameList.push(val.title)
+              console.log(this.benefitsNameList)
+              this.$apply()
             }
           })
         })
         let params = {
           benefitsNameList: this.benefitsNameList.join(','),
-          idList: this.benefitsArr.join(',')
+          idList: data.join(',')
         }
-        this.$emit('handleBenefitOk', params)
-      }
-      this.$apply()
-		})
-  }
-  watch = {
-    benefitsArr(val) {
-      console.log(val)
-      if (val && val.length) {
-        this.idList = val
-        this.$apply()
-      }
+        console.log(params)
+        this.$emit('handleBenefitOk', params)  
     }
   }
   onLoad() {

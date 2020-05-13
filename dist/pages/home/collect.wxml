@@ -25,7 +25,7 @@
               <view class="page__desc">记录来源 : {{item.title}}</view>
             </view>
             <view class="weui-flex between">
-              <button class="weui-btn_cell weui-btn_primary" wx:if="{{!activeIndex}}">
+              <button class="weui-btn_cell weui-btn_primary" wx:if="{{!activeIndex}}" catchtap="concatCompany" data-wpyconcatcompany-a="{{item}}">
                 立即沟通
               </button>
               <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" wx:else/>

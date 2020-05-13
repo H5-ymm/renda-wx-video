@@ -160,12 +160,11 @@ export default class my extends wepy.page {
     $http('/personal/getuserinfo', { uid: this.uid }).then(res => {
       this.userInfo = res.data || {}
       this.head_img =  res.data.head_img
-      let personal = {
-        head_img: res.data.head_img,
-        nickname: res.data.nickname,
-        tel: res.data.tel
+      if (this.userInfo.resume_count >= 80) {
+        wx.setStorageSync('rendaPerfect', 1)
+      } else {
+        wx.setStorageSync('rendaPerfect', 0)
       }
-      wx.setStorageSync('userInfo', JSON.stringify(personal))
       if (res.data.nickname) {
         let params = {
           nickname: res.data.nickname,
@@ -174,15 +173,19 @@ export default class my extends wepy.page {
           birthtime: res.data.birthtime || '',
           province: res.data.province,
           city: res.data.city,
+          head_img: res.data.head_img,
           tel: res.data.tel,
           email: res.data.email,
           job_search_status: res.data.job_search_status || ''
         }
+         wx.setStorageSync('userInfo', JSON.stringify(params))
         let expectedParams = {
           nature_work: res.data.nature_work || '',
           expected_salary: res.data.expected_salary || '',
           expected_city: res.data.expected_city || '',
           expected_province: res.data.expected_province || '',
+          first_pid: res.data.first_pid || '',
+          second_pid: res.data.second_pid || '',
           expected_job: res.data.expected_job || '',
           expected_trades: res.data.expected_trades || '',
           uid: this.uid
@@ -261,12 +264,12 @@ export default class my extends wepy.page {
 		},
     viewInfo(item) {
       if (item.title=='意见反馈') {
-        this.isModal = false
+        this.isModal = !this.isModal
         this.$apply()
       } else if(item.title == '职位管理') {
         if (!wx.getStorageSync('rendaPerfect')) {
           wxToast('请先完善企业资料')
-          wxNavigateTo('/pages/my/companyForm')
+          // wxNavigateTo('/pages/my/companyForm')
         } else {
           wxNavigateTo(item.url)
         }

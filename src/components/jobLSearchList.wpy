@@ -1,0 +1,32 @@
+
+<template>
+	<view>
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+      <view @tap="deliverResume({{item}})">
+				<jobLSearchItem :item.sync="item"></jobLSearchItem>
+			</view>
+    </repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+import jobLSearchItem from './jobLSearchItem'
+export default class jobLSearchList extends wepy.component {
+  components = {
+    jobLSearchItem: jobLSearchItem
+  }
+	props = {
+		list: Array
+	}
+	methods = {
+    deliverResume(item) {
+      wxNavigateTo('/pages/home/jobDetail?query='+item.id)
+    }
+	}
+}
+</script>

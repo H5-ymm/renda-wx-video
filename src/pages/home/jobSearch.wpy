@@ -1,0 +1,153 @@
+<style lang="less">
+@import "../../style/list.less";
+.scroll-view {
+  margin-bottom: 30rpx;
+}
+.search-section  {
+  margin-right: 30rpx;
+  .search-box {
+    width: 82%;
+  }
+}
+.search-query {
+  margin: 0 30rpx 30rpx;
+  .card-item {
+    margin-right: 40rpx;
+    position: relative;
+  }
+  .page__title {
+    font-size: 22rpx;
+  }
+  .samll-icon {
+    height: 20rpx;
+    width: 20rpx;
+    position: relative;
+    left: 18rpx;
+  }
+  .num {
+    color:  #1890FF;
+    position: absolute;
+    top: 0;
+    right: 14rpx;
+  }
+}
+</style>
+<template>
+  <scroll-view scroll-y="true" style="height:100%" @scrolltolower="searchScrollLower">
+    <view class="page_bottom">
+      <view class="weui-flex between weui-flex__item search-section">
+        <searchJob placeholder="搜索词" @searchValue="searchValue" ></searchJob>
+        <view class="weui-flex__item" @tap="searchName">搜索</view>
+      </view>
+      <view class="weui-flex start weui-flex__item search-query">
+        <view class="card-item weui-flex center" @tap="searchQuery('cityView')">{{address}}</view>
+        <view class="card-item weui-flex center" @tap="searchQuery('jobCategory')">{{jobName}}</view>
+        <view class="card-item weui-flex end" @tap="searchQuery('selectView')">
+           筛选
+           <image src="../../images/query.png" class="samll-icon" mode="scaleToFill" />
+           <view wx:if="{{total}}" class="num">{{total}}</view>
+        </view>
+        <view class="page__title" @tap="clearQuery">清空条件</view>
+      </view>
+    </view>
+    <jobLSearchList :list.sync="list" class="scroll-view"></jobLSearchList>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { wxToast, wxNavigateTo } from '@/util.js'
+import jobLSearchList from '@/components/jobLSearchList'
+import search from '@/components/search'
+export default class jobSearch extends wepy.page {
+  components = {
+    jobLSearchList: jobLSearchList,
+    searchJob: search
+  }
+  data = {
+    params: {
+			jf_if: '',
+      limit: 10,
+      page: 1,
+      area: ''
+    },
+    list: [],
+    count: 0,
+    address: '工作地点',
+    jobName: '岗位类别',
+    total: 0,
+    keyWords: ''
+  }
+  config = {
+    navigationBarTitleText: '职位列表'
+  }
+  getjobList () {
+    $http('/jobfair/getjobList', this.params).then(res => {
+      this.list = res.data.data || []
+      this.count = res.data.count || 0
+      this.$apply()
+    })
+  }
+  events = {
+    searchValue: data => {
+      this.keyWords = data
+      this.$apply()
+    }
+  }
+  onLoad() {
+    this.clearData()
+  }
+  onShow() {
+    if (wx.getStorageSync('codeObj')) {
+      this.params.area = JSON.parse(wx.getStorageSync('codeObj')).code
+      this.address = JSON.parse(wx.getStorageSync('codeObj')).name
+    }
+    if (wx.getStorageSync('jobCategory')) {
+      this.params.job_type = JSON.parse(wx.getStorageSync('jobCategory')).id
+      this.jobName = JSON.parse(wx.getStorageSync('jobCategory')).type_name
+    }
+    if (wx.getStorageSync('queryObj')) {
+      this.params.edu = JSON.parse(wx.getStorageSync('queryObj')).edu
+      this.params.nature = JSON.parse(wx.getStorageSync('queryObj')).nature
+      this.params.money = JSON.parse(wx.getStorageSync('queryObj')).money
+      this.total = JSON.parse(wx.getStorageSync('queryObj')).num
+    }
+    this.params.jf_id = wx.getStorageSync('rendaJHID')
+    this.getjobList()
+  }
+  clearData() {
+    wx.removeStorageSync('codeObj')
+    wx.removeStorageSync('jobCategory')
+    wx.removeStorageSync('queryObj')
+  }
+  methods = {
+    searchQuery(url) {
+      wxNavigateTo(`/pages/home/${url}`)
+    },
+    searchName() {
+      this.params.name = this.keyWords
+      this.getjobList()
+    },
+    clearQuery() {
+      this.params = {
+        jf_id: wx.getStorageSync('rendaJHID'),
+        limit: 10,
+        page: 1,
+        name: ''
+      }
+      this.total = 0
+      this.address = '工作地点'
+      this.jobName = '岗位类别'
+      this.$apply()
+      this.clearData()
+      this.getjobList()
+    },
+    searchScrollLower () {
+			if (this.count > this.list.length && this.count > this.params.limit) {
+			  this.params.limit = this.params.limit + 10
+				this.getjobList()
+			}
+    }
+  }
+}
+</script>

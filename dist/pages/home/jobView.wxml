@@ -3,7 +3,7 @@
     
 	<view class="scroll-view">
 	  <block  wx:if="{{$jobList$list.length}}" wx:for="{{$jobList$list}}" wx:for-index="$jobList$index" wx:for-item="$jobList$item" wx:key="$jobList$index">
-      <view bindtap="$jobList$deliverResume" data-wpydeliverresume-a="{{$jobList$item}}">
+      <view bindtap="$jobList$viewResume" data-wpyviewresume-a="{{$jobList$item}}">
 				
   <view class="list-row">
     <view class="weui-flex between list-col-1">    
@@ -12,7 +12,9 @@
     </view>
     <view class="page__desc">{{$jobList$item.number}}人 | {{$jobList$item.edu}} | {{$jobList$item.province}}{{$jobList$item.city}}{{$jobList$item.area}}</view>
     <view class="weui-flex start text-line">
-      <view class="weui-flex start weui-flex__item"><view class="card-item weui-flex center">{{$jobList$item.social_security}}</view></view>
+      <view class="weui-flex start weui-flex__item">
+        <view class="card-item weui-flex center">{{$jobList$item.social_security}}</view>
+      </view>
       <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobItem$isShowBtn&&$jobList$item.is_apply!=1}}" catchtap="$jobList$jobItem$deliverResume" data-com-index="{{$jobList$index}}" data-wpydeliverresume-a="{{$jobList$item}}">
         投递简历
       </button>

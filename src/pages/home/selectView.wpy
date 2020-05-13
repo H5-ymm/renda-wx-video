@@ -1,0 +1,117 @@
+<style lang="less">
+.select-view {
+  margin: 0 30rpx 30rpx;
+  width: 100%;
+  .select-box {
+    .select-box-title {
+      font-size: 36rpx;
+      margin: 30rpx 0;
+      font-weight:500;
+    }
+    .select-box-item {
+      background:#F0F6FE;
+      border-radius:8rpx;
+      font-weight: normal;
+      padding: 12rpx 0;
+      width: 200rpx;
+      margin: 10rpx 40rpx 10rpx 0;
+      box-sizing: border-box;
+      border: 1px solid #F0F6FE;
+      font-size: 26rpx;
+      &.active {
+        color: #1890FF;
+        border: 1px solid #1890FF;
+        background: #fff;
+      }
+    }
+  }
+}
+</style>
+<template>
+  <scroll-view scroll-y="true" style="height:100%">
+    <view class="view-list select-view">
+      <view class="select-box page__title">
+        <view class="select-box-title">学历要求</view>
+        <view class="weui-flex start wrap">
+          <view class="select-box-item weui-flex center {{item.value == query.edu ? 'active': '' }}" @tap="selectTap({{item}}, 'edu')"  wx:key="index" wx:for="{{eduList}}" >{{item.label}}</view>
+        </view>
+      </view>
+      <view class="select-box page__title">
+        <view class="select-box-title">薪资待遇</view>
+        <view class="weui-flex start wrap">
+          <view class="select-box-item  weui-flex center {{item.value == query.money ? 'active': '' }}"  @tap="selectTap({{item}}, 'money')" wx:for="{{moneyList}}" wx:key="index" >{{item.label}}</view>
+        </view>
+      </view>
+      <view class="select-box page__title">
+        <view class="select-box-title">工作性质</view>
+        <view class="weui-flex start">
+          <view class="select-box-item  weui-flex center {{item.value == query.nature ? 'active': '' }}" @tap="selectTap({{item}}, 'nature')"  wx:key="index" wx:for="{{workTypeList}}" >{{item.label}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="select-btn">
+			<view class="weui-flex center">
+				<button class="weui-btn_cell"  @tap="close">
+					取消 
+				</button>
+				<button class="weui-btn_cell weui-btn_primary" @tap="save">
+					确定
+				</button>
+			</view>
+		</view>
+  </scroll-view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { wxToast, wxNavigateTo } from '@/util.js'
+import { moneyList, eduList, workTypeList} from '@/base/base'
+export default class selectView extends wepy.page {
+  data = {
+    eduList,
+    workTypeList,
+    moneyList,
+    query: {
+      edu: '',
+      nature: '',
+      money: ''
+    },
+    num: 0
+  }
+  config = {
+    navigationBarTitleText: '筛选'
+  }
+  backView() {
+    wx.navigateBack({
+      delta: 1,
+    })
+  }
+  methods = {
+    selectTap(item, key) {
+      this.query[key] = item.value
+    },
+    save() {
+      for(let key in this.query) {
+        if (!this.query[key]) {
+          this.num = 0
+        }
+        if (this.query[key]) {
+          this.num = 3
+        }
+      }
+      // if (!this.query.money) {
+      //   this.num = 2
+      // } else {
+      //   this.num = 3
+      // }
+      this.query.num = this.num
+      wx.setStorageSync('queryObj', JSON.stringify(this.query))
+      this.backView()
+    },
+    close() {
+      wx.removeStorageSync('queryObj')
+      this.backView()
+    }
+  }
+}
+</script>
