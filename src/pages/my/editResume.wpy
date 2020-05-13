@@ -26,7 +26,7 @@
               <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
               <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
             </view> -->
-            <picker mode="date" data-name="birthtime" bindchange="bindDateChange">
+            <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
                 <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
@@ -106,12 +106,15 @@ export default class editResume extends wepy.page {
     address: [],
     birthtime: '',
     jobStatusList,
-    jobStatusIndex: -1
+    jobStatusIndex: -1,
+    endDate: ''
   }
   config = {
     navigationBarTitleText: '编辑简历'
   }
   onShow() {
+    this.endDate = $moment().format('YYYY-MM-DD')
+    console.log(this.endDate)
     if (wx.getStorageSync('userInfo')) {
       let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
       for(let key in this.form) {
