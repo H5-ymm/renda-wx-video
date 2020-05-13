@@ -234,6 +234,7 @@ export default class teamView extends wepy.page {
       wxNavigateTo('/pages/companyView/viewJob?query=' + item.id + '&apply=1')
     },
     searchScrollLower() {
+      console.log(0)
       if (this.count > this.list.length && this.count > this.params.limit) {
         this.params.limit = this.params.limit + 10
         this.getJobfairList()

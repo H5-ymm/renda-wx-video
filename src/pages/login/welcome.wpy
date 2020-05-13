@@ -88,7 +88,6 @@ export default class Welcome extends wepy.page {
     } else {
       this.openid = this.$parent.getOpenId()
     }
-    console.log(this.openid)
     if (!this.isRead) {
       this.checked = false
     }
@@ -168,9 +167,7 @@ export default class Welcome extends wepy.page {
     handleClose: () => {
       this.isLoginModal = !this.isLoginModal
       this.$apply()
-      console.log(this.title=='')
       if (this.title=='') {
-        console.log('取消')
         wxReLaunch('/pages/home/index?is_perfect=0')
       } else {
         wxToast('请选择身份')
@@ -183,6 +180,8 @@ export default class Welcome extends wepy.page {
       this.saveUserType()
     },
     handleOk: data => {
+      this.isLoginModal = !this.isLoginModal
+      this.$apply()
       if (this.usertype == 1) {
         wxRedirectTo('/pages/my/companyForm') 
       } else {
@@ -201,7 +200,9 @@ export default class Welcome extends wepy.page {
       this.$apply()
     },
     getUserInfo (e) {
-      if (!this.isRead) return
+      if (!this.isRead) {
+        return wxToast('请先阅读注册协议')
+      }
       this.userInfo = e.detail.userInfo
       if (this.userInfo) {
         let params = {

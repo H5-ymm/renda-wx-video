@@ -203,10 +203,12 @@ export default class companyForm extends wepy.page {
      	for(let key in userInfo) {
 				this.form[key] = userInfo[key]
 			}
-			this.benefitsArr = userInfo.benefits || []
+			this.benefitsArr = userInfo.benefits.filter(function (s) {
+				return s && s.trim()
+			})
 			console.log(this.benefitsArr)
 			this.$broadcast('getBenefitsArr', this.benefitsArr)
-			this.infoImg = userInfo.license_url || ''
+			this.infoImg = userInfo.license_url=='null' ? '' : userInfo.license_url
 			this.form.benefits = ''
 			this.jobIndex = this.form.trades ? Number(this.form.trades) - 1 : ''
       this.comIndex = this.form.nature ? Number(this.form.nature) - 1 : ''

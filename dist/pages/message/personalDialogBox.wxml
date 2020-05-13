@@ -1,8 +1,8 @@
 <wxs src="../../filterWxs/actionFilter.wxs" module="wxs"/>
 
 	<view style="height: {{scrollHeight}}" class="dialogBox-view dialogBox-row {{!is_apply&&isShow ? 'dialogBox-row1':''}} {{!isShow&&is_apply ? 'dialogBox-row2':''}} {{isShow&&is_apply ? 'dialogBox-row3':''}}" id="chat">
-		<view class="message-header">
-			<view class="weui-flex between message-header-content"  wx:if="{{is_apply&&rendaUserType==1}}">
+		<view class="message-header"  wx:if="{{is_apply&&rendaUserType==1}}">
+			<view class="weui-flex between message-header-content">
 				<view bindtap="videoCall">
 					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon"/>
 					<view class="page__title">视频面试</view>
