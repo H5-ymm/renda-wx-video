@@ -35,7 +35,7 @@
             <text>{{companyDetail.link_tel}}</text>
           </view>
           <view class="welfare_swiper" wx:if="{{benefits.length}}">
-            <swiper class="swiper" circular="true" previous-margin="100px" next-margin="50px">
+            <swiper class="swiper" circular="true" previous-margin="{{previous}}" next-margin="50px">
               <repeat wx:for="{{benefits}}" wx:key="index">
                 <swiper-item class="swiper-item">
                   <view class="welfare-item weui-flex between">
@@ -107,7 +107,8 @@ export default class jobDetail extends wepy.page {
     companyDetail: {},
     jobList: [],
     uid: [],
-    benefits: []
+    benefits: [],
+    previous: '100px'
   }
   config = {
     navigationBarTitleText: '企业详情'
@@ -115,7 +116,6 @@ export default class jobDetail extends wepy.page {
   getcompanyinfo (params) {
     $http('/personaljob/getcompanyinfo', params).then(res => {
       this.companyDetail = res.data || {}
-      console.log(res.data)
       this.companyDetail.address = res.data.address!='null' ?  res.data.address : ''
       res.data.benefits.forEach(item => {
         this.welfareList.forEach(val => {
@@ -124,8 +124,13 @@ export default class jobDetail extends wepy.page {
           }
         })
       })
-      this.getCompanyJob(params)
+      if (this.benefits.length<3) {
+        this.previous = 0
+      } else {
+        this.previous = '100px'
+      }
       this.$apply()
+      this.getCompanyJob(params)
     })
   }
   getCompanyJob(params) {

@@ -161,7 +161,6 @@ export default class companyForm extends wepy.page {
       trades:'',
       nature: '',
       scale: '',
-      com_name: '',
       link_tel: '',
       link_man: '',
       email: '',

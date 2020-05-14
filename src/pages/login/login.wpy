@@ -46,12 +46,6 @@ export default class Login extends wepy.page {
   }
   data = {
     isModal: true,
-    // modalHeight: 640,
-    // modalObj: {
-    //   title: '',
-    //   subTitle: '',
-    //   imgBg: 'https://a.rsd123.com/image/images/modalIcon.png'
-    // },
     form: {
       tel: '',
       code: '',
@@ -101,16 +95,6 @@ export default class Login extends wepy.page {
     }).catch(error => {
       if (error && error.status) {
         wxToast('登录失败')
-        // let obj = getErrorTip(error.status.code)
-        // if (error.status.code === 6001 || error.status.code === 6008) {
-        //   this.modalHeight = 640
-        // } else {
-        //   this.modalHeight = 560
-        // }
-        // this.modalObj.title = obj.title
-        // this.modalObj.subTitle = obj.subTitle
-        // this.isModal = false
-        // this.$apply()
       }
     })
   }
@@ -135,15 +119,17 @@ export default class Login extends wepy.page {
     }
   }
   saveUserType() {
+    let wxInfo = JSON.parse(wx.getStorageSync('wxInfo'))
     let params = {
       uid: this.uid,
       type: this.usertype,
-      img: this.userInfo.avatarUrl,
-      nickname: this.userInfo.nickName,
+      img: wxInfo.avatar,
+      nickname: wxInfo.nick,
       tel: this.phoneNumber
     }
     $http('/login/saveusertype', params).then(res => {
       if (res.data) {
+        params.head_img = wxInfo.avatar
         wx.setStorageSync('userInfo', JSON.stringify(params))
         if (this.usertype == 1 ) {
           this.text = '企业信息不完整，请前往完善'

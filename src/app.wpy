@@ -111,60 +111,6 @@ export default class extends wepy.app {
   onShow(options) {
    
   }
-  messageReceived (event) {
-    for (let i = 0; i < event.data.length; i++) {
-      let item = event.data[i]
-      if (item.type === TYPES.MSG_CUSTOM) {
-        if (isJSON(item.payload.data)) {
-          const videoCustom = JSON.parse(item.payload.data)
-          if (videoCustom.version === 3) {
-            switch (videoCustom.action) {
-              // 对方呼叫我
-              case 0:
-                if (!store.getters.isCalling) {
-                  let url = `/pages/room/room?args=${item.payload.data}&&from=${item.from}&&to=${item.to}`
-                  wx.navigateTo({url})
-                } else {
-                  // $bus.$emit('isCalling', item)
-                }
-                break
-              // 对方取消
-              case 1:
-                wx.navigateBack({
-                  delta: 1
-                })
-                break
-              // 对方拒绝
-              case 2:
-                $bus.$emit('onRefuse')
-                break
-              // 对方不接1min
-              case 3:
-                wx.navigateBack({
-                  delta: 1
-                })
-                break
-              // 对方接听
-              case 4:
-                // $bus.$emit('onCall', videoCustom)
-                break
-              // 对方挂断
-              case 5:
-                // $bus.$emit('onClose')
-                break
-              // 对方正在通话中
-              case 6:
-                // $bus.$emit('onBusy')
-                break
-              default:
-                break
-            }
-          }
-        }
-      }
-    }
-  // store.dispatch('onMessageEvent', event)
-  }
   autoUpdate() {
     var self = this
     // 获取小程序更新机制兼容
@@ -234,8 +180,8 @@ export default class extends wepy.app {
       wx.getUserInfo({
         success: res => {
           let params = {
-            avatarUrl: res.userInfo.avatarUrl,
-            nickName: res.userInfo.nickName
+            avatar: res.userInfo.avatarUrl,
+            nick: res.userInfo.nickName
           }
           this.globalData.wxInfo = params
           wx.setStorageSync('wxInfo', JSON.stringify(params))

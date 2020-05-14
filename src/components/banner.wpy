@@ -28,8 +28,8 @@
   }
 </style>
 <template>
-  <view class="page-section page-section-spacing swiper">
-    <swiper indicator-dots="true" indicator-color="#B5B5B6" wx:if="{{banner.length}}" indicator-active-color="#1890FF"
+  <view class="page-section page-section-spacing swiper" wx:if="{{banner.length}}">
+    <swiper indicator-dots="true" indicator-color="#B5B5B6" indicator-active-color="#1890FF"
       autoplay="true" class="swiper">
       <repeat wx:for="{{banner}}" wx:key="index">
         <swiper-item class="swiper-item">

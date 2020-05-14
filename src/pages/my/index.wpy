@@ -67,7 +67,7 @@ export default class my extends wepy.page {
     },
     usertype: 0,
     uid: '',
-    wxInfo: '',
+    wxInfo: {},
     com_id: ''
   }
   events = {
@@ -88,7 +88,7 @@ export default class my extends wepy.page {
   }
   onLoad () {
     this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-    this.wxInfo = wx.getStorageSync('wxInfo')
+    this.wxInfo = wx.getStorageSync('wxInfo') ? JSON.parse(wx.getStorageSync('wxInfo')) : {}
     this.usertype = wx.getStorageSync('rendaUserType')
     this.$apply()
   }
@@ -96,12 +96,6 @@ export default class my extends wepy.page {
     this.getDetail(this.usertype)
   }
   computed = {
-    userName () {
-      let name = wx.getStorageSync('wxInfo')
-        ? JSON.parse(wx.getStorageSync('wxInfo')).user_name
-        : ''
-      return this.userInfo.user_name ? this.userInfo.user_name : name
-    },
     urlApi() { 
       return this.usertype == 1 ? '/company/com_logo':'/personal/head_img'
     },
@@ -165,33 +159,33 @@ export default class my extends wepy.page {
       } else {
         wx.setStorageSync('rendaPerfect', 0)
       }
-      if (res.data.nickname) {
-        let params = {
-          nickname: res.data.nickname,
-          edu: res.data.edu || '',
-          sex: res.data.sex || '',
-          birthtime: res.data.birthtime || '',
-          province: res.data.province,
-          city: res.data.city,
-          head_img: res.data.head_img,
-          tel: res.data.tel,
-          email: res.data.email,
-          job_search_status: res.data.job_search_status || ''
-        }
-         wx.setStorageSync('userInfo', JSON.stringify(params))
-        let expectedParams = {
-          nature_work: res.data.nature_work || '',
-          expected_salary: res.data.expected_salary || '',
-          expected_city: res.data.expected_city || '',
-          expected_province: res.data.expected_province || '',
-          first_pid: res.data.first_pid || '',
-          second_pid: res.data.second_pid || '',
-          expected_job: res.data.expected_job || '',
-          expected_trades: res.data.expected_trades || '',
-          uid: this.uid
-        }
-        wx.setStorageSync('expectedInfo', JSON.stringify(expectedParams))
+      let params = {
+        nickname: res.data.nickname,
+        edu: res.data.edu || '',
+        sex: res.data.sex || '',
+        birthtime: res.data.birthtime || '',
+        province: res.data.province,
+        city: res.data.city,
+        head_img: res.data.head_img,
+        tel: res.data.tel,
+        email: res.data.email,
+        job_search_status: res.data.job_search_status || ''
       }
+      wx.setStorageSync('userInfo', JSON.stringify(params))
+      let expectedParams = {
+        nature_work: res.data.nature_work || '',
+        expected_salary: res.data.expected_salary || '',
+        expected_city: res.data.expected_city || '',
+        expected_province: res.data.expected_province || '',
+        first_pid: res.data.first_pid || '',
+        second_pid: res.data.second_pid || '',
+        expected_job: res.data.expected_job || '',
+        expected_trades: res.data.expected_trades || '',
+        uid: this.uid
+      }
+      wx.setStorageSync('expectedInfo', JSON.stringify(expectedParams))
+      this.wxInfo.nick = res.data.nickname
+      wx.setStorageSync('wxInfo', JSON.stringify(this.wxInfo))
       this.$apply()
     })
   }
@@ -201,10 +195,11 @@ export default class my extends wepy.page {
       this.userInfo.nickname = data.com_name
       this.userInfo.tel = data.link_tel
       this.com_id = data.id
-      if (data.logo_url) {
-        this.head_img = data.logo_url
-      }
-      this.$apply()
+      this.head_img = data.logo_url
+      this.wxInfo.avatar = data.logo_url
+      this.wxInfo.nick = data.com_name
+      this.$apply() 
+      wx.setStorageSync('wxInfo', JSON.stringify(this.wxInfo))
       wx.setStorageSync('userInfo', JSON.stringify(data))
     })
   }
@@ -227,6 +222,8 @@ export default class my extends wepy.page {
     $http(this.urlApi, params).then(res => {
       if(res.data) {
         this.head_img = head_img
+        this.wxInfo.avatar = head_img
+        wx.setStorageSync('wxInfo', JSON.stringify(this.wxInfo))
         this.$apply()
         wxToast('修改头像成功')
       }

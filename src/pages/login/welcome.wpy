@@ -68,6 +68,8 @@ export default class Welcome extends wepy.page {
       this.isLoginOut = false
     }
     this.$apply() 
+  }
+  onShow() {
     wx.getSetting({
       success: res => {
         // 没有授权
@@ -80,14 +82,12 @@ export default class Welcome extends wepy.page {
         this.$apply()
       }
     })
-
-  }
-  onShow() {
     if (wx.getStorageSync('rendaOpenId')) {
       this.openid =  wx.getStorageSync('rendaOpenId') 
     } else {
       this.openid = this.$parent.getOpenId()
     }
+    console.log(this.openid)
     if (!this.isRead) {
       this.checked = false
     }
@@ -97,14 +97,14 @@ export default class Welcome extends wepy.page {
     let params = {
       uid: this.uid,
       type: this.usertype,
-      img: this.userInfo.avatarUrl,
-      nickname: this.userInfo.nickName,
+      img: this.userInfo.avatar,
+      nickname: this.userInfo.nick,
       tel: this.phoneNumber
     }
     $http('/login/saveusertype', params).then(res => {
       if (res.data) {
         // this.isLoginModal = !this.isLoginModal
-        params.head_img = this.userInfo.avatarUrl 
+        params.head_img = this.userInfo.avatar 
         wx.setStorageSync('userInfo', JSON.stringify(params))
         this.title = ''
         if (this.usertype == 1 ) {
@@ -206,8 +206,8 @@ export default class Welcome extends wepy.page {
       this.userInfo = e.detail.userInfo
       if (this.userInfo) {
         let params = {
-          avatarUrl: this.userInfo.avatarUrl,
-          nickName: this.userInfo.nickName
+          avatar: this.userInfo.avatarUrl,
+          nick: this.userInfo.nickName
         }
         this.$parent.globalData.wxInfo = params
         wx.setStorageSync('wxInfo', JSON.stringify(params))

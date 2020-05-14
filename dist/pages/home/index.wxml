@@ -2,8 +2,8 @@
   <view class="page-home">
     <scroll-view scroll-y="true" refresher-enabled="true" bindscrolltolower="searchScrollLower" bindrefresherrefresh="bindrefresherrefresh" class="page">
       
-  <view class="page-section page-section-spacing swiper">
-    <swiper indicator-dots="true" indicator-color="#B5B5B6"  wx:if="{{$banner$banner.length}}" indicator-active-color="#1890FF" autoplay="true" class="swiper">
+  <view class="page-section page-section-spacing swiper"  wx:if="{{$banner$banner.length}}">
+    <swiper indicator-dots="true" indicator-color="#B5B5B6" indicator-active-color="#1890FF" autoplay="true" class="swiper">
       <block wx:for="{{$banner$banner}}" wx:key="index">
         <swiper-item class="swiper-item">
             <image src="{{item.image}}" alt="" class="swiper-image shadow" mode="aspectFill"/>

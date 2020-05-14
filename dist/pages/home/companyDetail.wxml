@@ -15,7 +15,7 @@
             <text>{{companyDetail.link_tel}}</text>
           </view>
           <view class="welfare_swiper"  wx:if="{{benefits.length}}">
-            <swiper class="swiper" circular="true" previous-margin="100px" next-margin="50px">
+            <swiper class="swiper" circular="true" previous-margin="{{previous}}" next-margin="50px">
               <block wx:for="{{benefits}}" wx:key="index">
                 <swiper-item class="swiper-item">
                   <view class="welfare-item weui-flex between">

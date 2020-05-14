@@ -33,12 +33,14 @@
     }
   }
   .message-col-2 {
-    // line-height: 50rpx;
     margin-left: 20rpx;
     padding: 30rpx 0;
     .message-col-small {
       font-size: 26rpx;
-    }
+		}
+		// .message-text {
+		// 	width: 240rpx;
+		// }
     .message-col-time {
       margin-top: 10rpx;
     }
@@ -58,7 +60,7 @@
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
 							<view>
 								<view class="page__title">{{item.nick}}</view>
-								<view class="message-col-small page__desc">{{item.messageForShow}}</view>
+								<view class="message-col-small page__desc message-text">{{item.messageForShow}}</view>
 							</view>
 							<view class="message-col-small message-col-time page__desc">{{item.lastTime}}</view>
 						</view>
@@ -91,10 +93,12 @@ export default class message extends wepy.page {
 			uid: ''
 		},
 		list: [],
-		count: 0
+		count: 0,
+		TIM: {}
 	}
 	config = {
-		navigationBarTitleText: '消息管理'
+		navigationBarTitleText: '消息管理',
+		enablePullDownRefresh: true
 	}
 	computed = {
 		urlApi() {
@@ -104,36 +108,50 @@ export default class message extends wepy.page {
 			return getList(this.list, 'lastTime', 'YYYY-MM-DD HH:mm')
 		}
 	}
+	bindrefresherrefresh() {
+    this.getUserList()
+	}
 	onShow() {
+		// this.TIM = this.$parent.globalData.TIM
+		// wx.$app.off(this.TIM.EVENT.ERROR, this._onIMError)
+    // wx.$app.on(this.TIM.EVENT.ERROR, this._onIMError, this)
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 		this.getUserList()
 	}
+	_onIMError (event) {
+    // 网络错误不弹toast && sdk未初始化完全报错
+    if (event.data.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
+      wxToast(event.data.message)
+    }
+  }
 	getUserList() {
-   let promise1 = wx.$app.getConversationList();
-			promise1.then(imResponse => {
-				let arr =  []
-				const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
-				conversationList.forEach(item=>{
-					let obj = {}
-					const { lastMessage, userProfile, conversationID, type } = item
-					if (type == 'C2C'&& userProfile.userID!= this.params.uid) {
-						obj = {
-							lastTime: lastMessage.lastTime,
-							messageForShow:lastMessage.messageForShow,
-							nick: userProfile.nick,
-							avatar: userProfile.avatar,
-							userID: userProfile.userID,
-							conversationID: conversationID
-						}
-						arr.push(obj)
+		let promise1 = wx.$app.getConversationList();
+		console.log(promise1)
+		if (!promise1) return
+		promise1.then(imResponse => {
+			let arr =  []
+			const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
+			conversationList.forEach(item=>{
+				let obj = {}
+				const { lastMessage, userProfile, conversationID, type } = item
+				if (type == 'C2C'&& userProfile.userID!= this.params.uid) {
+					obj = {
+						lastTime: lastMessage.lastTime,
+						messageForShow:lastMessage.messageForShow,
+						nick: userProfile.nick,
+						avatar: userProfile.avatar,
+						userID: userProfile.userID,
+						conversationID: conversationID
 					}
-				})
-				this.list = arr
-				console.log(arr)
-				this.$apply()
-			}).catch(function (imError) {
-				console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
-			});
+					arr.push(obj)
+				}
+			})
+			this.list = arr
+			console.log(arr)
+			this.$apply()
+		}).catch(function (imError) {
+			console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息
+		});
 	}
 	methods = {
 		viewMessage(item) {

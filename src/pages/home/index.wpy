@@ -120,6 +120,7 @@ export default class teamView extends wepy.page {
       this.$apply()
     },
     booking: data => {
+      console.log(data)
       // 订展先判断是否完善信息
       // 完善信息之后企业订展是否审核
       // 审核之后
@@ -137,6 +138,7 @@ export default class teamView extends wepy.page {
       wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
     },
     routerHall: data => {
+      console.log(this.usertype)
       if (!this.usertype) {
         wx.hideTabBar()
         this.isScaleModal = !this.isScaleModal
@@ -193,17 +195,17 @@ export default class teamView extends wepy.page {
   }
   checkUserLogin(openid) {
     store.dispatch(getAllUser({ openid })).then(res => {
-      this.params.uid = res.payload.id
-      this.usertype = res.payload.usertype
-      this.$apply()
       if (!res.payload.usertype) {
         wx.clearStorageSync();
         wxToast('请授权登录')
         wxNavigateTo('/pages/login/welcome')
       } else {
+        this.params.uid = res.payload.id
+        this.usertype = res.payload.usertype
+        this.$parent.globalData.rendaUserType = res.payload.usertype
+        this.$apply()
         this.getJobfairList()
         this.getUserSig()
-        this.$parent.globalData.rendaUserType = res.payload.usertype
       }
     }).catch(error => {
       if (error && error.code) {
@@ -252,7 +254,7 @@ export default class teamView extends wepy.page {
       this.getJobfairList()
     }
   }
-   _initIM () {
+  _initIM () {
     wx.$app.off( this.TIM.EVENT.SDK_READY, this._onIMReady);
     wx.$app.off( this.TIM.EVENT.ERROR, this._onIMError)
     // 监听事件)
@@ -269,8 +271,8 @@ export default class teamView extends wepy.page {
     $http('/autograph/getAutograph', { uid: this.params.uid + '' }).then(res => {
       let promise = wx.$app.login({ userID: this.params.uid + '', userSig: res.data });
       promise.then(imResponse => {
-        console.log('登录成功');
         this._initIM()
+        console.log('登录成功')
         if (imResponse.data.repeatLogin === true) {
           // 标识账号已登录，本次登录操作为重复登录。v2.5.1 起支持
           console.log(imResponse.data.errorInfo);
@@ -280,34 +282,37 @@ export default class teamView extends wepy.page {
       });
     })
   }
-  _onIMReady() {
-    let userInfo = wx.getStorageSync('userInfo')?JSON.parse(wx.getStorageSync('userInfo')): null
-    let params = {}
-    if (!userInfo) {
-      userInfo = JSON.parse(wx.getStorageSync('wxInfo'))
-      params = {
-        nick: userInfo.nickName,
-        avatar: userInfo.avatarUrl,
-      }
-    } else {
-      if (wx.getStorageSync('rendaUserType') == 2) {
-        params = {
-          nick: userInfo.nickname,
-          avatar: userInfo.head_img,
-        }
-      } else {
-        params = {
-          nick: userInfo.com_name,
-          avatar: userInfo.logo_url
-        }
-      }
-    }
-    let promise = wx.$app.updateMyProfile(params)
+  getConversationProfile() {
+		let conversationID = 'C2C' + this.params.uid
+		let promise =  wx.$app.getConversationProfile(conversationID);
+		promise.then(imResponse => {
+			const { userProfile } = imResponse.data.conversation
+      console.log(userProfile)
+      wx.setStorageSync('userProfile', JSON.stringify(userProfile))
+      console.log('获取个人信息')
+			this.$apply() // 会话资料
+		}).catch(function(imError) {
+			console.warn('getConversationProfile error:', imError); // 获取会话资料失败的相关信息
+		});
+  }
+  updateMyProfile () {
+    let userInfo = wx.getStorageSync('wxInfo')?JSON.parse(wx.getStorageSync('wxInfo')):{}
+    let promise = wx.$app.updateMyProfile(userInfo)
     promise.then(function(imResponse) {
+      wx.setStorageSync('userProfile', JSON.stringify(imResponse.data))
       console.log(imResponse.data); // 更新资料成功
+      console.log('更新个人信息')
     }).catch(function(imError) {
       console.warn('updateMyProfile error:', imError); // 更新资料失败的相关信息
     });
+  }
+  _onIMReady() {
+    console.log(wx.getStorageSync('wxInfo'))
+    if (wx.getStorageSync('wxInfo')) {
+      this.updateMyProfile() 
+    } else {
+      this.getConversationProfile()
+    }
   }
   getOpenId() {
     wx.login({
@@ -341,8 +346,8 @@ export default class teamView extends wepy.page {
   onShow() {
     wx.showTabBar()
     this.TIM = this.$parent.globalData.TIM
-    if (wx.getStorageSync('rendaOpenId') && wx.getStorageSync('session_key')) {
-      this.openid = wx.getStorageSync('rendaOpenId')
+    if (wx.getStorageSync('rendaOpenId') && wx.getStorageSync('session_key')) {
+      this.openid = wx.getStorageSync('rendaOpenId')
       this.checkUserLogin(this.openid)
     } else {
       this.getOpenId()

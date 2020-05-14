@@ -16,6 +16,7 @@
 	}
 	.modal-row {
 		margin-bottom: 16rpx;
+		text-align: left;
 		.modal-col {
 			border: 1px solid #eee;
 			border-radius: 5rpx;

@@ -37,26 +37,26 @@
 		<scroll-view scroll-y="true" id="scroll">
 			<view class="page_margin {{is_apply?'page_top':''}}">
 				<repeat wx:for="{{messageList}}" wx:key="index">
-					<view wx:if="{{(uid!=item.from)}}">
+					<view wx:if="{{(uid!=item.from) || (item.type=='TIMCustomElem'&&item.action)}}">
 						<view class="page__desc date">{{item.time}}</view>
 						<view class="weui-flex dialogBox-col weui-flex__item start">
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
 							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
 							<view class="dialogBox-content dialogBox-content-left weui-flex start">
-							  <view wx:if="{{item.text}}" >{{item.text}}</view>
-								<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
-								<view wx:if="{{!item.text&&!item.img}}" >挂断视频</view>
-								<image mode="scaleToFill" wx:if="{{!item.text&&!item.img}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" />
+							  <view wx:if="{{item.type=='TIMTextElem'}}" >{{item.text}}</view>
+								<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.type=='TIMImageElem'}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
+								<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
+								<image mode="scaleToFill" wx:if="{{item.type=='TIMCustomElem'}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" />
 							</view>
 						</view>
 					</view>
-					<view class="weui-flex wrap dialogBox-col weui-flex__item end" wx:else>
+					<view class="weui-flex wrap dialogBox-col weui-flex__item end" wx:if="{{(uid==item.from) || (item.type=='TIMCustomElem'&&item.action)}}">
 						<view class="page__desc date">{{item.time}}</view>
 						<view class="dialogBox-content weui-flex start dialogBox-content-right">
-							<view wx:if="{{item.text}}">{{item.text}}</view>
-							<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
-							<view wx:if="{{!item.text&&!item.img&&item.action}}">{{wxs.checkText(item.action)}}</view>
-							<image mode="scaleToFill" wx:if="{{!item.text&&!item.img}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" />
+							<view wx:if="{{item.type=='TIMTextElem'}}">{{item.text}}</view>
+							<image wx:if="{{item.type=='TIMImageElem'}}" mode="scaleToFill" src="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
+							<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
+							<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" />
 						</view>
 						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
 						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
@@ -84,7 +84,7 @@
 				</view>
 			</view>
 		</view>
-		<noticeModal :isScaleModal.sync="isNoticeModal" @setAllTime="setAllTime"></noticeModal>
+		<noticeModal :isScaleModal.sync="isNoticeModal" @setAllTime="setAllTime" @handleClose.user="noticeEntry"></noticeModal>
 	  <modal :isScaleModal.sync="isModal" :modalObj.sync="modalObj" @handleClose="handleClose" @handleOk="handleOk"></modal>
 	</view>
 </template>
@@ -147,16 +147,17 @@ export default class personalDialogBox extends wepy.page {
     this.getMessage()
 	}
   _initIM () {
-    wx.$app.off( this.TIM.EVENT.SDK_READY, this._onIMMessageReceived);
+    wx.$app.off( this.TIM.EVENT.MESSAGE_RECEIVED, this._onIMMessageReceived);
     wx.$app.on(this.TIM.EVENT.MESSAGE_RECEIVED, this._onIMMessageReceived, this)
   }
 	onLoad (options) {
+		wx.setStorageSync('hangRoom', false)
 		this.TIM = this.$parent.globalData.TIM
 		this.params.uid = options.userID
 		this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
-		this.userInfo = wx.getStorageSync('userInfo')?JSON.parse(wx.getStorageSync('userInfo')):{}
+		this.userInfo = wx.getStorageSync('userInfo') ? JSON.parse(wx.getStorageSync('userInfo')): {}
 		this.rendaUserType = wx.getStorageSync('rendaUserType')
-		this.setSdkReady = wx.getStorageSync('setSdkReady')
+		this.userProfile = JSON.parse(wx.getStorageSync('userProfile'))
 		this.$apply()
 		if (options.toUser) {
 			this.toUserId = options.toUser
@@ -168,8 +169,8 @@ export default class personalDialogBox extends wepy.page {
 		if (this.rendaUserType ==2) {
 		  this.getPersonal()
 		}
-		this.getCommunicate()
-		this.getMessage()	
+		this.getMessage()
+		this.getCommunicate()	
 	} 
 	// 滚动到列表bottom
   scrollToBottom () {
@@ -180,23 +181,15 @@ export default class personalDialogBox extends wepy.page {
 	onReady() {
 		wx.getSystemInfo({
 			success: (res) => {
-				console.log(res.windowHeight)
 				this.windowHeight = res.windowHeight
       }
 		})
 	}
 	_onIMMessageReceived(event) {
-	  this.scrollToBottom()
-		let interval = setInterval(() => {
-		if (this.messageList.length !== 0) {
-				this.scrollToBottom()
-				clearInterval(interval)
-			}
-		}, 600)
-		event.data.forEach(item => {
-			if (item.type == 'TIMCustomElem') {
+		event.data.forEach((item, index) => {
+			if (item.type == 'TIMCustomElem' && index == 0) {
 				let action = JSON.parse(item._elements[0].content.data).action
-				if ( action == 0 ) {
+				if ( action == 0 && item.to == this.uid) {
 					let params = {
 						args: item._elements[0].content.data,
 						to: item.to,
@@ -205,16 +198,16 @@ export default class personalDialogBox extends wepy.page {
 					}
 					this.getuserSig(params)
 				}
-				//  else {
-				// 	this.getMessage()
-				// }
 			} else {
 				this.getMessage()
 			}
 			this.$apply()
 		})
 	}
-	onShow () {
+	onShow () {	
+		if (wx.getStorageSync('hangRoom')) {
+			this.getMessage()
+		}
 		this._initIM()
 	}
 	onUnload () {
@@ -258,16 +251,14 @@ export default class personalDialogBox extends wepy.page {
 			const { payload, to, from, time, type } = item
 			let date = time
 			date = $moment.unix(date).format('YYYY-MM-DD HH:mm')
-			if (payload.imageInfoArray && payload.imageInfoArray.length) {
+			if (type == 'TIMImageElem') {
 				img = payload.imageInfoArray[0].imageUrl
-				messageObj =	Object.assign({ to, from, img, text: '', time: date })
-			} else {
-				if (type == 'TIMCustomElem') {
-					let data = JSON.parse(payload.data)
-          messageObj =	Object.assign(data, { to, from, time: date })
+				messageObj =	Object.assign({ to, from, img, text: '', time: date,type })
+			} else if (type == 'TIMCustomElem'){
+			  let data = JSON.parse(payload.data)
+					messageObj =	Object.assign(data, { to, from, time: date,type })
 				} else {
-          messageObj =	Object.assign(payload, { to, from, time: date })
-				}
+				messageObj =	Object.assign(payload, { to, from, time: date,type })
 			}
 			return messageObj
 		})
@@ -281,7 +272,7 @@ export default class personalDialogBox extends wepy.page {
 		}).exec()
 	}
   getMessage() {
-		this.getConversationProfile()
+		// this.getConversationProfile()
 	  let query = {conversationID: this.conversationID, count: 15}
 		let promise2 = wx.$app.getMessageList(query)
 		promise2.then(imResponse => {
@@ -346,6 +337,7 @@ export default class personalDialogBox extends wepy.page {
 	}
 	routerView (params) {
 		console.log(params)
+		console.log('跳转几次')
 		const url = `/pages/room/room?roomID=${params.room_id}&userSig=${params.userSig}` +
 			`&to=${params.to}` +
 			`&args=${params.args}`+
@@ -367,25 +359,11 @@ export default class personalDialogBox extends wepy.page {
 			if (res.data) {
 				let value = '入职通知' + $moment.unix(params.entry_time).format('YYYY-MM-DD HH:mm') + params.entry_address+ params.content
 				this.sendMessageApi(value)
+				this.isEntry = 1
 				this.isNoticeModal = !this.isNoticeModal
 		   	this.$apply()
 			}
 		})
-  }
-	events = {
-		setAllTime: data => {
-			console.log(data)
-			let params = Object.assign({apply_uid: this.toUserId, uid: this.params.uid}, data)
-			this.entryUser(params)
-		},
-		handleOk: data => {
-			let value = '不合适' + data
-      this.sendMessageApi(value)
-    },
-    handleClose: ()=> {
-      this.isModal = !this.isModal
-      this.$apply()
-    }
 	}
 	sendMessageApi(value) {
 		let message = wx.$app.createTextMessage({ to: this.toUserId, conversationType: this.TIM.TYPES.CONV_C2C, payload: { text: value } });
@@ -397,7 +375,8 @@ export default class personalDialogBox extends wepy.page {
 				to: this.toUserId,
 				from: this.uid,
 				text: value,
-				time: $moment().format('YYYY-MM-DD HH:mm')
+				time: $moment().format('YYYY-MM-DD HH:mm'),
+				type: 'TIMTextElem'
 			}
 			this.messageList.push(message)
 			this.scrollToBottom()
@@ -407,6 +386,21 @@ export default class personalDialogBox extends wepy.page {
 		}).catch(function (imError) {
 			console.warn('sendMessage error:', imError); // 获取会话列表失败的相关信息
 		});
+	}
+	events = {
+		setAllTime: data => {
+			console.log(data)
+			let params = Object.assign({apply_uid: this.toUserId, uid: this.uid}, data)
+			this.entryUser(params)
+		},
+		handleOk: data => {
+			let value = '不合适' + data
+      this.sendMessageApi(value)
+    },
+    handleClose: ()=> {
+      this.isModal = !this.isModal
+      this.$apply()
+    }
 	}
 	methods = {
 		noticeEntry(){
@@ -425,7 +419,6 @@ export default class personalDialogBox extends wepy.page {
 		  this.sendMessageApi(this.message)
 		},
 		blurInput(e) {
-			console.log(e)
 			this.message = ''
 			this.$apply()
 		},
@@ -492,10 +485,8 @@ export default class personalDialogBox extends wepy.page {
           extension: ''
         }
 			})
-     let promise = wx.$app.sendMessage(message);
+      let promise = wx.$app.sendMessage(message);
 			promise.then(imResponse => {
-				// 发送成功
-				// this.getMessage()
 				let query = Object.assign({args,to: this.toUserId,fromId: this.uid,room_id:options.room_id})
 				this.getuserSig(query)
 				console.log(imResponse);
@@ -503,12 +494,8 @@ export default class personalDialogBox extends wepy.page {
 				// 发送失败
 				console.warn('sendMessage error:', imError);
 			});
-      // let url = `/pages/room/room?args=${args}&from=${this.uid}&to=${this.toUserId}&uid=${this.uid}`
-      // wx.navigateTo({url})
-      // this.handleClose()
     },
 		viewResume() {
-			console.log(this.toUserId)
 			wxNavigateTo('/pages/my/resume?query=' + this.toUserId)
 		}
 	}

@@ -87,7 +87,7 @@ export default class resumeList extends wepy.page {
       if (item.delete == 1) {
         return wxToast('该求职者已删除')
       }
-      wxNavigateTo('/pages/home/jobDetail?query=' +item.apply_uid)
+      wxNavigateTo('/pages/my/resume?query=' +item.apply_uid)
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

@@ -61,10 +61,13 @@ Page({
   },
   enterRoom: function () {
     let rtcConfig = this.data.rtcConfig
+    let obj = Object.assign(this.data.message, { type: '' })
     rtcConfig.enableIM = true
     this.setData({
       isCalling: true,
-      rtcConfig: rtcConfig
+      rtcConfig: rtcConfig,
+      isPending: true,
+      message: obj
     }, () => {
       this.trtcComponent.enterRoom({ roomID: Number(this.data.rtcConfig.roomID) }).then(() => {
         if (this.template === 'custom') {
@@ -189,13 +192,12 @@ Page({
           console.log(this.data.option)
           let action = userinfo.action
           if (action == 4) {
-            console.log(action)
-            // let viewdeoInfo = {
-            //   roomID: Number(userinfo.room_id),
-            //   userID: options.from, // 必要参数 用户 ID 可以由您的帐号系统指定
-            // }
-            // let query = Object.assign(this.data.rtcConfig, viewdeoInfo)
             this.enterRoom()
+          }
+          if (action == 2 || action == 1 || action == 3) {
+            wx.navigateBack({
+              delta: 1
+            })
           }
         } 
       })

@@ -49,6 +49,22 @@ export default class welfareModal extends wepy.component {
   getBenefitsList() {
 		$http('/Constant/getBenefitsList', {}).then(res => {
       let arr = res.data
+      if (this.idList.length) {
+        this.idList.forEach(ele => {
+          arr.forEach(val => {
+            if(Number(ele) == val.id) {
+              val.disabled = true
+              this.benefitsNameList.push(val.title)
+              this.$apply()
+            }
+          })
+        })
+         let params = {
+          benefitsNameList: this.benefitsNameList.join(','),
+          idList: this.idList.join(',')
+        }
+        this.$emit('handleBenefitOk', params) 
+      }
       this.benefitsList = arr.map(item =>{
         item.disabled = false
         return item
@@ -59,22 +75,7 @@ export default class welfareModal extends wepy.component {
   events = {
     getBenefitsArr: data => {
       this.idList = data
-      data.forEach(ele => {
-        this.benefitsList.forEach(val => {
-          if(ele == val.id) {
-            val.disabled = true
-            this.benefitsNameList.push(val.title)
-            console.log(this.benefitsNameList)
-            this.$apply()
-          }
-        })
-      })
-      let params = {
-        benefitsNameList: this.benefitsNameList.join(','),
-        idList: data.join(',')
-      }
-      console.log(params)
-      this.$emit('handleBenefitOk', params)  
+      this.$apply()
     }
   }
   onLoad() {
@@ -93,7 +94,6 @@ export default class welfareModal extends wepy.component {
         benefitsNameList: this.benefitsNameList.join(','),
         idList: this.idList.join(',')
       }
-      console.log(params)
 			this.$emit('handleBenefitOk', params)
     },
     selectBenefit(item, index) {
@@ -109,7 +109,6 @@ export default class welfareModal extends wepy.component {
         this.benefitsNameList.splice(ret, 1)
       }
       this.idList = Array.from(new Set(this.idList))
-      console.log(this.idList)
       this.$apply()
     }
 	}
