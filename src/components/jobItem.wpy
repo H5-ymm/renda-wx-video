@@ -1,18 +1,22 @@
 
 <template>
   <view class="list-row">
-    <view class="weui-flex between list-col-1">    
+    <view class="weui-flex between list-col-1">
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view
+      class="page__desc"
+    >{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{item.social_security}}</view>
       </view>
-      <button class="weui-btn_cell weui-btn_primary" wx:if="{{isShowBtn&&item.is_apply!=1}}" @tap.stop="deliverResume({{item}})">
-        投递简历
-      </button>
+      <button
+        class="weui-btn_cell weui-btn_primary"
+        wx:if="{{isShowBtn&&item.is_apply!=1}}"
+        @tap.stop="deliverResume({{item}})"
+      >投递简历</button>
       <view class="number" wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
     </view>
   </view>
@@ -22,18 +26,18 @@ import wepy from 'wepy'
 import { wxToast, wxNavigateTo } from '@/util'
 import { $http } from '@/http.js'
 export default class jobItem extends wepy.component {
-	props = {
+  props = {
     item: Object,
     isShowBtn: {
-			type: Boolean,
-			default: true
-		}
+      type: Boolean,
+      default: true
+    }
   }
-	methods = {
+  methods = {
     deliverResume(item) {
       this.$emit('deliverResume', item)
       // this.applyJob(params, item)
     }
-	}
+  }
 }
 </script>

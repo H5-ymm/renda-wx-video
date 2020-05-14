@@ -4,7 +4,7 @@
       <view class="detail-box page_top">
         
   <view class="list-row">
-    <view class="weui-flex between list-col-1">    
+    <view class="weui-flex between list-col-1">
       <text class="page__title text-line">{{$jobDetailItem$item.job_name}}</text>
       <view class="number">{{$jobDetailItem$item.salary}}</view>
     </view>
@@ -13,9 +13,7 @@
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{$jobDetailItem$item.social_security}}</view>
       </view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobDetailItem$isShowBtn&&$jobDetailItem$item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-wpydeliverresume-a="{{$jobDetailItem$item}}">
-        投递简历
-      </button>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobDetailItem$isShowBtn&&$jobDetailItem$item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-wpydeliverresume-a="{{$jobDetailItem$item}}">投递简历</button>
       <view class="number"  wx:if="{{$jobDetailItem$isShowBtn&&$jobDetailItem$item.is_apply==1}}">已投递</view>
     </view>
   </view>

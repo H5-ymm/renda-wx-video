@@ -1,6 +1,6 @@
 
 <template>
-	<view class="list-row">
+  <view class="list-row">
     <view class="list-col-1">
       <view class="page__title weui-flex between">
         应聘职位：{{item.job_name}}
@@ -9,43 +9,42 @@
       <view class="weui-flex between">
         <view class="weui-flex__item">
           <view class="number">{{item.salary}}</view>
-          <view class="page__title">{{item.com_name}}</view>         
+          <view class="page__title">{{item.com_name}}</view>
         </view>
-        <button class="weui-btn_cell weui-btn_primary" @tap="concatCompany({{item}})">
-          立即沟通
-        </button>
-      </view>  
+        <button class="weui-btn_cell weui-btn_primary" @tap="concatCompany({{item}})">立即沟通</button>
+      </view>
     </view>
     <view class="weui-flex between">
       <view class="page__desc company_info">企业信息</view>
       <view class="number" @tap="viewDetail({{item}})">查看详情</view>
     </view>
-    <view class="page__desc">记录来自：{{item.title}}</view>  
+    <view class="page__desc">记录来自：{{item.title}}</view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import { wxNavigateTo, wxToast } from '@/util'
 export default class deliveryRecordItem extends wepy.component {
-	props = {
+  props = {
     item: Object
   }
-	methods = {
+  methods = {
     viewDetail(item) {
       if (item.com_status == 1) {
         return wxToast('该企业已删除')
       }
-      wxNavigateTo('/pages/home/companyDetail?query='+ item.com_id)
+      wxNavigateTo('/pages/home/companyDetail?query=' + item.com_id)
       wx.setStorageSync('rendaJHID', item.jf_id)
     },
     concatCompany(item) {
       if (item.com_status == 1) {
         return wxToast('该企业已删除')
       }
+      wx.setStorageSync('rendaJHID', item.jf_id)
       let uid = wx.getStorageSync('rendaUid')
       let conversationID = 'C2C' + item.com_id
       wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.com_id}`)
     }
-	}
+  }
 }
 </script>

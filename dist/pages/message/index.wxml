@@ -9,9 +9,9 @@
 							<image mode="scaleToFill" src="{{item.avatar}}" class="message-col-header" wx-if="{{item.avatar}}"/>
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
-							<view>
+							<view class=" message-text">
 								<view class="page__title">{{item.nick}}</view>
-								<view class="message-col-small page__desc message-text">{{item.messageForShow}}</view>
+								<view class="message-col-small page__desc">{{item.messageForShow}}</view>
 							</view>
 							<view class="message-col-small message-col-time page__desc">{{item.lastTime}}</view>
 						</view>

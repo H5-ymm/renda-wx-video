@@ -61,9 +61,9 @@
         </view>
         <view class="section-box">
           <view class="page__title">该公司职位</view>
-          <repeat for="{{jobList}}" key="index">
-            <view class="job-box page_bottom">
-              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="communicateCompany"></jobDetailItem>
+          <repeat wx:for="{{jobList}}" wx:key="index">
+            <view class="job-box page_bottom" @tap="viewJob({{item}})">
+              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="deliverResume"></jobDetailItem>
             </view>
           </repeat>
         </view>
@@ -133,6 +133,26 @@ export default class jobDetail extends wepy.page {
       this.getCompanyJob(params)
     })
   }
+  applyJob(params, item) {
+    $http('/personaljob/addapplyJob', params).then(res => {
+      if (res.data) {
+        data.is_apply = 1
+        wxToast('投递成功耐心等待企业回复吧')
+      } else {
+        wxToast('投递失败')
+      }
+    })
+  }
+  events = {
+    deliverResume: data => {
+      let params = {
+        uid: this.uid,
+        job_id: data.id,
+        jf_id: wx.getStorageSync('rendaJHID')
+      }
+      this.applyJob(params, data)
+    }
+  }
   getCompanyJob(params) {
     $http('/Jobfair/companyjobList', params).then(res => {
       this.jobList = res.data || []
@@ -166,6 +186,9 @@ export default class jobDetail extends wepy.page {
         jf_id: wx.getStorageSync('rendaJHID')
       }
       this.saveCollectCompany(params)
+    },
+    viewJob(item) {
+      wxNavigateTo('/pages/home/jobDetail?query='+item.id)
     },
     communicateCompany(){
       let rendaPerfect  = wx.getStorageSync('rendaPerfect')

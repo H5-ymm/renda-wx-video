@@ -6,7 +6,7 @@
       <view bindtap="$jobList$viewResume" data-wpyviewresume-a="{{$jobList$item}}">
 				
   <view class="list-row">
-    <view class="weui-flex between list-col-1">    
+    <view class="weui-flex between list-col-1">
       <text class="page__title text-line">{{$jobList$item.job_name}}</text>
       <view class="number">{{$jobList$item.salary}}</view>
     </view>
@@ -15,9 +15,7 @@
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{$jobList$item.social_security}}</view>
       </view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobItem$isShowBtn&&$jobList$item.is_apply!=1}}" catchtap="$jobList$jobItem$deliverResume" data-com-index="{{$jobList$index}}" data-wpydeliverresume-a="{{$jobList$item}}">
-        投递简历
-      </button>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobItem$isShowBtn&&$jobList$item.is_apply!=1}}" catchtap="$jobList$jobItem$deliverResume" data-com-index="{{$jobList$index}}" data-wpydeliverresume-a="{{$jobList$item}}">投递简历</button>
       <view class="number"  wx:if="{{$jobList$jobItem$isShowBtn&&$jobList$item.is_apply==1}}">已投递</view>
     </view>
   </view>

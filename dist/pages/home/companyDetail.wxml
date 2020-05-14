@@ -41,11 +41,11 @@
         </view>
         <view class="section-box">
           <view class="page__title">该公司职位</view>
-          <block wx:for="{{jobList}}" wx:for-index="index" wx:for-item="item" wx:key="index">
-            <view class="job-box page_bottom">
+          <block  wx:for="{{jobList}}" wx:key="index">
+            <view class="job-box page_bottom" bindtap="viewJob" data-wpyviewjob-a="{{item}}">
               
   <view class="list-row">
-    <view class="weui-flex between list-col-1">    
+    <view class="weui-flex between list-col-1">
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
@@ -54,9 +54,7 @@
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{item.social_security}}</view>
       </view>
-      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{index}}" data-wpydeliverresume-a="{{item}}">
-        投递简历
-      </button>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{undefined}}" data-wpydeliverresume-a="{{item}}">投递简历</button>
       <view class="number"  wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
     </view>
   </view>
