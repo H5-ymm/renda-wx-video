@@ -205,7 +205,6 @@ export default class companyForm extends wepy.page {
 			this.benefitsArr = userInfo.benefits.filter(function (s) {
 				return s && s.trim()
 			})
-			console.log(this.benefitsArr)
 			this.$broadcast('getBenefitsArr', this.benefitsArr)
 			this.infoImg = userInfo.license_url=='null' ? '' : userInfo.license_url
 			this.form.benefits = ''
@@ -225,9 +224,7 @@ export default class companyForm extends wepy.page {
 			this.form.area = data[2] ? data[2] : 0
 		},
 		handleBenefitOk: data => {
-			console.log(data)
-			this.benefits = data.benefitsNameList
-			console.log(this.benefits)
+		  this.benefits = data.benefitsNameList
 			this.form.benefits = data.idList
 			this.$apply()
 		}

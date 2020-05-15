@@ -95,10 +95,6 @@
           </view>
           <input class="weui-input weui-textarea" data-name="work_content" placeholder-class="placeholder" 
 						value="{{form.work_content}}" @input="changeInput" placeholder="请输入工作职责" />
-          <!-- <textarea data-name="work_content" placeholder-class="placeholder"
-            disable-default-padding="true"
-            class="weui-input weui-textarea" value="{{form.work_content}}" @input="changeInput"
-            placeholder="请输入工作职责" maxlength="-1"/> -->
         </view>
       </view>
     </view>
@@ -143,7 +139,6 @@ export default class editWorkExperience extends wepy.page {
     navigationBarTitleText: '工作/实习经历'
   }
   onLoad(options){
-    this.form.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     if (options.query) {
       this.id = options.query
@@ -211,10 +206,10 @@ export default class editWorkExperience extends wepy.page {
       if (!this.form.id) {
         wx.navigateBack({
           delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-        });
+        })
       } else {
         wxShowModal('', '确定删除你的工作经历', '确定').then(res => {
-				this.delJobspeciality()
+			  	this.delJobspeciality()
         }).catch(() => {
           console.log('取消')
         })

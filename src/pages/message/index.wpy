@@ -54,7 +54,6 @@
 				<repeat wx:for="{{newList}}" wx:key="index">
 					<view class="weui-flex start message-row" @tap="viewMessage({{item}})">
 						<view class="message-col-1">
-							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.avatar}}" />
 							<image mode="scaleToFill" src="{{item.avatar}}" class="message-col-header" wx-if="{{item.avatar}}" />
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">
@@ -112,9 +111,6 @@ export default class message extends wepy.page {
     this.getUserList()
 	}
 	onShow() {
-		// this.TIM = this.$parent.globalData.TIM
-		// wx.$app.off(this.TIM.EVENT.ERROR, this._onIMError)
-    // wx.$app.on(this.TIM.EVENT.ERROR, this._onIMError, this)
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 		this.getUserList()
 	}
@@ -123,31 +119,32 @@ export default class message extends wepy.page {
     if (event.data.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
       wxToast(event.data.message)
     }
-  }
+	}
+	changeList(arr) {
+		let conversationList =  []
+		arr.forEach(item=>{
+			let obj = {}
+			const { lastMessage, userProfile, conversationID, type } = item
+			if (type == 'C2C'&& userProfile.userID!= this.params.uid) {
+				obj = {
+					lastTime: lastMessage.lastTime,
+					messageForShow:lastMessage.messageForShow,
+					nick: userProfile.nick,
+					avatar: userProfile.avatar,
+					userID: userProfile.userID,
+					conversationID: conversationID
+				}
+				conversationList.push(obj)
+			}
+		})
+		return conversationList
+	}
 	getUserList() {
-		let promise1 = wx.$app.getConversationList();
-		console.log(promise1)
+		let promise1 = wx.$app.getConversationList()
 		if (!promise1) return
 		promise1.then(imResponse => {
-			let arr =  []
 			const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
-			conversationList.forEach(item=>{
-				let obj = {}
-				const { lastMessage, userProfile, conversationID, type } = item
-				if (type == 'C2C'&& userProfile.userID!= this.params.uid) {
-					obj = {
-						lastTime: lastMessage.lastTime,
-						messageForShow:lastMessage.messageForShow,
-						nick: userProfile.nick,
-						avatar: userProfile.avatar,
-						userID: userProfile.userID,
-						conversationID: conversationID
-					}
-					arr.push(obj)
-				}
-			})
-			this.list = arr
-			console.log(arr)
+			this.list = this.changeList(conversationList)
 			this.$apply()
 		}).catch(function (imError) {
 			console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息

@@ -22,7 +22,7 @@
 			</view>
 		</view>
 		<scroll-view scroll-y="true" id="scroll">
-			<view class="page_margin {{is_apply?'page_top':''}}">
+			<view class="page_margin {{is_apply&&rendaUserType==1?'page_top':''}}">
 				<block  wx:for="{{messageList}}" wx:key="index">
 					<view wx:if="{{(uid!=item.from) || (item.type=='TIMCustomElem'&&item.action)}}">
 						<view class="page__desc date">{{item.time}}</view>
@@ -46,7 +46,7 @@
 							<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon"/>
 						</view>
 						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
-						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" class="dialogBox-col-header" wx:else/>
 					</view>
 				</block>
 			</view>

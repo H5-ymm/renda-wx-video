@@ -114,7 +114,6 @@ export default class editResume extends wepy.page {
   }
   onShow() {
     this.endDate = $moment().format('YYYY-MM-DD')
-    console.log(this.endDate)
     if (wx.getStorageSync('userInfo')) {
       let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
       for(let key in this.form) {

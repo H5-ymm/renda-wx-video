@@ -107,7 +107,7 @@ export default class editEducation extends wepy.page {
       edu: '',
       uid: ''
     },
-    eduList: ['高中以下', '高中', '专科', '本科', '硕士'],
+    eduList: ['高中以下', '高中','中专', '大专', '本科', '硕士'],
     eduIndex: -1,
     disabled: false,
     isPicker: true,
@@ -124,6 +124,11 @@ export default class editEducation extends wepy.page {
       this.getEduDetail(options.query)
    }
   }
+  goBack() {
+    wx.navigateBack({
+      delta: 1
+    })
+  }
   delUseredu() {
     let params = {
       id: this.id ,
@@ -132,10 +137,7 @@ export default class editEducation extends wepy.page {
     $http('/Personal/del_useredu', params).then(res => {
  			if (res.data) {
         wxToast('删除成功')
-        // wxRedirectTo('/pages/my/resume')
-        wx.navigateBack({
-          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-        });
+        this.goBack()
 			} else {
 				wxToast('删除失败')
 			}
@@ -157,9 +159,7 @@ export default class editEducation extends wepy.page {
     $http('/Personal/save_useredu', this.form).then(res => {
  			if (res.data) {
         wxToast('保存成功')
-        wx.navigateBack({
-          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-        });
+        this.goBack()
 			} else {
 				wxToast('保存失败')
 			}
@@ -171,7 +171,7 @@ export default class editEducation extends wepy.page {
       this.form[key] = e.detail.value
     },
     bindEduChange(data) {
-     this.form.edu = data
+      this.form.edu = data
     },
     bindDateChange(e) {
       let key = e.currentTarget.dataset.name
@@ -182,7 +182,7 @@ export default class editEducation extends wepy.page {
     },
     deleteInfo() {
       if (!this.form.id) {
-        wxNavigateTo('/pages/my/resume')
+        this.goBack()
       } else {
         wxShowModal('', '确定删除你的教育背景', '确定').then(res => {
           this.delUseredu()

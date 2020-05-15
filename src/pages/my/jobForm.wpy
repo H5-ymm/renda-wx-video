@@ -170,6 +170,7 @@ export default class jobForm extends wepy.page {
     for (let key in allData) {
       this[key] = allData[key]
     }
+    this.$apply()
   }
 	events = {
 		selectCity: data => {
@@ -264,10 +265,8 @@ export default class jobForm extends wepy.page {
       this.form.salary = Number(data) + 1
     },
     onChange(e) {
-      console.log(e)
       let key = e.currentTarget.dataset.name
       this.form[key] = e.detail.text
-      console.log(this.form)
     },
 		changeInput(e) {
 			let key = e.currentTarget.dataset.name

@@ -90,7 +90,7 @@ export default class collect extends wepy.page {
       wx.setStorageSync('rendaJHID', item.jf_id)
     },
     concatCompany(item) {
-      wxNavigateTo('/pages/message/personalDialogBox?toUser=' + item.id + '&userID=' + this.params.uid)
+      wxNavigateTo('/pages/message/personalDialogBox?toUser=' + item.com_uid + '&userID=' + this.params.uid)
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

@@ -32,7 +32,7 @@
 </style>
 <template>
   <view class="page-home">
-    <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"  @refresherrefresh="bindrefresherrefresh"
+    <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
      class="page" >
       <banner></banner>
       <view class="section">
@@ -65,9 +65,8 @@ import banner from '@/components/banner'
 import actionSheet from '@/components/actionSheet'
 import jobFairList from '@/components/jobFairList'
 import { getStore } from 'wepy-redux'
-import { getAllUser } from '@/store/actions/user.js'
+import { getAllUser, getUser } from '@/store/actions/user.js'
 import { getAllContant } from '@/store/actions/contant.js'
-import { GETALLUSER } from '@/store/types/user.js'
 const store = getStore()
 export default class teamView extends wepy.page {
   components = {
@@ -144,24 +143,21 @@ export default class teamView extends wepy.page {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
       } else {
-        if (data.is_audit == 1 && data.applyinfo && !data.applyinfo.status) {
-          wx.hideTabBar()
-          this.text = '企业订展正在审核中，请联系客服021-51991869'
-          this.isScaleModal = !this.isScaleModal
-          this.okText = '联系客服'
-          this.$apply()
-        } else {
-          this.addjfUser(data.id)
-          wx.setStorageSync('rendaJHID', data.id)
-          wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
-          wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
-        }   
+        this.addjfUser(data.id)
+        wx.setStorageSync('rendaJHID', data.id)
+        wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
+        wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
+        // if (data.is_audit == 1 && data.applyinfo && !data.applyinfo.status) {
+        //   wx.hideTabBar()
+        //   this.text = '企业订展正在审核中，请联系客服021-51991869'
+        //   this.isScaleModal = !this.isScaleModal
+        //   this.okText = '联系客服'
+        //   this.$apply()
+        // } else {
+         
+        // }   
       }
     }
-  }
-  bindrefresherrefresh() {
-    console.log('bindrefresherrefresh')
-    this.onShow()
   }
   addjobfair(data) {
     let params = {
@@ -203,14 +199,12 @@ export default class teamView extends wepy.page {
         this.params.uid = res.payload.id
         this.usertype = res.payload.usertype
         this.$parent.globalData.rendaUserType = res.payload.usertype
+        store.dispatch(getUser({uid: this.params.uid }, this.usertype))
         this.$apply()
         this.getJobfairList()
         this.getUserSig()
       }
     }).catch(error => {
-      if (error && error.code) {
-
-      }
     })
   }
   getJobfairList() {
@@ -228,15 +222,12 @@ export default class teamView extends wepy.page {
   }
   methods = {
     viewInfo(item) {
-      wx.navigateTo({
-        url: item.url
-      })
+      wxNavigateTo(item.url)
     },
     viewDetail(item) {
       wxNavigateTo('/pages/companyView/viewJob?query=' + item.id + '&apply=1')
     },
     searchScrollLower() {
-      console.log(0)
       if (this.count > this.list.length && this.count > this.params.limit) {
         this.params.limit = this.params.limit + 10
         this.getJobfairList()
@@ -343,6 +334,12 @@ export default class teamView extends wepy.page {
       }
     })
   }
+  onPullDownRefresh() {
+    console.log('刷新')
+    wx.startPullDownRefresh({sunccess:() =>{
+      console.log('刷新')
+    }})
+  }
   onShow() {
     wx.showTabBar()
     this.TIM = this.$parent.globalData.TIM

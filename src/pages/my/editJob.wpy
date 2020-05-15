@@ -100,7 +100,6 @@ export default class editJob extends wepy.page {
       if (this.form.first_pid) {
         this.jobList = [this.form.first_pid, this.form.second_pid, this.form.expected_job]
       }
-      // this.comIndex = this.form.expected_trades ? Number(this.form.expected_trades) - 1: ''
       this.moneyIndex = this.form.expected_salary ? Number(this.form.expected_salary) - 1 : ''
       this.index = this.form.nature_work ? Number(this.form.nature_work) - 1 : ''
       this.$apply()
@@ -123,7 +122,7 @@ export default class editJob extends wepy.page {
         wx.setStorageSync('expectedInfo', JSON.stringify(this.form))
         wx.navigateBack({
           delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-        });
+        })
 			} else {
 				wxToast('保存失败')
 			}

@@ -85,10 +85,6 @@
             <view class="my-text weui-flex__item my-text-require">工作职责</view>
           </view>
           <input class="weui-input weui-textarea" data-name="work_content" placeholder-class="placeholder" value="{{form.work_content}}" bindinput="changeInput" placeholder="请输入工作职责"/>
-          <!-- <textarea data-name="work_content" placeholder-class="placeholder"
-            disable-default-padding="true"
-            class="weui-input weui-textarea" value="{{form.work_content}}" bindinput="changeInput"
-            placeholder="请输入工作职责" maxlength="-1"/> -->
         </view>
       </view>
     </view>

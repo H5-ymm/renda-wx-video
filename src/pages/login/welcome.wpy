@@ -127,7 +127,6 @@ export default class Welcome extends wepy.page {
     }
   }
   viewRouter (res) {
-    console.log(res.usertype)
     if (!res.usertype) {
       this.title = "选择身份"
       this.isLoginModal = !this.isLoginModal

@@ -12,7 +12,7 @@
                 {{resumeDetail.nickname}}
                 <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editResume',0)" class="page_card_icon" mode="scaleToFill" />
               </view>
-              <view class="page__desc">{{resumeDetail.birthtime || ''}} {{resumeDetail.province || '-'}}{{resumeDetail.city|| '-'}}</view>
+              <view class="page__desc">{{resumeDetail.sex==1?'男':'女'}} {{resumeDetail.birthtime || ''}} {{resumeDetail.province || '-'}}{{resumeDetail.city|| '-'}}</view>
               <view class="page__desc">联系电话：{{resumeDetail.tel}}</view>
               <view class="page__desc">邮箱：{{resumeDetail.email || '-'}}</view>
             </view>
@@ -29,7 +29,6 @@
             <view class="page__title">工作性质：{{resumeDetail.nature_work || '无'}}</view>
             <view class="page__title">工作地点：{{resumeDetail.expected_province || '无'}}{{resumeDetail.expected_city || ''}}</view>
             <view class="page__title">期望薪资：{{resumeDetail.expected_salary || '无'}}</view>
-            <!-- <view class="page__title">期望行业：{{resumeDetail.expected_trades || '无'}}</view> -->
             <view class="page__title">期望职位：{{resumeDetail.expected_job || '无'}}</view>
           </view>
         </view>
@@ -77,17 +76,11 @@
 </template>
 <script>
 import wepy from 'wepy'
-import jobItem from '@/components/jobItem'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { wxShowModal, wxToast, wxRedirectTo, wxNavigateTo } from '@/util.js'
+import { wxNavigateTo } from '@/util.js'
 export default class resume extends wepy.page {
-  components = {
-    jobDetailItem: jobItem
-  }
   data = {
-    item: {},
-    isShowBtn: false,
     resumeId: '',
     resumeDetail: {},
     eduList: [],
@@ -99,18 +92,17 @@ export default class resume extends wepy.page {
   onLoad(options) {
     if (options.query) {
       this.resumeId = options.query
-      this.uid = options.query
-      this.$apply()
+      this.uid = options.query     
     } else {
       this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
     }
+    this.$apply()
   }
   onShow() {
     this.getuserdetail()
   }
   getuserdetail() {
     $http('/personal/getuserdetail', {uid: this.uid}).then(res => {
-      console.log(res)
       this.resumeDetail = res.data
       this.resumeDetail.birthtime = res.data.birthtime ? $moment.unix(res.data.birthtime).format('YYYY-MM-DD'): ''
       if (this.resumeDetail.edulist) {
@@ -134,7 +126,6 @@ export default class resume extends wepy.page {
       if (item!=0) {
         wxNavigateTo(`/pages/my/${url}?query=${item.id}`)
       } else {
-        console.log(item)
         wxNavigateTo(`/pages/my/${url}`)
       } 
     }

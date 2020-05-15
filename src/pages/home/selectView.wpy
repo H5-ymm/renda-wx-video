@@ -99,11 +99,6 @@ export default class selectView extends wepy.page {
           this.num = 3
         }
       }
-      // if (!this.query.money) {
-      //   this.num = 2
-      // } else {
-      //   this.num = 3
-      // }
       this.query.num = this.num
       wx.setStorageSync('queryObj', JSON.stringify(this.query))
       this.backView()

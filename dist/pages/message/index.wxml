@@ -5,7 +5,6 @@
 				<block wx:for="{{newList}}" wx:key="index">
 					<view class="weui-flex start message-row" bindtap="viewMessage" data-wpyviewmessage-a="{{item}}">
 						<view class="message-col-1">
-							<image mode="scaleToFill" src="../../images/header.png" class="message-col-header" wx-if="{{!item.avatar}}"/>
 							<image mode="scaleToFill" src="{{item.avatar}}" class="message-col-header" wx-if="{{item.avatar}}"/>
 						</view>
 						<view class="weui-flex between-start wrap message-col-2 weui-flex__item page_bottom">

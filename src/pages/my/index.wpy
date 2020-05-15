@@ -242,11 +242,20 @@ export default class my extends wepy.page {
     $http('/login/outbindopenid', { uid: this.uid }).then(res => {
       wx.clearStorageSync()
       wxToast('退出登录成功')
+      this.timOut()
       wxRedirectTo('/pages/login/welcome?query=loginout')
       store.dispatch({ type: GETALLUSER, payload: {} })
     }).catch(error => {
       console.log(error)
     })
+  }
+  timOut() {
+    let promise = wx.$app.logout();
+    promise.then(function(imResponse) {
+      console.log('登出成功');
+    }).catch(function(imError) {
+      console.warn('logout error:', imError);
+    });
   }
   methods = {
     uploadImg() {

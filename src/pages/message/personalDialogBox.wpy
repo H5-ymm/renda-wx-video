@@ -35,7 +35,7 @@
 			</view>
 		</view>
 		<scroll-view scroll-y="true" id="scroll">
-			<view class="page_margin {{is_apply?'page_top':''}}">
+			<view class="page_margin {{is_apply&&rendaUserType==1?'page_top':''}}">
 				<repeat wx:for="{{messageList}}" wx:key="index">
 					<view wx:if="{{(uid!=item.from) || (item.type=='TIMCustomElem'&&item.action)}}">
 						<view class="page__desc date">{{item.time}}</view>
@@ -59,7 +59,7 @@
 							<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" />
 						</view>
 						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
-						<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
+						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" class="dialogBox-col-header" wx:else/>
 					</view>
 				</repeat>
 			</view>
@@ -157,7 +157,6 @@ export default class personalDialogBox extends wepy.page {
 		this.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
 		this.userInfo = wx.getStorageSync('userInfo') ? JSON.parse(wx.getStorageSync('userInfo')): {}
 		this.rendaUserType = wx.getStorageSync('rendaUserType')
-		this.userProfile = JSON.parse(wx.getStorageSync('userProfile'))
 		this.$apply()
 		if (options.toUser) {
 			this.toUserId = options.toUser
@@ -169,6 +168,7 @@ export default class personalDialogBox extends wepy.page {
 		if (this.rendaUserType ==2) {
 		  this.getPersonal()
 		}
+		this.getConversationProfile()
 		this.getMessage()
 		this.getCommunicate()	
 	} 
@@ -205,18 +205,13 @@ export default class personalDialogBox extends wepy.page {
 		})
 	}
 	onShow () {	
-		if (wx.getStorageSync('hangRoom')) {
-			this.getMessage()
-		}
+		// if (wx.getStorageSync('hangRoom')) {
+		// 	this.getMessage()
+		// }
 		this._initIM()
 	}
 	onUnload () {
 		this.isClear = false
-	}
-	onReachBottom() {
-		// if(!this.isCompleted) {
-		// 	this.getMessage(this.nextReqMessageID)
-		// }
 	}
 	getPersonal(){
 		let params = {
@@ -272,7 +267,6 @@ export default class personalDialogBox extends wepy.page {
 		}).exec()
 	}
   getMessage() {
-		// this.getConversationProfile()
 	  let query = {conversationID: this.conversationID, count: 15}
 		let promise2 = wx.$app.getMessageList(query)
 		promise2.then(imResponse => {
@@ -298,24 +292,6 @@ export default class personalDialogBox extends wepy.page {
 			console.warn('messageList error:', imError); // 登录失败的相关信息
 		});
  }
- getUserSig() {
-		$http('/autograph/getAutograph', { uid: this.uid }).then(res => {
-			let promise = tim.login({ userID: this.uid + '', userSig: res.data })
-			promise.then(imResponse => {
-				if (!this.setSdkReady) {
-					this.getMsgDetail()
-				} else {
-					this.getMessage()
-				}	
-				if (imResponse.data.repeatLogin === true) {
-					console.log('登录成功');
-					// this.getMessage()
-				}
-			}).catch(imError => {
-				console.warn('login error:', imError); // 登录失败的相关信息
-			});
-		})
-	}
 	getConversationProfile() {
 		let conversationID = 'C2C' + this.uid
 		let promise =  wx.$app.getConversationProfile(this.conversationID);
@@ -323,7 +299,6 @@ export default class personalDialogBox extends wepy.page {
 			// 获取成功
 			const { userProfile } = imResponse.data.conversation
 			this.userProfile = userProfile
-			console.log(this.userProfile)
 			this.$apply() // 会话资料
 		}).catch(function(imError) {
 			console.warn('getConversationProfile error:', imError); // 获取会话资料失败的相关信息
@@ -370,7 +345,6 @@ export default class personalDialogBox extends wepy.page {
 		let promise1 = wx.$app.sendMessage(message);
 		promise1.then(imResponse => {
 			console.log('发送成功')
-			// this.getMessage()
 			let message = {
 				to: this.toUserId,
 				from: this.uid,
@@ -389,7 +363,6 @@ export default class personalDialogBox extends wepy.page {
 	}
 	events = {
 		setAllTime: data => {
-			console.log(data)
 			let params = Object.assign({apply_uid: this.toUserId, uid: this.uid}, data)
 			this.entryUser(params)
 		},
@@ -431,16 +404,13 @@ export default class personalDialogBox extends wepy.page {
 				sourceType: ['album'], // 从相册选择
 				count: 1, // 只选一张，目前 SDK 不支持一次发送多张图片
 				success: res => {
-					// 2. 创建消息实例，接口返回的实例可以上屏
 					let message =  wx.$app.createImageMessage({
 						to: this.toUserId,
 						conversationType: this.TIM.TYPES.CONV_C2C,
 						payload: { file: res },
 						onProgress: function(event) { console.log('file uploading:', event) }
-					});
-					// 3. 发送图片
-					console.log(res)
-					let promise = wx.$app.sendMessage(message);
+					})
+					let promise = wx.$app.sendMessage(message)
 					promise.then(imResponse => {
 						// 发送成功
 						let message = {
@@ -448,11 +418,11 @@ export default class personalDialogBox extends wepy.page {
 							from: this.uid,
 							text: '',
 							img: res.tempFilePaths[0],
-              time: $moment().format('YYYY-MM-DD HH:mm')
+							time: $moment().format('YYYY-MM-DD HH:mm'),
+							type: 'TIMImageElem'
 						}
 						this.messageList.push(message)
 						this.scrollToBottom()
-						console.log(imResponse);
 					}).catch(function(imError) {
 						// 发送失败
 						console.warn('sendMessage error:', imError);
@@ -489,7 +459,6 @@ export default class personalDialogBox extends wepy.page {
 			promise.then(imResponse => {
 				let query = Object.assign({args,to: this.toUserId,fromId: this.uid,room_id:options.room_id})
 				this.getuserSig(query)
-				console.log(imResponse);
 			}).catch(function(imError) {
 				// 发送失败
 				console.warn('sendMessage error:', imError);
