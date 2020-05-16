@@ -10,8 +10,8 @@
     color: #333;
   }
   .message-col-1 {
-    width: 120rpx;
-    height: 120rpx;
+    width: 90rpx;
+    height: 90rpx;
     border-radius: 50%;
     background: #eeeeee;
     position: relative;
@@ -42,7 +42,9 @@
 			width: 60%;
 		}
     .message-col-time {
-      margin-top: 10rpx;
+			font-size: 25rpx;
+			margin-top: 10rpx;
+			color:rgba(17,17,17, 0.3);
     }
   }
 }
