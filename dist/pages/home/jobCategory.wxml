@@ -1,0 +1,19 @@
+
+  <scroll-view scroll-y="true" style="height:100%">
+    <view class="scroll-view">
+      <view class="weui-flex between list-row" bindtap="showMoreContent"  wx:for="{{list}}" wx:key="index" data-wpyshowmorecontent-a="{{item}}">
+        <view class="page__title">{{item.type_name}}</view>
+        <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"/>
+      </view>
+    </view>
+    <view  wx:if="{{if_show}}" class="{{show_centent?'show':'hide'}}" bindtap="switchShow">
+      <view class="content weui-flex between">
+        <view class="content-left content-row weui-flex__item">
+          <view wx:for="{{multiArray[0]}}" class="{{index==multiIndex[0]?'active': ''}}" wx:key="index" catchtap="showSecondData" data-wpyshowseconddata-a="1" data-wpyshowseconddata-b="{{item}}" data-wpyshowseconddata-c="{{index}}">{{item.type_name}}</view>
+        </view>
+        <view class="content-right content-row weui-flex__item">
+          <view wx:for="{{multiArray[1]}}" class="{{index==multiIndex[1]?'active': ''}}" wx:key="index" catchtap="showSecondData" data-wpyshowseconddata-a="2" data-wpyshowseconddata-b="{{item}}" data-wpyshowseconddata-c="{{index}}">{{item.type_name}}</view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>

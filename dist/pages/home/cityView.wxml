@@ -1,0 +1,45 @@
+
+  <view class="page-team-home">
+    <view class="city-title weui-flex between">
+      <image src="../../images/clear.png" alt="" class="city_icon" bindtap="close"/>
+      <view class="addressText">{{address?address:addressText}}</view>
+    </view>
+    <view class="view-list">
+      <view class="city-content weui-flex between">
+        <view class="city-col1 weui-flex__item">
+          <view class="name {{code?'':'active'}}" bindtap="selectCity" data-wpyselectcity-a="" data-wpyselectcity-b="0">全国</view>
+          <block  wx:for="{{multiArray[0]}}" wx:key="index">
+            <view class="name {{code==item.value?'active':''}}" bindtap="selectCity" data-wpyselectcity-a="{{item}}" data-wpyselectcity-b="1">{{item.name}}</view>
+          </block>
+        </view>
+        <view class="city-col2 weui-flex__item"  wx:if="{{code}}">
+          <block wx:for="{{multiArray[1]}}" wx:key="index">
+            <view class="name {{cityCode==item.value?'active':''}}" bindtap="selectCity" data-wpyselectcity-a="{{item}}" data-wpyselectcity-b="2">{{item.name}}</view>
+          </block>
+        </view>
+        <view class="city-col2 weui-flex__item" wx:if="{{!code}}">
+          <block wx:for="{{cityList}}" wx:key="index">
+            <view class="name {{cityCode==item.value||(address == '全国'&&index==0)?'active':''}}" bindtap="selectCity" data-wpyselectcity-a="{{item}}" data-wpyselectcity-b="2">{{item.name}}</view>
+          </block>
+        </view>
+        <view class="city-col3 weui-flex__item" wx:if="{{address!='全国'}}">
+          <block wx:for="{{multiArray[2]}}" wx:key="index">
+            <view class="name weui-flex between {{areaCode==item.value?'active':''}}" bindtap="selectCity" data-wpyselectcity-a="{{item}}" data-wpyselectcity-b="3">
+              {{item.name}}
+              <image src="../../images/selected.png" alt="" class="city_icon" wx:if="{{areaCode == item.value}}"/>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+    <view class="select-btn">
+			<view class="weui-flex center">
+				<button class="weui-btn_cell" bindtap="close">
+					取消 
+				</button>
+				<button class="weui-btn_cell weui-btn_primary" bindtap="save">
+					确定
+				</button>
+			</view>
+		</view>
+  </view>

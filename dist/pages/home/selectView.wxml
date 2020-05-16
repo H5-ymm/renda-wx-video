@@ -1,0 +1,33 @@
+
+  <scroll-view scroll-y="true" style="height:100%">
+    <view class="view-list select-view">
+      <view class="select-box page__title">
+        <view class="select-box-title">学历要求</view>
+        <view class="weui-flex start wrap">
+          <view class="select-box-item weui-flex center {{item.value == query.edu ? 'active': '' }}" bindtap="selectTap"  wx:key="index" wx:for="{{eduList}}" data-wpyselecttap-a="{{item}}" data-wpyselecttap-b="edu">{{item.label}}</view>
+        </view>
+      </view>
+      <view class="select-box page__title">
+        <view class="select-box-title">薪资待遇</view>
+        <view class="weui-flex start wrap">
+          <view class="select-box-item  weui-flex center {{item.value == query.money ? 'active': '' }}" bindtap="selectTap"  wx:for="{{moneyList}}" wx:key="index" data-wpyselecttap-a="{{item}}" data-wpyselecttap-b="money">{{item.label}}</view>
+        </view>
+      </view>
+      <view class="select-box page__title">
+        <view class="select-box-title">工作性质</view>
+        <view class="weui-flex start">
+          <view class="select-box-item  weui-flex center {{item.value == query.nature ? 'active': '' }}" bindtap="selectTap" wx:key="index" wx:for="{{workTypeList}}" data-wpyselecttap-a="{{item}}" data-wpyselecttap-b="nature">{{item.label}}</view>
+        </view>
+      </view>
+    </view>
+    <view class="select-btn">
+			<view class="weui-flex center">
+				<button class="weui-btn_cell" bindtap="close">
+					取消 
+				</button>
+				<button class="weui-btn_cell weui-btn_primary" bindtap="save">
+					确定
+				</button>
+			</view>
+		</view>
+  </scroll-view>
