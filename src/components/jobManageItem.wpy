@@ -1,12 +1,25 @@
 
+<style lang="less" scoped>
+.page__desc {
+  &.status2 {
+    color: #1890FF;
+  }
+  &.status3 {
+    color: #FF4444;
+  }
+  &.status4 {
+    color: #ff7618;
+  }
+}
+</style>
 <template>
   <view class="list-row weui-flex between">
     <view class="list-col-1 weui-flex__item">
       <view class="weui-flex between weui-flex__item">
         <view class="page__title">{{item.job_name}}</view>
         <view class="page__desc" wx:if="{{!item.status}}">待审核</view>
-        <view class="page__desc" wx:if="{{item.status == 1}}">{{item.is_up==1?'招聘中':'已结束'}}</view>
-        <view class="page__desc" wx:if="{{item.status == 2}}">已拒绝</view>
+        <view class="page__desc {{item.is_up==1?'status2':'status4'}}" wx:if="{{item.status == 1}}">{{item.is_up==1?'招聘中':'已结束'}}</view>
+        <view class="page__desc status3" wx:if="{{item.status == 2}}">已拒绝</view>
       </view>
       <view class="number">{{item.salary}}</view>
       <view class="page__desc">{{item.nature==3?'实习':item.nature==2?'兼职':'全职'}}｜{{item.edu}}｜{{item.province}}{{item.city}}{{item.area}}</view>

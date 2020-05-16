@@ -32,7 +32,7 @@
 <template>
   <view class="districtSelet">
     <view class="my-text-right weui-flex between"  @tap="changeSelect">
-      <view wx:if="{{multiText}}" class="page__title">
+      <view wx:if="{{multiText}}" class="weui-input page__label">
         {{multiText}}
       </view>
       <view wx:else class="placeholder">{{text}}</view>

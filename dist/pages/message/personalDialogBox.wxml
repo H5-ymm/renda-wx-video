@@ -25,7 +25,7 @@
 			<view class="page_margin {{is_apply&&rendaUserType==1?'page_top':''}}">
 				<block  wx:for="{{messageList}}" wx:key="index">
 					<view wx:if="{{(uid!=item.from) || (item.type=='TIMCustomElem'&&item.action)}}">
-						<view class="page__desc date">{{item.time}}</view>
+						<view class="date">{{item.time}}</view>
 						<view class="weui-flex dialogBox-col weui-flex__item start">
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
 							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
@@ -127,12 +127,10 @@
       <view class="modal-content">
         <view class="modal-title page__title">{{$modal$modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
-          	<input class="weui-input weui-textarea modal-col page__desc" data-name="content" placeholder-class="placeholder" value="{{$modal$content}}" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}"/>
-            <!-- <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
-            class="weui-input weui-textarea modal-col page__desc" bindinput="changeInput" 
-            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/> -->
-         </view>
-         <view class="weui-cell_btn weui-flex around">
+          <input class="weui-input weui-textarea modal-col page__desc" data-name="content" placeholder-class="placeholder" value="{{$modal$content}}" bindinput="$modal$changeInput" placeholder="{{$modal$modalObj.subTitle}}"/>
+        </view>
+        <view class="page__desc"  wx:if="{{$modal$modalObj.title=='不合适'}}">理由会直接发给求职者</view>
+        <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" bindtap="$modal$handleClose">取消</view>
           <view class="text page__text__active" bindtap="$modal$handleOk">确定</view>
         </view>

@@ -40,9 +40,11 @@
     margin-left: 10%;
     .content-row {
       height: 100%;
-      line-height: 100rpx;
       padding-left: 40rpx;
       overflow: auto;
+      .item {
+        margin: 60rpx 0;
+      }
       .active {
         color: #1890FF;
       }
@@ -72,10 +74,10 @@
     <view wx:if="{{if_show}}" class="{{show_centent?'show':'hide'}}" @tap="switchShow">
       <view class="content weui-flex between">
         <view class="content-left content-row weui-flex__item" >
-          <view wx:for="{{multiArray[0]}}" class="{{index==multiIndex[0]?'active': ''}}" wx:key="index" @tap.stop="showSecondData(1,{{item}},{{index}})">{{item.type_name}}</view>
+          <view wx:for="{{multiArray[0]}}" class="item {{index==multiIndex[0]?'active': ''}}" wx:key="index" @tap.stop="showSecondData(1,{{item}},{{index}})">{{item.type_name}}</view>
         </view>
         <view class="content-right content-row weui-flex__item">
-          <view  wx:for="{{multiArray[1]}}" class="{{index==multiIndex[1]?'active': ''}}" wx:key="index" @tap.stop="showSecondData(2,{{item}},{{index}})">{{item.type_name}}</view>
+          <view  wx:for="{{multiArray[1]}}" class="item {{index==multiIndex[1]?'active': ''}}" wx:key="index" @tap.stop="showSecondData(2,{{item}},{{index}})">{{item.type_name}}</view>
         </view>
       </view>
     </view>

@@ -64,7 +64,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataPicker$changeSelect">
-      <view  wx:if="{{$dataPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataPicker$multiText}}" class="weui-input page__label">
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
@@ -106,7 +106,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataEduPicker$changeSelect">
-      <view  wx:if="{{$dataEduPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataEduPicker$multiText}}" class="weui-input page__label">
         {{$dataEduPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataEduPicker$text}}</view>
@@ -146,7 +146,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataMoneyPicker$changeSelect">
-      <view  wx:if="{{$dataMoneyPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataMoneyPicker$multiText}}" class="weui-input page__label">
         {{$dataMoneyPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataMoneyPicker$text}}</view>
@@ -184,7 +184,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataSocialPicker$changeSelect">
-      <view  wx:if="{{$dataSocialPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataSocialPicker$multiText}}" class="weui-input page__label">
         {{$dataSocialPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataSocialPicker$text}}</view>

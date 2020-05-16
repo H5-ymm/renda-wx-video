@@ -1,6 +1,11 @@
 <style lang="less">
 @import '../../style/list.less';
 @import '../../style/detail.less';
+.detail-box {
+  &.detail-box1 {
+    height: auto;
+  }
+}
 .share-btn {
   background: none;
   line-height: auto;
@@ -12,7 +17,7 @@
 }
 .job-box {
   &.page_bottom {
-    &::after {
+    &:nth-last-child(1) {
       border-bottom: none
     }
   }
@@ -21,7 +26,7 @@
 <template>
   <view class="page view_hidden">
     <scroll-view scroll-y="true" class="view_auto view-content">
-      <view class="detail-box">
+      <view class="detail-box detail-box1">
         <view class="section-box company_section-box">
           <view class="weui-flex between">
             <view class="com_info">
@@ -54,18 +59,29 @@
           </view>
         </view>
         <view class="section-box">
+          <view class="page__title">该公司职位</view>
+          <repeat wx:for="{{jobList}}" wx:key="index">
+            <view @tap="viewJob({{item}})">
+               <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="deliverResume" wx:if="{{index==0&&!showMore}}"></jobDetailItem>
+            </view>
+            <view class="job-box {{showMore?'page_bottom':''}}" @tap="viewJob({{item}})">
+              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="communicateCompany" wx:if="{{showMore}}"></jobDetailItem>
+            </view>
+          </repeat>
+          <view class="page__text__active" @tap="viewMoreJob" wx:if="{{jobList.length>1}}">
+            {{showMore?'收起':'查看更多'}}</view>
+
+          <!-- <repeat wx:for="{{jobList}}" wx:key="index">
+            <view class="job-box page_bottom" @tap="viewJob({{item}})">
+              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="deliverResume"></jobDetailItem>
+            </view>
+          </repeat> -->
+        </view>
+         <view class="section-box">
           <view class="page__title">公司介绍</view>
           <view class="page__desc"> 
            {{companyDetail.content}}
           </view>
-        </view>
-        <view class="section-box">
-          <view class="page__title">该公司职位</view>
-          <repeat wx:for="{{jobList}}" wx:key="index">
-            <view class="job-box page_bottom" @tap="viewJob({{item}})">
-              <jobDetailItem :item.sync="item" :isShowBtn.sync="isShowBtn" @deliverResume="deliverResume"></jobDetailItem>
-            </view>
-          </repeat>
         </view>
       </view>
     </scroll-view>
@@ -108,7 +124,8 @@ export default class jobDetail extends wepy.page {
     jobList: [],
     uid: [],
     benefits: [],
-    previous: '100px'
+    previous: '100px',
+    showMore: false
   }
   config = {
     navigationBarTitleText: '企业详情'
@@ -178,6 +195,10 @@ export default class jobDetail extends wepy.page {
     }) 
   }
   methods = {
+    viewMoreJob(){
+      this.showMore = !this.showMore 
+      this.$apply()
+    },
     companyCollect(status) {
       let params = {
         uid: this.uid,

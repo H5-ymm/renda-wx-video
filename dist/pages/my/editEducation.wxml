@@ -8,7 +8,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataPicker$changeSelect">
-      <view  wx:if="{{$dataPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataPicker$multiText}}" class="weui-input page__label">
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>

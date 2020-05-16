@@ -16,7 +16,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataSexPicker$changeSelect">
-      <view  wx:if="{{$dataSexPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataSexPicker$multiText}}" class="weui-input page__label">
         {{$dataSexPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataSexPicker$text}}</view>
@@ -59,7 +59,7 @@
             </view> -->
             <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
-                <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
+                <view class="weui-input {{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
                 <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
               </view>
             </picker>
@@ -123,7 +123,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataPicker$changeSelect">
-      <view  wx:if="{{$dataPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataPicker$multiText}}" class="weui-input page__label">
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
@@ -163,7 +163,7 @@
             
   <view class="districtSelet">
     <view class="my-text-right weui-flex between" bindtap="$dataEduPicker$changeSelect">
-      <view  wx:if="{{$dataEduPicker$multiText}}" class="page__title">
+      <view  wx:if="{{$dataEduPicker$multiText}}" class="weui-input page__label">
         {{$dataEduPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataEduPicker$text}}</view>

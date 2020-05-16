@@ -204,7 +204,9 @@ export default class cityView extends wepy.page {
       this.$apply()
     },
     save() {
-      wx.setStorageSync('codeObj', JSON.stringify({code: this.areaCode, name : this.areaName}))
+      let code = this.areaCode || this.cityCode || this.code
+      let name = this.areaName || this.cityName || this.provinceName
+      wx.setStorageSync('codeObj', JSON.stringify({code, name}))
       wx.navigateBack({
        delta: 1,
       })

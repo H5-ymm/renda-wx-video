@@ -60,19 +60,23 @@
 }
 </style>
 <template>
-  <view hidden='{{isScaleModal}}'>
+  <view hidden="{{isScaleModal}}">
     <view @tap="handleOk" wx:if="{{isShow}}" class="modal_mask"></view>
     <view class="modal_box1 transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box">
       <view class="modal-content">
         <view class="modal-title page__title">{{modalObj.title}}</view>
         <view class="modal-textarea weui-flex center">
-          	<input class="weui-input weui-textarea modal-col page__desc" data-name="content" placeholder-class="placeholder" 
-						value="{{content}}" @input="changeInput" placeholder="{{modalObj.subTitle}}" />
-            <!-- <textarea data-name="content" placeholder-class="placeholder" disable-default-padding="true" 
-            class="weui-input weui-textarea modal-col page__desc" @input="changeInput" 
-            placeholder="{{modalObj.subTitle}}" maxlength="-1" value="{{content}}"/> -->
-         </view>
-         <view class="weui-cell_btn weui-flex around">
+          <input
+            class="weui-input weui-textarea modal-col page__desc"
+            data-name="content"
+            placeholder-class="placeholder"
+            value="{{content}}"
+            @input="changeInput"
+            placeholder="{{modalObj.subTitle}}"
+          >
+        </view>
+        <view class="page__desc" wx:if="{{modalObj.title=='不合适'}}">理由会直接发给求职者</view>
+        <view class="weui-cell_btn weui-flex around">
           <view class="text page__desc" @tap="handleClose">取消</view>
           <view class="text page__text__active" @tap="handleOk">确定</view>
         </view>
@@ -98,8 +102,8 @@ export default class modal extends wepy.component {
       this.$apply()
       this.$emit('handleClose')
     },
-    handleOk () {
-       if (!this.content) {
+    handleOk() {
+      if (!this.content) {
         return wxToast('请输入内容')
       }
       this.isShow = false
@@ -112,7 +116,7 @@ export default class modal extends wepy.component {
     }
   }
   watch = {
-    isScaleModal (val) {
+    isScaleModal(val) {
       if (!val) {
         this.isShow = true
       } else {

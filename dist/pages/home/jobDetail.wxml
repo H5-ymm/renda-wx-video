@@ -8,7 +8,7 @@
       <text class="page__title text-line">{{$jobDetailItem$item.job_name}}</text>
       <view class="number">{{$jobDetailItem$item.salary}}</view>
     </view>
-    <view class="page__desc">{{$jobDetailItem$item.number}}人 | {{$jobDetailItem$item.edu}} | {{$jobDetailItem$item.province}}{{$jobDetailItem$item.city}}{{$jobDetailItem$item.area}}</view>
+    <view class="page__desc">招{{$jobDetailItem$item.number}}人 | {{$jobDetailItem$item.edu}} | {{$jobDetailItem$item.province}}{{$jobDetailItem$item.city}}{{$jobDetailItem$item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{$jobDetailItem$item.social_security}}</view>

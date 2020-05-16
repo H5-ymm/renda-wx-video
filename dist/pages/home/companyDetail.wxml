@@ -1,7 +1,7 @@
 
   <view class="page view_hidden">
     <scroll-view scroll-y="true" class="view_auto view-content">
-      <view class="detail-box">
+      <view class="detail-box detail-box1">
         <view class="section-box company_section-box">
           <view class="weui-flex between">
             <view class="com_info">
@@ -34,22 +34,34 @@
           </view>
         </view>
         <view class="section-box">
-          <view class="page__title">公司介绍</view>
-          <view class="page__desc"> 
-           {{companyDetail.content}}
-          </view>
-        </view>
-        <view class="section-box">
           <view class="page__title">该公司职位</view>
           <block  wx:for="{{jobList}}" wx:key="index">
-            <view class="job-box page_bottom" bindtap="viewJob" data-wpyviewjob-a="{{item}}">
-              
-  <view class="list-row">
+            <view bindtap="viewJob" data-wpyviewjob-a="{{item}}">
+               
+  <view class="list-row" wx:if="{{index==0&&!showMore}}">
     <view class="weui-flex between list-col-1">
       <text class="page__title text-line">{{item.job_name}}</text>
       <view class="number">{{item.salary}}</view>
     </view>
-    <view class="page__desc">{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view class="page__desc">招{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    <view class="weui-flex start text-line">
+      <view class="weui-flex start weui-flex__item">
+        <view class="card-item weui-flex center">{{item.social_security}}</view>
+      </view>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{isShowBtn&&item.is_apply!=1}}" catchtap="$jobDetailItem$deliverResume" data-com-index="{{undefined}}" data-wpydeliverresume-a="{{item}}">投递简历</button>
+      <view class="number"  wx:if="{{isShowBtn&&item.is_apply==1}}">已投递</view>
+    </view>
+  </view>
+
+            </view>
+            <view class="job-box {{showMore?'page_bottom':''}}" bindtap="viewJob" data-wpyviewjob-a="{{item}}">
+              
+  <view class="list-row" wx:if="{{showMore}}">
+    <view class="weui-flex between list-col-1">
+      <text class="page__title text-line">{{item.job_name}}</text>
+      <view class="number">{{item.salary}}</view>
+    </view>
+    <view class="page__desc">招{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{item.social_security}}</view>
@@ -61,6 +73,20 @@
 
             </view>
           </block>
+          <view class="page__text__active" bindtap="viewMoreJob" wx:if="{{jobList.length>1}}">
+            {{showMore?'收起':'查看更多'}}</view>
+
+          <!-- <repeat wx:for="{{jobList}}" wx:key="index">
+            <view class="job-box page_bottom" bindtap="viewJob({{item}})">
+              <jobDetailItem v-bind:item.sync="item" v-bind:isShowBtn.sync="isShowBtn" binddeliverResume="deliverResume"></jobDetailItem>
+            </view>
+          </repeat> -->
+        </view>
+         <view class="section-box">
+          <view class="page__title">公司介绍</view>
+          <view class="page__desc"> 
+           {{companyDetail.content}}
+          </view>
         </view>
       </view>
     </scroll-view>

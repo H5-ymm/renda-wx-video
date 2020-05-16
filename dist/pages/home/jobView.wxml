@@ -10,7 +10,7 @@
       <text class="page__title text-line">{{$jobList$item.job_name}}</text>
       <view class="number">{{$jobList$item.salary}}</view>
     </view>
-    <view class="page__desc">{{$jobList$item.number}}人 | {{$jobList$item.edu}} | {{$jobList$item.province}}{{$jobList$item.city}}{{$jobList$item.area}}</view>
+    <view class="page__desc">招{{$jobList$item.number}}人 | {{$jobList$item.edu}} | {{$jobList$item.province}}{{$jobList$item.city}}{{$jobList$item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{$jobList$item.social_security}}</view>

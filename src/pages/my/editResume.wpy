@@ -28,7 +28,7 @@
             </view> -->
             <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
-                <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
+                <view class="weui-input {{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
                 <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
               </view>
             </picker>

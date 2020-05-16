@@ -11,6 +11,8 @@
 	 text-align: center;
 	 margin-bottom: 10rpx;
 	 color:rgba(17,17,17, 0.3);
+	 font-size: 24rpx;
+	 margin-top: 10rpx;
  }
 </style>
 <template>
@@ -39,7 +41,7 @@
 			<view class="page_margin {{is_apply&&rendaUserType==1?'page_top':''}}">
 				<repeat wx:for="{{messageList}}" wx:key="index">
 					<view wx:if="{{(uid!=item.from) || (item.type=='TIMCustomElem'&&item.action)}}">
-						<view class="page__desc date">{{item.time}}</view>
+						<view class="date">{{item.time}}</view>
 						<view class="weui-flex dialogBox-col weui-flex__item start">
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
 							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>

@@ -7,7 +7,7 @@
     </view>
     <view
       class="page__desc"
-    >{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
+    >招{{item.number}}人 | {{item.edu}} | {{item.province}}{{item.city}}{{item.area}}</view>
     <view class="weui-flex start text-line">
       <view class="weui-flex start weui-flex__item">
         <view class="card-item weui-flex center">{{item.social_security}}</view>
