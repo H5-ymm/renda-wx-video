@@ -32,13 +32,13 @@
 <template>
   <view class="districtSelet"  @tap="changeCity">
     <view class="my-text-right weui-flex between">
-      <view wx:if="{{options.length}}" class="page__title">
+      <view wx:if="{{options.length}}" class="weui-input page__label">
         {{multiArray[0][multiIndex[0]]}}
         {{multiArray[1][multiIndex[1]]}}
         {{disabled?multiArray[2][multiIndex[2]]:''}}
       </view>
       <view wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon" />
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>
       <view @tap.stop=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>

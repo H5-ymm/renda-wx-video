@@ -8,7 +8,7 @@
             <picker mode="date" data-name="worktime_start" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{worktime_start?'page__label':'placeholder'}}"> {{worktime_start?worktime_start:'请选择开始时间'}}</view>
-                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+                <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -19,7 +19,7 @@
             <picker mode="date" data-name="worktime_end" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{worktime_end?'page__label':'placeholder'}}"> {{worktime_end?worktime_end:'请选择结束时间'}}</view>
-                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+                <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -42,11 +42,11 @@
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">
       <view bindtap="$dataPicker$handleClose" wx:if="{{$dataPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">

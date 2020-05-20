@@ -7,6 +7,7 @@
 	  <block  wx:if="{{$deliveryRecordList$list.length}}" wx:for="{{$deliveryRecordList$list}}" wx:for-index="$deliveryRecordList$index" wx:for-item="$deliveryRecordList$item" wx:key="$deliveryRecordList$index">
       
   <view class="list-row">
+    <view class="page__desc page_bottom jfTitle">记录来自：{{$deliveryRecordList$item.title}}</view>
     <view class="list-col-1">
       <view class="page__title weui-flex between">
         应聘职位：{{$deliveryRecordList$item.job_name}}
@@ -24,12 +25,11 @@
       <view class="page__desc company_info">企业信息</view>
       <view class="number" bindtap="$deliveryRecordList$deliveryRecordItem$viewDetail" data-com-index="{{$deliveryRecordList$index}}" data-wpyviewdetail-a="{{$deliveryRecordList$item}}">查看详情</view>
     </view>
-    <view class="page__desc">记录来自：{{$deliveryRecordList$item.title}}</view>
   </view>
 
     </block>
 		<view  wx:if="{{!$deliveryRecordList$list.length}}" class="page_list">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

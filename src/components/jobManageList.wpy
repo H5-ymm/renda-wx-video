@@ -7,14 +7,13 @@
 			</view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
 </template>
 <script>
 import wepy from 'wepy'
-import { wxNavigateTo } from '@/util'
 import jobManageItem from './jobManageItem'
 export default class jobManageList extends wepy.component {
   components = {
@@ -22,9 +21,6 @@ export default class jobManageList extends wepy.component {
   }
 	props = {
 		list: Array
-	}
-	data = {
-	
 	}
 	methods = {
     viewJobDetail(item) {

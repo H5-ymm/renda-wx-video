@@ -50,7 +50,7 @@
         <view class="page__title" @tap="clearQuery">清空条件</view>
       </view>
     </view>
-    <jobLSearchList :list.sync="list" class="scroll-view"></jobLSearchList>
+    <jobLSearchList :list.sync="list" @deliverResume="deliverResume" class="scroll-view"></jobLSearchList>
   </scroll-view>
 </template>
 <script>
@@ -69,7 +69,9 @@ export default class jobSearch extends wepy.page {
 			jf_if: '',
       limit: 10,
       page: 1,
-      area: ''
+      area: '',
+      jf_id: '',
+      uid: ''
     },
     list: [],
     count: 0,
@@ -88,10 +90,28 @@ export default class jobSearch extends wepy.page {
       this.$apply()
     })
   }
+  applyJob(params) {
+    $http('/personaljob/addapplyJob', params).then(res => {
+      if (res.data) {
+        wxToast('投递成功耐心等待企业回复吧')
+        this.getjobList()
+      } else {
+        wxToast('投递失败')
+      }
+    })
+  }
   events = {
     searchValue: data => {
       this.keyWords = data
       this.$apply()
+    },
+    deliverResume: data => {
+      let params = {
+        uid: this.params.uid,
+        job_id: data.id,
+        jf_id: wx.getStorageSync('rendaJHID')
+      }
+      this.applyJob(params)
     }
   }
   onLoad() {
@@ -113,6 +133,7 @@ export default class jobSearch extends wepy.page {
       this.total = JSON.parse(wx.getStorageSync('queryObj')).num
     }
     this.params.jf_id = wx.getStorageSync('rendaJHID')
+    this.params.uid = wx.getStorageSync('rendaUid')
     this.getjobList()
   }
   clearData() {
@@ -133,7 +154,9 @@ export default class jobSearch extends wepy.page {
         jf_id: wx.getStorageSync('rendaJHID'),
         limit: 10,
         page: 1,
-        name: ''
+        name: '',
+        jf_id: '',
+        uid: wx.getStorageSync('rendaUid')
       }
       this.total = 0
       this.address = '工作地点'

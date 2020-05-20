@@ -33,7 +33,7 @@
 <template>
   <view class="page-home">
     <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
-     class="page" >
+     class="page" @refresherrefresh="bindrefresherrefresh">
       <banner></banner>
       <view class="section">
         <view class="job-box">
@@ -146,7 +146,7 @@ export default class teamView extends wepy.page {
         this.addjfUser(data.id)
         wx.setStorageSync('rendaJHID', data.id)
         wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
-        wxNavigateTo('/pages/home/hall?query=' + data.id + '&title=' + data.title)
+        wxNavigateTo('/pages/home/hall?query=' + data.id)
         // if (data.is_audit == 1 && data.applyinfo && !data.applyinfo.status) {
         //   wx.hideTabBar()
         //   this.text = '企业订展正在审核中，请联系客服021-51991869'
@@ -289,7 +289,7 @@ export default class teamView extends wepy.page {
   updateMyProfile () {
     let userInfo = wx.getStorageSync('wxInfo')?JSON.parse(wx.getStorageSync('wxInfo')):{}
     let promise = wx.$app.updateMyProfile(userInfo)
-    promise.then(function(imResponse) {
+    promise.then(imResponse => {
       wx.setStorageSync('userProfile', JSON.stringify(imResponse.data))
       console.log(imResponse.data); // 更新资料成功
       console.log('更新个人信息')
@@ -334,11 +334,8 @@ export default class teamView extends wepy.page {
       }
     })
   }
-  onPullDownRefresh() {
-    console.log('刷新')
-    wx.startPullDownRefresh({sunccess:() =>{
-      console.log('刷新')
-    }})
+  bindrefresherrefresh() {
+    this.onShow()
   }
   onShow() {
     wx.showTabBar()

@@ -34,7 +34,9 @@ page {
     color: @weuiTextColorDesc;
     font-family: PingFangSC-Medium;
 }
-
+input {
+  font-family: PingFangSC-Medium!important;
+}
 .view-content {
     height: calc(100% - 60px);
 }
@@ -153,10 +155,12 @@ page {
         &.weui-btn_warn {
             background: @weuiColorWarn;
         }
-
+        &.weui-btn_primary {
+            border: 1px solid @weuiColorPrimary;
+        }
         &.weui-btn_primary_plain {
             border-radius: 50rpx;
-            padding: 23rpx 32rpx;
+            padding: 23rpx 30rpx;
         }
     }
 

@@ -106,7 +106,7 @@
       id="modal-box"
       style="height:{{height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{isShow}}" class="close-icon" @tap="handleClose"/>
+        <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/close.png"  wx:if="{{isShow}}" class="close-icon" @tap="handleClose"/>
         <view wx:if="{{!title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{text}}</view>
           <view class="weui-flex around modal-btn">

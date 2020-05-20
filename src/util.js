@@ -86,8 +86,8 @@ const getErrorTip = code => {
     return obj;
 };
 const getImgUrl = imgUrl => {
-    // const baseUrl = 'https://a.rsd123.com/'
-    const baseUrl = 'http://www.ttxsg.com.cn:39009/'
+    const baseUrl = 'https://d.rsd123.com/'
+    // const baseUrl = 'http://www.ttxsg.com.cn:39009/'
     return baseUrl + imgUrl;
 };
 const compressImg = (photoSrc, ratio = 2) => {

@@ -30,15 +30,15 @@
 }
 </style>
 <template>
-  <view class="districtSelet">
+  <view class="districtSelet weui-flex__item weui-flex end">
     <view class="my-text-right weui-flex between" @tap="changeCity">
-      <view wx:if="{{options.length}}" class="page__title">
+      <view wx:if="{{options.length}}" class="weui-input page__label">
         {{multiArray[0][multiIndex[0]]}}
         {{multiArray[1][multiIndex[1]]}}
         {{multiArray[2][multiIndex[2]]}}
       </view>
       <view wx:else class="placeholder">{{placeholder}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>
       <view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
@@ -53,7 +53,7 @@
                 确定
               </view>
             </view>
-            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{multiIndex}}" @change="bindChange">
               <picker-view-column>
                 <repeat wx:for="{{multiArray[0]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>
@@ -133,6 +133,7 @@ export default class jobPosition extends wepy.component {
     })
   }
   getJobList3(value) {
+    console.log(value)
     let id = ''
     if (!value[1]) {
       id = this.idList[1][0]
@@ -192,7 +193,7 @@ export default class jobPosition extends wepy.component {
     },
     bindChange(e) {
       this.multiIndex = e.detail.value
-      this.getJobList1([this.idList[0][this.multiIndex[0]], 0])
+      this.getJobList1([this.idList[0][this.multiIndex[0]], this.idList[1][this.multiIndex[1]]])
     },
     selectClose() {
       this.isScaleModal = !this.isScaleModal

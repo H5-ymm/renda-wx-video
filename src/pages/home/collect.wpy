@@ -31,12 +31,12 @@
               <button class="weui-btn_cell weui-btn_primary" wx:if="{{!activeIndex}}" @tap.stop="concatCompany({{item}})">
                 立即沟通
               </button>
-              <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" wx:else/>
+              <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" wx:else/>
             </view>
           </view>
         </repeat>
         <view wx:if="{{!list.length}}" class="page_list">
-          <image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
+          <image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
           <view class="page_noData_text">暂无数据！</view>
         </view>
       </view>

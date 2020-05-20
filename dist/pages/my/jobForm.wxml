@@ -12,13 +12,13 @@
             
   <view class="districtSelet" bindtap="$districtSelet$changeCity">
     <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$districtSelet$options.length}}" class="page__title">
+      <view  wx:if="{{$districtSelet$options.length}}" class="weui-input page__label">
         {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
         {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
       <view  wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$districtSelet$isScaleModal}}">
       <view catchtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
@@ -68,11 +68,11 @@
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">
       <view bindtap="$dataPicker$handleClose" wx:if="{{$dataPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -110,11 +110,11 @@
         {{$dataEduPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataEduPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataEduPicker$isScaleModal}}">
       <view bindtap="$dataEduPicker$handleClose" wx:if="{{$dataEduPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataEduPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataEduPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -150,11 +150,11 @@
         {{$dataMoneyPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataMoneyPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataMoneyPicker$isScaleModal}}">
       <view bindtap="$dataMoneyPicker$handleClose" wx:if="{{$dataMoneyPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataMoneyPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataMoneyPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -188,11 +188,11 @@
         {{$dataSocialPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataSocialPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataSocialPicker$isScaleModal}}">
       <view bindtap="$dataSocialPicker$handleClose" wx:if="{{$dataSocialPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataSocialPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataSocialPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -222,15 +222,15 @@
           <view class="weui-flex between page_margin">
             <view class="my-text">岗位类别</view>
             
-  <view class="districtSelet">
+  <view class="districtSelet weui-flex__item weui-flex end">
     <view class="my-text-right weui-flex between" bindtap="$jobPosition$changeCity">
-      <view  wx:if="{{$jobPosition$options.length}}" class="page__title">
+      <view  wx:if="{{$jobPosition$options.length}}" class="weui-input page__label">
         {{$jobPosition$multiArray[0][$jobPosition$multiIndex[0]]}}
         {{$jobPosition$multiArray[1][$jobPosition$multiIndex[1]]}}
         {{$jobPosition$multiArray[2][$jobPosition$multiIndex[2]]}}
       </view>
       <view  wx:else class="placeholder">{{$jobPosition$placeholder}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$jobPosition$isScaleModal}}">
       <view bindtap="$jobPosition$ handleClose" wx:if="{{$jobPosition$isShow}}" class="modal_mask"/>
@@ -245,7 +245,7 @@
                 确定
               </view>
             </view>
-            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$jobPosition$activeIndex}}" bindchange="$jobPosition$bindChange">
+            <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$jobPosition$multiIndex}}" bindchange="$jobPosition$bindChange">
               <picker-view-column>
                 <block wx:for="{{$jobPosition$multiArray[0]}}" wx:key="index">
                   <view class="picker-view-item">{{item}}</view>

@@ -1,9 +1,18 @@
 .transition3s {
-    transition: 0.3s;
-    transform: scale(0);
-    &.g_scale1 {
-      transform: scale(1);
-    }
+	transition: 0.3s;
+	transform: scale(0);
+	&.g_scale1 {
+		transform: scale(1);
+	}
+}
+.transition2s {
+	transition: 0.3s;
+  -webkit-transform: translateY(260px);
+  transform: translateY(260px);
+	&.g_scale2 {
+		-webkit-transform: translateY(0);
+    transform: translateY(0);
+	}
 }
 .modal_mask {
 	position: fixed;

@@ -1,8 +1,8 @@
 import {
     wxToast
 } from '@/util.js'
-const baseUrl = 'http://www.ttxsg.com.cn:39009/';
-// const baseUrl = 'http://tiantianxsg.com:39888/'
+// const baseUrl = 'http://www.ttxsg.com.cn:39009/';
+const baseUrl = 'https://d.rsd123.com/'
 const apiUrl = baseUrl + 'wx.php';
 const http = (url, params, method) => {
   return new Promise((resolve, reject) => {
@@ -20,8 +20,7 @@ const http = (url, params, method) => {
           // 操作成功返回数据,原则上只针对服务器端返回成功的状态（如本例中为000000）
           if (res.data.status.code === 200) {
               resolve(res.data);
-          } else if (res.data.status.code === 4000) {
-              console.log(res.data.status.remind)
+          } else if (res.data.status.code === 4000 || res.data.status.code === 6100) {
               wxToast(res.data.status.remind)
               setTimeout(() => {
                   wx.redirectTo({

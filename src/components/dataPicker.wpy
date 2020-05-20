@@ -5,7 +5,7 @@
   margin: 0 auto;
 }
 .districtSelet {
- .picker {
+  .picker {
     height: 520rpx;
     background: #fff;
     width: 100%;
@@ -36,11 +36,11 @@
         {{multiText}}
       </view>
       <view wx:else class="placeholder">{{text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
     </view>
     <view hidden='{{isScaleModal}}'>
       <view @tap="handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
-      <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -84,12 +84,8 @@ export default class districtSelet extends wepy.component {
     multiText: '',
     isSelect: false
   }
-  onLoad() {
-    
-  }
   watch = {
     value(val) {
-      console.log(val)
       this.multiIndex = val
       this.multiText = this.range[val]
       this.$apply()
@@ -107,12 +103,10 @@ export default class districtSelet extends wepy.component {
   methods = {
     changeSelect() {
       this.isScaleModal = !this.isScaleModal 
-      this.isShow = true
       this.$apply()
     },
     selectOk() {
       this.isScaleModal = !this.isScaleModal 
-      this.isShow = true
       if (this.multiIndex == -1 ||!this.isSelect) {
         this.multiIndex = 0
       }
@@ -126,11 +120,9 @@ export default class districtSelet extends wepy.component {
       this.$apply()
     },
     selectClose() {
+      this.isSelect = false
       this.isScaleModal = !this.isScaleModal
       this.$apply()
-    },
-    cancelPickerChange(e) {
-      
     }
   }
 }

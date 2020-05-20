@@ -4,12 +4,18 @@
     width: 86%;
     margin: 0 auto;
   }
+  .pickerDate {
+    .modal_box {
+      min-height: 45%;
+    }
+  }
+  
  .picker {
-    height: 420rpx;
+    height: 500rpx;
     background: #fff;
     width: 100%;
     .picker-btn {
-      height: 80rpx;
+      height: 100rpx;
       border-bottom: 1px solid #eee;
       padding: 0 24rpx;
       color: #6a6a6a;
@@ -18,19 +24,19 @@
       }
     }
     .picker-view {
+      height: 480rpx;
       text-align: center;
       width: 100%;
-      height: 300rpx;
       .picker-view-item {
-        line-height: 80rpx;
+        line-height: 100rpx;
       }
     }
   }
 </style>
 <template>
-	<view hidden='{{isScaleModal}}'>
+	<view hidden='{{isScaleModal}}' class="pickerDate">
 		<view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
-		<view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
+		<view class="modal_box transition2s {{ isShow ? 'g_scale2': ''}}" id="modal-box">
 			<view class="modal-content">
         <view class="picker">
         <view class="weui-flex between picker-btn">
@@ -41,7 +47,7 @@
             确定
           </view>
         </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{value}}" @change="bindChange">
+        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 50px;font-size:16px;" value="{{value}}" @change="bindChange">
           <picker-view-column>
             <repeat wx:for="{{years}}" wx:key="index">
               <view class="picker-view-item">{{item}}年</view>
@@ -66,13 +72,11 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
+import $moment from 'moment'
 export default class pickerModal extends wepy.component {
 	props = {
 		isScaleModal: Boolean,
-		height: {
-			type: Number,
-			default: 520
-		}
+		time: String
 	}
 	data = {
 		isShow: false,
@@ -85,43 +89,58 @@ export default class pickerModal extends wepy.component {
     value: [9999, 1, 1],
 	}
 	onLoad () {
-		const date = new Date()
-    for (let i = 1990; i <= date.getFullYear(); i++) {
+    const date = new Date()
+    this.value[0] = date.getFullYear() - 1970
+    for (let i = 1970; i <= date.getFullYear(); i++) {
       this.years.push(i)
     }
 
     for (let i = 1; i <= 12; i++) {
-       this.months.push(i)
+      this.months.push(i)
     }
 
     for (let i = 1; i <= 31; i++) {
-       this.days.push(i)
+      this.days.push(i)
     }
-
-	}
+  }
+  getNum(num) {
+    return num < 10 ? '0' + num : num
+  }
 	methods = {
     bindChange: function (e) {
-      const val = e.detail.value
-      console.log(val)
+      this.value = e.detail.value
     },
 		handleClose () {
 			this.isShow = false
 			this.$apply()
 			this.$emit('handleClose')
 		},
-		handleOk () {
+		selectOk () {
 			this.isShow = false
       this.$apply()
-      console.log(this.value)
-			this.$emit('selectOk', this.value)
+      let month = this.months[this.value[1]]
+      let date = this.years[this.value[0]] + '-' + this.getNum(month) + '-' + this.getNum(this.days[this.value[2]])
+			this.$emit('selectOk', date)
 		}
-	}
+  }
+  getIndex(num, arr) {
+    return arr.indexOf(num)
+  }
 	watch = {
+    time(val) {
+      if (val) {
+        let month = Number($moment(val).month()) + 1
+        this.value[0] = this.getIndex($moment(val).year(), this.years)
+        this.value[1] = this.getIndex(month, this.months)
+        this.value[2] = this.getIndex($moment(val).date(), this.days) 
+        console.log(this.value)
+        this.$apply()
+      }
+    },
 		isScaleModal (val) {
 			if (!val) {
 				this.isShow = true
 			} else {
-				this.activeIndex = 0
 				this.isShow = false
 			}
 			this.$apply()

@@ -1,21 +1,35 @@
 <style lang="less">
 @import "../../style/list.less";
 .resume_view {
-  margin-bottom: 30rpx;
+  .scroll-view {
+    margin-bottom: 40rpx;
+  }
   .weui-cell_btn {
     width: 78%;
 		margin: 0 auto;
 		height: 200rpx;
     .weui-btn_cell {
       padding: 50rpx 16rpx;
+      margin-bottom: 40rpx;
+    }
+  }
+  .page__desc {
+    &.status2 {
+      color: #1890FF;
+    }
+    &.status3 {
+      color: #FF4444;
+    }
+    &.status4 {
+      color: #ff7618;
     }
   }
 }
 </style>
 <template>
  <view class="page page_top resume_view view_hidden">
-    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content1">
-      <jobManageList :list.sync="list" class="scroll-view page" @viewJobDetail="viewJobDetail"></jobManageList>
+    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
+      <jobManageList :list.sync="list" @viewJobDetail="viewJobDetail"></jobManageList>
     </scroll-view>
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布职位</button>
@@ -30,7 +44,7 @@ import { wxToast, wxNavigateTo, wxRedirectTo } from '@/util.js'
 import jobManageList from '@/components/jobManageList'
 export default class jobManage extends wepy.page {
   components = {
-    jobManageList: jobManageList,
+    jobManageList: jobManageList
   }
   data = {
     params: {
@@ -56,7 +70,7 @@ export default class jobManage extends wepy.page {
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {
 				this.params.limit = this.params.limit + 10
-				this.getReceiptList()
+				this.getjobList()
 			}
     }
   }

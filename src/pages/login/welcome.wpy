@@ -8,12 +8,12 @@
         <view>Hi,</view>
         <view class="login-title-col">欢迎使用应届生云端视频</view>
       </view>
-       <image src="http://www.ttxsg.com.cn:39009/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
+       <image src="https://d.rsd123.com/uploads/images/bg.png" mode="aspectFill" class="login-view-bg welcome-view-bg" />
       <view class="welcome-view-box">
         <view class="welcome-view-form login-view-form">
            <view class="rule-view weui-flex start wrap" @tap="checkedRule({{checked}})" >
-            <image wx:if="{{!checked}}" src="http://www.ttxsg.com.cn:39009/uploads/images/radio.png" mode="scaleToFill" class="check-icon" />
-            <image wx:else src="http://www.ttxsg.com.cn:39009/uploads/images/selected.png" mode="scaleToFill" class="check-icon" />
+            <image wx:if="{{!checked}}" src="https://d.rsd123.com/uploads/images/radio.png" mode="scaleToFill" class="check-icon" />
+            <image wx:else src="https://d.rsd123.com/uploads/images/selected.png" mode="scaleToFill" class="check-icon" />
              我已阅读并同意<view class="text">《应届生用户协议》</view>和
              <view class="text">《应届生隐私政策》</view>
             </view>
@@ -202,12 +202,13 @@ export default class Welcome extends wepy.page {
       if (!this.isRead) {
         return wxToast('请先阅读注册协议')
       }
-      this.userInfo = e.detail.userInfo
-      if (this.userInfo) {
+      let userInfo = e.detail.userInfo
+      if (e.detail.userInfo) {
         let params = {
-          avatar: this.userInfo.avatarUrl,
-          nick: this.userInfo.nickName
+          avatar: userInfo.avatarUrl,
+          nick: userInfo.nickName
         }
+        this.userInfo = params
         this.$parent.globalData.wxInfo = params
         wx.setStorageSync('wxInfo', JSON.stringify(params))
         this.authorize = true

@@ -2,7 +2,7 @@
 <template>
   <view class="list-card-row">
     <image src="{{itemValue.logo_url}}" wx:if="{{itemValue.logo_url}}" class="list-card-header shadow" mode="scaleToFill" />
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png" wx:else  class="list-card-header shadow" mode="scaleToFill"/>
+    <image src="https://d.rsd123.com/uploads/images/company.png" wx:else  class="list-card-header shadow" mode="scaleToFill"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{itemValue.com_name}}</text>

@@ -20,11 +20,11 @@
         {{$dataSexPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataSexPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataSexPicker$isScaleModal}}">
       <view bindtap="$dataSexPicker$handleClose" wx:if="{{$dataSexPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataSexPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataSexPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -55,12 +55,12 @@
             <view class="my-text weui-flex__item my-text-require">出生年月</view>
             <!-- <view class="my-text-right weui-flex between" bindtap="bindDateChange">
               <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
-              <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+              <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
             </view> -->
             <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="weui-input {{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
-                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+                <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -71,13 +71,13 @@
             
   <view class="districtSelet" bindtap="$districtSelet$changeCity">
     <view class="my-text-right weui-flex between">
-      <view  wx:if="{{$districtSelet$options.length}}" class="page__title">
+      <view  wx:if="{{$districtSelet$options.length}}" class="weui-input page__label">
         {{$districtSelet$multiArray[0][$districtSelet$multiIndex[0]]}}
         {{$districtSelet$multiArray[1][$districtSelet$multiIndex[1]]}}
         {{$districtSelet$disabled?$districtSelet$multiArray[2][$districtSelet$multiIndex[2]]:''}}
       </view>
       <view  wx:else class="placeholder">请选择地址</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$districtSelet$isScaleModal}}">
       <view catchtap="$districtSelet$ handleClose" wx:if="{{$districtSelet$isShow}}" class="modal_mask"/>
@@ -127,11 +127,11 @@
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">
       <view bindtap="$dataPicker$handleClose" wx:if="{{$dataPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -167,11 +167,11 @@
         {{$dataEduPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataEduPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataEduPicker$isScaleModal}}">
       <view bindtap="$dataEduPicker$handleClose" wx:if="{{$dataEduPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataEduPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataEduPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -211,9 +211,9 @@
       <button class="weui-btn_cell weui-btn_primary" bindtap="submit">保存</button>
     </view>
     
-	<view hidden="{{$pickerDate$isScaleModal}}">
+	<view hidden="{{$pickerDate$isScaleModal}}" class="pickerDate">
 		<view bindtap="$pickerDate$ handleClose"  wx:if="{{$pickerDate$isShow}}" class="modal_mask"/>
-		<view class="modal_box transition3s {{ $pickerDate$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$pickerDate$height}}rpx">
+		<view class="modal_box transition2s {{ $pickerDate$isShow ? 'g_scale2': ''}}" id="modal-box">
 			<view class="modal-content">
         <view class="picker">
         <view class="weui-flex between picker-btn">
@@ -224,7 +224,7 @@
             确定
           </view>
         </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{$pickerDate$value}}" bindchange="$pickerDate$bindChange">
+        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 50px;font-size:16px;" value="{{$pickerDate$value}}" bindchange="$pickerDate$bindChange">
           <picker-view-column>
             <block  wx:for="{{$pickerDate$years}}" wx:key="index">
               <view class="picker-view-item">{{item}}年</view>

@@ -99,6 +99,7 @@ export default class modal extends wepy.component {
   methods = {
     handleClose() {
       this.isShow = false
+      this.content = ''
       this.$apply()
       this.$emit('handleClose')
     },

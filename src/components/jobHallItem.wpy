@@ -2,7 +2,7 @@
 <template>
   <view class="list-card-row">
     <image src="{{item.head_img}}" wx:if="{{item.head_img}}" class="list-card-header shadow" mode="scaleToFill" />
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" wx:else class="list-card-header shadow" mode="scaleToFill" />
+    <image src="https://d.rsd123.com/uploads/images/user.png" wx:else class="list-card-header shadow" mode="scaleToFill" />
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{item.nickname}}</text>
@@ -24,7 +24,6 @@
 </template>
 <script>
 import wepy from 'wepy'
-// import { wxNavigateTo } from '@/util'
 export default class hallItem extends wepy.component {
 	props = {
     item: Object,
@@ -35,7 +34,6 @@ export default class hallItem extends wepy.component {
 	}
 	methods = {
     routerConcat(item) {
-      console.log(item)
       this.$emit('routerConcat', item)
     }
 	}

@@ -56,11 +56,21 @@
     color: #111;
     margin: 0 30rpx;
     box-sizing: border-box;
+    position: relative;
     .modal-tab-item {
       padding: 30rpx 48rpx;
-      &.modal-line {
-        border-bottom: 1px solid #1890FF;
-        color: #1890FF;
+    }
+    .line {
+      width: 200rpx;
+      height: 4rpx;
+      background: #1890FF;
+      position: absolute;
+      left: 0;
+      border-radius: 2rpx;
+      bottom: -2rpx;
+      transition: .1s;
+      &.line1 {
+        left: 53%;
       }
     }
   }
@@ -80,11 +90,12 @@
   <view hidden='{{isScaleModal}}'>
     <view wx:if="{{isShow}}" class="modal_mask"></view>
     <view class="modal_box transition3s {{ isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{height}}rpx">
-      <image src="http://www.ttxsg.com.cn:39009/uploads/images/closed.png" class="close_icon" mode="scaleToFill" @tap="handleCloseModal"/>
+      <image src="https://d.rsd123.com/uploads/images/closed.png" class="close_icon" mode="scaleToFill" @tap="handleCloseModal"/>
       <view class="modal-invitation">
         <view class="modal-title-tab weui-flex center">
-          <view class="modal-tab-item {{activeIndex==0?'modal-line':''}}" @tap="switchTab(0)">邀请函</view>
+          <view class="modal-tab-item" @tap="switchTab(0)">邀请函</view>
           <view class="modal-tab-item {{activeIndex==1?'modal-line':''}}" @tap="switchTab(1)">参展企业</view>
+          <view class="line {{activeIndex==1?'line1':''}}"></view>
         </view>
         <text selectable='true' decode="{{true}}" class="modal-subTitle" wx:if="{{activeIndex==0}}">
           {{content}}

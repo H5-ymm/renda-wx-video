@@ -69,7 +69,7 @@
 				</repeat>
 			</scroll-view>
 			<view wx:else class="page_list" >
-				<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
+				<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 				<view class="page_noData_text">暂无消息！</view>
 		   </view>
 		</view>
@@ -78,14 +78,7 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
-// import TIM from 'tim-wx-sdk'
-// import COS from 'cos-wx-sdk-v5'
 import { getImgUrl, wxNavigateTo, getList } from '@/util.js'
-// const tim = TIM.create({
-// 	SDKAppID: 1400335565
-// })
-// tim.setLogLevel(0)
-// tim.registerPlugin({ 'cos-wx-sdk': COS });
 export default class message extends wepy.page {
 	data = {
 		teamData: {},
@@ -114,8 +107,18 @@ export default class message extends wepy.page {
 	}
 	onShow() {
 		this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		// this.deleInfo()
 		this.getUserList()
 	}
+	deleInfo() {
+    let conversationID = 'C2C28'
+    let promise =  wx.$app.deleteConversation(conversationID);
+    promise.then(function(imResponse) {
+      console.log(imResponse.data); // 个人资料 - Profile 实例
+    }).catch(function(imError) {
+      console.warn('getMyProfile error:', imError); // 获取个人资料失败的相关信息
+    });
+  }
 	_onIMError (event) {
     // 网络错误不弹toast && sdk未初始化完全报错
     if (event.data.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
@@ -147,6 +150,7 @@ export default class message extends wepy.page {
 		promise1.then(imResponse => {
 			const conversationList = imResponse.data.conversationList; // 会话列表，用该列表覆盖原有的会话列表
 			this.list = this.changeList(conversationList)
+			console.log(this.list)
 			this.$apply()
 		}).catch(function (imError) {
 			console.warn('getConversationList error:', imError); // 获取会话列表失败的相关信息

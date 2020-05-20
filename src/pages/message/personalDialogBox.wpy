@@ -20,19 +20,19 @@
 		<view class="message-header" wx:if="{{is_apply&&rendaUserType==1}}">
 			<view class="weui-flex between message-header-content">
 				<view @tap="videoCall">
-					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" />
+					<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/video.png" class="dialogBox_icon" />
 					<view  class="page__title">视频面试</view>
 				</view>
 				<view @tap="viewResume">
-					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/view.png" class="dialogBox_icon" />
+					<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/view.png" class="dialogBox_icon" />
 					<view  class="page__title">查看简历</view>
 				</view>
 				<view @tap="noticeEntry" wx:if="{{!isEntry}}">
-					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/notice.png" class="dialogBox_icon" />
+					<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/notice.png" class="dialogBox_icon" />
 					<view  class="page__title">通知入职</view>
 				</view>
 				<view @tap="handleImproper">
-					<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/close.png" class="dialogBox_icon" />
+					<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/close.png" class="dialogBox_icon" />
 					<view class="page__title">不合适</view>
 				</view>
 			</view>
@@ -49,7 +49,7 @@
 							  <view wx:if="{{item.type=='TIMTextElem'}}" >{{item.text}}</view>
 								<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.type=='TIMImageElem'}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
 								<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
-								<image mode="scaleToFill" wx:if="{{item.type=='TIMCustomElem'}}" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video.png" class="dialogBox_icon" />
+								<image mode="scaleToFill" wx:if="{{item.type=='TIMCustomElem'}}" src="https://d.rsd123.com/uploads/images/company/video.png" class="dialogBox_icon" />
 							</view>
 						</view>
 					</view>
@@ -59,10 +59,10 @@
 							<view wx:if="{{item.type=='TIMTextElem'}}">{{item.text}}</view>
 							<image wx:if="{{item.type=='TIMImageElem'}}" mode="scaleToFill" src="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
 							<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
-							<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video2.png" class="dialogBox_icon" />
+							<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/video2.png" class="dialogBox_icon" />
 						</view>
 						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
-						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" class="dialogBox-col-header" wx:else/>
+						<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/user.png" class="dialogBox-col-header" wx:else/>
 					</view>
 				</repeat>
 			</view>
@@ -70,18 +70,18 @@
 		<view class="message-input-box shadow">
 			<view class="weui-flex between page_margin">
 				<input class="weui-input weui-flex__item" value="{{message}}" @blur="blurInput" @confirm="inputBind" confirm-type="send" placeholder="请输入...."/>
-				<image mode="scaleToFill" @tap="showMessageBtn" src="http://www.ttxsg.com.cn:39009/uploads/images/company/add.png" class="dialogBox_icon" />
+				<image mode="scaleToFill" @tap="showMessageBtn" src="https://d.rsd123.com/uploads/images/company/add.png" class="dialogBox_icon" />
 			</view>
 			<view class="weui-flex start message-menus" wx:if="{{isShow}}">
 				<view class="page_margin" @tap="videoCall" wx:if="{{is_apply}}">
 					<view class="weui-flex center message-item">
-						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/video1.png" class="dialogBox_icon" />
+						<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/video1.png" class="dialogBox_icon" />
 					</view>
 					<view  class="page__desc">视频面试</view>
 				</view>
 				<view class="page_margin" @tap="uploadImage">
 					<view class="weui-flex center message-item">
-						<image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/company/phone.png" class="dialogBox_icon" />
+						<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/phone.png" class="dialogBox_icon" />
 					</view>
 					<view  class="page__desc">图片</view>
 				</view>
@@ -166,7 +166,12 @@ export default class personalDialogBox extends wepy.page {
 			this.conversationID = 'C2C' + this.toUserId
 		} else {
 			this.conversationID = options.query
-			this.toUserId = options.userID
+			
+			if (options.com_id) {
+				this.toUserId =  options.com_id
+			} else {
+				this.toUserId = options.userID
+			}
 		}
 		if (this.rendaUserType ==2) {
 		  this.getPersonal()
@@ -208,9 +213,6 @@ export default class personalDialogBox extends wepy.page {
 		})
 	}
 	onShow () {	
-		// if (wx.getStorageSync('hangRoom')) {
-		// 	this.getMessage()
-		// }
 		this._initIM()
 	}
 	onUnload () {
@@ -219,7 +221,7 @@ export default class personalDialogBox extends wepy.page {
 	getPersonal(){
 		let params = {
 			com_id: this.rendaUserType== 2 ?  this.toUserId : this.uid,
-			uid: this.rendaUserType== 2 ? this.uid : this.toUserId 
+			uid: this.rendaUserType== 2 ? this.toUserId : this.id
 		}
 		$http('/autograph/CommunicateImmediately_personal', params).then(res => {
 			console.log(res.data)

@@ -2,15 +2,18 @@
 @import '../../style/list.less';
 .page {
   .page__desc {
-    font-size:24rpx;
+    font-size: 24rpx;
+    &.jfTitle {
+      padding: 0 0 15rpx;
+      margin-top: 0;
+      margin-bottom: 10rpx;
+    }
     &.company_info {
+      margin-top: 0;
       font-size: 26rpx;
     }
   }
-  .number {
-    font-size: 26rpx; 
-  }
-  .time {
+  .number,.time  {
     font-size: 26rpx; 
   }
 }

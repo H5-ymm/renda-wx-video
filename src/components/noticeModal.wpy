@@ -96,7 +96,6 @@ export default class noticeModal extends wepy.component {
 	events = {
 		setDate: data => {
 			this.form.entry_time = data
-			console.log(data)
 			this.$apply()
 		}
 	}

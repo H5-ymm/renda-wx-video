@@ -37,13 +37,13 @@
           <view class="weui-flex between" @tap="viewCompany">
             <view class="weui-flex between">
               <image src="{{companyDetail.logo_url}}" wx:if="{{companyDetail.logo_url}}" class="card-header shadow" mode="scaleToFill" />
-              <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png" wx:else class="card-header shadow" mode="scaleToFill" />
+              <image src="https://d.rsd123.com/uploads/images/company.png" wx:else class="card-header shadow" mode="scaleToFill" />
               <view class="com_info">
                 <view class="page__title">{{companyDetail.com_name}}</view>
                 <view class="page__desc">{{companyDetail.nature}} · {{companyDetail.scale}} · {{companyDetail.trades}}</view>
               </view>
             </view>
-            <image mode="scaleToFill" class="weui-flex__item" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_card_icon" />
+            <image mode="scaleToFill" class="weui-flex__item" src="https://d.rsd123.com/uploads/images/right.png" class="page_card_icon" />
           </view>
         </view>
       </view>
@@ -51,10 +51,10 @@
     <view class="footer-box">
       <view class="weui-flex between">
         <view class="weui-flex between">
-          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/collect-active.png" wx:if="{{jobDetailInfo && jobDetailInfo.is_collect}}" @tap="JobCollect(2)"/>
-          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/collect.png" wx:else @tap="JobCollect(1)"/>
+          <image mode="scaleToFill" class="big_icon" src="https://d.rsd123.com/uploads/images/company/collect-active.png" wx:if="{{jobDetailInfo && jobDetailInfo.is_collect}}" @tap="JobCollect(2)"/>
+          <image mode="scaleToFill" class="big_icon" src="https://d.rsd123.com/uploads/images/collect.png" wx:else @tap="JobCollect(1)"/>
           <button open-type="share" class="share-btn">
-            <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/share.png" />
+            <image mode="scaleToFill" class="big_icon" src="https://d.rsd123.com/uploads/images/company/share.png" />
           </button>
         </view>
         <view>

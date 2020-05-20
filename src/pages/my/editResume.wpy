@@ -24,12 +24,12 @@
             <view class="my-text weui-flex__item my-text-require">出生年月</view>
             <!-- <view class="my-text-right weui-flex between" @tap="bindDateChange">
               <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
-              <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+              <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
             </view> -->
             <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="weui-input {{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
-                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+                <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
               </view>
             </picker>
           </view>
@@ -65,7 +65,7 @@
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="submit">保存</button>
     </view>
-    <pickerDate :isScaleModal.sync="isPicker"></pickerDate>
+    <pickerDate :isScaleModal.sync="isPicker" :time.sync="birthtime"></pickerDate>
   </view>
 </template>
 <script>
@@ -76,7 +76,7 @@ import pickerDate from '@/components/pickerDate'
 import $moment from 'moment'
 import { $http } from '@/http.js'
 import { wxToast, wxRedirectTo, wxShowModal } from '@/util.js'
-import { jobStatusList, eduList } from '@/base/base'
+import { jobStatusList } from '@/base/base'
 export default class editResume extends wepy.page {
   components = {
     districtSelet: districtSelet,
@@ -113,11 +113,12 @@ export default class editResume extends wepy.page {
     navigationBarTitleText: '编辑简历'
   }
   onShow() {
+   
     this.endDate = $moment().format('YYYY-MM-DD')
     if (wx.getStorageSync('userInfo')) {
       let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
       for(let key in this.form) {
-        if (!userInfo[key]) {
+        if (!userInfo[key]&&userInfo[key]!='null') {
           this.form[key] = ''
         } else {
           this.form[key] = userInfo[key]
@@ -137,6 +138,12 @@ export default class editResume extends wepy.page {
     selectCity: data=> {
       this.form.province = data[0]
       this.form.city = data[1]
+    },
+    selectOk: data => {
+      this.birthtime = data
+      let date = $moment(data).valueOf() + ''
+      this.form.birthtime = date.substring(0, 10)
+      this.$apply()
     }
   }
   updateResume() {
@@ -146,7 +153,7 @@ export default class editResume extends wepy.page {
         wxToast('保存成功')
         wx.setStorageSync('userInfo', JSON.stringify(this.form))
         wx.navigateBack({
-          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          delta: 1
         });
 			} else {
 				wxToast('保存失败')
@@ -162,18 +169,15 @@ export default class editResume extends wepy.page {
       this.form.sex =  Number(data) + 1
     },
     bindEduChange(data) {
-      console.log(data)
       this.form.edu = data
     },
     bindChange(data) {
       this.form.job_search_status = Number(data) + 1
     },
     bindDateChange(e) {
-      // this.isPicker = !this.isPicker
-      let key = e.currentTarget.dataset.name
       this.birthtime = e.detail.value
       let date = $moment(e.detail.value).valueOf() + ''
-      this.form[key] = date.substring(0, 10)
+      this.form.birthtime = date.substring(0, 10)
       this.$apply()
     },
     submit() {

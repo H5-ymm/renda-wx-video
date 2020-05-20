@@ -3,67 +3,67 @@ export const jobStatusList =  ['应届毕业生', '离职寻找机会', '在职�
 
   export const welfareList = [
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon1.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon1.png',
       title: '五险一金'
     },
     {
-     icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon2.png',
+     icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon2.png',
       title: '周末双休'
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon3.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon3.png',
       title: '年底双薪'
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon4.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon4.png',
       title: '定期体检'
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon5.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon5.png',
       title: '包吃包住'
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon6.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon6.png',
       title: '带薪年假'
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon7.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon7.png',
       title: '扁平管理' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon8.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon8.png',
       title: '餐补' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon9.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon9.png',
       title: '岗前培训' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon10.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon10.png',
       title: '岗位晋升' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon11.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon11.png',
       title: '股权变更' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon12.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon12.png',
       title: '绩效奖金' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon13.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon13.png',
       title: '交通补贴' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon14.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon14.png',
       title: '节日礼物' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon15.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon15.png',
       title: '年底旅游' 
     },
     {
-      icon: 'http://www.ttxsg.com.cn:39009/uploads/images/company/welfare_icon16.png',
+      icon: 'https://d.rsd123.com/uploads/images/company/welfare_icon16.png',
       title: '住房补贴' 
     }
   ]

@@ -14,7 +14,7 @@
 		<picker mode="date" value="{{dateValue}}" start="{{startValue}}" @change="bindDateChange" class="modal-col picker-col">
 			<view class="picker weui-flex between">
 				<view class="weui-flex between weui-flex__item">
-					<view class="{{!params.date?'placeholder':''}}">{{dateValue}}</view>
+					<view class="{{!params.date?'placeholder':'weui-input'}}">{{dateValue}}</view>
 					<image src="https://a.rsd123.com/image/images/orderTaking/date.png" class="dateIcon" />
 				</view>
 			</view>
@@ -22,7 +22,7 @@
 		<picker mode="time" value="{{timeValue}}" start="09:00" end="21:00" @change="timeChange" class="modal-col picker-col">
 			<view class="picker weui-flex between">
 				<view class="weui-flex between weui-flex__item">
-					<view class="{{!params.time?'placeholder':''}}">{{timeValue}}</view>
+					<view class="{{!params.time?'placeholder':'weui-input'}}">{{timeValue}}</view>
 					<image src="https://a.rsd123.com/image/images/orderTaking/time.png" class="dateIcon" />
 				</view>
 			</view>

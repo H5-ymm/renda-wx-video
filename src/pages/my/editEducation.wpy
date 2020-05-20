@@ -1,35 +1,5 @@
 <style lang="less">
 @import "../../style/form.less";
-.add-view {
-  .page_form {
-    margin-top: 40rpx;
-    .page__label {
-      margin-right: 20rpx;
-    }
-    .page_margin {
-      padding: 10rpx 0;
-    }
-  }
-  .weui-cell_btn {
-    background: #fff;
-    border-top: 1px solid #F6F7FA;
-    padding: 30rpx 0;
-    .weui-btn_cell {
-      border-radius:16rpx;
-      background: #F6F6F6;
-      color:rgba(17,17,17,.5);
-      padding: 40rpx 10rpx;
-      width: 30%;
-      margin: 0 24rpx;
-      &.weui-btn_primary {
-        width: 50%;
-        padding: 40rpx 50rpx;
-        background: #1890FF;
-        color:#fff;
-      }
-    }
-  }
-}
 </style>
 <template>
   <view class="add-view page">
@@ -47,7 +17,7 @@
             <picker mode="date" data-name="graduation_date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{graduation_date?'page__label':'placeholder'}}"> {{graduation_date?graduation_date:'请选择'}}</view>
-                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"  class="page_right_icon" />
+                <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
               </view>
             </picker>
           </view>
@@ -78,14 +48,17 @@
         </view>
       </view>
     </view>
-    <view class="weui-cell_btn weui-flex center">
+    <view class="weui-cell_btn weui-flex center" @tap="submit">
+      <button class="weui-btn_cell weui-btn_primary" >保存</button>
+    </view>
+    <!-- <view class="weui-cell_btn weui-flex center">
      	<button class="weui-btn_cell"  @tap="deleteInfo">
         {{form.id?'删除 ':'取消'}}
       </button>
       <button class="weui-btn_cell weui-btn_primary" @tap="submit">
         保存
       </button>
-    </view>
+    </view> -->
   </view>
 </template>
 <script>
@@ -129,20 +102,20 @@ export default class editEducation extends wepy.page {
       delta: 1
     })
   }
-  delUseredu() {
-    let params = {
-      id: this.id ,
-      uid: this.form.uid
-    }
-    $http('/Personal/del_useredu', params).then(res => {
- 			if (res.data) {
-        wxToast('删除成功')
-        this.goBack()
-			} else {
-				wxToast('删除失败')
-			}
-		})
-  }
+  // delUseredu() {
+  //   let params = {
+  //     id: this.id ,
+  //     uid: this.form.uid
+  //   }
+  //   $http('/Personal/del_useredu', params).then(res => {
+ 	// 		if (res.data) {
+  //       wxToast('删除成功')
+  //       this.goBack()
+	// 		} else {
+	// 			wxToast('删除失败')
+	// 		}
+	// 	})
+  // }
   getEduDetail(id) {
     let params = {
       eid: id,
@@ -180,17 +153,17 @@ export default class editEducation extends wepy.page {
       this.form[key] = date.substring(0, 10)
       this.$apply()
     },
-    deleteInfo() {
-      if (!this.form.id) {
-        this.goBack()
-      } else {
-        wxShowModal('', '确定删除你的教育背景', '确定').then(res => {
-          this.delUseredu()
-        }).catch(() => {
-          console.log('取消')
-        })
-      }
-    },
+    // deleteInfo() {
+    //   if (!this.form.id) {
+    //     this.goBack()
+    //   } else {
+    //     wxShowModal('', '确定删除你的教育背景', '确定').then(res => {
+    //       this.delUseredu()
+    //     }).catch(() => {
+    //       console.log('取消')
+    //     })
+    //   }
+    // },
     submit() {
        if ((this.form.edu+'')=='') {
 				wxToast('请选择学历')

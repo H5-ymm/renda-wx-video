@@ -5,13 +5,13 @@
         <view class="login-view-form">
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-               <image src="http://www.ttxsg.com.cn:39009/uploads/images/phone.png" mode="aspectFill" class="page_card_icon"/>
+               <image src="https://d.rsd123.com/uploads/images/phone.png" mode="aspectFill" class="page_card_icon"/>
             </view>
             <input class="weui-input" value="{{form.tel}}" bindinput="changeInput" data-name="tel" placeholder="输入您的手机号"/>
           </view>
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-              <image src="http://www.ttxsg.com.cn:39009/uploads/images/password.png" mode="aspectFill" class="page_card_icon"/>
+              <image src="https://d.rsd123.com/uploads/images/password.png" mode="aspectFill" class="page_card_icon"/>
             </view>
             <input class="weui-input" value="{{form.code}}" bindinput="changeInput" data-name="code" placeholder="输入验证码"/>
             <text class="code-btn {{!sendAuthCode?'code-btn1':''}}" bindtap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
@@ -28,7 +28,7 @@
     <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
         <view wx:if="{{!$actionSheet$title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex around modal-btn">

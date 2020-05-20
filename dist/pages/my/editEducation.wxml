@@ -12,11 +12,11 @@
         {{$dataPicker$multiText}}
       </view>
       <view  wx:else class="placeholder">{{$dataPicker$text}}</view>
-      <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+      <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
     </view>
     <view hidden="{{$dataPicker$isScaleModal}}">
       <view bindtap="$dataPicker$handleClose" wx:if="{{$dataPicker$isShow}}" class="modal_mask"/>
-      <view class="modal_box transition3s {{ $dataPicker$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$dataPicker$height}}rpx">
+      <view class="modal_box" id="modal-box">
         <view class="modal-content">
           <view class="picker">
             <view class="weui-flex between picker-btn">
@@ -48,7 +48,7 @@
             <picker mode="date" data-name="graduation_date" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{graduation_date?'page__label':'placeholder'}}"> {{graduation_date?graduation_date:'请选择'}}</view>
-                <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png" class="page_right_icon"/>
+                <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>
               </view>
             </picker>
           </view>
@@ -79,12 +79,15 @@
         </view>
       </view>
     </view>
-    <view class="weui-cell_btn weui-flex center">
+    <view class="weui-cell_btn weui-flex center" bindtap="submit">
+      <button class="weui-btn_cell weui-btn_primary">保存</button>
+    </view>
+    <!-- <view class="weui-cell_btn weui-flex center">
      	<button class="weui-btn_cell" bindtap="deleteInfo">
         {{form.id?'删除 ':'取消'}}
       </button>
       <button class="weui-btn_cell weui-btn_primary" bindtap="submit">
         保存
       </button>
-    </view>
+    </view> -->
   </view>

@@ -3,12 +3,13 @@
     
   <view class="list-card shadow">
     <view class="weui-flex start card-col-1">    
-      <button class="weui-btn_cell weui-btn_primary {{$jobFairItemHall$itemValue.now_status==1?'':'weui-btn_warn'}}"  wx:if="{{$jobFairItemHall$isShowBtn}}">
+      <button class="weui-btn_cell {{$jobFairItemHall$itemValue.now_status==1?'weui-btn_active ':'weui-btn_warn'}}"  wx:if="{{$jobFairItemHall$isShowBtn}}">
         {{$jobFairItemHall$itemValue.now_status==1?'进行中':'待举办'}}
       </button>
       <text class="name {{$jobFairItemHall$isShowBtn?'text-line':''}}">{{$jobFairItemHall$itemValue.title}}</text>
     </view>
-    <view class="card-col-2">    
+    <view class="card-col-2">
+      <view>主办方：{{$jobFairItemHall$itemValue.sponsor}}</view> 
       <view>时间：{{$jobFairItemHall$itemValue.starttime}} 至 {{$jobFairItemHall$itemValue.endtime}}</view>
       <view>动态：<text>企业{{$jobFairItemHall$itemValue.companynum}}家 | 岗位{{$jobFairItemHall$itemValue.jobnum}}家 | 求职者{{$jobFairItemHall$itemValue.usernum}}人</text></view>
       <view>规模：{{$jobFairItemHall$itemValue.scale || 1}}家企业</view>
@@ -20,14 +21,14 @@
     </view>
   </view>
 
-    <view class="hall-switch weui-flex between shadow">
-      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="1">招聘大厅</view>
-      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="2">求职大厅</view>
-    </view>
+    <!-- <view class="hall-switch weui-flex between shadow">
+      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" bindtap="switchView(1)">招聘大厅</view>
+      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" bindtap="switchView(2)">求职大厅</view>
+    </view> -->
     
   <view class="weui-flex between search-box" wx:if="{{hallType==1}}">
 		<view class="weui-cell weui-flex start weui-flex__item">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon"/>
+			<image src="https://d.rsd123.com/uploads/images/search.png" class="searchIcon"/>
 			<input class="weui-input weui-flex__item search-input" bindinput="$searchJobHall$inputBind" confirm-type="search" bindfocus="$searchJobHall$inputFocus" value="{{$searchJobHall$name}}" bindblur="$searchJobHall$inputBlur" placeholder="{{$searchJobHall$placeholder}}"/>
     </view>
 	</view>
@@ -35,7 +36,7 @@
     
   <view class="weui-flex between search-box" wx:else>
 		<view class="weui-cell weui-flex start weui-flex__item">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon"/>
+			<image src="https://d.rsd123.com/uploads/images/search.png" class="searchIcon"/>
 			<input class="weui-input weui-flex__item search-input" bindinput="$searchHall$inputBind" confirm-type="search" bindfocus="$searchHall$inputFocus" value="{{$searchHall$name}}" bindblur="$searchHall$inputBlur" placeholder="{{$searchHall$placeholder}}"/>
     </view>
 	</view>
@@ -48,7 +49,7 @@
 					
   <view class="list-card-row">
     <image src="{{$hallList$item.logo_url}}"  wx:if="{{$hallList$item.logo_url}}" class="list-card-header shadow" mode="scaleToFill"/>
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/company.png"  wx:else class="list-card-header shadow" mode="scaleToFill"/>
+    <image src="https://d.rsd123.com/uploads/images/company.png"  wx:else class="list-card-header shadow" mode="scaleToFill"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{$hallList$item.com_name}}</text>
@@ -78,7 +79,7 @@
 			</block>
 		</view>
 		<view wx:if="{{!$hallList$list.length}}" class="page_list">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
@@ -91,7 +92,7 @@
 					
   <view class="list-card-row">
     <image src="{{$jobHallList$item.head_img}}"  wx:if="{{$jobHallList$item.head_img}}" class="list-card-header shadow" mode="scaleToFill"/>
-    <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png"  wx:else class="list-card-header shadow" mode="scaleToFill"/>
+    <image src="https://d.rsd123.com/uploads/images/user.png"  wx:else class="list-card-header shadow" mode="scaleToFill"/>
     <view class="list-card-content">
       <view class="weui-flex start card-col-1">    
         <text class="name">{{$jobHallList$item.nickname}}</text>
@@ -115,7 +116,7 @@
 			</block>
 		 </view>
 		<view wx:if="{{!$jobHallList$list.length}}" class="page_list">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>
@@ -124,11 +125,12 @@
   <view hidden="{{$invitationModal$isScaleModal}}">
     <view  wx:if="{{$invitationModal$isShow}}" class="modal_mask"/>
     <view class="modal_box transition3s {{ $invitationModal$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$invitationModal$height}}rpx">
-      <image src="http://www.ttxsg.com.cn:39009/uploads/images/closed.png" class="close_icon" mode="scaleToFill" bindtap="$invitationModal$handleCloseModal"/>
+      <image src="https://d.rsd123.com/uploads/images/closed.png" class="close_icon" mode="scaleToFill" bindtap="$invitationModal$handleCloseModal"/>
       <view class="modal-invitation">
         <view class="modal-title-tab weui-flex center">
-          <view class="modal-tab-item {{$invitationModal$activeIndex==0?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="0">邀请函</view>
+          <view class="modal-tab-item" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="0">邀请函</view>
           <view class="modal-tab-item {{$invitationModal$activeIndex==1?'modal-line':''}}" bindtap="$invitationModal$switchTab" data-wpyswitchtab-a="1">参展企业</view>
+          <view class="line {{$invitationModal$activeIndex==1?'line1':''}}"/>
         </view>
         <text selectable="true" decode="{{$invitationModal$true}}" class="modal-subTitle"  wx:if="{{$invitationModal$activeIndex==0}}">
           {{$invitationModal$content}}
@@ -147,7 +149,7 @@
     <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
         <view wx:if="{{!$actionSheet$title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex around modal-btn">

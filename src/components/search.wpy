@@ -26,7 +26,7 @@
 <template>
   <view class="weui-flex between search-box">
 		<view class="weui-cell weui-flex start weui-flex__item">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/search.png" class="searchIcon" />
+			<image src="https://d.rsd123.com/uploads/images/search.png" class="searchIcon" />
 			<input class="weui-input weui-flex__item search-input" @input='inputBind' confirm-type="search" @focus="inputFocus"
 			value="{{name}}" @blur="inputBlur" placeholder="{{placeholder}}"/>
     </view>

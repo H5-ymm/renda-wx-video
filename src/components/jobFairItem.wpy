@@ -2,12 +2,13 @@
 <template>
   <view class="list-card shadow">
     <view class="weui-flex start card-col-1">    
-      <button class="weui-btn_cell weui-btn_primary {{itemValue.now_status==1?'':'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
+      <button class="weui-btn_cell {{itemValue.now_status==1?'weui-btn_active ':'weui-btn_warn'}}" wx:if="{{isShowBtn}}">
         {{itemValue.now_status==1?'进行中':'待举办'}}
       </button>
       <text class="name {{isShowBtn?'text-line':''}}">{{itemValue.title}}</text>
     </view>
-    <view class="card-col-2">    
+    <view class="card-col-2">
+      <view>主办方：{{itemValue.sponsor}}</view> 
       <view>时间：{{itemValue.starttime}} 至 {{itemValue.endtime}}</view>
       <view>动态：<text>企业{{itemValue.companynum}}家 | 岗位{{itemValue.jobnum}}家 | 求职者{{itemValue.usernum}}人</text></view>
       <view>规模：{{itemValue.scale || 1}}家企业</view>

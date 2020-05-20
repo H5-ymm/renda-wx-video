@@ -18,7 +18,7 @@
             <swiper class="swiper" circular="true" previous-margin="{{previous}}" next-margin="50px">
               <block wx:for="{{benefits}}" wx:key="index">
                 <swiper-item class="swiper-item">
-                  <view class="welfare-item weui-flex between">
+                  <view class="welfare-item weui-flex around">
                     <image src="{{item.icon}}" alt="" class="samll_card_icon" mode="aspectFill"/>
                     <text class="welfare_desc">{{item.title}}</text> 
                   </view>
@@ -93,10 +93,10 @@
     <view class="footer-box">
       <view class="weui-flex between">
         <view class="weui-flex between">
-          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/collect-active.png" wx:if="{{companyDetail && companyDetail.is_collect}}" bindtap="companyCollect" data-wpycompanycollect-a="2"/>
-          <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/collect.png" wx:else bindtap="companyCollect" data-wpycompanycollect-a="1"/>
+          <image mode="scaleToFill" class="big_icon" src="https://d.rsd123.com/uploads/images/company/collect-active.png" wx:if="{{companyDetail && companyDetail.is_collect}}" bindtap="companyCollect" data-wpycompanycollect-a="2"/>
+          <image mode="scaleToFill" class="big_icon" src="https://d.rsd123.com/uploads/images/collect.png" wx:else bindtap="companyCollect" data-wpycompanycollect-a="1"/>
           <button open-type="share" class="share-btn">
-            <image mode="scaleToFill" class="big_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/company/share.png"/>
+            <image mode="scaleToFill" class="big_icon" src="https://d.rsd123.com/uploads/images/company/share.png"/>
           </button>
         </view>
         <view bindtap="communicateCompany">
@@ -111,7 +111,7 @@
     <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
     <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
       <view class="modal-page_card">
-        <image mode="scaleToFill" src="http://www.ttxsg.com.cn:39009/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
         <view wx:if="{{!$actionSheet$title}}" class="modal-content">
           <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
           <view class="weui-flex around modal-btn">

@@ -68,7 +68,7 @@
     <view class="scroll-view">
       <view class="weui-flex between list-row" @tap="showMoreContent({{item}})" wx:for="{{list}}" wx:key="index">
         <view class="page__title">{{item.type_name}}</view>
-        <image mode="scaleToFill" class="page_card_icon" src="http://www.ttxsg.com.cn:39009/uploads/images/right.png"/>
+        <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png"/>
       </view>
     </view>
     <view wx:if="{{if_show}}" class="{{show_centent?'show':'hide'}}" @tap="switchShow">

@@ -1,6 +1,7 @@
 
 <template>
   <view class="list-row">
+    <view class="page__desc page_bottom jfTitle">记录来自：{{item.title}}</view>
     <view class="list-col-1">
       <view class="page__title weui-flex between">
         应聘职位：{{item.job_name}}
@@ -18,7 +19,6 @@
       <view class="page__desc company_info">企业信息</view>
       <view class="number" @tap="viewDetail({{item}})">查看详情</view>
     </view>
-    <view class="page__desc">记录来自：{{item.title}}</view>
   </view>
 </template>
 <script>
@@ -42,8 +42,8 @@ export default class deliveryRecordItem extends wepy.component {
       }
       wx.setStorageSync('rendaJHID', item.jf_id)
       let uid = wx.getStorageSync('rendaUid')
-      let conversationID = 'C2C' + item.com_id
-      wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.com_id}`)
+      let conversationID = 'C2C' + item.com_uid
+      wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.com_uid}&com_id=${item.com_id}`)
     }
   }
 }

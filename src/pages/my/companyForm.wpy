@@ -1,15 +1,18 @@
 <style lang="less">
 @import "../../style/list.less";
-@import "../../style/cell.less";
+// @import "../../style/cell.less";
 .add-view {
 	&.page__company {
-		overflow: hidden;
+		// position: relative;
+		// z-index: 1;
+		// overflow: hidden;
 		margin: 0 30rpx;
 		.weui-input {
 			text-align: left;
+			color: #111;
 			&.weui-textarea {
 				border: none;
-				margin: 0 8rpx;
+				margin: -6rpx 8rpx;
 			}
 		}
 		.page_right_icon {
@@ -82,7 +85,7 @@
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">企业福利</view>
 						<view class="weui-flex start weui-flex__item" @tap="selectBenefits">
-							<view class="weui-flex__item {{benefits!=''?'page__title':'placeholder'}}">
+							<view class="weui-flex__item {{benefits!=''?'page__label':'placeholder'}}">
 								{{benefits!=''?benefits:'请选择企业福利'}}
 							</view>
 						</view>
@@ -93,9 +96,6 @@
 						<view class="my-text my-text-require">企业简介</view>
 						<input class="weui-input weui-textarea weui-flex__item" data-name="content" placeholder-class="placeholder" 
 						value="{{form.content}}" @input="changeInput" placeholder="请输入企业简介" />
-						<!-- <textarea data-name="content" placeholder-class="placeholder"
-						class="weui-input weui-textarea weui-flex__item" value="{{form.content}}" @input="changeInput"
-						placeholder="请输入企业简介" auto-height /> -->
 					</view>
 				</view>
 				<view class="list-row">
@@ -105,7 +105,7 @@
 						value="{{form.link_man}}" @input="changeInput" placeholder="请输入联系人" />
 					</view>
 				</view>
-				<view class=" list-row">
+				<view class="list-row">
 					<view class="weui-flex start">
 						<view class="my-text my-text-require">手机号码</view>
 						<input class="weui-input" data-name="link_tel" placeholder-class="placeholder" 
@@ -119,7 +119,7 @@
 							<view class="page__desc">图像大小不要超过5M</view>
 						</view>
 						<image @tap="uploadImg" src="{{infoImg}}" mode="scaleToFill" class="my-head" wx:if="{{infoImg}}" />
-						<image @tap="uploadImg" src="http://www.ttxsg.com.cn:39009/uploads/images/upload.png" mode="scaleToFill" class="my-head" wx:else />  
+						<image @tap="uploadImg" src="https://d.rsd123.com/uploads/images/upload.png" mode="scaleToFill" class="my-head" wx:else />  
 					</view>
 				</view>
       </view>
@@ -149,7 +149,7 @@ export default class companyForm extends wepy.page {
 		districtSelet: districtSelet,
 		dataPicker: dataPicker,
 		dataTradesPicker: dataPicker,
-		dataScalePicker: dataPicker,
+		dataScalePicker: dataPicker
 	}
 	data = {
 		form: {
@@ -198,16 +198,21 @@ export default class companyForm extends wepy.page {
 	}
 	getCompanyInfo() {
     $http('/Company/getcompanyinfobyuid', { uid: this.uid }).then(res => {
-			let userInfo = res.data
+		let userInfo = res.data || {}
      	for(let key in userInfo) {
 				this.form[key] = userInfo[key]
 			}
 			this.benefitsArr = userInfo.benefits.filter(function (s) {
 				return s && s.trim()
 			})
-			this.$broadcast('getBenefitsArr', this.benefitsArr)
+			if (this.benefitsArr.length) {
+				this.$broadcast('getBenefitsArr', this.benefitsArr)
+				this.form.benefits = this.benefitsArr.join(',')
+			} else {
+				this.form.benefits = ''
+			}
+			console.log(this.benefitsArr)
 			this.infoImg = userInfo.license_url=='null' ? '' : userInfo.license_url
-			this.form.benefits = ''
 			this.jobIndex = this.form.trades ? Number(this.form.trades) - 1 : ''
       this.comIndex = this.form.nature ? Number(this.form.nature) - 1 : ''
       this.comScaleIndex = this.form.scale ? Number(this.form.scale) - 1 : ''

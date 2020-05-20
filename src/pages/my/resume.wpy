@@ -10,20 +10,20 @@
             <view class="com_info">
               <view class="page__title">
                 {{resumeDetail.nickname}}
-                <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editResume',0)" class="page_card_icon" mode="scaleToFill" />
+                <image src="https://d.rsd123.com/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editResume',0)" class="page_card_icon" mode="scaleToFill" />
               </view>
               <view class="page__desc">{{resumeDetail.sex==1?'男':'女'}} {{resumeDetail.birthtime || ''}} {{resumeDetail.province || '-'}}{{resumeDetail.city|| '-'}}</view>
               <view class="page__desc">联系电话：{{resumeDetail.tel}}</view>
               <view class="page__desc">邮箱：{{resumeDetail.email || '-'}}</view>
             </view>
             <image src="{{resumeDetail.head_img}}" wx:if="{{resumeDetail.head_img}}" class="company_logo shadow" mode="scaleToFill" />
-            <image src="http://www.ttxsg.com.cn:39009/uploads/images/user.png" wx:else class="company_logo shadow" mode="scaleToFill" />
+            <image src="https://d.rsd123.com/uploads/images/user.png" wx:else class="company_logo shadow" mode="scaleToFill" />
           </view>
         </view>
         <view class="section-box">
           <view class="page__title weui-flex between">
             求职意向
-            <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editJob',0)" class="page_card_icon" mode="scaleToFill" />
+            <image src="https://d.rsd123.com/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editJob',0)" class="page_card_icon" mode="scaleToFill" />
           </view>
           <view class="job_detail">
             <view class="page__title">工作性质：{{resumeDetail.nature_work || '无'}}</view>
@@ -37,7 +37,7 @@
           <repeat wx:for="{{eduList}}" wx:key="index" wx:if="{{eduList.length}}">
             <view class="job_detail weui-flex between">
               <view class="page__title">{{item.school}}</view>
-              <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editEducation', {{item}})" class="page_card_icon" mode="scaleToFill" />
+              <image src="https://d.rsd123.com/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editEducation', {{item}})" class="page_card_icon" mode="scaleToFill" />
             </view>
             <view class="page__desc">
             {{item.edu}}｜{{item.faculty}}{{item.speciality}}
@@ -48,7 +48,7 @@
           </repeat>
           <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" @tap="routerView('editEducation',0)">
             添加教育背景
-            <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/add.png" class="page_card_icon " mode="scaleToFill" />
+            <image src="https://d.rsd123.com/uploads/images/user/add.png" class="page_card_icon " mode="scaleToFill" />
           </view>
         </view>
         <view class="section-box">
@@ -60,7 +60,7 @@
                    {{item.company_name}}
                    <view class="page__desc">{{item.worktime_start}} - {{item.worktime_end}}</view>
                 </view>
-                <image src="http://www.ttxsg.com.cn:39009/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editWorkExperience', {{item}})" class="page_card_icon" mode="scaleToFill" />
+                <image src="https://d.rsd123.com/uploads/images/user/edit.png" wx:if="{{!resumeId}}" @tap="routerView('editWorkExperience', {{item}})" class="page_card_icon" mode="scaleToFill" />
               </view>
               <view class="page__title">{{item.job_name}}</view>
             </view>
@@ -68,7 +68,7 @@
              {{item.work_content}}
             </view>
           </repeat>
-          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" @tap="routerView('editWorkExperience',0)">添加实习/工作经历<image src="http://www.ttxsg.com.cn:39009/uploads/images/user/add.png" class="page_card_icon" mode="scaleToFill" /></view>
+          <view class="page__text__active weui-flex center" wx:if="{{!resumeId}}" @tap="routerView('editWorkExperience',0)">添加实习/工作经历<image src="https://d.rsd123.com/uploads/images/user/add.png" class="page_card_icon" mode="scaleToFill" /></view>
         </view>
       </view>
     </scroll-view>

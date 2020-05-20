@@ -4,7 +4,7 @@
 	  <repeat for="{{newList}}" key="index" wx:if="{{newList.length}}" >
        <view class="list-card shadow">
 				<view class="weui-flex start card-col-1">    
-					<button class="weui-btn_cell weui-btn_primary {{item.now_status==1?'':'weui-btn_warn'}}">
+					<button class="weui-btn_cell {{item.now_status==1?'weui-btn_active':'weui-btn_warn'}}">
 						{{item.now_status==1?'进行中':'待举办'}}
 					</button>
 					<text class="name {{isShowBtn?'text-line':''}}">{{item.title}}</text>
@@ -33,7 +33,7 @@
 			</view>
     </repeat>
 		<view wx:if="{{!newList.length}}" class="page_list">
-			<image src="http://www.ttxsg.com.cn:39009/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
 			<view class="page_noData_text">暂无数据！</view>
 		</view>
 	</view>

@@ -8,13 +8,13 @@
         <view class="login-view-form">
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-               <image src="http://www.ttxsg.com.cn:39009/uploads/images/phone.png" mode="aspectFill" class="page_card_icon" />
+               <image src="https://d.rsd123.com/uploads/images/phone.png" mode="aspectFill" class="page_card_icon" />
             </view>
             <input class="weui-input" value="{{form.tel}}" @input="changeInput" data-name="tel" placeholder="输入您的手机号" />
           </view>
           <view class="weui-cell weui-flex start weui-cell_input page_bottom">
             <view class="weui-cell_label weui-flex between">
-              <image src="http://www.ttxsg.com.cn:39009/uploads/images/password.png" mode="aspectFill" class="page_card_icon" />
+              <image src="https://d.rsd123.com/uploads/images/password.png" mode="aspectFill" class="page_card_icon" />
             </view>
             <input class="weui-input" value="{{form.code}}" @input="changeInput" data-name="code" placeholder="输入验证码" />
             <text class="code-btn {{!sendAuthCode?'code-btn1':''}}" @tap="getCode">{{sendAuthCode?'获取验证码':auth_time+'s'}}</text>
