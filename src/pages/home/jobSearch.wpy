@@ -155,7 +155,6 @@ export default class jobSearch extends wepy.page {
         limit: 10,
         page: 1,
         name: '',
-        jf_id: '',
         uid: wx.getStorageSync('rendaUid')
       }
       this.total = 0
