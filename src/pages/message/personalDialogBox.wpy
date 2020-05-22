@@ -1,6 +1,7 @@
 <style lang="less">
  @import '../../style/message.less';
  page {
+	background: #F6F7FA;
 	height: auto;
 	.dialogBox-view {
 		box-sizing: border-box;
@@ -177,7 +178,7 @@ export default class personalDialogBox extends wepy.page {
 		  this.getPersonal()
 		}
 		this.getConversationProfile()
-		this.getMessage()
+
 		this.getCommunicate()	
 	} 
 	// 滚动到列表bottom
@@ -197,7 +198,7 @@ export default class personalDialogBox extends wepy.page {
 		event.data.forEach((item, index) => {
 			if (item.type == 'TIMCustomElem' && index == 0) {
 				let action = JSON.parse(item._elements[0].content.data).action
-				if ( action == 0 && item.to == this.uid) {
+				if ( action == 0 && item.from == this.toUserId) {
 					let params = {
 						args: item._elements[0].content.data,
 						to: item.to,
@@ -212,8 +213,9 @@ export default class personalDialogBox extends wepy.page {
 			this.$apply()
 		})
 	}
-	onShow () {	
-		this._initIM()
+	onShow () {
+		this.getMessage()
+		this._initIM()	
 	}
 	onUnload () {
 		this.isClear = false

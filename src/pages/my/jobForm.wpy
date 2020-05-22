@@ -2,11 +2,9 @@
 @import "../../style/list.less";
   .add-view {
     &.jobForm {
-      &.page_margin {
-        margin: 0 30rpx;
-      }
       .page_form {
         margin-top: 0;
+        padding: 0 30rpx;
         .list-row {
           padding: 10rpx 0;
           .weui-textarea {
@@ -23,8 +21,8 @@
     }
     .weui-cell_btn {
       width: 78%;
-      margin: 0 auto;
-      height: 200rpx;
+      margin: 20rpx auto 30rpx;
+      // height: 200rpx;
       &.job_btn {
         width:100%;
         .weui-btn_cell {
@@ -40,8 +38,8 @@
   }
 </style>
 <template>
-  <view class="add-view page jobForm page_margin">
-    <view class="view-content1 view_auto">
+  <view class="add-view page jobForm">
+    <view>
       <view class="page_form">
         <view class="list-row">
           <view class="weui-flex between page_margin">
@@ -156,7 +154,8 @@ export default class jobForm extends wepy.page {
     salaryIndex: -1,
     eduIndex: -1,
     natureIndex: -1,
-    address: []
+    address: [],
+    isScaleModal: true
 	}
 	config = {
 		navigationBarTitleText: '职位发布'
@@ -202,7 +201,10 @@ export default class jobForm extends wepy.page {
 		$http('/companyjob/is_upjob', params).then(res => {
       if (res.data) {
         wxToast('操作成功')
-        wxNavigateTo('/pages/my/jobManage')
+        // wxNavigateTo('/pages/my/jobManage')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        })
 			} else {
 				wxToast('操作失败')
 			}
@@ -218,7 +220,9 @@ export default class jobForm extends wepy.page {
         } else {
           wxToast('保存成功')
         }
-        wxNavigateTo('/pages/my/jobManage')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        })
 			} else {
 				wxToast('保存失败')
 			}
@@ -228,7 +232,9 @@ export default class jobForm extends wepy.page {
     $http('/companyjob/delete_job', params).then(res => {
       if (res.data) {
         wxToast('删除成功')
-        wxNavigateTo('/pages/my/jobManage')
+        wx.navigateBack({
+          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+        })
 			} else {
 				wxToast('删除失败')
 			}

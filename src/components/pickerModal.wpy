@@ -41,14 +41,9 @@
 							确定
 						</view>
 					</view>
-					<picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{activeIndex}}" @change="bindChange">
+					<picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 40px;font-size:16px;" value="{{value}}" @change="bindChange">
 						<picker-view-column>
-							<repeat wx:for="{{list}}" wx:key="index">
-								<view class="picker-view-item">{{item}}</view>
-							</repeat>
-						</picker-view-column>
-						<picker-view-column>
-							<repeat wx:for="{{list}}" wx:key="index">
+							<repeat wx:for="{{range}}" wx:key="index">
 								<view class="picker-view-item">{{item}}</view>
 							</repeat>
 						</picker-view-column>
@@ -64,47 +59,40 @@ import { $http } from '@/http.js'
 export default class pickerModal extends wepy.component {
 	props = {
 		isScaleModal: Boolean,
-		height: {
-			type: Number,
-			default: 520
-		},
-		list: Array
+	  value: Number,
+		range: Array,
+		type: String
 	}
 	data = {
-		isShow: false,
-		activeIndex: [],
-		rendaUserType: 0
-	}
-	onLoad () {
-		this.rendaUserType = wx.getStorageSync('rendaUserType')
+	  multiIndex: 0,
+    isScaleModal: true,
+    isShow: false,
+    multiText: '',
+    isSelect: false
 	}
 	methods = {
-		handleClose () {
-			this.isShow = false
+		selectOk() {
+      this.isScaleModal = !this.isScaleModal 
+      if (this.multiIndex == -1 ||!this.isSelect) {
+        this.multiIndex = 0
+      }
+      this.multiText = this.range[this.multiIndex]
 			this.$apply()
-			this.$emit('handleClose')
-		},
-		selectType (index) {
-			this.activeIndex = index
-			this.$apply()
-		},
-		handleOk () {
-			this.isShow = false
-			this.$apply()
-			this.$emit('selectOk', this.activeIndex)
-		}
+			this.$emit('pickerChange', this.multiText)
+      this.$emit('bindPickerChange', this.multiIndex)
+    },
+    bindChange(e) {
+      this.isSelect = true
+      this.multiIndex = e.detail.value
+      this.$apply()
+    },
+    selectClose() {
+      this.isSelect = false
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    }
 	}
 	watch = {
-		rendaUserType (val) {
-			if (val) {
-				if (this.menus[0].title == '切换团队') {
-					this.activeIndex = val === 2 ? 1 : 0
-				} else {
-					this.activeIndex = 0
-				}
-				this.$apply()
-			}
-		},
 		isScaleModal (val) {
 			if (!val) {
 				this.isShow = true

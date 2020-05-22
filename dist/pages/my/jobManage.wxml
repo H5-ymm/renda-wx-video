@@ -1,6 +1,6 @@
 
  <view class="page page_top resume_view view_hidden">
-    <scroll-view scroll-y="true" bindscrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
+    <scroll-view scroll-y="true" refresher-enabled="true" bindrefresherrefresh="bindrefresherrefresh" bindscrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
       
 	<view>
 	  <block  wx:if="{{$jobManageList$list.length}}" wx:for="{{$jobManageList$list}}" wx:for-index="$jobManageList$index" wx:for-item="$jobManageList$item" wx:key="$jobManageList$index">

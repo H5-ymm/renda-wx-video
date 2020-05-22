@@ -5,6 +5,9 @@
   margin: 0 auto;
 }
 .districtSelet {
+  .modal_mask {
+    // height: calc(100% - 520rpx);
+  }
   .picker {
     height: 520rpx;
     background: #fff;

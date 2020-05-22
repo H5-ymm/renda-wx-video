@@ -1,6 +1,6 @@
 
-  <view class="add-view page jobForm page_margin">
-    <view class="view-content1 view_auto">
+  <view class="add-view page jobForm">
+    <view>
       <view class="page_form">
         <view class="list-row">
           <view class="weui-flex between page_margin">

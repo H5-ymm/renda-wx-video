@@ -1,12 +1,10 @@
 <style lang="less">
-@import "../../style/list.less";
-// @import "../../style/cell.less";
+@import "../../style/form.less";
 .add-view {
-	&.page__company {
-		// position: relative;
-		// z-index: 1;
-		// overflow: hidden;
-		margin: 0 30rpx;
+	&.page__company {	
+		.view-content2 {
+			padding: 0 30rpx;
+		}
 		.weui-input {
 			text-align: left;
 			color: #111;
@@ -17,39 +15,44 @@
 		}
 		.page_right_icon {
 			display: none;
-		}
-	}
-  .page_form {
-    margin-top: 0;
-    .list-row {
-			padding: 30rpx 0;
-			.my-text-require-right {
-				flex: auto;
+		}	
+		.page_form {
+			margin-top: 0;
+			.list-row {
+				padding: 30rpx 0;
+				border-bottom: 1px solid #F0F2FA;
+				line-height: 50rpx;
+				.my-text-require-right {
+					flex: auto;
+				}
 			}
-		}
-		.my-text {
-			height: auto;
-			line-height: 55rpx;
-			width: 150rpx;
+			.my-text {
+				height: auto;
+				line-height: 55rpx;
+				width: 150rpx;
+			}
 		}
 	}
 	.my-head {
 		width: 80rpx;
 		height: 80rpx;
 	}
-  .weui-cell_btn {
+	.submit-btn {
     width: 78%;
-		margin: 0 auto;
-		height: 200rpx;
+		margin: 20rpx auto 30rpx;
+		// height: 200rpx;
+		// position: fixed;
+		// bottom: 30rpx;
+		// left: 11%;
     .weui-btn_cell {
       padding: 50rpx 16rpx;
     }
-  }
+	}
 }
 </style>
 <template>
   <view class="page__company add-view page">
-    <view class="view-content1 view_auto">
+    <view class="view-content2">
       <view class="page_form">
         <view class="list-row">
           <view class="weui-flex start">
@@ -124,18 +127,20 @@
 				</view>
       </view>
     </view>
-    <view class="weui-cell_btn weui-flex center">
+    <view class="weui-cell_btn weui-flex center submit-btn">
       <button class="weui-btn_cell weui-btn_primary" @tap="save">保存</button>
     </view>
 		<welfareModal :isScaleModal.sync="isModal" @handleBenefitOk="handleBenefitOk"></welfareModal>
 		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
-  </view>
+     <pickerDate :isScaleModal.sync="isPicker" :time.sync="birthtime"></pickerDate>
+	</view>
 </template>
 <script>
 import wepy from 'wepy'
 import districtSelet from '@/components/districtSelet'
 import welfareModal from '@/components/welfareModal'
 import dataPicker from '@/components/dataPicker'
+import pickerDate from '@/components/pickerDate'
 import { wxToast, checkMobile, getImgUrl, validateIdCard, compressImg, wxReLaunch } from '@/util.js'
 import { $http, uploadFile } from '@/http.js'
 import { connect, getStore } from 'wepy-redux'
@@ -149,7 +154,8 @@ export default class companyForm extends wepy.page {
 		districtSelet: districtSelet,
 		dataPicker: dataPicker,
 		dataTradesPicker: dataPicker,
-		dataScalePicker: dataPicker
+		dataScalePicker: dataPicker,
+		pickerDate: pickerDate
 	}
 	data = {
 		form: {
@@ -173,7 +179,9 @@ export default class companyForm extends wepy.page {
 		isModal: true,
 		infoImg: '',
 		disabled: true,
-		address: [],
+		isPicker: true,
+    address: [],
+    birthtime: '',
 		com_type: [],
     com_scale: [],
 		job_array: [],

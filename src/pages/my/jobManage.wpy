@@ -28,7 +28,7 @@
 </style>
 <template>
  <view class="page page_top resume_view view_hidden">
-    <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
+    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
       <jobManageList :list.sync="list" @viewJobDetail="viewJobDetail"></jobManageList>
     </scroll-view>
     <view class="weui-cell_btn weui-flex center">
@@ -40,7 +40,7 @@
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { wxToast, wxNavigateTo, wxRedirectTo } from '@/util.js'
+import { wxToast, wxNavigateTo } from '@/util.js'
 import jobManageList from '@/components/jobManageList'
 export default class jobManage extends wepy.page {
   components = {
@@ -56,16 +56,20 @@ export default class jobManage extends wepy.page {
     count: 0
   }
   config = {
-    navigationBarTitleText: '职位管理'
+    navigationBarTitleText: '职位管理',
+    enablePullDownRefresh: true
   }
   events = {
     viewJobDetail: data=> {
-      wxRedirectTo('/pages/my/jobForm?query='+ data.id)
+      wxNavigateTo('/pages/my/jobForm?query='+ data.id)
     }
+  }
+  bindrefresherrefresh() {
+    this.getjobList()
   }
   methods = {
     releaseJob() {
-      wxRedirectTo('/pages/my/jobForm')
+      wxNavigateTo('/pages/my/jobForm')
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

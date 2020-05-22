@@ -188,7 +188,11 @@ export default class jobPosition extends wepy.component {
       if (this.options.length) {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
-        this.$emit('selectJobType', this.options[2])
+        if (this.options[2]) {
+          this.$emit('selectJobType', this.options[2])
+        } else {
+          this.$emit('selectJobType', this.options[1])
+        }  
       }
     },
     bindChange(e) {
