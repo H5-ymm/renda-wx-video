@@ -57,7 +57,7 @@
               <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
               <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
             </view> -->
-            <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
+            <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange" value="{{birthtime}}">
               <view class="my-text-right weui-flex between">
                 <view class="weui-input {{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
                 <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>

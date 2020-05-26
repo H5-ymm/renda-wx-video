@@ -1,9 +1,9 @@
 var checkText = function (index) {
   var text = ''
   if(index == 1) {
-    text = '挂断通话'
+    text = '取消视频'
   } else if (index == 2) {
-    text = '对方不接视频'
+    text = '挂断视频'
   }else if (index == 3) {
     text = '对方取消视频'
   } else if (index == 4) {

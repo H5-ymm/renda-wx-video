@@ -99,6 +99,8 @@ export default class resumeList extends wepy.page {
       if (item.delete == 1) {
         return wxToast('该求职者已删除')
       }
+      let conversationID = 'C2C' + this.params.uid
+      // wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.apply_uid}`)
       wxNavigateTo('/pages/message/personalDialogBox?toUser=' + item.apply_uid + '&userID=' + this.params.uid)
     }
   }

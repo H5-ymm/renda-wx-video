@@ -14,7 +14,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">毕业时间</view>
-            <picker mode="date" data-name="graduation_date" bindchange="bindDateChange">
+            <picker mode="date" data-name="graduation_date" fields="month" value="{{graduation_date}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{graduation_date?'page__label':'placeholder'}}"> {{graduation_date?graduation_date:'请选择'}}</view>
                 <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
@@ -124,7 +124,7 @@ export default class editEducation extends wepy.page {
     $http('/personal/eduDetail', params).then(res => {
       this.form = res.data
       this.eduIndex = this.form.edu 
-      this.graduation_date = $moment.unix(this.form.graduation_date).format('YYYY-MM-DD')
+      this.graduation_date = $moment(new Date(Number(res.data.graduation_date))).format('YYYY-MM')
       this.$apply()
     })
   }
@@ -150,7 +150,7 @@ export default class editEducation extends wepy.page {
       let key = e.currentTarget.dataset.name
       this.graduation_date = e.detail.value
       let date = $moment(e.detail.value).valueOf() + ''
-      this.form[key] = date.substring(0, 10)
+      this.form[key] = date
       this.$apply()
     },
     // deleteInfo() {

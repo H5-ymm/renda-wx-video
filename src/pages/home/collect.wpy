@@ -5,8 +5,11 @@
   .page__desc {
     font-size:24rpx;
   }
-  .number {
+  .number, .page__label {
     font-size: 26rpx; 
+  }
+  .status {
+    padding-right: 40rpx;
   }
 }
 </style>
@@ -17,7 +20,7 @@
       <view class="home-view-box">
         <repeat wx:for="{{list}}" wx:key="index">
           <view class="list-row weui-flex between" wx:if="{{list.length}}" @tap="viewCompany({{item}})">
-            <view class="list-col-1 weui-flex__item">
+            <view class="list-col-1 weui-flex__item" wx:if="{{index<2}}">
               <view class="page__title weui-flex between">
                 {{!activeIndex?item.com_name:item.job_name}}
                 <view class="number" wx:if="{{activeIndex}}">{{item.salary}}</view>
@@ -27,11 +30,24 @@
               <view class="number" wx:if="{{activeIndex}}">{{item.com_name}}</view>
               <view class="page__desc">记录来源 : {{item.title}}</view>
             </view>
-            <view class="weui-flex between">
+            <view class="list-col-1 weui-flex__item" wx:else>
+              <view class="page__title weui-flex between">
+                {{item.name}}
+                <view class="number status">{{item.status==0?'未开始':item.status==1?'进行中':item.status==2?'未报名':'已结束'}}</view>
+              </view>
+              <view class="number">{{item.time}}</view>
+              <view class="weui-flex between">
+                <view class="weui-flex__item page__label"> {{item.name}}</view>
+                <button class="weui-btn_cell weui-btn_primary" @tap.stop="concatCompany({{item}})">
+                 {{item.status==0?'查看':item.status==1?'观看直播':item.status==2?'立即报名':'观看回放'}}
+                </button>
+              </view>
+            </view>
+            <view class="weui-flex between" wx:if="{{activeIndex<2}}">
               <button class="weui-btn_cell weui-btn_primary" wx:if="{{!activeIndex}}" @tap.stop="concatCompany({{item}})">
                 立即沟通
               </button>
-              <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" wx:else/>
+              <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" wx:else />
             </view>
           </view>
         </repeat>
@@ -62,7 +78,9 @@ export default class collect extends wepy.page {
     },
     tabBarList: [
     { name: '企业'},
-    { name: '职位'}],
+    { name: '职位'},
+    { name: '宣讲会'}
+    ],
     count: 0
   }
   config = {
@@ -72,12 +90,29 @@ export default class collect extends wepy.page {
     switchTab: data => {
       this.activeIndex = data
       this.$apply()
-      this.getCollectList()
+      if (data == 2) {
+        this.list = [{
+          name: '基督教的',
+          time: '2012年12月12日 12:22',
+          status: 0
+        },{
+          name: '基督教的',
+          time: '2012年12月12日 12:22',
+          status: 1
+        },{
+          name: '基督教的',
+          time: '2012年12月12日 12:22',
+          status: 2
+        }]
+      } else {
+        this.getCollectList()
+      }
+     
     }
   }
   computed = {
 		urlApi() {
-			return this.activeIndex == 0 ? '/personaljob/collect_company': '/personaljob/collect_job'
+			return this.activeIndex == 0 ? '/personaljob/collect_company': this.activeIndex == 1 ? '/personaljob/collect_job' : ''
     }
   }
   methods = {
@@ -91,7 +126,7 @@ export default class collect extends wepy.page {
     },
     concatCompany(item) {
       let conversationID = 'C2C' + item.com_uid
-      wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.com_uid}&com_id=${item.id}`)
+      wxNavigateTo(`/pages/message/personalDialogBox?query=${conversationID}&userID=${item.com_uid}`)
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

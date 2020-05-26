@@ -178,6 +178,7 @@ export default class Login extends wepy.page {
       if (this.auth_time <= 0) {
         this.sendAuthCode = true
         this.auth_time = 60
+        this.$apply()
         clearInterval(this.auth_timetimer)
       }
     }, 1000)

@@ -8,10 +8,10 @@
 <template>
   <scroll-view scroll-y="true" @scrolltolower="searchScrollLower" style="height:100%" class="scroll-view">
     <jobFairItemHall :itemValue.sync="jobFairInfo" :isShowBtn.sync="isShowBtn" @viewDetail="viewDetail"></jobFairItemHall>
-    <!-- <view class="hall-switch weui-flex between shadow">
+    <view class="hall-switch weui-flex between shadow">
       <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" @tap="switchView(1)">招聘大厅</view>
       <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" @tap="switchView(2)">求职大厅</view>
-    </view> -->
+    </view>
     <searchJobHall placeholder="搜索职位" @inputFocus.user="inputFocus" wx:if="{{hallType==1}}" @inputBlur="inputBlur"></searchJobHall>
     <searchHall  @searchValue="searchValue" wx:else placeholder="搜索意向职位"></searchHall>
     <hallList :list.sync="list" wx:if="{{hallType==1}}" @viewCompany="viewCompany" @routerJob="routerJob"></hallList>

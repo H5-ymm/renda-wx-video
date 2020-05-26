@@ -9,7 +9,7 @@
   margin: 0 auto;
   .tab-line {
     position: absolute;
-    left: 18%;
+    left: 10%;
     bottom: 20%;
     background: #1890ff;
     height: 4rpx;
@@ -17,7 +17,10 @@
     transition: 0.7s;
     border-radius: 4rpx;
     &.line1 {
-      left: 68%;
+      left: 43%;
+    }
+    &.line2 {
+      left: 76%;
     }
   }
   .tabBar_item {

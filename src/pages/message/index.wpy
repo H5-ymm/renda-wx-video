@@ -78,7 +78,7 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
-import { getImgUrl, wxNavigateTo, getList } from '@/util.js'
+import { getImgUrl, wxNavigateTo, getList,wxRedirectTo } from '@/util.js'
 export default class message extends wepy.page {
 	data = {
 		teamData: {},

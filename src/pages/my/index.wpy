@@ -112,6 +112,10 @@ export default class my extends wepy.page {
         url: `/pages/my/jobManage`
       },
       {
+        title: '宣讲会管理',
+        url: `/pages/my/lectureManage`
+      },
+      {
         title: '应聘简历',
         url: '/pages/my/resumeList'
       },

@@ -4,6 +4,19 @@
   .scroll-view {
     margin-bottom: 40rpx;
   }
+  .search-query {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 30rpx;
+    .card-item {
+      margin-right: 40rpx;
+      position: relative;
+      padding: 8rpx 10rpx;
+    }
+    .samll-icon {
+      height: 20rpx;
+      width: 20rpx;
+    }
+  }
   .weui-cell_btn {
     width: 78%;
 		margin: 0 auto;
@@ -13,7 +26,12 @@
       margin-bottom: 40rpx;
     }
   }
+  .number {
+    font-size: 24rpx;
+  }
   .page__desc {
+    margin-top: 0;
+    margin-right: 30rpx;
     &.status2 {
       color: #1890FF;
     }
@@ -27,24 +45,36 @@
 }
 </style>
 <template>
- <view class="page page_top resume_view view_hidden">
-    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
-      <jobManageList :list.sync="list" @viewJobDetail="viewJobDetail"></jobManageList>
+ <view class="page page_top resume_view">
+    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="page view_auto">
+       <view class="weui-flex start weui-flex__item search-query page_margin">
+        <view class="card-item">请选择开始时间</view>
+        <view class="card-item">
+          状态
+          <image src="../../images/down1.png" class="samll-icon" mode="scaleToFill" />
+        </view>
+        <view class="weui-flex end  weui-flex__item ">
+          搜索
+        </view>
+      </view>
+      <lectureManageList :list.sync="list" @viewJobDetail="viewJobDetail"></lectureManageList>
     </scroll-view>
-    <view class="weui-cell_btn weui-flex center">
+    <!-- <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布职位</button>
-    </view>
+    </view> -->
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { wxToast, wxNavigateTo } from '@/util.js'
-import jobManageList from '@/components/jobManageList'
-export default class jobManage extends wepy.page {
+import { wxToast, wxNavigateTo, getList } from '@/util.js'
+import search from '@/components/search'
+import lectureManageList from '@/components/lectureManageList'
+export default class lectureManage extends wepy.page {
   components = {
-    jobManageList: jobManageList
+    lectureManageList: lectureManageList,
+    search: search
   }
   data = {
     params: {
@@ -62,6 +92,11 @@ export default class jobManage extends wepy.page {
   events = {
     viewJobDetail: data=> {
       wxNavigateTo('/pages/my/jobForm?query='+ data.id)
+    }
+  }
+  computed = {
+    newList() {
+      return getList(this.list, 'addtime')
     }
   }
   bindrefresherrefresh() {

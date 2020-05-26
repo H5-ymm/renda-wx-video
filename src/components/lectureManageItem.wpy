@@ -1,0 +1,28 @@
+<template>
+  <view class="list-row weui-flex between">
+    <view class="list-col-1 weui-flex__item">
+      <view class="number" wx:if="{{item.status == 0}}">提示：请联系客服021-19865100 避免申请失败</view>
+      <view class="page__title">
+        {{item.job_name}}
+      </view>
+      <view class="page__desc">{{item.addtime}}</view>
+      <view class="number" wx:if="{{item.status == 2}}">拒绝理由：规范不合规</view>
+      <view class="number" wx:if="{{item.status == 1}}">在招职位：5个 投递简历：10份</view>
+    </view>
+    <view class="weui-flex between">
+      <view class="page__desc" wx:if="{{!item.status}}">待审核</view>
+      <view class="page__desc {{item.is_up==1?'status2':'status4'}}" wx:if="{{item.status == 1}}">{{item.is_up==1?'招聘中':'已结束'}}</view>
+      <view class="page__desc status3" wx:if="{{item.status == 2}}">已拒绝</view>
+      <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" />
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { wxNavigateTo } from '@/util'
+export default class lectureManageItem extends wepy.component {
+	props = {
+    item: Object
+	}
+}
+</script>

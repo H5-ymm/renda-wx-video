@@ -26,7 +26,7 @@
               <view class="{{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
               <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
             </view> -->
-            <picker mode="date" data-name="birthtime" end="{{endDate}}" bindchange="bindDateChange">
+            <picker mode="date" data-name="birthtime" end="{{endDate}}" @change="bindDateChange" value="{{birthtime}}">
               <view class="my-text-right weui-flex between">
                 <view class="weui-input {{birthtime?'page__label':'placeholder'}}"> {{birthtime?birthtime:'请选择'}}</view>
                 <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
@@ -65,7 +65,7 @@
     <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="submit">保存</button>
     </view>
-    <pickerDate :isScaleModal.sync="isPicker" :time.sync="birthtime"></pickerDate>
+    <pickerDate :isScaleModal.sync="isPicker"></pickerDate>
   </view>
 </template>
 <script>
@@ -117,8 +117,9 @@ export default class editResume extends wepy.page {
     this.endDate = $moment().format('YYYY-MM-DD')
     if (wx.getStorageSync('userInfo')) {
       let userInfo = JSON.parse(wx.getStorageSync('userInfo'))
+      console.log(userInfo)
       for(let key in this.form) {
-        if (!userInfo[key]&&userInfo[key]!='null') {
+        if (userInfo[key]+''==''&&userInfo[key]!='null') {
           this.form[key] = ''
         } else {
           this.form[key] = userInfo[key]
@@ -127,9 +128,11 @@ export default class editResume extends wepy.page {
       if (userInfo.province) {
         this.address = [userInfo.province, userInfo.city]
       }
-      this.birthtime = userInfo.birthtime ? $moment.unix(this.form.birthtime).format('YYYY-MM-DD') : ''
+      this.birthtime = userInfo.birthtime ? $moment(new Date(Number(this.form.birthtime))).format('YYYY-MM-DD') : ''
       this.jobStatusIndex = userInfo.job_search_status ? Number(userInfo.job_search_status) - 1 : ''
-      this.eduIndex = userInfo.edu || -1
+      this.eduIndex = userInfo.edu || 0
+      this.form.edu = this.eduIndex
+      console.log(this.eduIndex)
       this.index = userInfo.sex ? Number(userInfo.sex) - 1 : ''
       this.$apply()
     }
@@ -138,12 +141,6 @@ export default class editResume extends wepy.page {
     selectCity: data=> {
       this.form.province = data[0]
       this.form.city = data[1]
-    },
-    selectOk: data => {
-      this.birthtime = data
-      let date = $moment(data).valueOf() + ''
-      this.form.birthtime = date.substring(0, 10)
-      this.$apply()
     }
   }
   updateResume() {
@@ -176,8 +173,11 @@ export default class editResume extends wepy.page {
     },
     bindDateChange(e) {
       this.birthtime = e.detail.value
-      let date = $moment(e.detail.value).valueOf() + ''
-      this.form.birthtime = date.substring(0, 10)
+      let date = new Date(e.detail.value).getTime() + ''
+      console.log(date)
+      this.form.birthtime = date
+      console.log(this.form.birthtime)
+
       this.$apply()
     },
     submit() {

@@ -104,17 +104,17 @@ export default class resume extends wepy.page {
   getuserdetail() {
     $http('/personal/getuserdetail', {uid: this.uid}).then(res => {
       this.resumeDetail = res.data
-      this.resumeDetail.birthtime = res.data.birthtime ? $moment.unix(res.data.birthtime).format('YYYY-MM-DD'): ''
+      this.resumeDetail.birthtime = res.data.birthtime ? $moment(new Date(Number(res.data.birthtime))).format('YYYY-MM-DD'): ''
       if (this.resumeDetail.edulist) {
         this.eduList = this.resumeDetail.edulist.map(item =>{
-          item.graduation_date = $moment.unix(item.graduation_date).format('YYYY-MM')
+          item.graduation_date = $moment(new Date(Number(item.graduation_date))).format('YYYY-MM')
           return item
         })
       }
       if (this.resumeDetail.jobspecialitylist) {
         this.jobspecialitylist = this.resumeDetail.jobspecialitylist.map(item =>{
-          item.worktime_start = $moment.unix(item.worktime_start).format('YYYY-MM-DD')
-          item.worktime_end = $moment.unix(item.worktime_end).format('YYYY-MM-DD')
+          item.worktime_start = $moment(new Date(Number(item.worktime_start))).format('YYYY-MM-DD')
+          item.worktime_end = $moment(new Date(Number(item.worktime_end))).format('YYYY-MM-DD')
           return item
         })
       }

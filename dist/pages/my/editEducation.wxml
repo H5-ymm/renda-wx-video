@@ -45,7 +45,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">毕业时间</view>
-            <picker mode="date" data-name="graduation_date" bindchange="bindDateChange">
+            <picker mode="date" data-name="graduation_date" fields="month" value="{{graduation_date}}" bindchange="bindDateChange">
               <view class="my-text-right weui-flex between">
                 <view class="{{graduation_date?'page__label':'placeholder'}}"> {{graduation_date?graduation_date:'请选择'}}</view>
                 <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png" class="page_right_icon"/>

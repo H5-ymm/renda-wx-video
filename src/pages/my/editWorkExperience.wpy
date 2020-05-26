@@ -48,7 +48,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作开始时间</view>
-            <picker mode="date" data-name="worktime_start" bindchange="bindDateChange">
+            <picker mode="date" data-name="worktime_start" bindchange="bindDateChange" value="{{worktime_start}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{worktime_start?'page__label':'placeholder'}}"> {{worktime_start?worktime_start:'请选择开始时间'}}</view>
                 <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
@@ -59,7 +59,7 @@
         <view class="page_margin">
           <view class="weui-flex between">
             <view class="my-text  weui-flex__item my-text-require">工作结束时间</view>
-            <picker mode="date" data-name="worktime_end" bindchange="bindDateChange">
+            <picker mode="date" data-name="worktime_end" bindchange="bindDateChange" value="{{worktime_end}}">
               <view class="my-text-right weui-flex between">
                 <view class="{{worktime_end?'page__label':'placeholder'}}"> {{worktime_end?worktime_end:'请选择结束时间'}}</view>
                 <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/right.png"  class="page_right_icon" />
@@ -153,8 +153,8 @@ export default class editWorkExperience extends wepy.page {
     $http('/personal/jobspecialityDetail', params).then(res => {
       this.form = res.data
       this.index = this.form.job_type 
-      this.worktime_start = $moment.unix(this.form.worktime_start).format('YYYY-MM-DD')
-      this.worktime_end = $moment.unix(this.form.worktime_end).format('YYYY-MM-DD')
+      this.worktime_start =  $moment(new Date(Number(res.data.worktime_start))).format('YYYY-MM-DD')
+      this.worktime_end = $moment(new Date(Number(res.data.worktime_end))).format('YYYY-MM-DD')
       this.$apply()
     })
   }
@@ -192,7 +192,7 @@ export default class editWorkExperience extends wepy.page {
       let key = e.currentTarget.dataset.name
       this[key] =  e.detail.value
       let date = $moment(e.detail.value).valueOf() + ''
-      this.form[key] = date.substring(0, 10)
+      this.form[key] = date
       this.$apply()
     },
     bindChange(data) {

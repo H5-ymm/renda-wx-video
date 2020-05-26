@@ -11,7 +11,7 @@ Page({
       userID: '', // 必要参数 用户 ID 可以由您的帐号系统指定
       userSig: '', // 必要参数 身份签名，相当于登录密码的作用
       template: 'grid', // 必要参数 组件模版，支持的值 1v1 grid custom ，注意：不支持动态修改, iOS 不支持 pusher 动态渲染
-      debugMode: true,
+      debugMode: false,
       cloudenv: 'PRO',
       frontCamera: 'front',
       localVideo: true,
@@ -286,7 +286,7 @@ Page({
    */
   onHide: function () {
     console.log('room hide')
-    wx.setStorageSync('setSdkReady', false)
+   
   },
 
   /**
@@ -294,10 +294,14 @@ Page({
    */
   onUnload: function () {
     console.log('room unload')
-    // wx.setKeepScreenOn({
-    //   keepScreenOn: false,
-    // })
-    wx.setStorageSync('setSdkReady', false)
+    wx.setKeepScreenOn({
+      keepScreenOn: false,
+    })
+    // if (this.data.type === 'call') {
+    //   this.closeVedio(2)
+    // } else {
+    //   this.closeVedio(1)
+    // }
   },
 
   /**

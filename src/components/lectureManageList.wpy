@@ -1,0 +1,31 @@
+
+<template>
+	<view>
+	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
+      <view @tap="viewJobDetail({{item}})">
+				<lectureManageItem :item.sync="item"></lectureManageItem>
+			</view>
+    </repeat>
+		<view wx:if="{{!list.length}}" class="page_list">
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill" />
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import lectureManageItem from './lectureManageItem'
+export default class lectureManageList extends wepy.component {
+  components = {
+    lectureManageItem: lectureManageItem
+  }
+	props = {
+		list: Array
+	}
+	methods = {
+    viewJobDetail(item) {
+      this.$emit('viewJobDetail', item)
+    }
+	}
+}
+</script>

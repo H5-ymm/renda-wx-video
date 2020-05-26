@@ -18,10 +18,11 @@ const tim = TIM.create({
   SDKAppID: SDKAPPID
 })
 tim.setLogLevel(4)
+tim.registerPlugin({'cos-wx-sdk': COS})
 // tim.setLogLevel(1)
 wx.$app = tim
 wx.TIM = TIM
-wx.$app.registerPlugin({'cos-wx-sdk': COS})
+// wx.$app.registerPlugin({'cos-wx-sdk': COS})
 moment.locale('zh-cn');
 wepy.$moment = moment
 const store = configStore()
@@ -39,6 +40,7 @@ export default class extends wepy.app {
       'pages/my/editJob',
       'pages/my/jobForm',
       'pages/my/jobManage',
+      'pages/my/lectureManage',
       'pages/home/collect',
       'pages/home/cityView',
       'pages/home/jobCategory',
