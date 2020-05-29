@@ -86,7 +86,6 @@
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
-import $moment from 'moment'
 import { getImgUrl, wxToast, wxNavigateTo } from '@/util.js'
 import jobList from '@/components/jobList'
 export default class jobCategory extends wepy.page {

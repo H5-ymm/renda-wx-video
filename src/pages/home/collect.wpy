@@ -20,7 +20,7 @@
       <view class="home-view-box">
         <repeat wx:for="{{list}}" wx:key="index">
           <view class="list-row weui-flex between" wx:if="{{list.length}}" @tap="viewCompany({{item}})">
-            <view class="list-col-1 weui-flex__item" wx:if="{{index<2}}">
+            <view class="list-col-1 weui-flex__item" wx:if="{{activeIndex<2}}">
               <view class="page__title weui-flex between">
                 {{!activeIndex?item.com_name:item.job_name}}
                 <view class="number" wx:if="{{activeIndex}}">{{item.salary}}</view>
@@ -32,12 +32,12 @@
             </view>
             <view class="list-col-1 weui-flex__item" wx:else>
               <view class="page__title weui-flex between">
-                {{item.name}}
+                {{item.title}}
                 <view class="number status">{{item.status==0?'未开始':item.status==1?'进行中':item.status==2?'未报名':'已结束'}}</view>
               </view>
-              <view class="number">{{item.time}}</view>
+              <view class="number">{{item.starttime}}</view>
               <view class="weui-flex between">
-                <view class="weui-flex__item page__label"> {{item.name}}</view>
+                <view class="weui-flex__item page__label"> {{item.com_name}}</view>
                 <button class="weui-btn_cell weui-btn_primary" @tap.stop="concatCompany({{item}})">
                  {{item.status==0?'查看':item.status==1?'观看直播':item.status==2?'立即报名':'观看回放'}}
                 </button>
@@ -63,6 +63,7 @@
 import wepy from 'wepy'
 import tabBar from '@/components/tabBar'
 import { $http } from '@/http.js'
+import $moment from 'moment'
 import { wxShowModal, wxToast, wxRedirectTo, wxNavigateTo } from '@/util.js'
 export default class collect extends wepy.page {
   components = {
@@ -90,29 +91,13 @@ export default class collect extends wepy.page {
     switchTab: data => {
       this.activeIndex = data
       this.$apply()
-      if (data == 2) {
-        this.list = [{
-          name: '基督教的',
-          time: '2012年12月12日 12:22',
-          status: 0
-        },{
-          name: '基督教的',
-          time: '2012年12月12日 12:22',
-          status: 1
-        },{
-          name: '基督教的',
-          time: '2012年12月12日 12:22',
-          status: 2
-        }]
-      } else {
-        this.getCollectList()
-      }
+      this.getCollectList()
      
     }
   }
   computed = {
 		urlApi() {
-			return this.activeIndex == 0 ? '/personaljob/collect_company': this.activeIndex == 1 ? '/personaljob/collect_job' : ''
+			return this.activeIndex == 0 ? '/personaljob/collect_company': this.activeIndex == 1 ? '/personaljob/collect_job' : '/collect/collectAlectureList'
     }
   }
   methods = {
@@ -137,8 +122,16 @@ export default class collect extends wepy.page {
   }
   getCollectList () {
     $http(this.urlApi, this.params).then(res => {
-      this.list = res.data.data ? res.data.data : []
-      this.count = res.data.count
+      let arr = res.data.data ? res.data.data : []
+      if (this.activeIndex == 2) {
+        arr.forEach(item => {
+          item.starttime = $moment.unix(item.starttime).format('YYYY-MM-DD HH:mm')
+        })
+        this.list = arr
+      } else {
+        this.list = arr
+      }
+      this.count = res.data.count || res.data.countNum
       this.$apply()
     })
   }

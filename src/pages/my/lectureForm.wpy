@@ -47,10 +47,6 @@
             <input class="weui-input" placeholder-class="placeholder" data-name="job_name" value="{{form.job_name}}" @input="changeInput" placeholder="请输入职位名称" />
           </view>
           <view class="weui-flex between page_margin">
-            <view class="my-text">展示位置</view>
-            <lecturePicker :range.sync="lectureList" :value.sync="lectureIndex" @bindPickerChange.user="bindLectureChange"></lecturePicker>
-          </view>
-          <view class="weui-flex between page_margin">
             <view class="my-text">工作地点</view>
             <districtSelet @selectCity="selectCity" :address.sync="address" :disabled.sync="disabled"></districtSelet>
           </view>
@@ -88,15 +84,8 @@
           <view class="page_margin page_bottom">
             <view class="my-text">职位要求</view>
           </view>
-           <input class="weui-input weui-textarea weui-flex__item" data-name="job_requirements" placeholder-class="placeholder" 
-            value="{{form.job_requirements}}" @input="changeInput" placeholder="请输入职位要求" />
-        </view>
-        <view class="list-row">
-          <view class="weui-flex start-start page_margin page_bottom">
-            <view class="my-text">职位描述</view>
-          </view>
-          <input class="weui-input weui-textarea weui-flex__item" data-name="content" placeholder-class="placeholder" 
-            value="{{form.content}}" @input="changeInput" placeholder="请输入职位描述" @input="changeInput"/>
+           <editor class="weui-input weui-textarea weui-flex__item" id="editor" @ready="onEditorReady" data-name="job_requirements" placeholder-class="placeholder" 
+            value="{{form.job_requirements}}" @input="changeInput" show-img-size="true" show-img-toolbar="true"></editor>
         </view>
       </view>
     </view>
@@ -122,15 +111,14 @@ const store = getStore()
 @connect({
   list: (state) => state.contant.list
 })
-export default class jobForm extends wepy.page {
+export default class lectureForm extends wepy.page {
 	components = {
     districtSelet: districtSelet,
     jobPosition: jobPosition,
     dataPicker: dataPicker,
     dataEduPicker: dataPicker,
     dataSocialPicker: dataPicker,
-    dataMoneyPicker: dataPicker,
-    lecturePicker: dataPicker
+    dataMoneyPicker: dataPicker
 	}
 	data = {
 		form: {
@@ -151,7 +139,6 @@ export default class jobForm extends wepy.page {
     disabled:  true,
     jobId: '',
     workTypeList: ['全职', '兼职', '实习'],
-    lectureList:['招聘会','宣讲会','招聘会/宣讲会'],
     social_security: [],
     edu_type: [],
     jobList: [],
@@ -160,9 +147,9 @@ export default class jobForm extends wepy.page {
     salaryIndex: -1,
     eduIndex: -1,
     natureIndex: -1,
-    lectureIndex:-1,
     address: [],
-    isScaleModal: true
+    isScaleModal: true,
+    editorCtx: null
 	}
 	config = {
 		navigationBarTitleText: '职位发布'
@@ -219,6 +206,7 @@ export default class jobForm extends wepy.page {
   }
   savejob() {
     this.form.uid = wx.getStorageSync('rendaUid')
+    this.form.exhibition = 1
 		$http('/Companyjob/savejob', this.form).then(res => {
 			if (res.data) {
         if (this.form.status == 1) {
@@ -260,12 +248,21 @@ export default class jobForm extends wepy.page {
     })
   }
 	methods = {
+    onEditorReady() {
+      wx.createSelectorQuery().select('#editor').context(res=> {
+        this.editorCtx = res.context
+        this.editorCtx.setContents({
+          html: '招聘简章
+          ',
+            success: function () {
+              console.log('insert html success')
+            }
+          })
+      }).exec()
+    },
     selectBnefits(){
       this.isModal = !this.isModal
       this.$apply()
-    },
-    bindLectureChange(data) {
-      this.form.exhibition = Number(data) + 1
     },
     bindPickerEduChange(data) {
       this.form.edu= data

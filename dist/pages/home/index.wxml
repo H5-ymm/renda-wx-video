@@ -14,8 +14,9 @@
 
       <view class="section">
         <view class="job-box">
-          <view class="job-title weui-flex start">
-            视频招聘会({{count}})
+          <view class="job-title weui-flex between">
+            <view>视频招聘会({{count}})</view>
+            <view class="card-item lecture-item" bindtap="viewLecture">空中宣讲会</view>
           </view>
           <view class="job-search">
             <view class="job-search-query weui-flex start">

@@ -3,16 +3,17 @@
     <view class="list-col-1 weui-flex__item">
       <view class="number" wx:if="{{item.status == 0}}">提示：请联系客服021-19865100 避免申请失败</view>
       <view class="page__title">
-        {{item.job_name}}
+        {{item.title}}
       </view>
       <view class="page__desc">{{item.addtime}}</view>
-      <view class="number" wx:if="{{item.status == 2}}">拒绝理由：规范不合规</view>
-      <view class="number" wx:if="{{item.status == 1}}">在招职位：5个 投递简历：10份</view>
+      <view class="number" wx:if="{{item.status == 2}}">拒绝理由：{{item.reason}}</view>
+      <view class="number" wx:if="{{item.status == 1||item.status == 5}}">在招职位：{{item.jobNum}}个 投递简历：{{item.resumeNum}}份</view>
     </view>
     <view class="weui-flex between">
-      <view class="page__desc" wx:if="{{!item.status}}">待审核</view>
-      <view class="page__desc {{item.is_up==1?'status2':'status4'}}" wx:if="{{item.status == 1}}">{{item.is_up==1?'招聘中':'已结束'}}</view>
-      <view class="page__desc status3" wx:if="{{item.status == 2}}">已拒绝</view>
+      <view class="page__desc" wx:if="{{!item.status}}">申请中</view>
+      <view class="page__desc {{item.status==1?'status2':item.status==2?'status4':'status3'}}" wx:if="{{item.status&&item.status<4}}">{{item.status==1?'已通过':item.status==2?'未通过':'已取消'}}</view>
+      <view class="page__desc" wx:if="{{item.status==4}}">已结束</view>
+      <view class="page__desc status2" wx:if="{{item.status == 5}}">进行中</view>
       <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" />
     </view>
   </view>

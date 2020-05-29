@@ -11,6 +11,13 @@
         padding: 0 30rpx;
         font-weight: 500;
       }
+      .card-item{
+        &.lecture-item {
+          color: #111111;
+          font-weight: bold;
+          font-size: 32rpx;
+        }
+      }
       .job-search {
         .job-search-query {
           padding: 26rpx 0;
@@ -37,8 +44,9 @@
       <banner></banner>
       <view class="section">
         <view class="job-box">
-          <view class="job-title weui-flex start">
-            视频招聘会({{count}})
+          <view class="job-title weui-flex between">
+            <view>视频招聘会({{count}})</view>
+            <view class="card-item lecture-item" @tap="viewLecture">空中宣讲会</view>
           </view>
           <view class="job-search">
             <view class="job-search-query weui-flex start">
@@ -137,7 +145,6 @@ export default class teamView extends wepy.page {
       wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
     },
     routerHall: data => {
-      console.log(this.usertype)
       if (!this.usertype) {
         wx.hideTabBar()
         this.isScaleModal = !this.isScaleModal
@@ -146,16 +153,7 @@ export default class teamView extends wepy.page {
         this.addjfUser(data.id)
         wx.setStorageSync('rendaJHID', data.id)
         wx.setStorageSync('addjobfair', JSON.stringify(data.applyinfo))
-        wxNavigateTo('/pages/home/hall?query=' + data.id)
-        // if (data.is_audit == 1 && data.applyinfo && !data.applyinfo.status) {
-        //   wx.hideTabBar()
-        //   this.text = '企业订展正在审核中，请联系客服021-51991869'
-        //   this.isScaleModal = !this.isScaleModal
-        //   this.okText = '联系客服'
-        //   this.$apply()
-        // } else {
-         
-        // }   
+        wxNavigateTo('/pages/home/hall?query=' + data.id) 
       }
     }
   }
@@ -221,6 +219,14 @@ export default class teamView extends wepy.page {
     })
   }
   methods = {
+    viewLecture(){
+      let query = {
+        uid: this.params.uid,
+        rendaUserType: this.usertype,
+        rendaPerfect: wx.getStorageSync('rendaPerfect')
+      }
+      wxNavigateTo(`/pages/webView/webView?type=1&query=${JSON.stringify(query)}`)
+    },
     viewInfo(item) {
       wxNavigateTo(item.url)
     },

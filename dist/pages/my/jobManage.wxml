@@ -12,11 +12,13 @@
         <view class="page__title">{{$jobManageList$item.job_name}}</view>
         <view class="page__desc"  wx:if="{{!$jobManageList$item.status}}">待审核</view>
         <view class="page__desc {{$jobManageList$item.is_up==1?'status2':'status4'}}"  wx:if="{{$jobManageList$item.status == 1}}">{{$jobManageList$item.is_up==1?'招聘中':'已结束'}}</view>
-        <view class="page__desc status3" wx:if="{{$jobManageList$item.status == 2}}">已拒绝</view>
+        <view class="page__desc status3" wx:if="{{$jobManageList$item.status == 2}}">已拒绝</view>>
       </view>
       <view class="number">{{$jobManageList$item.salary}}</view>
-      <view class="page__desc">{{$jobManageList$item.nature==3?'实习':$jobManageList$item.nature==2?'兼职':'全职'}}｜{{$jobManageList$item.edu}}｜{{$jobManageList$item.province}}
+      <view class="page__desc weui-flex between">
+        <view>{{$jobManageList$item.nature==3?'实习':$jobManageList$item.nature==2?'兼职':'全职'}}｜{{$jobManageList$item.edu}}｜{{$jobManageList$item.province}}</view>
         <!-- {{item.city}}{{item.area}} -->
+        <view class="number">{{$jobManageList$item.exhibition==1?'招聘会':$jobManageList$item.exhibition==2?'宣讲会':'招聘会 | 宣讲会'}}</view>
       </view>
     </view>
     <view class="weui-flex between">

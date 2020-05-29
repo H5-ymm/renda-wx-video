@@ -8,9 +8,10 @@
     "pages/my/deliveryRecord",
     "pages/my/resumeList",
     "pages/my/editJob",
-    "pages/my/jobForm",
     "pages/my/jobManage",
     "pages/my/lectureManage",
+    "pages/my/jobForm",
+    "pages/webView/webView",
     "pages/home/collect",
     "pages/home/cityView",
     "pages/home/jobCategory",
@@ -64,5 +65,5 @@
     "uploadFile": 10000,
     "downloadFile": 10000
   },
-  "sitemapLocation": "sitemap26.json"
+  "sitemapLocation": "sitemap48.json"
 }

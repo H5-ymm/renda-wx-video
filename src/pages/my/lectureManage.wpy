@@ -7,14 +7,34 @@
   .search-query {
     border-bottom: 1px solid #eee;
     padding-bottom: 30rpx;
+    position: relative;
     .card-item {
-      margin-right: 40rpx;
+      margin-right: 0;
       position: relative;
       padding: 8rpx 10rpx;
+      &.status-item {
+        margin-left: 10rpx;
+      }
     }
     .samll-icon {
       height: 20rpx;
       width: 20rpx;
+    }
+    .job-query {
+      position: absolute;
+      top: 80rpx;
+      left: 62%;
+      padding: 12rpx 20rpx;
+      transform: .1s;
+      background:#fff;
+      font-size: 26rpx;
+      font-weight: 400;
+      text-align: center;
+      line-height: 46rpx;
+      box-shadow:1px 2px 8px 0px rgba(49,101,204,0.1);
+      .active {
+        color: #1890FF;
+      }
     }
   }
   .weui-cell_btn {
@@ -46,22 +66,37 @@
 </style>
 <template>
  <view class="page page_top resume_view">
-    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="page view_auto">
-       <view class="weui-flex start weui-flex__item search-query page_margin">
-        <view class="card-item">请选择开始时间</view>
-        <view class="card-item">
-          状态
+    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
+       <view class="weui-flex between weui-flex__item search-query page_margin">
+        <div class="weui-flex start">
+          <picker mode="date" data-name="startTime" @change="bindDateChange" value="{{startTime}}">
+              <view class="my-text-right weui-flex between">
+                <view class="card-item {{startTime?'page__label':'placeholder'}}"> {{startTime?startTime:'请选择开始时间'}}</view>
+              </view>
+            </picker>
+            <view class="line">-</view>
+            <picker mode="date" data-name="endTime" @change="bindDateChange" value="{{endTime}}">
+              <view class="my-text-right weui-flex between">
+                <view class="card-item {{endTime?'page__label':'placeholder'}}"> {{endTime?endTime:'请选择结束时间'}}</view>
+              </view>
+            </picker>
+        </div>
+        <view class="card-item status-item" @tap="searchStatus">
+          {{text?text:'状态'}}
           <image src="../../images/down1.png" class="samll-icon" mode="scaleToFill" />
         </view>
-        <view class="weui-flex end  weui-flex__item ">
-          搜索
+        <view class="weui-flex end page__desc" @tap="search">搜索</view>
+         <view class="job-query" wx:if="{{visibile}}">
+          <repeat wx:for="{{statusTypeList}}" wx:key="index">
+            <view @tap="select({{item}},{{index}}, 'status')" class="item {{activeIndex==index?'active':''}}">{{item.label}}</view>
+          </repeat>
         </view>
       </view>
       <lectureManageList :list.sync="list" @viewJobDetail="viewJobDetail"></lectureManageList>
     </scroll-view>
-    <!-- <view class="weui-cell_btn weui-flex center">
-      <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布职位</button>
-    </view> -->
+    <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布宣讲会</button>
+    </view>
   </view>
 </template>
 <script>
@@ -80,10 +115,25 @@ export default class lectureManage extends wepy.page {
     params: {
 			uid: '',
 			page: 1,
-      limit: 10
+      limit: 10,
+      status: '',
+      startTime: '',
+      endTime: ''
     },
     list: [],
-    count: 0
+    count: 0,
+    startTime: '',
+    endTime: '',
+    visibile: false,
+    statusTypeList: [
+      {label: '申请中',value:1},
+      {label: '进行中',value:4},
+      {label: '已通过',value:2},
+      {label: '未通过',value:3},
+      {label: '已取消',value:5},
+    ],
+    activeIndex: -1,
+    text: ''
   }
   config = {
     navigationBarTitleText: '职位管理',
@@ -91,20 +141,34 @@ export default class lectureManage extends wepy.page {
   }
   events = {
     viewJobDetail: data=> {
-      wxNavigateTo('/pages/my/jobForm?query='+ data.id)
-    }
-  }
-  computed = {
-    newList() {
-      return getList(this.list, 'addtime')
+      wxNavigateTo('/pages/webView/webView?query='+ data.id+'&type=2')
     }
   }
   bindrefresherrefresh() {
     this.getjobList()
   }
   methods = {
+    bindDateChange(e){
+      let key = e.currentTarget.dataset.name
+      this[key] =  e.detail.value
+      let date = $moment(e.detail.value).valueOf() + ''
+      this.params[key] = date.substring(0, 10)
+      this.$apply()
+    },
+    searchStatus() {
+      this.visibile = true
+    },
+    select(item,index,key){
+      this.params[key] = item.value
+      this.text = item.label
+      this.visibile = false
+      this.activeIndex = index
+    },
+    search() {
+      this.getjobList()
+    },
     releaseJob() {
-      wxNavigateTo('/pages/my/jobForm')
+      wxNavigateTo('/pages/webView/webView?type=2')
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {
@@ -114,9 +178,9 @@ export default class lectureManage extends wepy.page {
     }
   }
   getjobList () {
-    $http('/Companyjob/getjobList', this.params).then(res => {
-      this.list = res.data.data ? res.data.data : []
-      this.count = res.data.count
+    $http('/Alecture/alectureList', this.params).then(res => {
+      this.list = getList(res.data.data, 'addtime', 'YYYY-DD-MM HH:mm')
+      this.count = res.data.countNum
       this.$apply()
     })
   }

@@ -1,0 +1,32 @@
+
+<template>
+	<view class="page">
+	  <web-view src="{{src}}"></web-view>
+	</view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http } from '@/http.js'
+import { getImgUrl, wxNavigateTo, getList,wxRedirectTo } from '@/util.js'
+export default class webView extends wepy.page {
+	data = {
+    src: ''
+  }
+	onLoad(options) {
+		let url = 'http://www.ttxsg.com.cn:39009/dist/#/'
+		let uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
+		if (options.type==1) {
+			url+='home'
+			this.src = `${url}?uid=${uid}&query=${options.query}` 
+		} else {
+    	url+='applicationLecure'
+			if (options.query) {
+				this.src = `${url}?uid=${uid}&query=${options.query}` 
+			} else {
+				this.src = `${url}?uid=${uid}`
+	  	}
+		}
+		this.$apply() 
+	}
+}
+</script>
