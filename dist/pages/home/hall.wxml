@@ -21,10 +21,10 @@
     </view>
   </view>
 
-    <!-- <view class="hall-switch weui-flex between shadow">
-      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" bindtap="switchView(1)">招聘大厅</view>
-      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" bindtap="switchView(2)">求职大厅</view>
-    </view> -->
+    <view class="hall-switch weui-flex between shadow">
+      <view class="hall-switch-col1 {{hallType==1?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="1">招聘大厅</view>
+      <view class="hall-switch-col1 hall-switch-col2 {{hallType==2?'hall-switch-active':''}}" bindtap="switchView" data-wpyswitchview-a="2">求职大厅</view>
+    </view>
     
   <view class="weui-flex between search-box" wx:if="{{hallType==1}}">
 		<view class="weui-cell weui-flex start weui-flex__item">
