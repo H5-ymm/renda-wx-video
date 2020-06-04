@@ -1,0 +1,873 @@
+<style lang="less">
+@import "../../style/list.less";
+page {
+  overflow: hidden;
+}
+.page-home {
+  height: 100%;
+  background: #F6F7FA;
+  overflow: hidden;
+  .view-content  {
+    height: calc(100% - 50px);
+  }
+  .page {
+    overflow: hidden;
+  }
+  .view_padding {
+    padding: 20rpx 30rpx;  
+  }
+  .swipe-container {
+      height: 560rpx;
+      background: #fdfdfe;
+      position: relative;
+      .big_icon {
+        margin-right: 0;
+        margin:  0 auto;
+      }
+    }
+    .line {
+      padding: 0 30rpx;
+    }
+    .box{
+      position: absolute;
+      height: 90rpx;
+      width: 100%;
+      bottom: 140rpx;
+      z-index: 12;
+      left: 0;
+      color: #fff;
+      font-size: 24rpx;
+      view {
+        height: 100%;
+        margin: 0 10rpx;
+        line-height: 90rpx;
+        text {
+          display: inline-block;
+          margin-right: 10rpx;
+        }
+      }
+      .people_icon {
+        width: 30rpx;
+        height: 32rpx;
+        margin-right: 10rpx;
+      }
+    }
+    .bg2 {
+      position: absolute;
+      height: 76%;
+      width: 100%;
+      top: 0;
+      left: 0;
+      background: -webkit-linear-gradient(bottom,#1D1D27,rgba(31, 63, 128, 0.16),rgba(29, 29, 39, 0));
+      z-index: 1;
+    }
+    .swipe-box {
+      width: 100%;
+      height: 100%;
+      .video_file {
+        position: relative;
+        display: block;
+        height:76%;
+        width: 100%;
+      }
+      &.swipe-box-com {
+        .video_file {
+          height:100%;
+        }
+        .bg2 {
+          height:100%;
+        }
+        .box {
+          bottom: 0;
+        }
+      }
+    }
+   .image-row {
+      position: absolute;
+      width: 96%;
+      top: 10rpx;
+      left: 30rpx;
+      z-index: 33;
+      .image--col {
+        height: 70rpx;
+      }
+      .icon{
+        width: 62rpx;
+        height: 62rpx;
+        border-radius: 50%;
+      }
+   }
+   video, .swiper-image {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    background: -webkit-linear-gradient(bottom,#1D1D27,rgba(31, 63, 128, 0.16),rgba(29, 29, 39, 0));
+  }
+  .video_file #video_img {
+    position: absolute;
+    left: 40%;
+    top: 30%;
+    z-index: 90;
+  }
+  .loading_btn {
+    width:164rpx;
+    height:64rpx;
+    border-radius: 32rpx;
+    border:1px solid rgba(255,255,255,.4);
+    color: #fff;
+    text-align: center;
+    line-height: 64rpx;
+  }
+  .cell {
+    padding: 10rpx 30rpx;
+    .page__desc {
+      margin-top: 0;
+    }
+  }
+  .avatar_icon {
+    width: 50rpx;
+    height: 50rpx;
+    border-radius: 50%;
+    margin-right: 30rpx;
+  }
+  .page__text__active {
+    font-size: 32rpx;
+  }
+  .section {
+    margin-top: 20rpx;
+    background: #fdfdfe;
+    >.page__title {
+      font-weight: bold;
+    }
+    .swipe-end {
+      position: relative;
+      padding-top: 20rpx;
+    }
+    .swipe-container {
+      padding-right: 30rpx;
+    }
+    .line {
+      // padding: 0 30rpx 10rpx;
+      .page__title {
+        font-weight: none;
+        font-size: 24rpx;
+      }
+       &.line1 {
+        .page__title {
+          font-weight: bold;
+          font-size: 30rpx;
+        }
+      }
+    }
+  }
+  .header-tab {
+    background: #fdfdfe;
+    &.tabBar {
+      width: 100%;
+      .weui-flex__item {
+        flex: auto;
+      }
+      .tab-line {
+        bottom: 0;
+        width: 60rpx;
+        // &.line0 {
+        //   left: 8%;
+        // }
+        // &.line1{
+        //   left: 36%;
+        // }
+        // &.line2 {
+        //   left: 63%;
+        // }
+        // &.line3 {
+        //   left: 86%;
+        // }
+      }
+    } 
+  }
+  .apply_btn {
+    width:100%;
+    height:50px;
+    background:#1890FF;
+    color: #fff;
+    text-align: center;
+    font-size: 32rpx;
+    box-shadow:0px -4px 8px 0px rgba(10,17,40,0.1);
+  }
+  .tab-box {
+    height: 100rpx;
+  }
+  .section1 {
+    // height: calc(100% - 346px);
+     height: calc(100% - 50px)
+  }
+  .canvas-box {
+    width:100%;
+    height: 100%;
+    position: relative;
+    .swiper-icon {
+      position: absolute;
+      left: 30rpx;
+      top: 50%;
+      z-index: 99;
+      width: 80rpx;
+      height: 80rpx;
+      &.swiper-icon1 {
+        left: 86%;
+      }
+    }
+    .swiper {
+      height: calc(100% - 52px);;
+      width: 100%;
+      .swiper-item {
+        width:100%;
+        height: 100%;
+        text-align: center;
+        image {
+          width: 100%;
+          height: 100%!important;
+        }
+      }
+    }
+    .page-box {
+      position: absolute;
+      bottom: 0;
+      left: 45%;
+    }
+  }
+  .page__title {
+    .pdfName {
+      width: 200px;
+      display: inline-block;
+    }
+  }
+  .pdf_icon {
+    width: 76rpx;
+    height: 90rpx;
+    margin-right: 20rpx;
+  }
+  .share-btn {
+    background: none;
+    line-height: auto;
+    font-size: 0;
+    margin: 0;
+    &::after {
+      border:none;
+    }
+  }
+}
+.container-box {
+    background-image: url(https://mc.qcloudimg.com/static/img/7da57e0050d308e2e1b1e31afbc42929/bg.png);
+    background-color: #333;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 560rpx;
+    width: 100%;
+    .center {
+      position: absolute;
+      left: calc(50vw - 55px);
+      top: calc(50vh - 55px);
+      width: 110px;
+      height: 110px;
+    }
+}
+
+.operate {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  right: 0;
+  left: 0;
+  bottom: 3vh;
+  width: fit-content;
+  height: 50px;
+}
+
+.operate-nolink {
+  position: absolute;
+  right: 0;
+  left: 0;
+  width: fit-content;
+  height: 80px;
+}
+
+.img-box {
+  position: relative;
+  display:inline-block;
+  height: 50px;
+  width: 80px;
+  vertical-align: middle;
+}
+
+.img-view {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+
+.img-box-big {
+  position: relative;
+  display:inline-block;
+  height: 60px;
+  width: 60px;
+  padding-left: 40px;
+  vertical-align: middle;
+}
+
+.img-view-big {
+  position: relative;
+  display: block;
+  width: 60px;
+  height: 60px;
+}
+
+.img-box-small {
+  position: relative;
+  display:inline-block;
+  margin-left: calc(100vw - 80px - 50px - 80px);
+  height: 50px;
+  width: 50px;
+  vertical-align: middle;
+}
+
+.img-view-small {
+  position: relative;
+  display: block;
+  width: 50px;
+  height: 50px;
+}
+</style>
+<template>
+  <view class="page-home">
+    <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
+     class="{{rendaUserType==2&&!lectureInfo.alectureApplyNum==1 ? 'view-content': 'page'}}" @refresherrefresh="bindrefresherrefresh">
+      <swiper class="swipe-container {{rendaUserType==2?'swipe-container1':''}}" wx:if="{{lectureInfo.status!=5||com_uid!= uid}}"> 
+          <swiper-item class="swipe-box {{rendaUserType==1?'swipe-box-com':''}}" >
+            <view class="bg2" wx:if="{{!autoplay}}" @tap="bindplay"></view>
+            <view class="image-row">
+              <view class="weui-flex between image--col">
+                <image
+                  src="../../images/back.png"
+                  class="icon"
+                  @tap="back"
+                  mode="aspectFit">
+                  <button open-type="share" class="share-btn">
+                  <image
+                    src="../../images/share_top.png"
+                    class="icon"
+                    mode="aspectFit">
+                </button> 
+              </view>
+            </view>
+            <view class="video_file">
+              <view class="loading_btn" id="video_img" wx:if="{{networkType=='none'}}" @tap="againLoading">重新加载</view>
+              <video name="media" id="video" custom-cache="false" @ended="bindended" show-play-btn="{{showPalyBtn}}"  show-center-play-btn="{{showPalyBtn}}" autoplay="{{autoplay}}" src="{{lectureInfo.enclosure}}" controls  wx:if="{{lectureInfo.type==1}}">
+              </video>
+              <image src="{{lectureInfo.enclosure}}" mode="aspectFill" alt="" wx:if="{{lectureInfo.type==2}}" class="swiper-image shadow">
+            </view>
+            <view class="box" wx:if="{{lectureInfo.type==2}}">
+              <view class="weui-flex between">
+                <view>
+                  <image
+                    src="../../images/people.png"
+                    class="people_icon"
+                    mode="aspectFill">
+                  <text class="num">{{lectureInfo.addNum}}人</text>
+                </view>
+                <view>
+                  <image
+                    src="../../images/people.png"
+                    class="people_icon"
+                    mode="aspectFill">
+                </view>
+              </view>
+            </view>
+            <view class="line weui-flex between" wx:if="{{rendaUserType==2}}">
+              <view class="page__title">{{lectureInfo.title}}</view>
+              <view>
+                <image
+                  src="https://d.rsd123.com/uploads/images/collect.png"
+                  class="big_icon"
+                  wx:if="{{!lectureInfo.collectNum&&rendaUserType==2}}"
+                  @tap="collect"
+                  mode="aspectFill">
+                  <image
+                  src="http://ttxsg.com.cn:39009/uploads/img/collect.png"
+                  class="big_icon"
+                  wx:if="{{lectureInfo.collectNum&&rendaUserType==2}}"
+                  @tap="collect"
+                  mode="aspectFill">
+              </view>
+            </view>
+            <view class="cell weui-flex between" wx:if="{{rendaUserType==2}}">
+              <view class=" weui-flex start">
+                <image
+                  src="{{lectureInfo.logo_url}}"
+                  class="avatar_icon"
+                  mode="aspectFill">
+                <view class="page__desc">{{lectureInfo.title}}</view>
+              </view>
+              <view class="page__desc">{{lectureInfo.starttime}}</view>
+            </view>
+          </swiper-item>
+      </swiper>
+      <view class="container-box" wx:if="{{lectureInfo.status==5&&com_uid == uid}}">
+         <mlvb-live-room id="id_liveroom" wx:if="{{showLiveRoom}}" roomid="{{roomID}}" role="{{role}}" roomname="{{roomName}}" pureaudio="{{pureAudio}}" debug="{{debug}}" muted="{{muted}}" beauty="{{beauty}}" template="float" @RoomEvent="onRoomEvent">
+          <cover-view slot="casterBackButton" style='position:absolute;left:0;height:10%;width:10%;top:{{(headerHeight + statusBarHeight) - 26}}rpx'>
+              <cover-image class='close' src="/images/back.png" @tap="onBack"></cover-image>
+          </cover-view>
+
+          <cover-view slot="audienceBackButton" style='position:absolute;left:0;height:10%;width:10%;top:{{(headerHeight + statusBarHeight) - 26}}rpx'>
+            <cover-image class='close' src="/images/back.png" @tap="onBack"></cover-image>
+          </cover-view>
+            
+          <!-- 主播推流界面上叠加的操作按钮 -->
+          <cover-view slot="caster" style='position:absolute;bottom:0;height:10%;width:100%'>
+            <cover-view class="operate">
+              <cover-view class='img-box'>
+                <cover-image class='img-view' src="/images/camera{{frontCamera?'':'-gray'}}.png" @tap="changeCamera"></cover-image>
+              </cover-view>
+              <cover-view class='img-box'>
+                <cover-image class='img-view' src="/images/{{beauty > 0? 'beauty' : 'beauty-dis'}}.png" @tap="setBeauty"></cover-image>
+              </cover-view>
+              <cover-view class='img-box'>
+                <cover-image class='img-view' src="/images/{{debug? 'log' : 'log2'}}.png" @tap="showLog"></cover-image>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+
+          <!-- 观众播放界面上叠加的操作按钮 -->
+          <cover-view slot="audience" style='position:absolute;bottom:0;height:10%;width:100%'>
+            <cover-view class="{{!linked? 'operate-nolink' : 'operate'}}">
+              <cover-view wx:if="{{linked}}" class='img-box'>
+                <cover-image class='img-view' src='/images/camera.png' @tap="changeCamera"></cover-image>
+              </cover-view>
+              <cover-view wx:if="{{linked}}" class='img-box'>
+                <cover-image class='img-view' src="/images/{{beauty > 0? 'beauty' : 'beauty-dis'}}.png" @tap="setBeauty"></cover-image>
+              </cover-view>
+              <cover-view wx:if="{{!linked}}" class='img-box-big'>
+                <cover-image class='img-view-big' src='/images/video-call.png' @tap="onLinkClick"></cover-image>
+              </cover-view>
+              <cover-view class="{{!linked? 'img-box-small' : 'img-box'}}">
+                <cover-image class="{{!linked? 'img-view-small' : 'img-view'}}" src="/images/{{debug? 'log':'log2'}}.png" @tap="showLog"></cover-image>
+              </cover-view>
+            </cover-view>
+            <cover-image wx:if="{{phoneNum}}" class='center' src="/images/{{phoneNum}}.png"></cover-image>
+          </cover-view>
+       </mlvb-live-room>
+      </view>
+       <pdfView @applyResume="applyResume" :lectureInfo.sync="lectureInfo"></pdfView>
+    </scroll-view>
+    <view class="apply_btn weui-flex center" @tap="submit" wx:if="{{!lectureInfo.alectureApplyNum&&rendaUserType==2}}">立即免费报名</view>
+    <actionSheet :isScaleModal.sync="isScaleModal" text="个人信息不完整，请前往完善" okText="完善信息" @handleClose="handleClose" @handleOk="handleOk"></actionSheet>
+ </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http, uploadFileVideo } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxToast, wxNavigateTo, wxRedirectTo, contactPhone, handleTime, wxShowModal } from '@/util.js'
+import actionSheet from '@/components/actionSheet'
+import jobList from '@/components/jobList'
+import pdfView from '@/components/pdfView'
+export default class lectureDetail extends wepy.page {
+  components = {
+    jobLectureList: jobList,
+    actionSheet: actionSheet,
+    pdfView: pdfView
+  }
+  data = {
+    isScaleModal: true,
+    TIM: null,
+    rendaUserType: 0,
+    isShow: true,
+    show: false,
+    lectureInfo: {},
+    id: '',
+    uid: '',
+    com_id: '',
+    com_uid: '',
+    flag: true,
+    addBtn: true,
+    networkType: '',
+    autoplay: false,
+    showPalyBtn: true,
+    userName: '',
+    roomID: '',
+    roomName: '',
+    pureAudio: false,
+    role: 'audience',
+    showLiveRoom: false,
+    rooms: [],
+    comment: [],
+    linked: false,
+    debug: false,
+    frontCamera: true,
+    inputMsg: [],
+    muted: false,
+    toview: '',
+    beauty: 5,
+    shouldExit: false,
+    phoneNum: '',
+    headerHeight: 40,
+    statusBarHeight: 30,
+    options: {}
+  }
+  config = {
+    enablePullDownRefresh: true,
+    "usingComponents": {
+       "mlvb-live-room": "/components/mlvb-live-room/mlvbliveroomview"
+    }
+  }
+  events = {
+    handleClose: () => {
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    },
+    handleOk: () => {
+      if (!wx.getStorageSync('rendaPerfect')) {
+        wxNavigateTo('/pages/my/resume') 
+      }
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
+    },
+    applyResume(item) {
+      if (!wx.getStorageSync('rendaPerfect')) {
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+      } else {
+        let params = {
+          uid: this.uid,
+          job_id: item.id,
+          jf_id: this.id,
+          type: 2
+        }
+        $http('/personaljob/addapplyJob',params).then(res => {
+          if (res.data) {
+            wxToast('投递成功')
+            this.getList(this.com_id)
+          } else {
+            wxToast('投递失败')
+          }
+        })
+      }
+    }
+  }
+  start() {
+    this.component = this.$wxpage.selectComponent("#id_liveroom")
+    console.log('self.component: ', this.component)
+    this.component.start();
+  }
+  onShareAppMessage (res) {
+    return {
+      title: '邀请观看直播'
+    }
+  }
+  onLoad(options) {
+    this.id = options.query
+    this.uid = wx.getStorageSync('rendaUid')
+    this.rendaUserType = wx.getStorageSync('rendaUserType')
+    this.options = options
+    this.roomName = options.roomName
+    this.getLectureDetail(this.id)
+    console.log("--> onLoad: ", options)
+  }
+  onShow() {
+    wx.onNetworkStatusChange(res => {
+      console.log(res)
+      console.log(res.isConnected)
+      console.log(res.networkType)
+    })
+    wx.getNetworkType({
+      success: res => {
+        console.log(res)
+        this.networkType = res.networkType
+        console.log(this.networkType)
+        this.$apply()
+      }
+    })
+  }
+  onReady () {
+    wx.setNavigationBarTitle({
+      title: this.roomName
+    })
+  }
+  methods = {
+    submit() {
+      if (!wx.getStorageSync('rendaPerfect')) {
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+        return
+      }
+      wxShowModal('', '确定报名该宣讲会吗?', '确定').then(() => {
+        let params = {
+          uid: this.uid,
+          preachId: this.id
+        }
+        $http('/homepresentation/preachEnroll',params).then(res => {
+          if (res.data) {
+            this.lectureInfo.alectureApplyNum = 1
+            this.$apply()
+            wxToast('报名成功,请准时查看')
+          } else {
+            wxToast('报名失败')
+          }
+        })
+      }).catch(() => {
+
+      })
+    },
+    onRoomEvent(e) {
+      var self = this;
+      var args = e.detail;
+      console.log('onRoomEvent', args)
+      switch (args.tag) {
+        case 'roomClosed': {
+          wx.showModal({
+            content: `房间已解散`,
+            showCancel: false,
+            complete: () => {
+              wx.navigateBack({ delta: 1 })
+            }
+          });
+          break;
+        }
+        case 'error': {
+          wx.showToast({
+            title: `${args.detail}[${args.code}]`,
+            icon: 'none',
+            duration: 1500
+          })
+          if (args.code == 5000) {
+            this.shouldExit = true;
+            self.$apply()
+          } else {
+            console.error("收到error:", args)
+            if (args.code != -9004) {
+              setTimeout(() => {
+                wx.navigateBack({ delta: 1 })
+              }, 1500)
+            } else {
+              self.linked = false
+              self.phoneNum = ''
+              self.$apply()
+            }
+          }
+          break;
+        }
+        case 'linkOn': { // 连麦连上
+          self.linked = true
+          self.phoneNum = ''
+          self.$apply()
+          break;
+        }
+        case 'linkOut': { //连麦断开
+        self.linked = false
+          self.phoneNum = ''
+          self.$apply()
+          break;
+        }
+        case 'recvTextMsg': {
+          console.log('收到消息:', e.detail.detail);
+          var msg = e.detail.detail;
+          self.comment.push({
+            content: msg.message,
+            name: msg.userName,
+            time: msg.time
+          });
+          self.comment = self.comment
+          self.toview = ''
+          // 滚动条置底
+          self.toview = 'scroll-bottom'
+          self.$apply()
+          break;
+        }
+        case 'requestJoinAnchor': { //收到连麦请求
+          var jioner = args.detail;
+          var showBeginTime = Math.round(Date.now());
+          wx.showModal({
+            content: `${jioner.userName} 请求连麦`,
+            cancelText: '拒绝',
+            confirmText: '接受',
+            success: function (sm) {
+              var timeLapse = Math.round(Date.now()) - showBeginTime;
+              if (timeLapse < 10000) {
+                if (sm.confirm) {
+                  console.log('用户点击同意')
+                  self.component && self.component.respondJoinAnchor(true, jioner);
+                } else if (sm.cancel) {
+                  console.log('用户点击取消')
+                  self.component && self.component.respondJoinAnchor(false, jioner);
+                }
+              } else {
+                wx.showToast({
+                  title: '连麦超时',
+                })
+              }
+            }
+          })
+          break;
+        }
+        default: {
+          console.log('onRoomEvent default: ', e)
+          break;
+        }
+      }
+    },
+    onLinkClick: function () {
+      var self = this;
+      self.component && self.component.requestJoinAnchor();
+      self.phoneNum = 'phone-1'
+      self.$apply()
+      self.setInternal();
+    },
+    setInternal: function () {
+      var self = this;
+      setTimeout(() => {
+        if (!self.phoneNum) {
+          return;
+        }
+        var curPhoneNum = '';
+        switch (self.phoneNum) {
+          case 'phone-1':
+            curPhoneNum = 'phone-2';
+            break;
+          case 'phone-2':
+            curPhoneNum = 'phone-3';
+            break;
+          case 'phone-3':
+            curPhoneNum = 'phone-1';
+            break;
+          default:
+            break;
+        }
+        self.phoneNum = curPhoneNum
+        self.$apply()
+        self.setInternal();
+      }, 500);
+    },
+    goRoom: function (e) {
+      var self = this;
+      var index = parseInt(e.currentTarget.dataset.index);
+      var roomID = self.rooms[index].roomID;
+      self.roomID = roomID
+      self.$apply()
+    },
+    showLog() {
+      this.debug = !this.debug
+      this.$apply()
+    },
+    changeMute() {
+      this.muted = !this.muted
+      this.$apply()
+    },
+    setBeauty() {
+      this.beauty = this.beauty == 5 ? 0 : 5
+      this.$apply()
+    },
+    changeCamera() {
+      this.component && this.component.switchCamera();
+      this.frontCamera = !this.frontCamera
+      this.$apply()
+    },
+    bindInputMsg(e) {
+      this.inputMsg = e.detail.value;
+    },
+    onBack() {
+      wx.navigateBack({
+        delta: 1
+      });
+    },
+    // 再次加载
+     againLoading() {
+      if (this.networkType != 'none') {
+        if (this.networkType!='wifi' && this.networkType != 'none') {
+          wxToast('当前非Wi-Fi 播放，请注意流量消耗')
+        } 
+        this.autoplay = true
+        this.$apply
+      } else {
+        wxToast('视频加载失败，请检查网络并重试')
+      } 
+    },
+    // 视频播放
+    bindplay() {
+      if (this.networkType!='wifi' && this.networkType != 'none') {
+        wxToast('当前非Wi-Fi 播放，请注意流量消耗')
+      } else if (this.networkType == 'none') {
+        wxToast('视频加载失败，请检查网络并重试')
+      } else {
+        this.autoplay = true
+        this.showPalyBtn = false
+        this.$apply()
+      }
+    },
+    // 播放结束
+    bindended() {
+      this.autoplay = false
+      this.showPalyBtn = true
+      this.$apply()
+    },
+    // 返回 
+    back() {
+      wx.navigateBack({
+        delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+      })
+    },
+    // 收藏
+    collect() {
+      let params = {
+        uid: this.uid,
+        preachId: this.id
+      }
+      let text = this.lectureInfo.collectNum == 1 ? '取消收藏' : '收藏'
+      let url = this.lectureInfo.collectNum == 1 ? '/homepresentation/delAlectureCollect': '/homepresentation/collectPreach'
+      $http(url, params).then(res => {
+        if (res.data) {
+          this.lectureInfo.collectNum = this.lectureInfo.collectNum == 1 ? 0 : 1
+          this.$apply()
+          wxToast(`${text}成功`)
+        } else {
+          wxToast(`${text}失败`)
+        }
+      })
+    }
+  }
+  bindrefresherrefresh() {
+    this.getLectureDetail(this.id)
+  }
+  getLectureInfo(info) {
+    this.lectureInfo = info
+    this.lectureInfo.starttime = handleTime(info.starttime)
+    this.com_id = info.com_id
+    this.com_uid = info.com_uid
+    this.$apply()
+    if (this.lectureInfo.status == 5 && this.uid == this.com_uid) {
+      let options = this.options
+      var role = options.type == 'create' ? 'anchor' : 'audience';
+      this.roomName = options.roomName
+      this.userName = options.userName
+      this.role = role
+      this.showLiveRoom = true
+      if (role == 'audience') {
+        this.roomID = options.roomID
+        this.showLiveRoom = true
+      } else {
+        this.pureAudio = options.pureAudio
+      }
+      this.$apply()
+      this.start()
+    }
+  }
+  getLectureDetail(id) {
+    let params = {
+      uid: this.uid,
+      id
+    }
+    $http('/Homepresentation/getAlectureInfo', params).then(res => {
+      this.getLectureInfo(res.data)
+    })
+  }
+}
+</script>

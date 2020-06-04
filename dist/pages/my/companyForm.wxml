@@ -242,40 +242,9 @@
   </view>
 
 		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
-     
-	<view hidden="{{$pickerDate$isScaleModal}}" class="pickerDate">
-		<view bindtap="$pickerDate$ handleClose"  wx:if="{{$pickerDate$isShow}}" class="modal_mask"/>
-		<view class="modal_box transition2s {{ $pickerDate$isShow ? 'g_scale2': ''}}" id="modal-box">
-			<view class="modal-content">
-        <view class="picker">
-        <view class="weui-flex between picker-btn">
-          <view class="weui-flex center" bindtap="$pickerDate$selectClose">
-            取消
-          </view>
-          <view class="weui-flex center ok-btn" bindtap="$pickerDate$selectOk">
-            确定
-          </view>
-        </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 50px;font-size:16px;" value="{{$pickerDate$value}}" bindchange="$pickerDate$bindChange">
-          <picker-view-column>
-            <block  wx:for="{{$pickerDate$years}}" wx:key="index">
-              <view class="picker-view-item">{{item}}年</view>
-            </block>
-          </picker-view-column>
-          <picker-view-column>
-            <block wx:for="{{$pickerDate$months}}" wx:key="index">
-              <view class="picker-view-item">{{item}}月</view>
-            </block>
-          </picker-view-column>
-          <picker-view-column>
-            <block wx:for="{{$pickerDate$days}}" wx:key="index">
-              <view class="picker-view-item">{{item}}日</view>
-            </block>
-          </picker-view-column>
-        </picker-view>
-      </view>
-			</view>
-		</view>
-	</view>
+    
+	<picker mode="multiSelector" value="{{$pickerDate$valueArray}}" range="{{$pickerDate$rangeValues}}" bindcolumnchange="$pickerDate$handleColumnChange" bindchange="$pickerDate$handleValueChange" bindcancel="$pickerDate$handleCancel">
+  
+</picker>
 
 	</view>

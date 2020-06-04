@@ -34,74 +34,103 @@
   }
 </style>
 <template>
-	<view hidden='{{isScaleModal}}' class="pickerDate">
-		<view @tap=" handleClose" wx:if="{{isShow}}" class="modal_mask"></view>
-		<view class="modal_box transition2s {{ isShow ? 'g_scale2': ''}}" id="modal-box">
-			<view class="modal-content">
-        <view class="picker">
-        <view class="weui-flex between picker-btn">
-          <view class="weui-flex center" @tap="selectClose">
-            取消
-          </view>
-          <view class="weui-flex center ok-btn" @tap="selectOk">
-            确定
-          </view>
-        </view>
-        <picker-view class="picker-view" indicator-class="picker-box" indicator-style="height: 50px;font-size:16px;" value="{{value}}" @change="bindChange">
-          <picker-view-column>
-            <repeat wx:for="{{years}}" wx:key="index">
-              <view class="picker-view-item">{{item}}年</view>
-            </repeat>
-          </picker-view-column>
-          <picker-view-column>
-            <repeat wx:for="{{months}}" wx:key="index">
-              <view class="picker-view-item">{{item}}月</view>
-            </repeat>
-          </picker-view-column>
-          <picker-view-column>
-            <repeat wx:for="{{days}}" wx:key="index">
-              <view class="picker-view-item">{{item}}日</view>
-            </repeat>
-          </picker-view-column>
-        </picker-view>
-      </view>
-			</view>
-		</view>
-	</view>
+	<picker mode="multiSelector" value="{{valueArray}}" range="{{rangeValues}}" @columnchange="handleColumnChange" @change="handleValueChange" @cancel="handleCancel">
+  <slot></slot>
+</picker>
 </template>
 <script>
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
+const leftPad0 = function(v, n) {
+      if (!v) {
+        v = "";
+      }
+      let prefix = "";
+      for (let i = 0; i < n; i++) {
+        prefix += "0";
+      }
+      return (prefix + v).substr(-n);
+    };
+    const stringToDate = function(str) {
+      str = str.replace(/-/g, "/");
+      return new Date(str);
+    };
+    const isLeapYear = function(year) {
+      if (((year % 4) == 0) && ((year % 100) != 0) || ((year % 400) == 0)) {
+        return true;
+      }
+      return false;
+    };
+    const now = new Date();
+    const years = [];
+    const beginYear = 1990;
+    for (var i = beginYear; i <= now.getFullYear(); i++) {
+      years.push(i + "年");
+    }
+    const months = [];
+    for (var i = 0; i < 12; i++) {
+      months.push(leftPad0(i + 1, 2) + "月");
+    }
+    const days = [];
+    for (var i = 0; i < 31; i++) {
+      days.push(leftPad0(i + 1, 2) + "日");
+    }
+    const hours = [];
+    for (var i = 0; i < 24; i++) {
+      hours.push(leftPad0(i, 2) + "时");
+    }
+    const minutes = [];
+    for (var i = 0; i < 60; i++) {
+      minutes.push(leftPad0(i, 2) + "分");
+}
 export default class pickerModal extends wepy.component {
 	props = {
-		isScaleModal: Boolean,
-		time: String
+	  value: String,
+    dateValue: {
+      type: Date
+    }
 	}
 	data = {
-		isShow: false,
-    years: [],
-    year: '',
-    months: [],
-    month: 2,
-    days: [],
-    day: 2,
-    value: [9999, 1, 1],
+		valueArray: [0, 0, 0, 0, 0],
+    rangeValues: [
+      years,
+      months,
+      days,
+      hours,
+      minutes
+    ],
+    pickerYear: beginYear,
+    pickerMonth: 1
 	}
-	onLoad () {
-    const date = new Date()
-    this.value[0] = date.getFullYear() - 1970
-    for (let i = 1970; i <= date.getFullYear(); i++) {
-      this.years.push(i)
+  _dateToValueArray(date) {
+    return [date.getFullYear() - beginYear, date.getMonth(), date.getDate() - 1, date.getHours(), date.getMinutes()];
+  }
+  _settMonthDays(year, month) {
+    let monthDays = 31;
+    switch (month) {
+      case 2:
+        monthDays = 28;
+        if (isLeapYear(year)) {
+          monthDays = 29;
+        }
+        break;
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+        monthDays = 30;
+        break;
     }
-
-    for (let i = 1; i <= 12; i++) {
-      this.months.push(i)
+    let days = [];
+    for (let i = 0; i < monthDays; i++) {
+      days.push(leftPad0(i + 1, 2) + "日");
     }
-
-    for (let i = 1; i <= 31; i++) {
-      this.days.push(i)
-    }
+    this.pickerYear = year
+    this.pickerMonth = month
+    this.rangeValues[2] = days
+    // this.$apply()
+    console.log(this.rangeValues)
   }
   getNum(num) {
     return num < 10 ? '0' + num : num
@@ -114,37 +143,46 @@ export default class pickerModal extends wepy.component {
 			this.isShow = false
 			this.$apply()
 			this.$emit('handleClose')
-		},
-		selectOk () {
-			this.isShow = false
-      this.$apply()
-      let month = this.months[this.value[1]]
-      let date = this.years[this.value[0]] + '-' + this.getNum(month) + '-' + this.getNum(this.days[this.value[2]])
-			this.$emit('selectOk', date)
-		}
-  }
-  getIndex(num, arr) {
-    return arr.indexOf(num)
+    },
+     handleColumnChange(e) {
+      if (e.detail.column > 1) return false;
+      let year = this.pickerYear;
+      let month = this.pickerMonth;
+      if (e.detail.column == 0) {
+        year = e.detail.value + beginYear;
+      } else if (e.detail.column == 1) {
+        month = e.detail.value + 1;
+      }
+      this._settMonthDays(year, month);
+    },
+    handleValueChange(e) {
+      let dateArr = [];
+      for (let i in e.detail.value) {
+        let v = this.rangeValues[i][e.detail.value[i]];
+        dateArr.push(v.toString().substr(0, v.length - 1))
+      }
+      let dateString = dateArr[0] + "-" + dateArr[1] + "-" + dateArr[2] + " " + dateArr[3] + ":" + dateArr[4] + ":00";
+      let params = {
+        date: stringToDate(dateString),
+        dateString
+      }
+      this.$emit('change', params)
+    }
   }
 	watch = {
-    time(val) {
-      if (val) {
-        let month = Number($moment(val).month()) + 1
-        this.value[0] = this.getIndex($moment(val).year(), this.years)
-        this.value[1] = this.getIndex(month, this.months)
-        this.value[2] = this.getIndex($moment(val).date(), this.days) 
-        console.log(this.value)
-        this.$apply()
-      }
+    value(val) {
+      console.log(val)
+      this.valueArray = this._dateToValueArray(stringToDate(val))
+      console.log(this.valueArray)
+      this.$apply()
     },
-		isScaleModal (val) {
-			if (!val) {
-				this.isShow = true
-			} else {
-				this.isShow = false
-			}
-			this.$apply()
-		}
+    dateValue(date) {
+      this.valueArray = this._dateToValueArray(date)
+      this.$apply()
+    },
+    valueArray(val) {
+      this._settMonthDays(val[0] + beginYear, val[1] + 1);
+    }
 	}
 }
 </script>

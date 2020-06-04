@@ -1,0 +1,44 @@
+
+<template>
+  <view class="list-row">
+    <view class="weui-flex between list-col-1">
+      <text class="page__title text-line">{{item.job_name}}</text>
+      <view class="number">{{item.salary_min}}~{{item.salary_max}}</view>
+    </view>
+    <view
+      class="page__desc"
+    >招{{item.number}}人 | {{item.eduName}} | {{item.provinceName}}</view>
+    <view class="weui-flex start">
+      <view class="weui-flex start weui-flex__item">  
+        <view class="card-item">{{item.natureName}}</view>
+        <view class="card-item">{{item.social_securityName}}</view>
+      </view>
+      <view class="page__desc" wx:if="{{rendaUserType==1}}">共有{{item.reasumeNum}}人投递</view> 
+      <button
+        class="weui-btn_cell weui-btn_primary"
+        wx:if="{{rendaUserType==2&&item.isApply!=1}}"
+        @tap.stop="deliverResume({{item}})"
+      >投递简历</button>
+      <view class="number" wx:if="{{rendaUserType==2&&item.isApply==1}}">已投递</view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class jobLectureItem extends wepy.component {
+  props = {
+    item: Object
+  }
+  data = {
+    rendaUserType: 0
+  }
+  onLoad(){
+    this.rendaUserType = wx.getStorageSync('rendaUserType');
+  }
+  methods = {
+    deliverResume(item) {
+      this.$emit('deliverResume', item)
+    }
+  }
+}
+</script>

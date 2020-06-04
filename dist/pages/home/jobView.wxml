@@ -5,7 +5,7 @@
 	  <block  wx:if="{{$jobList$list.length}}" wx:for="{{$jobList$list}}" wx:for-index="$jobList$index" wx:for-item="$jobList$item" wx:key="$jobList$index">
       <view bindtap="$jobList$viewResume" data-wpyviewresume-a="{{$jobList$item}}">
 				
-  <view class="list-row">
+  <view class="list-row" wx:if="{{$jobList$jobType==1}}">
     <view class="weui-flex between list-col-1">
       <text class="page__title text-line">{{$jobList$item.job_name}}</text>
       <view class="number">{{$jobList$item.salary}}</view>
@@ -17,6 +17,24 @@
       </view>
       <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobItem$isShowBtn&&$jobList$item.is_apply!=1}}" catchtap="$jobList$jobItem$deliverResume" data-com-index="{{$jobList$index}}" data-wpydeliverresume-a="{{$jobList$item}}">投递简历</button>
       <view class="number"  wx:if="{{$jobList$jobItem$isShowBtn&&$jobList$item.is_apply==1}}">已投递</view>
+    </view>
+  </view>
+
+				
+  <view class="list-row" wx:if="{{$jobList$jobType==2}}">
+    <view class="weui-flex between list-col-1">
+      <text class="page__title text-line">{{$jobList$item.job_name}}</text>
+      <view class="number">{{$jobList$item.salary_min}}~{{$jobList$item.salary_max}}</view>
+    </view>
+    <view class="page__desc">招{{$jobList$item.number}}人 | {{$jobList$item.eduName}} | {{$jobList$item.provinceName}}</view>
+    <view class="weui-flex start">
+      <view class="weui-flex start weui-flex__item">  
+        <view class="card-item">{{$jobList$item.natureName}}</view>
+        <view class="card-item">{{$jobList$item.social_securityName}}</view>
+      </view>
+      <view class="page__desc"  wx:if="{{$jobList$jobLectureItem$rendaUserType==1}}">共有{{$jobList$item.reasumeNum}}人投递</view> 
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobList$jobLectureItem$rendaUserType==2&&$jobList$item.isApply!=1}}" catchtap="$jobList$jobLectureItem$deliverResume" data-com-index="{{$jobList$index}}" data-wpydeliverresume-a="{{$jobList$item}}">投递简历</button>
+      <view class="number" wx:if="{{$jobList$jobLectureItem$rendaUserType==2&&$jobList$item.isApply==1}}">已投递</view>
     </view>
   </view>
 

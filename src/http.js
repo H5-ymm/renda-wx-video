@@ -1,8 +1,8 @@
 import {
     wxToast
 } from '@/util.js'
-// const baseUrl = 'http://www.ttxsg.com.cn:39009/';
-const baseUrl = 'https://d.rsd123.com/'
+const baseUrl = 'http://www.ttxsg.com.cn:39009/';
+// const baseUrl = 'https://d.rsd123.com/'
 const apiUrl = baseUrl + 'wx.php';
 const http = (url, params, method) => {
   return new Promise((resolve, reject) => {
@@ -60,7 +60,27 @@ const uploadFile = (tempFilePaths) => {
     });
   });
 };
+const uploadFileVideo = (tempFilePaths) => {
+  console.log(tempFilePaths)
+  return new Promise((resolve, reject) => {
+    wx.uploadFile({
+      url: `${apiUrl}/uploadimg/moreupload`,
+      filePath: tempFilePaths[0],
+      name: 'image',
+      success: res => {
+        console.log(res)
+          if (res.data) {
+            resolve(JSON.parse(res.data));
+          }
+      },
+      fail: error => {
+          reject(error);
+      }
+    });
+  });
+};
 module.exports = {
   $http: http,
-  uploadFile: uploadFile
+  uploadFile: uploadFile,
+  uploadFileVideo: uploadFileVideo
 }

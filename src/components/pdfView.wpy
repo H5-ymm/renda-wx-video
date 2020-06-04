@@ -1,0 +1,301 @@
+
+<style lang="less">
+  .bottom-content {
+    height: calc(100% - 296px);
+  }
+</style>
+<template>
+  <view class="bottom-content">
+     <view class="tab-box {{rendaUserType==2?'section':''}}">
+        <tabBar :tabBarList.sync="tabBarList" @switchTab="switchTab" class="header-tab"></tabBar>
+      </view>
+      <view class="section section1">
+        <jobLectureList :list.sync="list" class="scroll-view" jobType="2" @deliverResume.user="applyResume" wx:if="{{activeIndex==2}}"></jobLectureList>
+        <view class="container view_padding" wx:if="{{activeIndex==1}}">
+          <rich-text nodes="{{lectureInfo.invitation_letter}}" class="my-text-right weui-textarea"></rich-text>
+        </view>
+        <view class="canvas-box" wx:if="{{activeIndex==0}}">
+          <view class="cell weui-flex between page_bottom">
+            <view class=" weui-flex start">
+              <image
+                src="http://ttxsg.com.cn:39009/uploads/img/pdf.png"
+                class="pdf_icon"
+                mode="aspectFill">
+              <view class="page__title weui-flex start" wx:if="{{!enclosure}}" @tap="uploadFile">
+                <text class="text-line pdfName page__text__active" wx:if="{{rendaUserType==1&&uid == lectureInfo.com_uid}}">点击上传演示文稿</text>
+                <text class="text-line pdfName page__desc" wx:else>暂无附件</text>
+              </view>
+              <view class="page__title weui-flex start" wx:else @tap="viewPdf">
+                <text class="text-line pdfName">{{pdfName}}</text>
+              </view>
+            </view>
+            <image
+              @tap="deleteFile"
+              src=" http://ttxsg.com.cn:39009/uploads/img/delete.png"
+              class="avatar_icon"
+              wx:if="{{enclosure&&lectureInfo.status!=5&&rendaUserType==1}}"
+              mode="aspectFill">
+          </view>
+          <image src="../images/left_icon.png" alt="" class="swiper-icon" mode="widthFix" @tap="preImg" wx:if="{{pdfList.length}}">
+          <image src="../images/right_icon.png" alt="" class="swiper-icon swiper-icon1" mode="widthFix" @tap="nextImg" wx:if="{{pdfList.length}}">
+          <swiper class="swiper" current="{{page}}" @change="bindchange" @animationfinish="changeFinish">
+            <repeat wx:for="{{pdfList}}" wx:key="index" >
+              <swiper-item class="swiper-item" @tap="viewImg({{item}})">
+                <image src="{{item.image}}" alt="" class="swiper-image shadow" mode="widthFix">
+              </swiper-item>
+            </repeat>
+          </swiper>
+          <view class="page__title page-box" wx:if="{{pdfList.length}}">{{page+1}}/{{total}}</view>
+        </view>
+      </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import { $http, uploadFileVideo } from '@/http.js'
+import $moment from 'moment'
+import { getImgUrl, wxToast, wxNavigateTo, wxRedirectTo, contactPhone, handleTime, wxShowModal } from '@/util.js'
+import jobList from '@/components/jobList'
+import tabBar from '@/components/tabBar'
+export default class pdfView extends wepy.component {
+  components = {
+    jobLectureList: jobList,
+    tabBar: tabBar
+  }
+  props = {
+    lectureInfo: Object
+  }
+  data = {
+    params: {
+      page: 1,
+      limit: 10
+    },
+    rendaUserType: 0,
+    list: [],
+    pdfName: '',
+    id: '',
+    uid: '',
+    com_id: '',
+    page: 0,
+    tabBarList: [
+      { name: 'ppt展示'},
+      { name: '公司简介'},
+      { name: '招聘职位'},
+      // { name: '聊天'}
+    ],
+    activeIndex: 0,
+    pdfList: [],
+    total: 0,
+    enclosure: '',
+    arr: [],
+    flag: true,
+    addBtn: true,
+    networkType: '',
+    autoplay: false,
+    showPalyBtn: true
+  }
+  events = {
+    switchTab: data => {
+      this.activeIndex = data
+      this.$apply()
+      if (this.activeIndex == 0 && this.enclosure) {
+        this.getPdftopng(this.page)
+      } 
+      if (this.activeIndex == 2) {
+        this.getCompanyJobList(this.com_id)
+      } 
+    }
+  }
+  getCompanyJobList(com_id) {
+    let params = {
+      com_id,
+      uid: this.uid
+    }
+    $http('/alecture/getCompanyJobList', params).then(res => {
+      this.list = res.data
+      this.$apply()
+    })
+  }
+  upload(tempFilePath) {
+    uploadFileVideo(tempFilePath).then(res => {
+      this.page = 1
+      this.enclosure = getImgUrl(res.data.url)
+      this.$apply()
+      this.getPdftopng(this.page)
+      this.addFile(this.enclosure)
+    })
+  }
+  addFile(file) {
+    let params = {
+      id: this.id,
+      file,
+      file_name: this.pdfName
+    }
+    $http('/alecture/addAttachment',params).then(res => {
+      if (res.data) {
+        wxToast('上传成功')
+      } else {
+        wxToast('上传失败')
+      }
+    })
+  }
+  uploadPdf() {
+    wx.chooseMessageFile({
+      count: 1,
+      type: 'file',
+      success:res => {
+        let tempFiles = res.tempFiles[0]
+        this.pdfName = tempFiles.name 
+        this.upload([tempFiles.path])
+      }
+    })
+  }
+  methods = {
+    applyResume(item) {
+      console.log(item)
+      this.$emit('applyResume', item)
+    },
+    // 上传
+    uploadFile() {
+      if (this.uid != this.lectureInfo.com_uid) return
+      this.uploadPdf()
+    },
+    // 查看pdf
+    viewPdf() {
+      if (this.rendaUserType == 2) {
+          wx.downloadFile({
+          // 示例 url，并非真实存在
+          url: this.enclosure,
+          success: function (res) {
+            const filePath = res.tempFilePath
+            wx.openDocument({
+              filePath: filePath,
+              success: function (res) {
+                console.log('打开文档成功')
+              }
+            })
+          }
+        })
+      } else {
+        this.uploadPdf()
+      }
+    },
+    // 返回 
+    back() {
+      wx.navigateBack({
+        delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+      })
+    },
+    viewImg(item){
+      wx.previewImage({
+        current: item, // 当前显示图片的http链接
+        urls: this.pdfList // 需要预览的图片http链接列表
+      })
+    },
+    // 删除附件
+    deleteFile() {
+      wxShowModal('', '确定删除附件吗?', '确定').then(res => {
+        let params = {
+          id: this.id,
+          dir: this.enclosure
+        }
+        $http('/alecture/delFile',params).then(res => {
+          if (res.data) {
+            this.pdfName = ''
+            this.enclosure = ''
+            this.pdfList = []
+            this.page = 0
+            this.$apply()
+            wxToast('删除成功')
+          } else {
+            wxToast('删除失败')
+          }
+        })
+      }).catch(() => {
+        console.log('取消')
+      })
+    },
+    viewInfo(item) {
+      wxNavigateTo(item.url)
+    },
+    viewDetail(item) {
+      wxNavigateTo('/pages/companyView/viewJob?query=' + item.id + '&apply=1')
+    },
+    searchScrollLower() {
+      if (this.count > this.list.length && this.count > this.params.limit) {
+        this.params.limit = this.params.limit + 10
+        this.endAlectureList()
+      }
+    },
+    bindchange(e) {
+      if ((this.page < (this.total - 1)) && this.addBtn) {
+        this.page = this.page + 1
+        this.$apply()
+        this.getPdftopng(this.page)
+      } else {
+        this.page = e.detail.current
+      }
+    },
+    changeFinish() {
+      this.addBtn = false
+      this.flag = true
+    },
+    preImg() {
+      if (!this.flag) return
+      if (this.page == 0) {
+        return wxToast('这是第一张了')
+      } else {
+        this.page = this.page - 1
+      }
+      this.addBtn = false
+      this.$apply()
+    },
+    nextImg() {
+      if (!this.flag) return
+      this.addBtn = true
+      this.page = Number(this.page) + 1
+      if (this.page > (this.total - 1)) {
+        this.page = this.page - 1
+        return wxToast('最后一张了')
+      } else {
+        this.getPdftopng(this.page)
+      } 
+    }
+  }
+  getPdftopng(page) {
+    wx.showLoading({
+      title: 'pdf加载中',
+    })
+    $http('/homepresentation/getPdfToPng', { pdf: this.enclosure,  page, preach_id: this.id}).then(res => {
+      let info = res.data.data
+      info.image = getImgUrl(info.image)
+      this.pdfList.push(info)
+      this.total = res.data.countNum
+      this.$apply()
+      wx.hideLoading()
+    })
+  }
+  onLoad() {
+    this.id = wx.getStorageSync('lectureId')
+    this.uid = wx.getStorageSync('rendaUid')
+    this.rendaUserType = wx.getStorageSync('rendaUserType')
+    this.enclosure = this.lectureInfo.file
+    console.log(this.enclosure)
+    this.$apply()
+  }
+  watch = {
+    lectureInfo(val) {
+      if (val) {
+        this.pdfName = val.file_name || ''
+        this.enclosure = val.file
+        this.com_id = val.com_id
+        this.id = val.id
+        this.$apply()
+        if (this.enclosure) {
+          this.getPdftopng(this.page)
+        }
+      }
+    }
+  }
+}
+</script>

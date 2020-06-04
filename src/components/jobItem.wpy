@@ -23,8 +23,6 @@
 </template>
 <script>
 import wepy from 'wepy'
-import { wxToast, wxNavigateTo } from '@/util'
-import { $http } from '@/http.js'
 export default class jobItem extends wepy.component {
   props = {
     item: Object,
@@ -36,7 +34,6 @@ export default class jobItem extends wepy.component {
   methods = {
     deliverResume(item) {
       this.$emit('deliverResume', item)
-      // this.applyJob(params, item)
     }
   }
 }

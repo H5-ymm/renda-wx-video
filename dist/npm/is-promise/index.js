@@ -1,1 +1,1 @@
-function isPromise(o){return!!o&&("object"==typeof o||"function"==typeof o)&&"function"==typeof o.then}module.exports=isPromise;
+function isPromise(e){return!!e&&("object"==typeof e||"function"==typeof e)&&"function"==typeof e.then}module.exports=isPromise,module.exports.default=isPromise;

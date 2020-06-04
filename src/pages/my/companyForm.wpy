@@ -132,7 +132,7 @@
     </view>
 		<welfareModal :isScaleModal.sync="isModal" @handleBenefitOk="handleBenefitOk"></welfareModal>
 		<canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"></canvas>
-     <pickerDate :isScaleModal.sync="isPicker" :time.sync="birthtime"></pickerDate>
+    <pickerDate :isScaleModal.sync="isPicker" :time.sync="birthtime"></pickerDate>
 	</view>
 </template>
 <script>

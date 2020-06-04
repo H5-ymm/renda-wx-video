@@ -306,7 +306,7 @@ export default class personalDialogBox extends wepy.page {
 			console.warn('messageList error:', imError); // 登录失败的相关信息
 		});
  }
-	getConversationProfile() {
+ getConversationProfile() {
 		let conversationID = 'C2C' + this.uid
 		let promise =  wx.$app.getConversationProfile(this.conversationID);
 		promise.then(imResponse => {

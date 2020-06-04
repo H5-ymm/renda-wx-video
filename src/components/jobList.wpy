@@ -3,7 +3,8 @@
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
       <view @tap="viewResume({{item}})">
-				<jobItem :item.sync="item"  @deliverResume.user="deliverResume"></jobItem>
+				<jobItem :item.sync="item"  @deliverResume.user="deliverResume" wx:if="{{jobType==1}}"></jobItem>
+				<jobLectureItem :item.sync="item"  @deliverResume.user="deliverResume" wx:if="{{jobType==2}}"></jobLectureItem>
 			</view>
     </repeat>
 		<view wx:if="{{!list.length}}" class="page_list">
@@ -16,12 +17,19 @@
 import wepy from 'wepy'
 import { wxNavigateTo } from '@/util'
 import jobItem from './jobItem'
+import jobLectureItem from './jobLectureItem'
+
 export default class jobList extends wepy.component {
   components = {
-    jobItem: jobItem
+		jobItem: jobItem,
+		jobLectureItem: jobLectureItem,
   }
 	props = {
-		list: Array
+		list: Array,
+		jobType: {
+      type: String,
+      default: 1
+    }
 	}
 	methods = {
     viewResume(item) {

@@ -31,6 +31,9 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/home/index',
+      'pages/lecture/list',
+      'pages/lecture/detail',
+      'pages/lecture/lectureForm',
       'pages/message/index',
       'pages/my/index',
       'pages/home/hall',
@@ -41,7 +44,6 @@ export default class extends wepy.app {
       'pages/my/jobManage',
       'pages/my/lectureManage',
       'pages/my/jobForm',
-      'pages/webView/webView',
       'pages/home/collect',
       'pages/home/cityView',
       'pages/home/jobCategory',
@@ -88,7 +90,7 @@ export default class extends wepy.app {
       }]
     },
     networkTimeout: {
-      request: 10000,
+      request: 100000,
       connectSocket: 10000,
       uploadFile: 10000,
       downloadFile: 10000

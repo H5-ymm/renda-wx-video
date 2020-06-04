@@ -240,6 +240,17 @@ const isJSON = (str) => {
       }
     })
  }
+ const handleTime = time => {
+    let newTime = ''
+    let daySart = $moment().startOf('day').format('X')
+    let dayEnd = $moment().endOf('day').format('x')
+    if ((daySart <= time ) && (dayEnd>= time)) {
+      newTime = '今天 ' + $moment.unix(time).format('HH:mm')
+    } else {
+      newTime = $moment.unix(time).format('YYYY-MM-DD HH:mm')
+    }
+    return newTime
+  }
 module.exports = {
     manglingFormatCardNumber: manglingFormatCardNumber,
     validateIdCard: validateIdCard,
@@ -258,5 +269,6 @@ module.exports = {
     getList: getList,
     isJSON: isJSON,
     checkNum: checkNum,
-    contactPhone: contactPhone
+    contactPhone: contactPhone,
+    handleTime: handleTime
 };

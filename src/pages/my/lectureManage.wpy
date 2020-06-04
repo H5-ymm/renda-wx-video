@@ -3,6 +3,7 @@
 .resume_view {
   .scroll-view {
     margin-bottom: 40rpx;
+    height: 100%;
   }
   .search-query {
     border-bottom: 1px solid #eee;
@@ -52,6 +53,7 @@
   .page__desc {
     margin-top: 0;
     margin-right: 30rpx;
+    font-size: 24rpx;
     &.status2 {
       color: #1890FF;
     }
@@ -66,7 +68,7 @@
 </style>
 <template>
  <view class="page page_top resume_view">
-    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="view-content1 scroll-view view_auto">
+    <scroll-view scroll-y="true" refresher-enabled="true" @refresherrefresh="bindrefresherrefresh" @scrolltolower="searchScrollLower" class="scroll-view view_auto">
        <view class="weui-flex between weui-flex__item search-query page_margin">
         <div class="weui-flex start">
           <picker mode="date" data-name="startTime" @change="bindDateChange" value="{{startTime}}">
@@ -94,9 +96,9 @@
       </view>
       <lectureManageList :list.sync="list" @viewJobDetail="viewJobDetail"></lectureManageList>
     </scroll-view>
-    <view class="weui-cell_btn weui-flex center">
+    <!-- <view class="weui-cell_btn weui-flex center">
       <button class="weui-btn_cell weui-btn_primary" @tap="releaseJob">发布宣讲会</button>
-    </view>
+    </view> -->
   </view>
 </template>
 <script>
@@ -136,12 +138,12 @@ export default class lectureManage extends wepy.page {
     text: ''
   }
   config = {
-    navigationBarTitleText: '职位管理',
+    navigationBarTitleText: '宣讲会管理',
     enablePullDownRefresh: true
   }
   events = {
     viewJobDetail: data=> {
-      wxNavigateTo('/pages/webView/webView?query='+ data.id+'&type=2')
+      wxNavigateTo('/pages/lecture/lectureForm?query='+ data.id)
     }
   }
   bindrefresherrefresh() {
@@ -168,7 +170,7 @@ export default class lectureManage extends wepy.page {
       this.getjobList()
     },
     releaseJob() {
-      wxNavigateTo('/pages/webView/webView?type=2')
+      wxNavigateTo('/pages/lecture/lectureForm')
     },
     searchScrollLower () {
 			if (this.count > this.list.length && this.count > this.params.limit) {

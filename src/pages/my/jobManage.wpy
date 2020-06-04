@@ -53,7 +53,8 @@ export default class jobManage extends wepy.page {
       limit: 10
     },
     list: [],
-    count: 0
+    count: 0,
+    islecture: ''
   }
   config = {
     navigationBarTitleText: '职位管理',
@@ -80,10 +81,23 @@ export default class jobManage extends wepy.page {
   }
   getjobList () {
     $http('/Companyjob/getjobList', this.params).then(res => {
-      this.list = res.data.data ? res.data.data : []
+      let arr = res.data.data ? res.data.data : []
+      if (this.islecture) {
+        this.list = arr.filter(item => {
+          if (item.exhibition!=1) {
+            return item
+          }
+        })
+      } else {
+        this.list = arr
+      }
       this.count = res.data.count
       this.$apply()
     })
+  }
+  onLoad(options) {
+    this.islecture = options.query
+    this.$apply()
   }
   onShow() {
     this.params.uid = wx.getStorageSync('rendaUid') || this.$parent.globalData.uid
