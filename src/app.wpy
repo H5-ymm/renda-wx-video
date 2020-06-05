@@ -31,9 +31,6 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/home/index',
-      'pages/lecture/list',
-      'pages/lecture/detail',
-      'pages/lecture/lectureForm',
       'pages/message/index',
       'pages/my/index',
       'pages/home/hall',
@@ -60,6 +57,13 @@ export default class extends wepy.app {
       'pages/login/welcome',
       'pages/login/login',
       'pages/login/rule'
+    ],
+    subPackages: [
+      {
+        root: 'pages/lecture',
+        pages: ['list', 'lectureForm', 'detail']
+
+      },
     ],
     window: {
       navigationBarTextStyle: 'white',

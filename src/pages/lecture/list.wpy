@@ -206,7 +206,7 @@
                 </view>
                 <view>
                   <image
-                    src="../../images/people.png"
+                    src="https://d.rsd123.com/uploads/images/image/people.png"
                     class="people_icon"
                     mode="aspectFill">
                   <text class="num">{{item.addNum}}人</text>
@@ -231,12 +231,6 @@
                 <swiper-item class="swiper-item swipe-box" @tap="viewLecture({{item}})">
                   <view class="bg2"></view>
                   <view class="video_file">
-                    <!-- <image
-                      src="../../image/play.png"
-                      wx:if="{{item.type==1}}"
-                      id="video_img"
-                      mode="aspectFill"
-                    > -->
                     <video name="media" id="video" src="{{item.enclosure}}" custom-cache="false" enable-danmu danmu-btn controls preload="auto" wx:if="{{item.type==1}}">
                     </video>
                     <image src="{{item.enclosure}}" mode="aspectFill" alt="" wx:if="{{item.type==2}}" class="swiper-image shadow">
@@ -273,11 +267,11 @@
           <view class="swipe-box swipe-end" @tap="viewLecture({{item}})">
             <view class="bg2"></view>
             <view class="video_file">
-              <image
+              <!-- <image
                 src="../../images/play.png"
                 wx:if="{{item.type==1}}"
                 id="video_img"
-                mode="aspectFill">
+                mode="aspectFill"> -->
               <video name="media" id="video" src="{{item.enclosure}}" enable-danmu danmu-btn controls preload="auto" wx:if="{{item.type==1}}">
               </video>
               <image src="{{item.enclosure}}" mode="aspectFill" alt="" wx:if="{{item.type==2}}" class="swiper-image shadow">
@@ -318,7 +312,6 @@ export default class lecture extends wepy.page {
     usertype: 0,
     text: '',
     okText: '',
-    enclosure: 'http://www.ttxsg.com.cn:39009/uploads/other/20200601/24b91ba5b4e2795e987bf44f01efeabb.pdf',
     showLoading: false,
     current: 0,
     total: 0,
@@ -339,7 +332,7 @@ export default class lecture extends wepy.page {
     },
     handleOk: () => {
       if (!wx.getStorageSync('rendaPerfect')) {
-        wxNavigateTo('/pages/my/companyForm') 
+        wxNavigateTo('/orderPackages/pages/my/companyForm') 
       }
       this.isScaleModal = !this.isScaleModal
       this.$apply()

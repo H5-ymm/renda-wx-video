@@ -88,6 +88,8 @@ import jobFairList from '@/components/jobFairList'
 import { getStore } from 'wepy-redux'
 import { getAllUser, getUser } from '@/store/actions/user.js'
 import { getAllContant } from '@/store/actions/contant.js'
+import { login, getRoomList } from '@/lib/mlvbliveroomcore.js'
+console.log(login)
 const store = getStore()
 export default class teamView extends wepy.page {
   components = {
@@ -113,13 +115,90 @@ export default class teamView extends wepy.page {
     usertype: 0,
     TIM: null,
     text: '',
-    okText: ''
+    okText: '',
+    userSig: '',
+    roomList: [],
+    isGetLoginInfo: false,
+    firstshow: true
   }
   config = {
     navigationBarTitleText: '首页',
     enablePullDownRefresh: true
   }
-   events = {
+  videoInit() {
+    var self = this;
+    // wx.showLoading({
+    //   title: '登录信息获取中',
+    // })
+    var userID = new Date().getTime().toString(16);
+    var userSig = this.userSig
+    var loginInfo = {
+      sdkAppID: 1400335565,
+      userID: this.params.uid,
+      userSig: userSig,
+      userName:'呵呵的杨大萌',
+      userAvatar: ''
+    }
+
+    //MLVB 登录
+    login({
+      data: loginInfo,
+      success: function (ret) {
+        //登录成功，拉取房间列表
+        self.firstshow = false;
+        self.isGetLoginInfo = true;
+        self.$apply()
+        self.getRoom();
+        // wx.hideLoading();
+      },
+      fail: function (ret) {
+        //登录失败
+        self.isGetLoginInfo = false;
+        self.$apply()
+        // wx.hideLoading();
+        wx.showModal({
+          title: '提示',
+          content: ret.errMsg,
+          showCancel: false,
+          complete: function () {
+            wx.navigateBack({});
+          }
+        });
+      }
+    });
+  }
+  getRoom() {
+    var self = this;
+    if (!self.isGetLoginInfo) {
+      wx.showModal({
+        title: '提示',
+        content: '登录信息初始化中，请稍后再试',
+        showCancel: false
+      })
+      return;
+    }
+    getRoomList({
+      data: {
+        index: 0,
+        cnt: 20
+      },
+      success: function (ret) {
+        self.roomList =  ret.rooms
+        console.log(this.roomList)
+        self.$apply()
+        console.log('获取房间列表成功');
+      },
+      fail: function (ret) {
+        console.log(ret);
+        wx.showModal({
+          title: '获取房间列表失败',
+          content: ret.errMsg,
+          showCancel: false
+        });
+      }
+    });
+  }
+  events = {
     searchValue: keywords => {
       this.params = Object.assign(this.params, { keywords })
       this.getJobfairList()
@@ -285,6 +364,8 @@ export default class teamView extends wepy.page {
   }
   getUserSig() {
     $http('/autograph/getAutograph', { uid: this.params.uid + '' }).then(res => {
+      this.userSig =  res.data
+      this.videoInit()
       let promise = wx.$app.login({ userID: this.params.uid + '', userSig: res.data });
       promise.then(imResponse => {
         this._initIM()

@@ -36,8 +36,8 @@
               wx:if="{{enclosure&&lectureInfo.status!=5&&rendaUserType==1}}"
               mode="aspectFill">
           </view>
-          <image src="../images/left_icon.png" alt="" class="swiper-icon" mode="widthFix" @tap="preImg" wx:if="{{pdfList.length}}">
-          <image src="../images/right_icon.png" alt="" class="swiper-icon swiper-icon1" mode="widthFix" @tap="nextImg" wx:if="{{pdfList.length}}">
+          <image src="http://ttxsg.com.cn:39009/uploads/images/image/left_icon.png" alt="" class="swiper-icon" mode="widthFix" @tap="preImg" wx:if="{{pdfList.length}}">
+          <image src="http://ttxsg.com.cn:39009/uploads/images/image/right_icon.png" alt="" class="swiper-icon swiper-icon1" mode="widthFix" @tap="nextImg" wx:if="{{pdfList.length}}">
           <swiper class="swiper" current="{{page}}" @change="bindchange" @animationfinish="changeFinish">
             <repeat wx:for="{{pdfList}}" wx:key="index" >
               <swiper-item class="swiper-item" @tap="viewImg({{item}})">
@@ -86,13 +86,7 @@ export default class pdfView extends wepy.component {
     activeIndex: 0,
     pdfList: [],
     total: 0,
-    enclosure: '',
-    arr: [],
-    flag: true,
-    addBtn: true,
-    networkType: '',
-    autoplay: false,
-    showPalyBtn: true
+    enclosure: ''
   }
   events = {
     switchTab: data => {
@@ -149,6 +143,14 @@ export default class pdfView extends wepy.component {
         this.upload([tempFiles.path])
       }
     })
+  }
+  events = {
+    searchScrollLower() {
+      if (this.count > this.list.length && this.count > this.params.limit) {
+        this.params.limit = this.params.limit + 10
+        this.endAlectureList()
+      }
+    }
   }
   methods = {
     applyResume(item) {
@@ -220,12 +222,6 @@ export default class pdfView extends wepy.component {
     },
     viewDetail(item) {
       wxNavigateTo('/pages/companyView/viewJob?query=' + item.id + '&apply=1')
-    },
-    searchScrollLower() {
-      if (this.count > this.list.length && this.count > this.params.limit) {
-        this.params.limit = this.params.limit + 10
-        this.endAlectureList()
-      }
     },
     bindchange(e) {
       if ((this.page < (this.total - 1)) && this.addBtn) {

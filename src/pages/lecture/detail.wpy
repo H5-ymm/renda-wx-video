@@ -348,13 +348,13 @@ page {
             <view class="image-row">
               <view class="weui-flex between image--col">
                 <image
-                  src="../../images/back.png"
+                  src="https://d.rsd123.com/uploads/images/image/back.png"
                   class="icon"
                   @tap="back"
                   mode="aspectFit">
                   <button open-type="share" class="share-btn">
                   <image
-                    src="../../images/share_top.png"
+                    src="https://d.rsd123.com/uploads/images/image/share_top.png"
                     class="icon"
                     mode="aspectFit">
                 </button> 
@@ -370,14 +370,14 @@ page {
               <view class="weui-flex between">
                 <view>
                   <image
-                    src="../../images/people.png"
+                    src="https://d.rsd123.com/uploads/images/image/people.png"
                     class="people_icon"
                     mode="aspectFill">
                   <text class="num">{{lectureInfo.addNum}}人</text>
                 </view>
                 <view>
                   <image
-                    src="../../images/people.png"
+                    src="https://d.rsd123.com/uploads/images/image/people.png"
                     class="people_icon"
                     mode="aspectFill">
                 </view>
@@ -497,7 +497,7 @@ export default class lectureDetail extends wepy.page {
     roomID: '',
     roomName: '',
     pureAudio: false,
-    role: 'audience',
+    role: '',
     showLiveRoom: false,
     rooms: [],
     comment: [],
@@ -594,6 +594,9 @@ export default class lectureDetail extends wepy.page {
     })
   }
   methods = {
+    searchScrollLower() {
+      this.$broadcast('searchScrollLower')
+    },
     submit() {
       if (!wx.getStorageSync('rendaPerfect')) {
         this.isScaleModal = !this.isScaleModal

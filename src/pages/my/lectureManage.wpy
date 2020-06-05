@@ -85,7 +85,7 @@
         </div>
         <view class="card-item status-item" @tap="searchStatus">
           {{text?text:'状态'}}
-          <image src="../../images/down1.png" class="samll-icon" mode="scaleToFill" />
+          <image src="https://d.rsd123.com/uploads/images/image/down1.png" class="samll-icon" mode="scaleToFill" />
         </view>
         <view class="weui-flex end page__desc" @tap="search">搜索</view>
          <view class="job-query" wx:if="{{visibile}}">
