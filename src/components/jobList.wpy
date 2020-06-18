@@ -1,4 +1,12 @@
 
+<style lang="less">
+ .page_list {
+	 .page_noData {
+		 margin: 40rpx auto;
+	 }
+ }
+</style>
+
 <template>
 	<view>
 	  <repeat for="{{list}}" key="index" wx:if="{{list.length}}" >
@@ -33,7 +41,9 @@ export default class jobList extends wepy.component {
 	}
 	methods = {
     viewResume(item) {
-			if (wx.getStorageSync('rendaUserType')==1 && wx.getStorageSync('rendaUid') != item.com_uid) return
+			console.log(item)
+			// && wx.getStorageSync('rendaUid') != item.com_uid
+			if (wx.getStorageSync('rendaUserType')==1) return
       wxNavigateTo('/pages/home/jobDetail?query='+item.id)
 		},
 		deliverResume(item) {

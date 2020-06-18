@@ -29,49 +29,52 @@
     position: relative;
     .line {
       &.line1 {
-          margin-top: 10rpx;
+          margin-bottom: 10rpx;
           .page__title {
             font-weight: bold;
             font-size: 30rpx;
-          }  
+          }
+          .page__desc{
+            margin-top: 3rpx;
+            margin-bottom: 2rpx;
+          }
         }
       }
     }
-    .swipe-box {
-      width: 100%;
-      height: 100%;
-
-    }
-    .bg {
-      position: absolute;
-      height: 396rpx;
-      width: 94%;
-      top: 16rpx;
-      left: 3%;
-      background:rgba(8,19,45, 0.1);
-      z-index: -1;
-      border-radius: 8rpx;
-    }
-    .bg2 {
-      position: absolute;
-      height: 78%;
-      width: 100%;
-      top: 0;
-      left: 0;
-      background: -webkit-linear-gradient(bottom,#1D1D27,rgba(31, 63, 128, 0.16),rgba(29, 29, 39, 0));
-      z-index: 1;
-      border-radius: 8rpx;
-    }
-    .bg1 {
-      height: 396rpx;
-      background:rgba(8,19,45,0.05);
-      border-radius: 8rpx;
-      position: absolute;
-      height: 396rpx;
-      width: 90%;
-      top: 32rpx;
-      z-index: -1;
-      left: 5%;
+  .swipe-box {
+    width: 100%;
+    height: 100%;
+  }
+  .bg {
+    position: absolute;
+    height: 396rpx;
+    width: 94%;
+    top: 16rpx;
+    left: 3%;
+    background:rgba(8,19,45, 0.1);
+    z-index: -1;
+    border-radius: 8rpx;
+  }
+  .bg2 {
+    position: absolute;
+    height: 78%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: -webkit-linear-gradient(bottom,#1D1D27,rgba(31, 63, 128, 0.16),rgba(29, 29, 39, 0));
+    z-index: 1;
+    border-radius: 8rpx;
+  }
+  .bg1 {
+    height: 396rpx;
+    background:rgba(8,19,45,0.05);
+    border-radius: 8rpx;
+    position: absolute;
+    height: 396rpx;
+    width: 90%;
+    top: 32rpx;
+    z-index: -1;
+    left: 5%;
   }
   .video_file {
     position: relative;
@@ -136,13 +139,23 @@
     padding: 30rpx 0 0 30rpx;
     margin-top: 30rpx;
     background: #fdfdfe;
+    &.section1 {
+      padding-bottom: 20rpx;
+      .line {
+        padding-top: 10rpx;
+      }
+      .swipe-container {
+        height: 520rpx;
+        padding-bottom: 20rpx;
+      }
+    }
     >.page__title {
       font-weight: bold;
       padding-bottom: 10rpx;
     }
     .swipe-end {
       position: relative;
-      padding-top: 20rpx;
+      // padding-top: 20rpx;
     }
     .swipe-container {
       padding-right: 30rpx;
@@ -165,7 +178,7 @@
       .swiper-item {
         height: 100%;
         width: 60%!important;
-        line-height: 32rpx;
+        line-height: 30rpx;
         .line {
           padding-top: 10rpx;
         }
@@ -187,7 +200,7 @@
   <view class="page-home">
     <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
      class="view_auto {{rendaUserType==1 ? 'view-content': 'page'}}" @refresherrefresh="bindrefresherrefresh">
-      <swiper autoplay="true" class="swipe-container view_padding"> 
+      <swiper autoplay="true" class="swipe-container view_padding" wx:if="{{banner.length}}"> 
         <repeat wx:for="{{banner}}" wx:key="index">
           <swiper-item class="swipe-box" @tap="viewLecture({{item}})">
             <view class="bg"></view>
@@ -250,7 +263,7 @@
             </swiper>
           </view>
       </view>
-      <view class="section">
+      <view class="section section1">
         <view class="page__title">宣讲回看</view>
         <view class="swipe-container"
           wx:for="{{list2}}" wx:key="index">
@@ -267,14 +280,8 @@
           <view class="swipe-box swipe-end" @tap="viewLecture({{item}})">
             <view class="bg2"></view>
             <view class="video_file">
-              <!-- <image
-                src="../../images/play.png"
-                wx:if="{{item.type==1}}"
-                id="video_img"
-                mode="aspectFill"> -->
-              <video name="media" id="video" src="{{item.enclosure}}" enable-danmu danmu-btn controls preload="auto" wx:if="{{item.type==1}}">
+              <video name="media" id="video" src="{{item.back_url}}" enable-danmu danmu-btn controls preload="auto">
               </video>
-              <image src="{{item.enclosure}}" mode="aspectFill" alt="" wx:if="{{item.type==2}}" class="swiper-image shadow">
             </view>
             <view class="line weui-flex between">
               <view class="page__title">{{item.addtime}}</view>
@@ -319,7 +326,7 @@ export default class lecture extends wepy.page {
     list1: [],
     list2: [],
     rendaUserType: 0,
-   
+    TIM: null
   }
   config = {
     navigationBarTitleText: '空中宣讲会',
@@ -337,6 +344,19 @@ export default class lecture extends wepy.page {
       this.isScaleModal = !this.isScaleModal
       this.$apply()
     }
+  }
+  onLoad() {
+    this.TIM = this.$parent.globalData.TIM
+    this.rendaUserType = wx.getStorageSync('rendaUserType')
+    // wx.$app.on(this.TIM.EVENT.ERROR, this._onIMError, this)
+  }
+  onShow() {
+    this.getALLlist()
+  }
+  getALLlist() {
+    this.startAlectureList()
+    this.getsetAlectureList()
+    this.endAlectureList()
   }
   startAlectureList() {
     $http('/homepresentation/startAlectureList', {}).then(res => {
@@ -369,6 +389,14 @@ export default class lecture extends wepy.page {
       this.$apply()
     })
   }
+  _onIMError (event) {
+    console.log(event)
+    console.log('错误事件')
+    // 网络错误不弹toast && sdk未初始化完全报错
+    if (event.data.message && event.data.code && event.data.code !== 2800 && event.data.code !== 2999) {
+      wxToast(event.data.message)
+    }
+  }
   methods = {
     applyLecture() {
       if (!wx.getStorageSync('rendaPerfect')) {
@@ -378,10 +406,18 @@ export default class lecture extends wepy.page {
         wxNavigateTo(`/pages/lecture/lectureForm`)
       }
     },
-    viewLecture(item){
-      // if (item.com_uid != wx.getStorageSync('rendaUid')) return
+    viewLecture(item)  {
       wx.setStorageSync('lectureId', item.id)
-      wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + '&type=create&userName='+item.com_name+'&roomName='+item.title +'&roomID=' + item.room_num)
+      if(this.rendaUserType == 1) {
+        if (item.room_num) {
+          wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + 'userName='+item.com_name+'&roomName='+item.title +'&roomID=' + item.room_num)
+        } else {
+          wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + '&type=create&userName='+item.com_name+'&roomName='+item.title +'&roomID=' + item.room_num)
+        }      
+      } else {
+        var url = '/pages/lecture/detail?query='+ item.id + '&roomID=' + item.room_num + '&roomName=' + item.com_name + '&userName=' + item.title + '&accelerateURL=' + item.push_url
+        wxNavigateTo(url)
+      }
     },
     searchScrollLower() {
       if (this.count > this.list.length && this.count > this.params.limit) {
@@ -391,13 +427,7 @@ export default class lecture extends wepy.page {
     }
   }
   bindrefresherrefresh() {
-    this.startAlectureList()
+    this.getALLlist()
   }
-  onShow() {
-    this.rendaUserType = wx.getStorageSync('rendaUserType')
-    this.startAlectureList()
-    this.getsetAlectureList()
-    this.endAlectureList()
-  }
 }
 </script>

@@ -247,6 +247,7 @@ export default class my extends wepy.page {
       wx.clearStorageSync()
       wxToast('退出登录成功')
       this.timOut()
+      // wx.removeStorage('rendaUid');
       wxRedirectTo('/pages/login/welcome?query=loginout')
       store.dispatch({ type: GETALLUSER, payload: {} })
     }).catch(error => {

@@ -4,12 +4,18 @@
   .section {
     padding-bottom: 20rpx;
     .job-box {
+      margin-top: 16rpx;
       .job-title {
         height: 88rpx;
-        font-size: 30rpx;
+        font-size: 32rpx;
         color: #111111;
         padding: 0 30rpx;
         font-weight: 500;
+      }
+      .home_icon {
+        width: 35rpx;
+        height: 35rpx;
+        margin-right: 10rpx;
       }
       .card-item{
         &.lecture-item {
@@ -20,7 +26,7 @@
       }
       .job-search {
         .job-search-query {
-          padding: 26rpx 0;
+          padding: 0 0 20rpx;
           margin: 0 30rpx;
         }
         .job-search-item {
@@ -35,17 +41,10 @@
       }
     }
   }
-}
-.canvas-box {
-  width:100%;
-  height: 500rpx;
-  .swiper , .swiper-item {
-    width:100%;
-    height: 100%;
-    text-align: center;
-    image {
-      width: 96%;
-      height: 100%;
+  .nav {
+    margin: 0 0 -40rpx;
+    .card_icon {
+      height: 176rpx;
     }
   }
 }
@@ -55,11 +54,16 @@
     <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
      class="page" @refresherrefresh="bindrefresherrefresh">
       <banner></banner>
+      <view class="weui-flex between nav">
+        <image mode="widthFix" class="card_icon" @tap="viewLecture(0)" src="https://d.rsd123.com/uploads/images/nav_icon1.png"/>
+        <image mode="widthFix" class="card_icon" @tap="viewLecture(1)" src="https://d.rsd123.com/uploads/images/nav_icon2.png"/>
+      </view>
       <view class="section">
         <view class="job-box">
-          <view class="job-title weui-flex between">
+          <view class="job-title weui-flex start">
+            <image mode="widthFix" class="home_icon" src="../../images/home_icon.png"/>
             <view>视频招聘会({{count}})</view>
-            <view class="card-item lecture-item" @tap="viewLecture">空中宣讲会</view>
+            <!-- <view class="card-item lecture-item" @tap="viewLecture">空中宣讲会</view> -->
           </view>
           <view class="job-search">
             <view class="job-search-query weui-flex start">
@@ -88,8 +92,7 @@ import jobFairList from '@/components/jobFairList'
 import { getStore } from 'wepy-redux'
 import { getAllUser, getUser } from '@/store/actions/user.js'
 import { getAllContant } from '@/store/actions/contant.js'
-import { login, getRoomList } from '@/lib/mlvbliveroomcore.js'
-console.log(login)
+import { login } from '@/lib/mlvbliveroomcore.js'
 const store = getStore()
 export default class teamView extends wepy.page {
   components = {
@@ -119,7 +122,9 @@ export default class teamView extends wepy.page {
     userSig: '',
     roomList: [],
     isGetLoginInfo: false,
-    firstshow: true
+    firstshow: true,
+    userAvatar: '',
+    userName: ''
   }
   config = {
     navigationBarTitleText: '首页',
@@ -127,19 +132,16 @@ export default class teamView extends wepy.page {
   }
   videoInit() {
     var self = this;
-    // wx.showLoading({
-    //   title: '登录信息获取中',
-    // })
     var userID = new Date().getTime().toString(16);
     var userSig = this.userSig
+    let userInfo = wx.getStorageSync('wxInfo')?JSON.parse(wx.getStorageSync('wxInfo')):{}
     var loginInfo = {
       sdkAppID: 1400335565,
-      userID: this.params.uid,
+      userID: this.params.uid + '',
       userSig: userSig,
-      userName:'呵呵的杨大萌',
-      userAvatar: ''
+      userName: userInfo.nick,
+      userAvatar:  userInfo.avatar
     }
-
     //MLVB 登录
     login({
       data: loginInfo,
@@ -148,14 +150,12 @@ export default class teamView extends wepy.page {
         self.firstshow = false;
         self.isGetLoginInfo = true;
         self.$apply()
-        self.getRoom();
-        // wx.hideLoading();
+        // self.getRoom()
       },
       fail: function (ret) {
         //登录失败
         self.isGetLoginInfo = false;
         self.$apply()
-        // wx.hideLoading();
         wx.showModal({
           title: '提示',
           content: ret.errMsg,
@@ -177,26 +177,27 @@ export default class teamView extends wepy.page {
       })
       return;
     }
-    getRoomList({
-      data: {
-        index: 0,
-        cnt: 20
-      },
-      success: function (ret) {
-        self.roomList =  ret.rooms
-        console.log(this.roomList)
-        self.$apply()
-        console.log('获取房间列表成功');
-      },
-      fail: function (ret) {
-        console.log(ret);
-        wx.showModal({
-          title: '获取房间列表失败',
-          content: ret.errMsg,
-          showCancel: false
-        });
-      }
-    });
+    // getRoomList({
+    //   data: {
+    //     index: 0,
+    //     cnt: 20
+    //   },
+    //   success: function (ret) {
+    //     self.roomList =  ret.rooms
+    //     console.log(self.roomList)
+    //     wx.setStorageSync('roomList', JSON.stringify(self.roomList))
+    //     self.$apply()
+    //     console.log('获取房间列表成功');
+    //   },
+    //   fail: function (ret) {
+    //     console.log(ret);
+    //     wx.showModal({
+    //       title: '获取房间列表失败',
+    //       content: ret.errMsg,
+    //       showCancel: false
+    //     });
+    //   }
+    // });
   }
   events = {
     searchValue: keywords => {
@@ -317,13 +318,17 @@ export default class teamView extends wepy.page {
         urls: this.pdfList // 需要预览的图片http链接列表
       })
     },
-    viewLecture(){
-      let query = {
-        uid: this.params.uid,
-        rendaUserType: this.usertype,
-        rendaPerfect: wx.getStorageSync('rendaPerfect')
+    viewLecture(index){
+      if (index == 0 ) {
+        let query = {
+          uid: this.params.uid,
+          rendaUserType: this.usertype,
+          rendaPerfect: wx.getStorageSync('rendaPerfect')
+        }
+        wxNavigateTo(`/pages/lecture/list`)
+      } else {
+        wxToast('敬请期待')
       }
-      wxNavigateTo(`/pages/lecture/list`)
     },
     viewInfo(item) {
       wxNavigateTo(item.url)
@@ -351,10 +356,10 @@ export default class teamView extends wepy.page {
   }
   _initIM () {
     wx.$app.off( this.TIM.EVENT.SDK_READY, this._onIMReady);
-    wx.$app.off( this.TIM.EVENT.ERROR, this._onIMError)
+    // wx.$app.off( this.TIM.EVENT.ERROR, this._onIMError)
     // 监听事件)
     wx.$app.on( this.TIM.EVENT.SDK_READY, this._onIMReady, this);
-    wx.$app.on( this.TIM.EVENT.ERROR, this._onIMError, this)
+    // wx.$app.on( this.TIM.EVENT.ERROR, this._onIMError, this)
   }
   _onIMError (event) {
     // 网络错误不弹toast && sdk未初始化完全报错
@@ -365,7 +370,6 @@ export default class teamView extends wepy.page {
   getUserSig() {
     $http('/autograph/getAutograph', { uid: this.params.uid + '' }).then(res => {
       this.userSig =  res.data
-      this.videoInit()
       let promise = wx.$app.login({ userID: this.params.uid + '', userSig: res.data });
       promise.then(imResponse => {
         this._initIM()
@@ -384,7 +388,8 @@ export default class teamView extends wepy.page {
 		let promise =  wx.$app.getConversationProfile(conversationID);
 		promise.then(imResponse => {
 			const { userProfile } = imResponse.data.conversation
-      console.log(userProfile)
+      this.userAvatar = userProfile.avatar
+      this.userName = userProfile.nick
       wx.setStorageSync('userProfile', JSON.stringify(userProfile))
       console.log('获取个人信息')
 			this.$apply() // 会话资料
@@ -404,12 +409,12 @@ export default class teamView extends wepy.page {
     });
   }
   _onIMReady() {
-    console.log(wx.getStorageSync('wxInfo'))
     if (wx.getStorageSync('wxInfo')) {
       this.updateMyProfile() 
     } else {
       this.getConversationProfile()
     }
+    this.videoInit()
   }
   getOpenId() {
     wx.login({
@@ -423,8 +428,7 @@ export default class teamView extends wepy.page {
               this.$parent.globalData.sessionKey = data.session_key
               wx.setStorageSync('session_key', data.session_key)
               wx.setStorageSync('rendaOpenId', data.openid)
-              this.checkUserLogin(this.openid)
-              
+              this.checkUserLogin(this.openid)       
             } else {
               wx.clearStorageSync();
               wxToast('请授权登录')

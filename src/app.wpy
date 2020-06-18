@@ -113,9 +113,10 @@ export default class extends wepy.app {
   }
   removeData() {
     wx.removeStorageSync('preForm')
-    wx.removeStorageSync('resumeType');
-    wx.removeStorageSync('sendAuthCode');
+    wx.removeStorageSync('resumeType')
+    wx.removeStorageSync('sendAuthCode')
     wx.removeStorageSync('setSdkReady')
+    wx.removeStorageSync('rendaToken')
   }
   onShow(options) {
    

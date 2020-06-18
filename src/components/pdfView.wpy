@@ -1,11 +1,18 @@
 
 <style lang="less">
   .bottom-content {
-    height: calc(100% - 296px);
+    height: calc(100% - 282px);
+    &.bottom-content1{
+      // height: calc(100% - 416px);
+      height: 45%;
+    }
+    .scroll-view {
+      overflow: auto;
+    }
   }
 </style>
 <template>
-  <view class="bottom-content">
+  <view class="bottom-content {{(lectureInfo.status==5&&lectureInfo.com_uid == uid&&rendaUserType==1&&overBtnShow) || (lectureInfo.status==5&&rendaUserType==2&&overBtnShow) ? 'bottom-content1': 'bottom-content2'}}">
      <view class="tab-box {{rendaUserType==2?'section':''}}">
         <tabBar :tabBarList.sync="tabBarList" @switchTab="switchTab" class="header-tab"></tabBar>
       </view>
@@ -22,7 +29,7 @@
                 class="pdf_icon"
                 mode="aspectFill">
               <view class="page__title weui-flex start" wx:if="{{!enclosure}}" @tap="uploadFile">
-                <text class="text-line pdfName page__text__active" wx:if="{{rendaUserType==1&&uid == lectureInfo.com_uid}}">点击上传演示文稿</text>
+                <text class="text-line pdfName page__text__active" wx:if="{{rendaUserType==1&&uid == lectureInfo.com_uid&&lectureInfo.status!=4}}">点击上传演示文稿</text>
                 <text class="text-line pdfName page__desc" wx:else>暂无附件</text>
               </view>
               <view class="page__title weui-flex start" wx:else @tap="viewPdf">
@@ -63,7 +70,8 @@ export default class pdfView extends wepy.component {
     tabBar: tabBar
   }
   props = {
-    lectureInfo: Object
+    lectureInfo: Object,
+    overBtnShow: Boolean
   }
   data = {
     params: {
@@ -86,7 +94,8 @@ export default class pdfView extends wepy.component {
     activeIndex: 0,
     pdfList: [],
     total: 0,
-    enclosure: ''
+    enclosure: '',
+    flag: true
   }
   events = {
     switchTab: data => {
@@ -94,10 +103,19 @@ export default class pdfView extends wepy.component {
       this.$apply()
       if (this.activeIndex == 0 && this.enclosure) {
         this.getPdftopng(this.page)
-      } 
+      }
       if (this.activeIndex == 2) {
         this.getCompanyJobList(this.com_id)
       } 
+    },
+    applyResumeOk: () => {
+      this.getCompanyJobList(this.com_id)
+    },
+    searchScrollLower() {
+      if (this.count > this.list.length && this.count > this.params.limit) {
+        this.params.limit = this.params.limit + 10
+        this.endAlectureList()
+      }
     }
   }
   getCompanyJobList(com_id) {
@@ -112,7 +130,6 @@ export default class pdfView extends wepy.component {
   }
   upload(tempFilePath) {
     uploadFileVideo(tempFilePath).then(res => {
-      this.page = 1
       this.enclosure = getImgUrl(res.data.url)
       this.$apply()
       this.getPdftopng(this.page)
@@ -144,17 +161,8 @@ export default class pdfView extends wepy.component {
       }
     })
   }
-  events = {
-    searchScrollLower() {
-      if (this.count > this.list.length && this.count > this.params.limit) {
-        this.params.limit = this.params.limit + 10
-        this.endAlectureList()
-      }
-    }
-  }
   methods = {
     applyResume(item) {
-      console.log(item)
       this.$emit('applyResume', item)
     },
     // 上传
@@ -181,12 +189,6 @@ export default class pdfView extends wepy.component {
       } else {
         this.uploadPdf()
       }
-    },
-    // 返回 
-    back() {
-      wx.navigateBack({
-        delta: 1 // 返回的页面数，如果 delta 大于现有页面数，则返回到首页,
-      })
     },
     viewImg(item){
       wx.previewImage({
@@ -276,7 +278,6 @@ export default class pdfView extends wepy.component {
     this.uid = wx.getStorageSync('rendaUid')
     this.rendaUserType = wx.getStorageSync('rendaUserType')
     this.enclosure = this.lectureInfo.file
-    console.log(this.enclosure)
     this.$apply()
   }
   watch = {

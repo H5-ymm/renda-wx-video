@@ -5,6 +5,11 @@
   .page__desc {
     font-size:24rpx;
   }
+  .header-tab {
+    .tab-line {
+      margin-left: -40rpx;
+    }
+  }
   .number, .page__label {
     font-size: 26rpx; 
   }
@@ -38,7 +43,7 @@
               <view class="number">{{item.starttime}}</view>
               <view class="weui-flex between">
                 <view class="weui-flex__item page__label"> {{item.com_name}}</view>
-                <button class="weui-btn_cell weui-btn_primary" @tap.stop="concatCompany({{item}})">
+                <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewVideo({{item}})">
                  {{item.status==0?'查看':item.status==1?'观看直播':item.status==2?'立即报名':'观看回放'}}
                 </button>
               </view>
@@ -104,10 +109,16 @@ export default class collect extends wepy.page {
     viewCompany(item) {
       if (!this.activeIndex) {
         wxNavigateTo('/pages/home/companyDetail?query=' + item.id)
-      } else {
+      } else if (this.activeIndex == 1){
         wxNavigateTo('/pages/home/jobDetail?query=' + item.id)
+      } else {
+        return false
       }
       wx.setStorageSync('rendaJHID', item.jf_id)
+    },
+    viewVideo(item) {
+      var url = '/pages/lecture/detail?query='+ item.id + '&roomID=' + item.room_num + '&roomName=' + item.com_name + '&userName=' + item.title + '&accelerateURL=' + item.push_url
+      wxNavigateTo(url)
     },
     concatCompany(item) {
       let conversationID = 'C2C' + item.com_uid

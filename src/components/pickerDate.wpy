@@ -64,7 +64,7 @@ const leftPad0 = function(v, n) {
     };
     const now = new Date();
     const years = [];
-    const beginYear = 1990;
+    const beginYear = $moment().year();
     for (var i = beginYear; i <= now.getFullYear(); i++) {
       years.push(i + "年");
     }

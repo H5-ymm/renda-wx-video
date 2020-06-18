@@ -1,1 +1,2 @@
+@import "./../../components/jobList.wxss";
 .list-row{border-bottom:1px solid #F0F2FA;padding:20rpx 30rpx;line-height:50rpx}.list-row .number{font-size:30rpx;color:#1890FF}.list-row .card-item{margin-top:6rpx;padding:0;line-height:30rpx}.list-row .weui-btn_cell{width:auto;padding:26rpx 30rpx 24rpx;border-radius:50rpx;font-size:24rpx}.scroll-view{margin-bottom:30rpx}

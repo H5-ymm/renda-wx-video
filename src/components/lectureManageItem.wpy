@@ -12,7 +12,7 @@
     <view class="weui-flex between">
       <view class="page__desc" wx:if="{{!item.status}}">申请中</view>
       <view class="page__desc {{item.status==1?'status2':item.status==2?'status4':'status3'}}" wx:if="{{item.status&&item.status<4}}">{{item.status==1?'已通过':item.status==2?'未通过':'已取消'}}</view>
-      <view class="page__desc" wx:if="{{item.status==4}}">已结束</view>
+      <view class="page__desc" wx:if="{{item.status == 4}}">已结束</view>
       <view class="page__desc status2" wx:if="{{item.status == 5}}">进行中</view>
       <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" />
     </view>

@@ -12,11 +12,16 @@
     </swiper>
   </view>
 
+      <view class="weui-flex between nav">
+        <image mode="widthFix" class="card_icon" bindtap="viewLecture" src="https://d.rsd123.com/uploads/images/nav_icon1.png" data-wpyviewlecture-a="0"/>
+        <image mode="widthFix" class="card_icon" bindtap="viewLecture" src="https://d.rsd123.com/uploads/images/nav_icon2.png" data-wpyviewlecture-a="1"/>
+      </view>
       <view class="section">
         <view class="job-box">
-          <view class="job-title weui-flex between">
+          <view class="job-title weui-flex start">
+            <image mode="widthFix" class="home_icon" src="../../images/home_icon.png"/>
             <view>视频招聘会({{count}})</view>
-            <view class="card-item lecture-item" bindtap="viewLecture">空中宣讲会</view>
+            <!-- <view class="card-item lecture-item" bindtap="viewLecture">空中宣讲会</view> -->
           </view>
           <view class="job-search">
             <view class="job-search-query weui-flex start">

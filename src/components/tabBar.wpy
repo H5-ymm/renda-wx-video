@@ -17,14 +17,15 @@
     transition: 0.7s;
     border-radius: 4rpx;
     &.line1 {
-      left: 43%;
+      left: 44%;
     }
     &.line2 {
-      left: 76%;
+      left: 78%;
     }
   }
   .tabBar_item {
     text-align: center;
+    flex: auto;
     &.tabBar_item-active {
       color: #1890ff;
     }
@@ -34,7 +35,7 @@
 <template>
   <view class="weui-flex around tabBar">
     <repeat wx:for="{{tabBarList}}" wx:key="index">
-      <view class="{{activeIndex==index?'tabBar_item-active':''}} weui-flex__item tabBar_item " @tap="switchTab({{index}})">
+      <view class="{{activeIndex==index?'tabBar_item-active':''}} tabBar_item " @tap="switchTab({{index}})">
         <view class="weui-flex center">{{item.name}}</view>
       </view>
     </repeat>

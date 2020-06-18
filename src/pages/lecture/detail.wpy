@@ -18,6 +18,7 @@ page {
   }
   .swipe-container {
       height: 560rpx;
+      // height: 55%;
       background: #fdfdfe;
       position: relative;
       .big_icon {
@@ -37,6 +38,7 @@ page {
       left: 0;
       color: #fff;
       font-size: 24rpx;
+      // display: none;
       view {
         height: 100%;
         margin: 0 10rpx;
@@ -101,7 +103,8 @@ page {
     width: 100%;
     height: 100%;
     object-position: center;
-    background: -webkit-linear-gradient(bottom,#1D1D27,rgba(31, 63, 128, 0.16),rgba(29, 29, 39, 0));
+    z-index: 22;
+    // background: -webkit-linear-gradient(bottom,#1D1D27,rgba(31, 63, 128, 0.16),rgba(29, 29, 39, 0));
   }
   .video_file #video_img {
     position: absolute;
@@ -196,10 +199,12 @@ page {
   }
   .tab-box {
     height: 100rpx;
+   
   }
   .section1 {
     // height: calc(100% - 346px);
-     height: calc(100% - 50px)
+     height: calc(100% - 60px);
+    // height: calc(100% - 40px);
   }
   .canvas-box {
     width:100%;
@@ -217,7 +222,8 @@ page {
       }
     }
     .swiper {
-      height: calc(100% - 52px);;
+      // height: calc(100% - 52px);
+      height: calc(100% - 40px);
       width: 100%;
       .swiper-item {
         width:100%;
@@ -239,11 +245,12 @@ page {
     .pdfName {
       width: 200px;
       display: inline-block;
+      font-size: 26rpx;
     }
   }
   .pdf_icon {
-    width: 76rpx;
-    height: 90rpx;
+    width: 56rpx;
+    height: 60rpx;
     margin-right: 20rpx;
   }
   .share-btn {
@@ -261,8 +268,12 @@ page {
     background-color: #333;
     background-repeat: no-repeat;
     background-size: cover;
-    height: 560rpx;
+    height:55%;
     width: 100%;
+    position: relative;
+    &.container-box1 {
+      height: 100%;
+    }
     .center {
       position: absolute;
       left: calc(50vw - 55px);
@@ -271,14 +282,16 @@ page {
       height: 110px;
     }
 }
-
+cover-view {
+  overflow:initial!important;
+}
 .operate {
   position: absolute;
   margin-left: auto;
   margin-right: auto;
   right: 0;
-  left: 0;
-  bottom: 3vh;
+  left: -30rpx;
+  bottom:0;
   width: fit-content;
   height: 50px;
 }
@@ -294,11 +307,65 @@ page {
 .img-box {
   position: relative;
   display:inline-block;
-  height: 50px;
-  width: 80px;
+  height: 100rpx;
+  width: 160rpx;
   vertical-align: middle;
+  &.input-box {
+    width: 260rpx;
+    height: auto;
+    position: absolute;
+    bottom: 15rpx;
+    left: 20px;
+    z-index: 888;
+    .weui-input {
+      background:rgba(255,255,255,1);
+      border-radius:60rpx;
+      height: 60rpx;
+      text-align: left;  
+      padding-left: 10rpx;
+      font-size: 25rpx;
+    }
+  }
 }
-
+.play-icon {
+  position: absolute;
+  bottom: 15rpx;
+  right: 20px;
+  width: 60rpx;
+  height: 60rpx;
+}
+.message-box {
+  width: 300rpx;
+  height: 300rpx;
+  position: absolute;
+  bottom: 80rpx;
+  overflow: auto;
+  left: 15px;
+  font-size: 23rpx;
+  color: #fff;
+  overflow: hidden;
+  .message-swiper {
+    overflow: auto;
+    height: 100%;
+    padding: 6rpx;
+    position: relative;
+    .item {
+      height: 50rpx!important;
+      .text {
+        margin: 6rpx 0;
+        .nick {
+          padding: 0 8rpx;
+          color: #F3A04F;
+        }
+        .avatar {
+          width: 40rpx;
+          height: 40rpx;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}
 .img-view {
   position: relative;
   display: block;
@@ -341,89 +408,77 @@ page {
 <template>
   <view class="page-home">
     <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
-     class="{{rendaUserType==2&&!lectureInfo.alectureApplyNum==1 ? 'view-content': 'page'}}" @refresherrefresh="bindrefresherrefresh">
-      <swiper class="swipe-container {{rendaUserType==2?'swipe-container1':''}}" wx:if="{{lectureInfo.status!=5||com_uid!= uid}}"> 
-          <swiper-item class="swipe-box {{rendaUserType==1?'swipe-box-com':''}}" >
-            <view class="bg2" wx:if="{{!autoplay}}" @tap="bindplay"></view>
-            <view class="image-row">
-              <view class="weui-flex between image--col">
+     class="{{(rendaUserType==1&&uid!=com_uid) || lectureInfo.status==4 ? 'page': 'view-content'}}" @refresherrefresh="bindrefresherrefresh">
+      <swiper class="swipe-container {{rendaUserType==2?'swipe-container1':''}}" wx:if="{{lectureInfo.status!=5 || (com_uid!= uid && rendaUserType==1) || !overBtnShow}}"> 
+        <swiper-item class="swipe-box {{rendaUserType==1?'swipe-box-com':''}}" >
+          <view class="bg2" wx:if="{{lectureInfo.type==2&&lectureInfo.status!=4}}"></view>
+          <view class="image-row">
+            <view class="weui-flex between image--col">
+              <image
+                src="https://d.rsd123.com/uploads/images/image/back.png"
+                class="icon"
+                @tap="back"
+                mode="aspectFit">
+                <button open-type="share" class="share-btn">
                 <image
-                  src="https://d.rsd123.com/uploads/images/image/back.png"
+                  src="https://d.rsd123.com/uploads/images/image/share_top.png"
                   class="icon"
-                  @tap="back"
                   mode="aspectFit">
-                  <button open-type="share" class="share-btn">
-                  <image
-                    src="https://d.rsd123.com/uploads/images/image/share_top.png"
-                    class="icon"
-                    mode="aspectFit">
-                </button> 
-              </view>
+              </button> 
             </view>
-            <view class="video_file">
-              <view class="loading_btn" id="video_img" wx:if="{{networkType=='none'}}" @tap="againLoading">重新加载</view>
-              <video name="media" id="video" custom-cache="false" @ended="bindended" show-play-btn="{{showPalyBtn}}"  show-center-play-btn="{{showPalyBtn}}" autoplay="{{autoplay}}" src="{{lectureInfo.enclosure}}" controls  wx:if="{{lectureInfo.type==1}}">
-              </video>
-              <image src="{{lectureInfo.enclosure}}" mode="aspectFill" alt="" wx:if="{{lectureInfo.type==2}}" class="swiper-image shadow">
-            </view>
-            <view class="box" wx:if="{{lectureInfo.type==2}}">
-              <view class="weui-flex between">
-                <view>
-                  <image
-                    src="https://d.rsd123.com/uploads/images/image/people.png"
-                    class="people_icon"
-                    mode="aspectFill">
-                  <text class="num">{{lectureInfo.addNum}}人</text>
-                </view>
-                <view>
-                  <image
-                    src="https://d.rsd123.com/uploads/images/image/people.png"
-                    class="people_icon"
-                    mode="aspectFill">
-                </view>
-              </view>
-            </view>
-            <view class="line weui-flex between" wx:if="{{rendaUserType==2}}">
-              <view class="page__title">{{lectureInfo.title}}</view>
+          </view>
+          <view class="video_file">
+            <view class="loading_btn" id="video_img" wx:if="{{networkType=='none'}}" @tap="againLoading">重新加载</view>
+            <video name="media" id="video" custom-cache="false"  src="{{lectureInfo.enclosure}}" controls  wx:if="{{lectureInfo.type==1&&lectureInfo.status!=4}}">
+            </video>
+            <image src="{{lectureInfo.enclosure}}" mode="aspectFill" alt="" wx:if="{{lectureInfo.type==2&&lectureInfo.status!=4}}" class="swiper-image shadow">
+            <video name="media" id='myvideo' custom-cache="false" loop="true" src="{{lectureInfo.back_url}}" controls  wx:if="{{lectureInfo.back_url&&lectureInfo.status==4}}">
+            </video>
+          </view>
+          <view class="box" wx:if="{{lectureInfo.type==2}}">
+            <view class="weui-flex between">
               <view>
                 <image
-                  src="https://d.rsd123.com/uploads/images/collect.png"
-                  class="big_icon"
-                  wx:if="{{!lectureInfo.collectNum&&rendaUserType==2}}"
-                  @tap="collect"
+                  src="https://d.rsd123.com/uploads/images/image/people.png"
+                  class="people_icon"
                   mode="aspectFill">
-                  <image
-                  src="http://ttxsg.com.cn:39009/uploads/img/collect.png"
-                  class="big_icon"
-                  wx:if="{{lectureInfo.collectNum&&rendaUserType==2}}"
-                  @tap="collect"
-                  mode="aspectFill">
+                <text class="num">{{lectureInfo.addNum}}人</text>
               </view>
             </view>
-            <view class="cell weui-flex between" wx:if="{{rendaUserType==2}}">
-              <view class=" weui-flex start">
+          </view>
+          <view class="line weui-flex between" wx:if="{{rendaUserType==2}}">
+            <view class="page__title">{{lectureInfo.title}}</view>
+            <view>
+              <image
+                src="https://d.rsd123.com/uploads/images/collect.png"
+                class="big_icon"
+                wx:if="{{!lectureInfo.collectNum&&rendaUserType==2}}"
+                @tap="collect"
+                mode="aspectFill">
                 <image
-                  src="{{lectureInfo.logo_url}}"
-                  class="avatar_icon"
-                  mode="aspectFill">
-                <view class="page__desc">{{lectureInfo.title}}</view>
-              </view>
-              <view class="page__desc">{{lectureInfo.starttime}}</view>
+                src="http://ttxsg.com.cn:39009/uploads/img/collect.png"
+                class="big_icon"
+                wx:if="{{lectureInfo.collectNum&&rendaUserType==2}}"
+                @tap="collect"
+                mode="aspectFill">
             </view>
-          </swiper-item>
+          </view>
+          <view class="cell weui-flex between" wx:if="{{rendaUserType==2}}">
+            <view class="weui-flex start">
+              <image
+                src="{{lectureInfo.logo_url}}"
+                class="avatar_icon"
+                mode="aspectFill">
+              <view class="page__desc">{{lectureInfo.title}}</view>
+            </view>
+            <view class="page__desc">{{lectureInfo.starttime}}</view>
+          </view>
+        </swiper-item>
       </swiper>
-      <view class="container-box" wx:if="{{lectureInfo.status==5&&com_uid == uid}}">
-         <mlvb-live-room id="id_liveroom" wx:if="{{showLiveRoom}}" roomid="{{roomID}}" role="{{role}}" roomname="{{roomName}}" pureaudio="{{pureAudio}}" debug="{{debug}}" muted="{{muted}}" beauty="{{beauty}}" template="float" @RoomEvent="onRoomEvent">
-          <cover-view slot="casterBackButton" style='position:absolute;left:0;height:10%;width:10%;top:{{(headerHeight + statusBarHeight) - 26}}rpx'>
-              <cover-image class='close' src="/images/back.png" @tap="onBack"></cover-image>
-          </cover-view>
-
-          <cover-view slot="audienceBackButton" style='position:absolute;left:0;height:10%;width:10%;top:{{(headerHeight + statusBarHeight) - 26}}rpx'>
-            <cover-image class='close' src="/images/back.png" @tap="onBack"></cover-image>
-          </cover-view>
-            
+      <view class="container-box {{isFull ? 'container-box1': ''}}" wx:if="{{(lectureInfo.status==5&&com_uid == uid&&rendaUserType==1&&overBtnShow) || rendaUserType==2&&overBtnShow}}">
+        <mlvb-live-room id="id_liveroom" wx:if="{{showLiveRoom}}" destroyRoom="{{destroyRoom}}" roomid="{{roomID}}" role="{{role}}" roomname="{{roomName}}" pureaudio="{{pureAudio}}" debug="{{debug}}" muted="{{muted}}" beauty="{{beauty}}" template="float" @RoomEvent="onRoomEvent">
           <!-- 主播推流界面上叠加的操作按钮 -->
-          <cover-view slot="caster" style='position:absolute;bottom:0;height:10%;width:100%'>
+          <cover-view slot="caster" style='position:absolute;bottom:0;height:70px;width:50%;right:30px'>
             <cover-view class="operate">
               <cover-view class='img-box'>
                 <cover-image class='img-view' src="/images/camera{{frontCamera?'':'-gray'}}.png" @tap="changeCamera"></cover-image>
@@ -431,14 +486,11 @@ page {
               <cover-view class='img-box'>
                 <cover-image class='img-view' src="/images/{{beauty > 0? 'beauty' : 'beauty-dis'}}.png" @tap="setBeauty"></cover-image>
               </cover-view>
-              <cover-view class='img-box'>
-                <cover-image class='img-view' src="/images/{{debug? 'log' : 'log2'}}.png" @tap="showLog"></cover-image>
-              </cover-view>
             </cover-view>
           </cover-view>
 
           <!-- 观众播放界面上叠加的操作按钮 -->
-          <cover-view slot="audience" style='position:absolute;bottom:0;height:10%;width:100%'>
+          <cover-view slot="audience" style='position:absolute;bottom:0;height:70px;width:50%;right:30px'>
             <cover-view class="{{!linked? 'operate-nolink' : 'operate'}}">
               <cover-view wx:if="{{linked}}" class='img-box'>
                 <cover-image class='img-view' src='/images/camera.png' @tap="changeCamera"></cover-image>
@@ -446,21 +498,32 @@ page {
               <cover-view wx:if="{{linked}}" class='img-box'>
                 <cover-image class='img-view' src="/images/{{beauty > 0? 'beauty' : 'beauty-dis'}}.png" @tap="setBeauty"></cover-image>
               </cover-view>
-              <cover-view wx:if="{{!linked}}" class='img-box-big'>
-                <cover-image class='img-view-big' src='/images/video-call.png' @tap="onLinkClick"></cover-image>
-              </cover-view>
-              <cover-view class="{{!linked? 'img-box-small' : 'img-box'}}">
-                <cover-image class="{{!linked? 'img-view-small' : 'img-view'}}" src="/images/{{debug? 'log':'log2'}}.png" @tap="showLog"></cover-image>
-              </cover-view>
             </cover-view>
-            <cover-image wx:if="{{phoneNum}}" class='center' src="/images/{{phoneNum}}.png"></cover-image>
           </cover-view>
        </mlvb-live-room>
+        <view class='img-box input-box' wx:if="{{overBtnShow}}">
+          <input class="weui-input" placeholder-class="placeholder" value="{{message}}" @change="changeInput"  placeholder="请输入" />
+        </view>
+        <image src="../../images/full.png" alt="" class="play-icon" wx:if="{{!isFull}}" mode="aspectFill" @tap="setFull">
+        <image src="../../images/play.png" alt="" class="play-icon" wx:else  mode="aspectFill" @tap="setFull">
+        <view class='message-box' wx:if="{{overBtnShow}}"> 
+          <scroll-view class="message-swiper" scroll-y="true" scroll-with-animation="true" scroll-into-view="text-{{num}}">
+            <repeat for="{{messageList}}"  wx:key="index">
+              <view class="item" id="text-{{index+1}}">
+                <view class="text weui-flex start">
+                  <image src="{{item.avatar}}" alt="" class="avatar"  mode="aspectFill">
+                  <text class="nick">{{item.nick}}  </text> {{item.text}}</view>
+              </view>
+            </repeat>
+          </scroll-view>
+        </view>
       </view>
-       <pdfView @applyResume="applyResume" :lectureInfo.sync="lectureInfo"></pdfView>
+     <pdfView @applyResume="applyResume" :lectureInfo.sync="lectureInfo" :overBtnShow.sync="overBtnShow" wx:if="{{!isFull}}"></pdfView>
     </scroll-view>
     <view class="apply_btn weui-flex center" @tap="submit" wx:if="{{!lectureInfo.alectureApplyNum&&rendaUserType==2}}">立即免费报名</view>
-    <actionSheet :isScaleModal.sync="isScaleModal" text="个人信息不完整，请前往完善" okText="完善信息" @handleClose="handleClose" @handleOk="handleOk"></actionSheet>
+    <view class="apply_btn weui-flex center" @tap="handleOver" wx:if="{{lectureInfo.alectureApplyNum&&rendaUserType==2&&lectureInfo.status==5}}">{{roomID?'观看直播':'直播未开始'}}</view>
+    <view class="apply_btn weui-flex center" @tap="handleOver" wx:if="{{rendaUserType==1&&uid==com_uid&&lectureInfo.status==5}}">{{overBtnShow?'结束直播':'开始直播'}}</view>
+    <actionSheet :isScaleModal.sync="isScaleModal" :text.sync="text" :okText.sync="okText" @handleClose="handleClose" @handleOk="handleOk"></actionSheet>
  </view>
 </template>
 <script>
@@ -480,6 +543,7 @@ export default class lectureDetail extends wepy.page {
   data = {
     isScaleModal: true,
     TIM: null,
+    message: '',
     rendaUserType: 0,
     isShow: true,
     show: false,
@@ -512,10 +576,22 @@ export default class lectureDetail extends wepy.page {
     phoneNum: '',
     headerHeight: 40,
     statusBarHeight: 30,
-    options: {}
+    options: {},
+    roomList: [],
+    overBtnShow: false,
+    text: '',
+    okText: '',
+    messageList: [],
+    animationData: {},
+    timer: null,
+    num: -1,
+    TaskId: '',
+    isFull: false,
+    destroyRoom: false
   }
   config = {
     enablePullDownRefresh: true,
+    pageOrientation: 'auto',
     "usingComponents": {
        "mlvb-live-room": "/components/mlvb-live-room/mlvbliveroomview"
     }
@@ -526,11 +602,22 @@ export default class lectureDetail extends wepy.page {
       this.$apply()
     },
     handleOk: () => {
-      if (!wx.getStorageSync('rendaPerfect')) {
-        wxNavigateTo('/pages/my/resume') 
-      }
       this.isScaleModal = !this.isScaleModal
       this.$apply()
+      if (this.rendaUserType == 2) {
+        if (!wx.getStorageSync('rendaPerfect')) {
+          wxNavigateTo('/pages/my/resume') 
+        } else {    
+          this.component = this.$wxpage.selectComponent("#id_liveroom")
+          this.component.stop()
+          this.overBtnShow = false
+          this.$apply()
+        }
+      } else {
+        this.destroyRoom = true
+        this.$apply()
+        this.overVideo()
+      }
     },
     applyResume(item) {
       if (!wx.getStorageSync('rendaPerfect')) {
@@ -546,7 +633,8 @@ export default class lectureDetail extends wepy.page {
         $http('/personaljob/addapplyJob',params).then(res => {
           if (res.data) {
             wxToast('投递成功')
-            this.getList(this.com_id)
+            // this.getList(this.com_id)
+            this.$broadcast('applyResumeOk')
           } else {
             wxToast('投递失败')
           }
@@ -556,24 +644,37 @@ export default class lectureDetail extends wepy.page {
   }
   start() {
     this.component = this.$wxpage.selectComponent("#id_liveroom")
-    console.log('self.component: ', this.component)
     this.component.start();
+    this.createTask()
   }
   onShareAppMessage (res) {
     return {
-      title: '邀请观看直播'
+      title: '邀请观看直播',
+      imageUrl: getImgUrl('/uploads/images/zb.png')
     }
   }
+  _initIM () {
+    wx.$app.off(this.TIM.EVENT.MESSAGE_RECEIVED, this._onIMMessageReceived);
+    wx.$app.on(this.TIM.EVENT.MESSAGE_RECEIVED, this._onIMMessageReceived, this)
+  }
+  _onIMMessageReceived(event) {
+    event.data.forEach((item, index) => {
+		 console.log(item)
+		})
+		this.getGroupMessage()
+	}
   onLoad(options) {
     this.id = options.query
     this.uid = wx.getStorageSync('rendaUid')
     this.rendaUserType = wx.getStorageSync('rendaUserType')
     this.options = options
     this.roomName = options.roomName
-    this.getLectureDetail(this.id)
-    console.log("--> onLoad: ", options)
+    if (this.rendaUserType == 2) {
+      this.roomID = options.roomID
+    }
   }
   onShow() {
+    this.getLectureDetail(this.id)
     wx.onNetworkStatusChange(res => {
       console.log(res)
       console.log(res.isConnected)
@@ -581,25 +682,153 @@ export default class lectureDetail extends wepy.page {
     })
     wx.getNetworkType({
       success: res => {
-        console.log(res)
         this.networkType = res.networkType
-        console.log(this.networkType)
         this.$apply()
       }
     })
+    // this.createTemplate()
   }
   onReady () {
     wx.setNavigationBarTitle({
       title: this.roomName
     })
   }
+  overVideo() {
+    let params = {
+      uid: this.uid,
+      id: this.id
+    }
+    $http('/homepresentation/endPreachInfo', params).then(res => {
+      this.component = this.$wxpage.selectComponent("#id_liveroom")
+      this.component.stop();
+      // this.overTask()
+      wxToast('直播结束')
+      wx.navigateBack({
+        delta: 1
+      })
+    })
+  }
+  overTask() {
+     let params = {
+      StreamName: 'rendalive_' + this.id,
+      TaskId: this.TaskId
+    }
+    $http('/livebroadcast/stopLiveRecord',params).then(res => {
+      console.log(res)
+      if (res.data) {
+        wxToast('直播结束')
+        wx.navigateBack({
+          delta: 1
+        })
+      } else {
+        wxToast('推出直播失败')
+      }
+    })
+  }
+  createTask() {
+    let params = {
+      StreamName: 'rendalive_' + this.id,
+      AppName: 'live',
+      RecordType: 'video',
+      FileFormat: 'mp4'
+    }
+    $http('/livebroadcast/createLiveRecord', params).then(res => {
+      console.log(res)
+      this.TaskId = res.data.TaskId
+    })
+  }
+  getGroupMessage() {
+    let promise = wx.$app.getGroupMemberList({groupID: this.roomID, count: 30, offset:0});
+    promise.then(imResponse => {
+      const memberList = imResponse.data.memberList; // 消息列表。。
+      this.getMessage(memberList)
+    })
+  }
+  getMessage(memberList) {
+    let promise = wx.$app.getConversationList()
+    promise.then(imResponse => {
+      const messageList = this.changeList(imResponse.data.conversationList) // 消息列表。
+      let arr = []
+      messageList.forEach(val => {
+        memberList.forEach(item => {
+          if (item.userID == val.fromAccount) {
+            arr.push({text: val.text,nick: item.nick,avatar:item.avatar})
+          }
+        })
+      })
+      this.num = this.num + 1 
+      this.messageList = this.messageList.concat(arr)
+      this.message = ''
+      this.$apply()
+    })
+  }
+  changeList(list) {
+    let arr = []
+		list.forEach(item=> {
+      const { type, lastMessage } = item
+			if (type == 'GROUP') {
+        let messageObj = {}
+        messageObj = Object.assign( {text: lastMessage.messageForShow, fromAccount: lastMessage.fromAccount})
+        arr.push(messageObj)
+			}
+    })
+		return arr
+	}
+  sendMessage() {
+    let group = this.roomID
+    let message =  wx.$app.createTextMessage({
+      to: group,
+      conversationType: this.TIM.TYPES.CONV_GROUP,
+      payload: {
+        text: this.message
+      }
+    });
+    // 2. 发送消息
+    let promise = wx.$app.sendMessage(message);
+    promise.then(imResponse => {
+      // 发送成功
+      this.getGroupMessage()
+    }).catch(function(imError) {
+      // 发送失败
+      console.warn('sendMessage error:', imError);
+    });
+  }
+  createRoomId(roomID, pushUrl) {
+    let params = {
+      uid: this.uid,
+      id: this.id,
+      roomNum: roomID,
+      pushUrl
+    }
+    $http('/alecture/upRoomNum', params).then(res=>{
+      console.log(res)
+      this.roomID = roomID
+      this.$apply()
+    }).catch(err=>{
+        
+    })
+  }
   methods = {
+    setFull() {
+      this.isFull = !this.isFull
+      this.$apply()
+    },
+    changeInput(e){
+      if ( !e.detail.value) {
+        return wxToast('消息不能为空')
+      }
+      this.message = e.detail.value
+      clearInterval(this.timer)
+      this.sendMessage()
+    },
     searchScrollLower() {
       this.$broadcast('searchScrollLower')
     },
     submit() {
       if (!wx.getStorageSync('rendaPerfect')) {
         this.isScaleModal = !this.isScaleModal
+        this.okText = '完善信息'
+        this.text = '个人信息不完整，请前往完善'
         this.$apply()
         return
       }
@@ -621,11 +850,49 @@ export default class lectureDetail extends wepy.page {
 
       })
     },
+    handleOver() {
+      if (!this.roomID && this.rendaUserType == 2) return
+      if (this.overBtnShow) {
+        this.text = this.rendaUserType == 1 ?  '结束直播 确认结束宣讲会吗？' :  '确认退出宣讲会直播吗？'
+        this.okText = '确认'
+        this.isScaleModal = !this.isScaleModal
+        this.$apply()
+      } else {
+          if ((this.lectureInfo.status == 5 && this.uid == this.com_uid) || (this.lectureInfo.status == 5 &&this.rendaUserType == 2)) {
+          let options = this.options
+          let role
+          if (options.roomID && this.rendaUserType == 1) {
+            role = 'anchor'
+            this.roomID = options.roomID
+          } else {
+            role = options.type == 'create' ? 'anchor' : 'audience'
+          }
+          this.roomName = options.roomName
+          this.userName = options.userName
+          this.role = role
+          this.showLiveRoom = true
+          this.overBtnShow = true
+          if (role == 'audience') {
+            this.roomID = options.roomID
+          } else {
+            this.pureAudio = options.pureAudio
+          }
+          this.$apply()
+        }
+        this.start()
+        this.TIM = this.$parent.globalData.TIM
+        this._initIM()
+      }  
+    },
     onRoomEvent(e) {
       var self = this;
       var args = e.detail;
       console.log('onRoomEvent', args)
       switch (args.tag) {
+         case 'created': {
+         this.createRoomId(args.data.roomID, args.data.pushUrl)
+         break;
+        }
         case 'roomClosed': {
           wx.showModal({
             content: `房间已解散`,
@@ -659,18 +926,6 @@ export default class lectureDetail extends wepy.page {
           }
           break;
         }
-        case 'linkOn': { // 连麦连上
-          self.linked = true
-          self.phoneNum = ''
-          self.$apply()
-          break;
-        }
-        case 'linkOut': { //连麦断开
-        self.linked = false
-          self.phoneNum = ''
-          self.$apply()
-          break;
-        }
         case 'recvTextMsg': {
           console.log('收到消息:', e.detail.detail);
           var msg = e.detail.detail;
@@ -686,46 +941,20 @@ export default class lectureDetail extends wepy.page {
           self.$apply()
           break;
         }
-        case 'requestJoinAnchor': { //收到连麦请求
-          var jioner = args.detail;
-          var showBeginTime = Math.round(Date.now());
-          wx.showModal({
-            content: `${jioner.userName} 请求连麦`,
-            cancelText: '拒绝',
-            confirmText: '接受',
-            success: function (sm) {
-              var timeLapse = Math.round(Date.now()) - showBeginTime;
-              if (timeLapse < 10000) {
-                if (sm.confirm) {
-                  console.log('用户点击同意')
-                  self.component && self.component.respondJoinAnchor(true, jioner);
-                } else if (sm.cancel) {
-                  console.log('用户点击取消')
-                  self.component && self.component.respondJoinAnchor(false, jioner);
-                }
-              } else {
-                wx.showToast({
-                  title: '连麦超时',
-                })
-              }
-            }
-          })
-          break;
-        }
         default: {
           console.log('onRoomEvent default: ', e)
           break;
         }
       }
     },
-    onLinkClick: function () {
+    onLinkClick() {
       var self = this;
       self.component && self.component.requestJoinAnchor();
       self.phoneNum = 'phone-1'
       self.$apply()
       self.setInternal();
     },
-    setInternal: function () {
+    setInternal() {
       var self = this;
       setTimeout(() => {
         if (!self.phoneNum) {
@@ -750,13 +979,6 @@ export default class lectureDetail extends wepy.page {
         self.setInternal();
       }, 500);
     },
-    goRoom: function (e) {
-      var self = this;
-      var index = parseInt(e.currentTarget.dataset.index);
-      var roomID = self.rooms[index].roomID;
-      self.roomID = roomID
-      self.$apply()
-    },
     showLog() {
       this.debug = !this.debug
       this.$apply()
@@ -778,12 +1000,14 @@ export default class lectureDetail extends wepy.page {
       this.inputMsg = e.detail.value;
     },
     onBack() {
-      wx.navigateBack({
-        delta: 1
-      });
+      this.overBtnShow = true
+      this.text = this.rendaUserType == 1 ?  '结束直播 确认结束宣讲会吗？' :  '确认退出宣讲会直播吗？'
+      this.okText = '确认'
+      this.isScaleModal = !this.isScaleModal
+      this.$apply()
     },
     // 再次加载
-     againLoading() {
+    againLoading() {
       if (this.networkType != 'none') {
         if (this.networkType!='wifi' && this.networkType != 'none') {
           wxToast('当前非Wi-Fi 播放，请注意流量消耗')
@@ -840,29 +1064,6 @@ export default class lectureDetail extends wepy.page {
   bindrefresherrefresh() {
     this.getLectureDetail(this.id)
   }
-  getLectureInfo(info) {
-    this.lectureInfo = info
-    this.lectureInfo.starttime = handleTime(info.starttime)
-    this.com_id = info.com_id
-    this.com_uid = info.com_uid
-    this.$apply()
-    if (this.lectureInfo.status == 5 && this.uid == this.com_uid) {
-      let options = this.options
-      var role = options.type == 'create' ? 'anchor' : 'audience';
-      this.roomName = options.roomName
-      this.userName = options.userName
-      this.role = role
-      this.showLiveRoom = true
-      if (role == 'audience') {
-        this.roomID = options.roomID
-        this.showLiveRoom = true
-      } else {
-        this.pureAudio = options.pureAudio
-      }
-      this.$apply()
-      this.start()
-    }
-  }
   getLectureDetail(id) {
     let params = {
       uid: this.uid,
@@ -871,6 +1072,13 @@ export default class lectureDetail extends wepy.page {
     $http('/Homepresentation/getAlectureInfo', params).then(res => {
       this.getLectureInfo(res.data)
     })
+  }
+  getLectureInfo(info) {
+    this.lectureInfo = info
+    this.lectureInfo.starttime = handleTime(info.starttime)
+    this.com_id = info.com_id
+    this.com_uid = info.com_uid
+    this.$apply()
   }
 }
 </script>

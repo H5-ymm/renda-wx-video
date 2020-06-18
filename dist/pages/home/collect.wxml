@@ -3,7 +3,7 @@
 	  
   <view class="weui-flex around tabBar header-tab">
     <block  wx:for="{{$tabBar$tabBarList}}" wx:key="index">
-      <view class="{{$tabBar$activeIndex==index?'tabBar_item-active':''}} weui-flex__item tabBar_item " bindtap="$tabBar$switchTab" data-wpyswitchtab-a="{{index}}">
+      <view class="{{$tabBar$activeIndex==index?'tabBar_item-active':''}} tabBar_item " bindtap="$tabBar$switchTab" data-wpyswitchtab-a="{{index}}">
         <view class="weui-flex center">{{item.name}}</view>
       </view>
     </block>
@@ -32,7 +32,7 @@
               <view class="number">{{item.starttime}}</view>
               <view class="weui-flex between">
                 <view class="weui-flex__item page__label"> {{item.com_name}}</view>
-                <button class="weui-btn_cell weui-btn_primary" catchtap="concatCompany" data-wpyconcatcompany-a="{{item}}">
+                <button class="weui-btn_cell weui-btn_primary" catchtap="viewVideo" data-wpyviewvideo-a="{{item}}">
                  {{item.status==0?'查看':item.status==1?'观看直播':item.status==2?'立即报名':'观看回放'}}
                 </button>
               </view>
