@@ -134,6 +134,8 @@
   }
   .page__text__active {
     font-size: 32rpx;
+    width: 100%;
+    flex: auto;
   }
   .section {
     padding: 30rpx 0 0 30rpx;
@@ -200,7 +202,7 @@
   <view class="page-home">
     <scroll-view scroll-y="true" refresher-enabled="true" @scrolltolower="searchScrollLower"
      class="view_auto {{rendaUserType==1 ? 'view-content': 'page'}}" @refresherrefresh="bindrefresherrefresh">
-      <swiper autoplay="true" class="swipe-container view_padding" wx:if="{{banner.length}}"> 
+      <swiper autoplay="true" circular="true" class="swipe-container view_padding" wx:if="{{banner.length}}"> 
         <repeat wx:for="{{banner}}" wx:key="index">
           <swiper-item class="swipe-box" @tap="viewLecture({{item}})">
             <view class="bg"></view>
@@ -231,7 +233,7 @@
                 src="{{item.logo_url}}"
                 class="avatar_icon"
                 mode="aspectFill">
-              <view class="page__text__active">{{item.title}}</view>
+              <view class="page__text__active text-line">{{item.title}}</view>
             </view>
           </swiper-item>
         </repeat>
@@ -410,12 +412,12 @@ export default class lecture extends wepy.page {
       wx.setStorageSync('lectureId', item.id)
       if(this.rendaUserType == 1) {
         if (item.room_num) {
-          wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + 'userName='+item.com_name+'&roomName='+item.title +'&roomID=' + item.room_num)
+          wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + '&userName=' + item.com_name + '&roomName=' + item.title + '&roomID=' + item.room_num)
         } else {
           wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + '&type=create&userName='+item.com_name+'&roomName='+item.title +'&roomID=' + item.room_num)
         }      
       } else {
-        var url = '/pages/lecture/detail?query='+ item.id + '&roomID=' + item.room_num + '&roomName=' + item.com_name + '&userName=' + item.title + '&accelerateURL=' + item.push_url
+        var url = '/pages/lecture/detail?query='+ item.id + '&roomID=' + item.room_num + '&roomName=' + item.com_name + '&userName=' + item.title
         wxNavigateTo(url)
       }
     },

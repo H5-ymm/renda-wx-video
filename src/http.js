@@ -4,19 +4,16 @@ import {
 const baseUrl = 'http://www.ttxsg.com.cn:39009/';
 // const baseUrl = 'https://d.rsd123.com/'
 const apiUrl = baseUrl + 'wx.php';
-const rendaUid = wx.getStorageSync('rendaUid');
+let rendaUid = wx.getStorageSync('rendaUid')
 let header = {
 	'Content-Type': 'application/x-www-form-urlencoded'
 }
-console.log(rendaUid)
 if (rendaUid) {
 	header = JSON.parse(JSON.stringify(Object.assign(header, {'http-uid': rendaUid})))
 } else {
 	header = header
 }
 const http = (url, params, method) => {
-	console.log(header)
-	console.log(url)
 	return new Promise((resolve, reject) => {
 		wx.request({
 			url: `${apiUrl}${url}`, // 服务器url+参数中携带的接口具体地址

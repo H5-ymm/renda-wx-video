@@ -159,13 +159,15 @@ export default class lectureManage extends wepy.page {
       this.$apply()
     },
     searchStatus() {
-      this.visibile = true
+      this.visibile = !this.visibile
+      this.$apply()
     },
     select(item,index,key){
       this.params[key] = item.value
       this.text = item.label
       this.visibile = false
       this.activeIndex = index
+      this.$apply()
     },
     search() {
       this.getjobList()

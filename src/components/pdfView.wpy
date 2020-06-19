@@ -16,7 +16,7 @@
      <view class="tab-box {{rendaUserType==2?'section':''}}">
         <tabBar :tabBarList.sync="tabBarList" @switchTab="switchTab" class="header-tab"></tabBar>
       </view>
-      <view class="section section1">
+      <view class="section section1 {{activeIndex==2?'section2':''}}">
         <jobLectureList :list.sync="list" class="scroll-view" jobType="2" @deliverResume.user="applyResume" wx:if="{{activeIndex==2}}"></jobLectureList>
         <view class="container view_padding" wx:if="{{activeIndex==1}}">
           <rich-text nodes="{{lectureInfo.invitation_letter}}" class="my-text-right weui-textarea"></rich-text>
@@ -156,8 +156,12 @@ export default class pdfView extends wepy.component {
       type: 'file',
       success:res => {
         let tempFiles = res.tempFiles[0]
-        this.pdfName = tempFiles.name 
-        this.upload([tempFiles.path])
+        if (tempFiles.name.indexOf('pdf') == -1) {
+          wxToast('请上传pdf文件')
+        } else {
+          this.pdfName = tempFiles.name
+          this.upload([tempFiles.path])
+        }
       }
     })
   }
@@ -173,7 +177,9 @@ export default class pdfView extends wepy.component {
     // 查看pdf
     viewPdf() {
       if (this.rendaUserType == 2) {
-          wx.downloadFile({
+        console.log(this.enclosure)
+        wx.showLoading()
+        wx.downloadFile({
           // 示例 url，并非真实存在
           url: this.enclosure,
           success: function (res) {
@@ -181,6 +187,7 @@ export default class pdfView extends wepy.component {
             wx.openDocument({
               filePath: filePath,
               success: function (res) {
+                wx.hideLoading()
                 console.log('打开文档成功')
               }
             })
@@ -278,13 +285,16 @@ export default class pdfView extends wepy.component {
     this.uid = wx.getStorageSync('rendaUid')
     this.rendaUserType = wx.getStorageSync('rendaUserType')
     this.enclosure = this.lectureInfo.file
+    console.log(this.lectureInfo.file)
     this.$apply()
   }
   watch = {
     lectureInfo(val) {
       if (val) {
+        console.log(val)
         this.pdfName = val.file_name || ''
         this.enclosure = val.file
+        console.log(val.file)
         this.com_id = val.com_id
         this.id = val.id
         this.$apply()

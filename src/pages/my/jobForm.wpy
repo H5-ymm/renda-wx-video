@@ -191,16 +191,17 @@ export default class jobForm extends wepy.page {
   getjobInfo(id) {
 		$http('/companyjob/getjobinfo', { id }).then(res => {
       this.form = res.data
+      this.lectureIndex = this.form.exhibition ? Number(this.form.nature) - 1 : ''
       if (this.form.province) {
         this.address = [this.form.province, this.form.city, this.form.area]
-      }
-      if (this.form.first_pid) {
-        this.jobList = [this.form.first_pid, this.form.second_pid, this.form.job_type]
       }
       this.securityIndex = this.form.social_security ? Number(this.form.social_security) - 1 : ''
       this.salaryIndex = this.form.salary ? Number(this.form.salary) - 1 : ''
       this.eduIndex = this.form.edu ? this.form.edu : ''
       this.natureIndex = this.form.nature ? Number(this.form.nature) - 1 : ''
+      if (this.form.first_pid) {
+        this.jobList = [this.form.first_pid, this.form.second_pid, this.form.job_type]
+      }
       this.$apply()
 		})
   }
@@ -208,9 +209,8 @@ export default class jobForm extends wepy.page {
 		$http('/companyjob/is_upjob', params).then(res => {
       if (res.data) {
         wxToast('操作成功')
-        // wxNavigateTo('/pages/my/jobManage')
         wx.navigateBack({
-          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          delta: 1
         })
 			} else {
 				wxToast('操作失败')
@@ -227,7 +227,7 @@ export default class jobForm extends wepy.page {
           wxToast('保存成功')
         }
         wx.navigateBack({
-          delta: 1 //返回的页面数，如果 delta 大于现有页面数，则返回到首页,
+          delta: 1
         })
 			} else {
 				wxToast('保存失败')

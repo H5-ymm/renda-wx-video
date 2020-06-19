@@ -7,7 +7,7 @@
 	  <block  wx:if="{{$deliveryRecordList$list.length}}" wx:for="{{$deliveryRecordList$list}}" wx:for-index="$deliveryRecordList$index" wx:for-item="$deliveryRecordList$item" wx:key="$deliveryRecordList$index">
       
   <view class="list-row">
-    <view class="page__desc page_bottom jfTitle">记录来自：{{$deliveryRecordList$item.title}}</view>
+    <view class="page__desc page_bottom jfTitle">记录来自：{{$deliveryRecordList$item.type==1?'招聘会——':'宣讲会——'}}{{$deliveryRecordList$item.title}}</view>
     <view class="list-col-1">
       <view class="page__title weui-flex between">
         应聘职位：{{$deliveryRecordList$item.job_name}}

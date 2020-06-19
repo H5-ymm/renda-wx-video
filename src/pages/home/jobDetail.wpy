@@ -71,7 +71,7 @@
 import wepy from 'wepy'
 import jobItem from '@/components/jobItem'
 import { $http } from '@/http.js'
-import { wxShowModal, wxToast, wxNavigateTo } from '@/util.js'
+import { wxShowModal, wxToast, wxNavigateTo, getImgUrl } from '@/util.js'
 export default class jobDetail extends wepy.page {
   components = {
     jobDetailItem: jobItem
@@ -115,7 +115,8 @@ export default class jobDetail extends wepy.page {
   }
   onShareAppMessage (res) {
     return {
-      title: '转发',
+      title: '邀请投递职位',
+      imageUrl: getImgUrl('/uploads/images/share2.png'),
       path: '/pages/home/jobDetail?query=' + this.id
     }
   }

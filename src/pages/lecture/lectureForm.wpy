@@ -84,6 +84,7 @@
     bottom: 0;
     left: 0;
     font-size: 32rpx;
+    z-index: 33;
     box-shadow:0px -4px 8px 0px rgba(10,17,40,0.1);
   }
 </style>
@@ -150,7 +151,7 @@
           <i class="iconfont icon-youxupailie {{formats.list === 'ordered' ? 'ql-active' : ''}}" data-name="list" data-value="ordered"></i>
           <i class="iconfont icon-wuxupailie {{formats.list === 'bullet' ? 'ql-active' : ''}}" data-name="list" data-value="bullet"></i>
         </view>
-        <editor class="weui-input weui-textarea weui-flex__item" id="editor" read-only="{{isEdit}}" @statuschange="onStatusChange" data-name="invitation_letter" placeholder-class="placeholder" 
+        <editor class="weui-input weui-textarea weui-flex__item" id="editor" read-only="{{isEdit}}" @ready="onEditorReady" @statuschange="onStatusChange" data-name="invitation_letter" placeholder-class="placeholder" 
           placeholder="请输入招聘简章" @input="onChange" show-img-size="true" show-img-toolbar="true"></editor>
       </view>
     </view>
@@ -267,6 +268,7 @@ export default class lectureForm extends wepy.page {
   }
   upload(tempFilePath) {
     uploadFileVideo(tempFilePath).then(res => {
+      wx.hideLoading()
       this.fileImg = getImgUrl(res.data.url)
       this.form.enclosure = this.fileImg
       this.$apply()
@@ -292,6 +294,12 @@ export default class lectureForm extends wepy.page {
       let { name, value } = e.target.dataset
       if (!name) return
       this.editorCtx.format(name, value)
+    },
+    onEditorReady() {
+      const that = this
+      wx.createSelectorQuery().select('#editor').context(function (res) {
+        that.editorCtx = res.context
+      }).exec()
     },
     viewJob() {
       wxNavigateTo('/pages/my/jobManage?query=lecture')
@@ -331,7 +339,16 @@ export default class lectureForm extends wepy.page {
               this.upload([res.url])
             })
           } else {
+            console.log(tempFiles)
+            if (tempFiles.name.indexOf('Ogg')>-1) {
+              wxToast('请上传PM4格式的视频')
+              return
+            }
+            wx.showLoading({
+              title: '视频上传中'
+            })
             this.form.type = 1
+            console.log(tempFiles.path)
             this.upload([tempFiles.path])
           }
         }

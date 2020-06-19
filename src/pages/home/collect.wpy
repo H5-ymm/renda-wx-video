@@ -7,7 +7,10 @@
   }
   .header-tab {
     .tab-line {
-      margin-left: -40rpx;
+      margin-left: -20rpx;
+      &.line0 {
+        margin-left: -6rpx;
+      }
     }
   }
   .number, .page__label {

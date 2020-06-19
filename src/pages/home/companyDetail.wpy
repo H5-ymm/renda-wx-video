@@ -110,7 +110,7 @@ import jobItem from '@/components/jobItem'
 import actionSheet from '@/components/actionSheet'
 import { $http } from '@/http.js'
 import { welfareList } from '@/base/base'
-import { wxShowModal, wxToast, wxRedirectTo, wxNavigateTo } from '@/util.js'
+import { wxShowModal, wxToast, wxRedirectTo, wxNavigateTo, getImgUrl } from '@/util.js'
 export default class jobDetail extends wepy.page {
   components = {
     jobDetailItem: jobItem,
@@ -179,6 +179,7 @@ export default class jobDetail extends wepy.page {
   onShareAppMessage (res) {
     return {
       title: '转发',
+      imageUrl: getImgUrl('/uploads/images/share3.png'),
       path: '/pages/home/companyDetail?query=' + this.id
     }
   }

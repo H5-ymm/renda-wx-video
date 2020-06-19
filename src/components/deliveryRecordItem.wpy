@@ -1,7 +1,7 @@
 
 <template>
   <view class="list-row">
-    <view class="page__desc page_bottom jfTitle">记录来自：{{item.title}}</view>
+    <view class="page__desc page_bottom jfTitle">记录来自：{{item.type==1?'招聘会——':'宣讲会——'}}{{item.title}}</view>
     <view class="list-col-1">
       <view class="page__title weui-flex between">
         应聘职位：{{item.job_name}}

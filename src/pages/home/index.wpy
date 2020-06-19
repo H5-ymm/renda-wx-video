@@ -92,7 +92,6 @@ import jobFairList from '@/components/jobFairList'
 import { getStore } from 'wepy-redux'
 import { getAllUser, getUser } from '@/store/actions/user.js'
 import { getAllContant } from '@/store/actions/contant.js'
-import { login } from '@/lib/mlvbliveroomcore.js'
 const store = getStore()
 export default class teamView extends wepy.page {
   components = {
@@ -118,86 +117,11 @@ export default class teamView extends wepy.page {
     usertype: 0,
     TIM: null,
     text: '',
-    okText: '',
-    userSig: '',
-    roomList: [],
-    isGetLoginInfo: false,
-    firstshow: true,
-    userAvatar: '',
-    userName: ''
+    okText: ''
   }
   config = {
     navigationBarTitleText: '首页',
     enablePullDownRefresh: true
-  }
-  videoInit() {
-    var self = this;
-    var userID = new Date().getTime().toString(16);
-    var userSig = this.userSig
-    let userInfo = wx.getStorageSync('wxInfo')?JSON.parse(wx.getStorageSync('wxInfo')):{}
-    var loginInfo = {
-      sdkAppID: 1400335565,
-      userID: this.params.uid + '',
-      userSig: userSig,
-      userName: userInfo.nick,
-      userAvatar:  userInfo.avatar
-    }
-    //MLVB 登录
-    login({
-      data: loginInfo,
-      success: function (ret) {
-        //登录成功，拉取房间列表
-        self.firstshow = false;
-        self.isGetLoginInfo = true;
-        self.$apply()
-        // self.getRoom()
-      },
-      fail: function (ret) {
-        //登录失败
-        self.isGetLoginInfo = false;
-        self.$apply()
-        wx.showModal({
-          title: '提示',
-          content: ret.errMsg,
-          showCancel: false,
-          complete: function () {
-            wx.navigateBack({});
-          }
-        });
-      }
-    });
-  }
-  getRoom() {
-    var self = this;
-    if (!self.isGetLoginInfo) {
-      wx.showModal({
-        title: '提示',
-        content: '登录信息初始化中，请稍后再试',
-        showCancel: false
-      })
-      return;
-    }
-    // getRoomList({
-    //   data: {
-    //     index: 0,
-    //     cnt: 20
-    //   },
-    //   success: function (ret) {
-    //     self.roomList =  ret.rooms
-    //     console.log(self.roomList)
-    //     wx.setStorageSync('roomList', JSON.stringify(self.roomList))
-    //     self.$apply()
-    //     console.log('获取房间列表成功');
-    //   },
-    //   fail: function (ret) {
-    //     console.log(ret);
-    //     wx.showModal({
-    //       title: '获取房间列表失败',
-    //       content: ret.errMsg,
-    //       showCancel: false
-    //     });
-    //   }
-    // });
   }
   events = {
     searchValue: keywords => {
@@ -220,7 +144,6 @@ export default class teamView extends wepy.page {
       this.$apply()
     },
     booking: data => {
-      console.log(data)
       // 订展先判断是否完善信息
       // 完善信息之后企业订展是否审核
       // 审核之后
@@ -288,6 +211,7 @@ export default class teamView extends wepy.page {
         wxNavigateTo('/pages/login/welcome')
       } else {
         this.params.uid = res.payload.id
+        wx.setStorageSync('rendaUid', res.payload.id)
         this.usertype = res.payload.usertype
         this.$parent.globalData.rendaUserType = res.payload.usertype
         store.dispatch(getUser({uid: this.params.uid }, this.usertype))
@@ -369,7 +293,8 @@ export default class teamView extends wepy.page {
   }
   getUserSig() {
     $http('/autograph/getAutograph', { uid: this.params.uid + '' }).then(res => {
-      this.userSig =  res.data
+      // this.userSig =  res.data
+      wx.setStorageSync('userSig', res.data)
       let promise = wx.$app.login({ userID: this.params.uid + '', userSig: res.data });
       promise.then(imResponse => {
         this._initIM()
@@ -388,8 +313,6 @@ export default class teamView extends wepy.page {
 		let promise =  wx.$app.getConversationProfile(conversationID);
 		promise.then(imResponse => {
 			const { userProfile } = imResponse.data.conversation
-      this.userAvatar = userProfile.avatar
-      this.userName = userProfile.nick
       wx.setStorageSync('userProfile', JSON.stringify(userProfile))
       console.log('获取个人信息')
 			this.$apply() // 会话资料
@@ -414,7 +337,7 @@ export default class teamView extends wepy.page {
     } else {
       this.getConversationProfile()
     }
-    this.videoInit()
+    // this.videoInit()
   }
   getOpenId() {
     wx.login({
