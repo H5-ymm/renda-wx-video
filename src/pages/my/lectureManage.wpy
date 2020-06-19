@@ -50,10 +50,16 @@
   .number {
     font-size: 24rpx;
   }
+  .lecture-title {
+    width: 85%;
+    padding-right: 20rpx;
+  }
   .page__desc {
     margin-top: 0;
-    margin-right: 30rpx;
     font-size: 24rpx;
+    &.weui-flex__item {
+      width: 120rpx;
+    }
     &.status2 {
       color: #1890FF;
     }
@@ -76,7 +82,7 @@
                 <view class="card-item {{startTime?'page__label':'placeholder'}}"> {{startTime?startTime:'请选择开始时间'}}</view>
               </view>
             </picker>
-            <view class="line">-</view>
+            <view class="line"> - </view>
             <picker mode="date" data-name="endTime" @change="bindDateChange" value="{{endTime}}">
               <view class="my-text-right weui-flex between">
                 <view class="card-item {{endTime?'page__label':'placeholder'}}"> {{endTime?endTime:'请选择结束时间'}}</view>

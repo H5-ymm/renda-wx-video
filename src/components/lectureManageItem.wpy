@@ -2,18 +2,27 @@
   <view class="list-row weui-flex between">
     <view class="list-col-1 weui-flex__item">
       <view class="number" wx:if="{{item.status == 0}}">提示：请联系客服021-19865100 避免申请失败</view>
-      <view class="page__title">
-        {{item.title}}
+      <view class="weui-flex between">
+        <view class="page__title lecture-title">{{item.title}}</view>
+        <view class="page__desc weui-flex__item" wx:if="{{!item.status}}">申请中</view>
+        <view class="page__desc weui-flex__item {{item.status==1?'status2':item.status==2?'status4':'status3'}}" wx:if="{{item.status&&item.status<4}}">{{item.status==1?'已通过':item.status==2?'未通过':'已取消'}}</view>
+        <view class="page__desc weui-flex__item" wx:if="{{item.status == 4}}">已结束</view>
+        <view class="page__desc status2 weui-flex__item" wx:if="{{item.status == 5}}">进行中</view>
       </view>
-      <view class="page__desc">{{item.addtime}}</view>
-      <view class="number" wx:if="{{item.status == 2}}">拒绝理由：{{item.reason}}</view>
-      <view class="number" wx:if="{{item.status == 1||item.status == 5}}">在招职位：{{item.jobNum}}个 投递简历：{{item.resumeNum}}份</view>
+      <view class="weui-flex between">
+        <view class="weui-flex__item">
+          <view class="page__desc">
+            {{item.addtime}}
+          </view>
+          <view class="number" wx:if="{{item.status == 2}}">拒绝理由：{{item.reason}}</view>
+          <view class="number" wx:if="{{item.status == 1||item.status == 5}}">在招职位：{{item.jobNum}}个 投递简历：{{item.resumeNum}}份</view>
+        </view>
+        <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 4}}">查看回放</button>
+        <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 1}}">开启直播</button>
+        <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 5}}">直播进行中</button>
+      </view>
     </view>
     <view class="weui-flex between">
-      <view class="page__desc" wx:if="{{!item.status}}">申请中</view>
-      <view class="page__desc {{item.status==1?'status2':item.status==2?'status4':'status3'}}" wx:if="{{item.status&&item.status<4}}">{{item.status==1?'已通过':item.status==2?'未通过':'已取消'}}</view>
-      <view class="page__desc" wx:if="{{item.status == 4}}">已结束</view>
-      <view class="page__desc status2" wx:if="{{item.status == 5}}">进行中</view>
       <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png" />
     </view>
   </view>
@@ -24,6 +33,15 @@ import { wxNavigateTo } from '@/util'
 export default class lectureManageItem extends wepy.component {
 	props = {
     item: Object
-	}
+  }
+  methods = {
+    viewLecture(item) {
+      if (item.room_num) {
+        wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + '&userName=' + item.com_name + '&roomName=' + item.title + '&roomID=' + item.room_num)
+      } else {
+        wxNavigateTo(`/pages/lecture/detail?query=`+ item.id + '&type=create&userName='+item.com_name+'&roomName='+item.title +'&roomID=' + item.room_num)
+      }   
+    }
+  }
 }
 </script>
