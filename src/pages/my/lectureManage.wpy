@@ -12,10 +12,14 @@
     .card-item {
       margin-right: 0;
       position: relative;
-      padding: 8rpx 10rpx;
+      padding: 14rpx 10rpx;
+      font-size: 24rpx;
       &.status-item {
         margin-left: 10rpx;
       }
+    }
+    .line {
+      margin: 0 10rpx;
     }
     .samll-icon {
       height: 20rpx;
@@ -51,8 +55,8 @@
     font-size: 24rpx;
   }
   .lecture-title {
-    width: 85%;
-    padding-right: 20rpx;
+    width: 80%;
+    padding-right: 10rpx;
   }
   .page__desc {
     margin-top: 0;

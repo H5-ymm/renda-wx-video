@@ -19,7 +19,7 @@
         </view>
         <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 4}}">查看回放</button>
         <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 1}}">开启直播</button>
-        <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 5}}">直播进行中</button>
+        <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewLecture({{item}})" wx:if="{{item.status == 5}}">直播中</button>
       </view>
     </view>
     <view class="weui-flex between">
