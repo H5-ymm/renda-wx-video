@@ -92,7 +92,8 @@ export default class districtSelet extends wepy.component {
     codeList: [],
     province: [],
     isScaleModal: true,
-    isShow: false
+    isShow: false,
+    isChange: false
   }
   getCode(list) {
     return list.map(item => {
@@ -182,19 +183,26 @@ export default class districtSelet extends wepy.component {
       this.$apply()
     },
     selectOk() {
-      this.codeList.forEach((item, index) => {
-        this.options[index] = item[this.multiIndex[index]]
-          ? item[this.multiIndex[index]]
-          : 0
-      })
+      if (!this.isChange) {
+        this.options = [110000, 110100, 110101]
+      } else {
+         this.codeList.forEach((item, index) => {
+          this.options[index] = item[this.multiIndex[index]]
+            ? item[this.multiIndex[index]]
+            : 0
+        })
+      }
       if (this.options.length) {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
+        console.log(this.options)
         this.$emit('selectCity', this.options)
       }
     },
     bindChange(e) {
+      this.isChange = true
       this.multiIndex = e.detail.value
+      this.$apply()
       this.getCityList([this.codeList[0][this.multiIndex[0]], 0])
     },
     selectClose() {
@@ -202,15 +210,16 @@ export default class districtSelet extends wepy.component {
       this.$apply()
     },
     cancelPickerChange(e) {
+      this.isChange = false
       if (!this.address || (this.address && this.address.length === 0)) {
         this.multiIndex = [0, 0, 0]
         this.options = []
-        this.$apply()
         this.getRegion([])
       } else {
         lock = true
         this.getRegion(this.address)
       }
+      this.$apply()
     }
   }
 }

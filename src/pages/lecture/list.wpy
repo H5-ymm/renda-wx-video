@@ -135,7 +135,7 @@
   .page__text__active {
     font-size: 32rpx;
     width: 100%;
-    flex: auto;
+    flex: 1;
   }
   .section {
     padding: 30rpx 0 0 30rpx;

@@ -63,6 +63,7 @@
     font-size: 24rpx;
     &.weui-flex__item {
       width: 120rpx;
+      text-align: center;
     }
     &.status2 {
       color: #1890FF;
