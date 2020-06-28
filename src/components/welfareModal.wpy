@@ -69,7 +69,7 @@ export default class welfareModal extends wepy.component {
             }
           })
         })
-         let params = {
+        let params = {
           benefitsNameList: this.benefitsNameList.join(','),
           idList: this.idList.join(',')
         }
@@ -94,22 +94,26 @@ export default class welfareModal extends wepy.component {
         benefitsNameList: this.benefitsNameList.join(','),
         idList: this.idList.join(',')
       }
-      console.log(params)
 			this.$emit('handleBenefitOk', params)
     },
     selectBenefit(item, index) {
+      console.log(item)
+      console.log(this.idList)
       this.benefitsList[index].disabled = !item.disabled
-			if (this.idList.indexOf(item.id) === -1) {
+			if (this.idList.indexOf(item.id + '') === -1) {
         this.idList.push(item.id)
         this.benefitsNameList.push(item.title)
 			} else {
 				let ret = this.idList.findIndex(v => {
-					return v === item.id
+					return Number(v) === item.id
 				})
         this.idList.splice(ret, 1)
         this.benefitsNameList.splice(ret, 1)
       }
       this.idList = Array.from(new Set(this.idList))
+      console.log(this.idList)
+      this.benefitsNameList = Array.from(new Set(this.benefitsNameList))
+      console.log(this.benefitsNameList)
       this.$apply()
     }
 	}

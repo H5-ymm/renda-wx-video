@@ -88,7 +88,7 @@ const getErrorTip = code => {
 const getImgUrl = imgUrl => {
     const baseUrl = 'https://d.rsd123.com/'
     // const baseUrl = 'http://www.ttxsg.com.cn:39009/'
-    return baseUrl + imgUrl;
+    return baseUrl + imgUrl
 };
 const compressImg = (photoSrc, ratio = 2) => {
     let obj = {
@@ -243,8 +243,8 @@ const isJSON = (str) => {
  const handleTime = time => {
     let newTime = ''
     let daySart = $moment().startOf('day').format('X')
-    let dayEnd = $moment().endOf('day').format('x')
-    if ((daySart <= time ) && (dayEnd>= time)) {
+    let dayEnd = $moment().endOf('day').format('X')
+    if ((daySart - time <= 0 ) && (dayEnd - time >= 0)) {
       newTime = '今天 ' + $moment.unix(time).format('HH:mm')
     } else {
       newTime = $moment.unix(time).format('YYYY-MM-DD HH:mm')

@@ -47,6 +47,11 @@
       height: 176rpx;
     }
   }
+  .page_list {
+    .page_noData {
+      margin: 0 auto;
+    }
+  }
 }
 </style>
 <template>
@@ -85,7 +90,7 @@
 import wepy from 'wepy'
 import { $http } from '@/http.js'
 import $moment from 'moment'
-import { getImgUrl, wxToast, wxNavigateTo, wxRedirectTo, contactPhone } from '@/util.js'
+import { wxToast, wxNavigateTo, wxRedirectTo, contactPhone } from '@/util.js'
 import banner from '@/components/banner'
 import actionSheet from '@/components/actionSheet'
 import jobFairList from '@/components/jobFairList'

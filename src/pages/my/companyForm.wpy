@@ -259,7 +259,15 @@ export default class companyForm extends wepy.page {
 			if (res.data) {
 				wxToast('修改成功')
 				wx.setStorageSync('rendaPerfect', 1)
-        wxReLaunch('/pages/my/index')
+				let pages = getCurrentPages()
+				console.log(pages + '几层')
+				if (pages.length == 1) {
+					wxReLaunch('/pages/home/index')
+				} else {
+					wx.navigateBack({
+						delta: 1
+					})
+				}
 			} else {
 				wxToast('修改失败')
 			}

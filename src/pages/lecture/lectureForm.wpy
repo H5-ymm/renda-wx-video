@@ -129,8 +129,8 @@
       <view class="list-row"> 
         <view class="weui-flex between">
           <view class="my-text">展示图片/视频</view>
-          <image src="{{fileImg}}" alt="" class="img-icon" wx:if="{{fileImg&&form.type==2}}" />
-          <video name="media" id="video" class="img-icon" src="{{fileImg}}" enable-danmu danmu-btn controls preload="auto"
+          <image src="{{fileImg}}" alt="" class="img-icon" wx:if="{{fileImg&&form.type==2}}" @tap="uploadImg"/>
+          <video name="media" id="video" class="img-icon" @tap="uploadImg" src="{{fileImg}}" enable-danmu danmu-btn controls preload="auto"
             wx:if="{{fileImg&&form.type==1}}">
           </video>
           <image @tap="uploadImg" src="https://d.rsd123.com/uploads/images/upload.png" mode="scaleToFill" class="my-head" wx:if="{{!fileImg}}"/>  
@@ -267,9 +267,15 @@ export default class lectureForm extends wepy.page {
 		}) 
   }
   upload(tempFilePath) {
+    console.log(tempFilePath)
     uploadFileVideo(tempFilePath).then(res => {
-      wx.hideLoading()
+      console.log(res)
+      if (this.form.type == 1) {
+        wx.hideLoading()
+      }
       this.fileImg = getImgUrl(res.data.url)
+      console.log(this.fileImg)
+      console.log(this.form.type)
       this.form.enclosure = this.fileImg
       this.$apply()
     })
@@ -335,8 +341,8 @@ export default class lectureForm extends wepy.page {
           let tempFiles = res.tempFiles[0]
           if (tempFiles.type == 'image') {
             this.form.type = 2
-            compressImg(tempFiles.path).then(res => {
-              this.upload([res.url])
+            compressImg(tempFiles.path).then(ret => {
+              this.upload([ret.url])
             })
           } else {
             console.log(tempFiles)

@@ -183,6 +183,16 @@
         line-height: 30rpx;
         .line {
           padding-top: 10rpx;
+          .card-right {
+            width: 78%;
+            padding-left: 30rpx;
+          }
+          .avatar_icon {
+            margin-right: 0;
+          }
+          .page__title {
+            width: 100%;
+          }
         }
       }
     }
@@ -255,8 +265,8 @@
                       src="{{item.logo_url}}"
                       class="avatar_icon"
                       mode="aspectFill">
-                     <view>
-                      <view class="page__title">{{item.title}}</view>
+                     <view class="card-right">
+                      <view class="page__title text-line">{{item.title}}</view>
                       <view class="page__desc">{{item.starttime}}</view>
                     </view>
                   </view>
@@ -341,7 +351,7 @@ export default class lecture extends wepy.page {
     },
     handleOk: () => {
       if (!wx.getStorageSync('rendaPerfect')) {
-        wxNavigateTo('/orderPackages/pages/my/companyForm') 
+        wxNavigateTo('/pages/my/companyForm') 
       }
       this.isScaleModal = !this.isScaleModal
       this.$apply()

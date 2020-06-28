@@ -339,8 +339,9 @@ cover-view {
   height: 60rpx;
 }
 .message-box {
-  width: 520rpx;
+  width: 400rpx;
   height: 300rpx;
+  padding-right: 10rpx;
   position: absolute;
   bottom: 80rpx;
   overflow: auto;
@@ -354,17 +355,25 @@ cover-view {
     padding: 6rpx;
     position: relative;
     .item {
-      height: 50rpx!important;
+      // height: 50rpx!important;
+      margin-bottom: 16rpx;
+      .weui-flex__item {
+        flex: auto;
+      }
       .text {
         margin: 6rpx 0;
         .nick {
           padding: 0 8rpx;
-          color: #F3A04F;
+          color: #F3A04F;  
         }
         .avatar {
           width: 40rpx;
           height: 40rpx;
           border-radius: 50%;
+        }
+        .message {
+          word-break: break-all;
+          width: 100rpx;
         }
       }
     }
@@ -513,8 +522,11 @@ cover-view {
             <repeat for="{{messageList}}"  wx:key="index">
               <view class="item" id="text-{{index+1}}">
                 <view class="text weui-flex start">
-                  <image src="{{item.avatar}}" alt="" class="avatar"  mode="aspectFill">
-                  <view class="weui-flex__item weui-flex between"><text class="nick">{{item.nick}}  </text> {{item.text}}</view>
+                  <view class="weui-flex start weui-flex__item">
+                    <image src="{{item.avatar}}" alt="" class="avatar"  mode="aspectFill">
+                    <view class="nick">{{item.nick}}</view> 
+                  </view>
+                  <view class="message weui-flex__item">{{item.text}}</view>
                 </view>
               </view>
             </repeat>
@@ -906,10 +918,10 @@ export default class lectureDetail extends wepy.page {
         this.isScaleModal = !this.isScaleModal
         this.$apply()
       } else {
-          if (this.lectureInfo.status!=5) {
+          if (this.lectureInfo.status!=5 && this.rendaUserType == 2) {
             wxToast('宣讲会直播未开始，到达直播时间后一大波观众观看哦!')
           }
-          if ((this.uid == this.com_uid) || (this.lectureInfo.status == 5 &&this.rendaUserType == 2)) {
+          if ((this.uid == this.com_uid) || (this.lectureInfo.status == 5 && this.rendaUserType == 2)) {
             wxToast('直播中断，可以再次进入进行直播哦！')
             let options = this.options
             let role

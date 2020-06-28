@@ -61,9 +61,8 @@ export default class datePicker extends wepy.component {
 		},
 		date(val) {
 			if(val) {
-				console.log(val)
 				this.dateValue = $moment(val).format('YYYY-MM-DD')
-				this.timeValue = $moment(val).format('HH:ss')
+				this.timeValue = $moment(val).format('HH:mm')
 				this.$apply()
 			}
 		}
@@ -71,7 +70,7 @@ export default class datePicker extends wepy.component {
 	onLoad () {
 		this.viewType = wx.getStorageSync('rendaViewType')
 		this.dateValue = $moment().format('YYYY-MM-DD')
-		this.timeValue = $moment().format('HH:ss')
+		this.timeValue = $moment().format('HH:mm')
 		this.params.date = this.dateValue
 		this.startValue = this.dateValue
 		this.params.time = this.timeValue

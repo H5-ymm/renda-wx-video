@@ -47,7 +47,7 @@
 							<image mode="scaleToFill" src="{{userProfile.avatar}}" class="dialogBox-col-header" wx:if="{{userProfile.avatar}}"/>
 							<image mode="scaleToFill" src="https://a.rsd123.com/image/images/default1.png" class="dialogBox-col-header" wx:else/>
 							<view class="dialogBox-content dialogBox-content-left weui-flex start">
-							  <view wx:if="{{item.type=='TIMTextElem'}}" >{{item.text}}</view>
+							  <rich-text wx:if="{{item.type=='TIMTextElem'}}" class="msg_content" nodes="{{item.text}}"></rich-text>
 								<image mode="scaleToFill" src="{{item.img}}" wx:if="{{item.type=='TIMImageElem'}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
 								<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
 								<image mode="scaleToFill" wx:if="{{item.type=='TIMCustomElem'}}" src="https://d.rsd123.com/uploads/images/company/video.png" class="dialogBox_icon" />
@@ -56,14 +56,16 @@
 					</view>
 					<view class="weui-flex wrap dialogBox-col weui-flex__item end" wx:if="{{(uid==item.from&&item.type!='TIMCustomElem')||(uid==item.from&&item.type=='TIMCustomElem'&&item.action&&item.action!=5)}}">
 						<view class="page__desc date">{{item.time}}</view>
-						<view class="dialogBox-content weui-flex start dialogBox-content-right">
-							<view wx:if="{{item.type=='TIMTextElem'}}">{{item.text}}</view>
-							<image wx:if="{{item.type=='TIMImageElem'}}" mode="scaleToFill" src="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
-							<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
-							<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/video2.png" class="dialogBox_icon" />
+					  <view class="weui-flex end">
+							<view class="dialogBox-content weui-flex start dialogBox-content-right">
+								<rich-text wx:if="{{item.type=='TIMTextElem'}}" class="msg_content" nodes="{{item.text}}"></rich-text>
+								<image wx:if="{{item.type=='TIMImageElem'}}" mode="scaleToFill" src="{{item.img}}" @tap="viewImage({{item}})"  class="dialogBox_icon" />
+								<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>
+								<image wx:if="{{item.type=='TIMCustomElem'}}" mode="scaleToFill" src="https://d.rsd123.com/uploads/images/company/video2.png" class="dialogBox_icon" />
+							</view>
+							<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
+							<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/user.png" class="dialogBox-col-header" wx:else/>
 						</view>
-						<image mode="scaleToFill" src="{{userInfo.head_img}}" class="dialogBox-col-header" wx:if="{{userInfo.head_img}}"/>
-						<image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/user.png" class="dialogBox-col-header" wx:else/>
 					</view>
 				</repeat>
 			</view>
@@ -212,8 +214,8 @@ export default class personalDialogBox extends wepy.page {
 		})
 	}
 	onShow () {
+		this._initIM()
 		this.getMessage()
-		this._initIM()	
 	}
 	onUnload () {
 		this.isClear = false
@@ -342,7 +344,7 @@ export default class personalDialogBox extends wepy.page {
 	entryUser(params) {
 		$http('/Autograph/entry', params).then(res => {
 			if (res.data) {
-				let value = '入职通知' + $moment.unix(params.entry_time).format('YYYY-MM-DD HH:mm') + params.entry_address+ params.content
+				let value = '入职通知：<br>入职时间：' + $moment.unix(params.entry_time).format('YYYY-MM-DD HH:mm') + ';<br>入职地点：' + params.entry_address + ';<br>入职内容：' + params.content
 				this.sendMessageApi(value)
 				this.isEntry = 1
 				this.isNoticeModal = !this.isNoticeModal

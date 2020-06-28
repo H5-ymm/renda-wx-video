@@ -96,7 +96,7 @@
             <view class="my-text">职位描述</view>
           </view>
           <input class="weui-input weui-textarea weui-flex__item" data-name="content" placeholder-class="placeholder" 
-            value="{{form.content}}" @input="changeInput" placeholder="请输入职位描述" @input="changeInput"/>
+            value="{{form.content}}" @input="changeInput" placeholder="请输入职位描述"/>
         </view>
       </view>
     </view>

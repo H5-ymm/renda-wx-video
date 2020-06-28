@@ -36,6 +36,7 @@
       font-weight: 400;
       text-align: center;
       line-height: 46rpx;
+      z-index: 3;
       box-shadow:1px 2px 8px 0px rgba(49,101,204,0.1);
       .active {
         color: #1890FF;

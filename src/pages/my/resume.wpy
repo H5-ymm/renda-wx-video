@@ -104,6 +104,11 @@ export default class resume extends wepy.page {
   getuserdetail() {
     $http('/personal/getuserdetail', {uid: this.uid}).then(res => {
       this.resumeDetail = res.data
+      if (this.resumeDetail.resume_count >= 80) {
+        wx.setStorageSync('rendaPerfect', 1)
+      } else {
+        wx.setStorageSync('rendaPerfect', 0)
+      }
       this.resumeDetail.birthtime = res.data.birthtime ? $moment(new Date(Number(res.data.birthtime))).format('YYYY-MM-DD'): ''
       if (this.resumeDetail.edulist) {
         this.eduList = this.resumeDetail.edulist.map(item =>{

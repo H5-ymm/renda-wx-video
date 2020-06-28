@@ -251,10 +251,11 @@ export default class hall extends wepy.page {
 			if (this.count > this.list.length && this.count > limit) {
 				if (this.hallType == 1) {
           this.companyParams.limit = this.companyParams.limit + 10
+          this.getHallList(this.companyParams)
         } else {
           this.params.limit = this.params.limit + 10
+          this.getHallList(this.params)
         }
-				this.getHallList(this.query)
 			}
     }
   }
