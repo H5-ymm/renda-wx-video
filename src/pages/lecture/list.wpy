@@ -219,7 +219,7 @@
             <view class="bg1"></view>
             <view class="bg2"></view>
             <view class="video_file">
-              <video name="media" id="video" src="{{item.enclosure}}" enable-danmu danmu-btn controls preload="auto" wx:if="{{item.type==1}}">
+              <video name="media" controls="{{controls}}" showCenterPlayBtn="{{controls}}"  src="{{item.enclosure}}" preload="auto" wx:if="{{item.type==1}}">
               </video>
               <image src="{{item.enclosure}}" mode="aspectFill" alt="" wx:if="{{item.type==2}}" class="swiper-image shadow">
             </view>
@@ -256,7 +256,7 @@
                 <swiper-item class="swiper-item swipe-box" @tap="viewLecture({{item}})">
                   <view class="bg2"></view>
                   <view class="video_file">
-                    <video name="media" id="video" src="{{item.enclosure}}" custom-cache="false" enable-danmu danmu-btn controls preload="auto" wx:if="{{item.type==1}}">
+                    <video name="media" controls="{{controls}}" showCenterPlayBtn="{{controls}}"  src="{{item.enclosure}}" wx:if="{{item.type==1}}">
                     </video>
                     <image src="{{item.enclosure}}" mode="aspectFill" alt="" wx:if="{{item.type==2}}" class="swiper-image shadow">
                   </view>
@@ -275,7 +275,7 @@
             </swiper>
           </view>
       </view>
-      <view class="section section1">
+      <view class="section section1" wx:if="{{list2.length}}">
         <view class="page__title">宣讲回看</view>
         <view class="swipe-container"
           wx:for="{{list2}}" wx:key="index">
@@ -292,7 +292,7 @@
           <view class="swipe-box swipe-end" @tap="viewLecture({{item}})">
             <view class="bg2"></view>
             <view class="video_file">
-              <video name="media" id="video" src="{{item.back_url}}" enable-danmu danmu-btn controls preload="auto">
+              <video name="media" controls="{{controls}}" showCenterPlayBtn ="{{controls}}" src="{{item.back_url}}">
               </video>
             </view>
             <view class="line weui-flex between">
@@ -338,7 +338,8 @@ export default class lecture extends wepy.page {
     list1: [],
     list2: [],
     rendaUserType: 0,
-    TIM: null
+    TIM: null,
+    controls: false
   }
   config = {
     navigationBarTitleText: '空中宣讲会',

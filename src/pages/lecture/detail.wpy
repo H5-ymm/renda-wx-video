@@ -443,7 +443,7 @@ cover-view {
             <view class="loading_btn" id="video_img" wx:if="{{networkType=='none'}}" @tap="againLoading">重新加载</view>
             <video name="media" id="video" custom-cache="false"  src="{{lectureInfo.enclosure}}" controls  wx:if="{{lectureInfo.type==1&&lectureInfo.status!=4}}">
             </video>
-            <image src="{{lectureInfo.enclosure}}" mode="aspectFill" alt="" wx:if="{{lectureInfo.type==2&&lectureInfo.status!=4}}" class="swiper-image shadow">
+            <image src="{{lectureInfo.enclosure}}" mode="scaleToFill" alt="" wx:if="{{lectureInfo.type==2&&lectureInfo.status!=4}}" class="swiper-image shadow">
             <video name="media" id='myvideo' custom-cache="false" loop="true" @play="bindplay" src="{{lectureInfo.back_url}}" controls  wx:if="{{lectureInfo.back_url&&lectureInfo.status==4}}">
             </video>
           </view>
@@ -537,8 +537,8 @@ cover-view {
       <pdfView @applyResume="applyResume" :lectureInfo.sync="lectureInfo" :overBtnShow.sync="overBtnShow" wx:if="{{!isFull}}"></pdfView>
     </scroll-view>
     <view class="apply_btn weui-flex center" @tap="submit" wx:if="{{!lectureInfo.alectureApplyNum&&rendaUserType==2}}">立即免费报名</view>
-    <view class="apply_btn weui-flex center" @tap="handleOver" wx:if="{{lectureInfo.alectureApplyNum&&rendaUserType==2}}">{{roomID&&lectureInfo.status==5?'观看直播':'直播未开始'}}</view>
-    <view class="apply_btn weui-flex center" @tap="handleOver" wx:if="{{rendaUserType==1&&uid==com_uid}}">{{overBtnShow?'结束直播':'开始直播'}}</view>
+    <view class="apply_btn weui-flex center" @tap="handleOver" wx:if="{{lectureInfo.alectureApplyNum&&rendaUserType==2}}">{{roomID&&lectureInfo.status==5?'观看宣讲':'宣讲未开始'}}</view>
+    <view class="apply_btn weui-flex center" @tap="handleOver" wx:if="{{rendaUserType==1&&uid==com_uid}}">{{overBtnShow?'结束宣讲':'开始宣讲'}}</view>
     <actionSheet :isScaleModal.sync="isScaleModal" :text.sync="text" :okText.sync="okText" @handleClose="handleClose" @handleOk="handleOk"></actionSheet>
  </view>
 </template>
@@ -671,7 +671,7 @@ export default class lectureDetail extends wepy.page {
   onShareAppMessage (res) {
     var url = '/pages/lecture/detail?query='+ this.id + '&roomID=' + this.roomID + '&roomName=' + this.roomName + '&userName=' + this.options.userName + '&isShare=true'
     return {
-      title: '邀请观看直播',
+      title: '邀请观看宣讲会',
       imageUrl: getImgUrl('/uploads/images/zb.png'),
       path: url
     }
@@ -758,7 +758,7 @@ export default class lectureDetail extends wepy.page {
       this.component = this.$wxpage.selectComponent("#id_liveroom")
       this.component.stop();
       // this.overTask()
-      wxToast('直播结束')
+      wxToast('宣讲结束')
       wx.navigateBack({
         delta: 1
       })
@@ -771,12 +771,12 @@ export default class lectureDetail extends wepy.page {
     }
     $http('/livebroadcast/stopLiveRecord',params).then(res => {
       if (res.data) {
-        wxToast('直播结束')
+        wxToast('宣讲结束')
         wx.navigateBack({
           delta: 1
         })
       } else {
-        wxToast('推出直播失败')
+        wxToast('推出宣讲失败')
       }
     })
   }
@@ -905,24 +905,24 @@ export default class lectureDetail extends wepy.page {
     },
     handleOver() {
       if (!this.roomID && this.rendaUserType == 2) {
-        wxToast('宣讲会直播开始后，下拉刷新进入直播!')
+        wxToast('宣讲会开始后，下拉刷新进入宣讲!')
         return
       }
       if (this.overBtnShow) {
         if (this.lectureInfo.status!=5) {
-          wxToast('直播未开始不能结束')
+          wxToast('宣讲未开始不能结束')
           return
         }
-        this.text = this.rendaUserType == 1 ?  '结束直播 确认结束宣讲会吗？' :  '确认退出宣讲会直播吗？'
+        this.text = this.rendaUserType == 1 ?  '结束宣讲 确认结束宣讲会吗？' :  '确认退出宣讲会宣讲吗？'
         this.okText = '确认'
         this.isScaleModal = !this.isScaleModal
         this.$apply()
       } else {
           if (this.lectureInfo.status!=5 && this.rendaUserType == 2) {
-            wxToast('宣讲会直播未开始，到达直播时间后一大波观众观看哦!')
+            wxToast('宣讲会未开始，到达时间后一大波观众观看哦!')
           }
           if ((this.uid == this.com_uid) || (this.lectureInfo.status == 5 && this.rendaUserType == 2)) {
-            wxToast('直播中断，可以再次进入进行直播哦！')
+            wxToast('宣讲中断，可以再次进入进行宣讲哦！')
             let options = this.options
             let role
             if (options.roomID && this.rendaUserType == 1) {
@@ -1064,7 +1064,7 @@ export default class lectureDetail extends wepy.page {
     },
     onBack() {
       this.overBtnShow = true
-      this.text = this.rendaUserType == 1 ?  '结束直播 确认结束宣讲会吗？' :  '确认退出宣讲会直播吗？'
+      this.text = this.rendaUserType == 1 ?  '结束宣讲 确认结束宣讲会吗？' :  '确认退出宣讲会宣讲吗？'
       this.okText = '确认'
       this.isScaleModal = !this.isScaleModal
       this.$apply()

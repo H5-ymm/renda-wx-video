@@ -1,0 +1,74 @@
+
+ <view class="page page_top resume_view">
+    <scroll-view scroll-y="true" refresher-enabled="true" bindrefresherrefresh="bindrefresherrefresh" bindscrolltolower="searchScrollLower" class="scroll-view view_auto">
+       <view class="weui-flex between weui-flex__item search-query page_margin">
+        <div class="weui-flex start">
+          <picker mode="date" data-name="startTime" bindchange="bindDateChange" value="{{startTime}}">
+              <view class="my-text-right weui-flex between">
+                <view class="card-item {{startTime?'page__label':'placeholder'}}"> {{startTime?startTime:'请选择开始时间'}}</view>
+              </view>
+            </picker>
+            <view class="line"> - </view>
+            <picker mode="date" data-name="endTime" bindchange="bindDateChange" value="{{endTime}}">
+              <view class="my-text-right weui-flex between">
+                <view class="card-item {{endTime?'page__label':'placeholder'}}"> {{endTime?endTime:'请选择结束时间'}}</view>
+              </view>
+            </picker>
+        </div>
+        <view class="card-item status-item" bindtap="searchStatus">
+          {{text?text:'状态'}}
+          <image src="https://d.rsd123.com/uploads/images/image/down1.png" class="samll-icon" mode="scaleToFill"/>
+        </view>
+        <view class="weui-flex end page__desc" bindtap="search">搜索</view>
+         <view class="job-query"  wx:if="{{visibile}}">
+          <block wx:for="{{statusTypeList}}" wx:key="index">
+            <view bindtap="select" class="item {{activeIndex==index?'active':''}}" data-wpyselect-a="{{item}}" data-wpyselect-b="{{index}}" data-wpyselect-c="status">{{item.label}}</view>
+          </block>
+        </view>
+      </view>
+      
+	<view>
+	  <block  wx:if="{{$lectureManageList$list.length}}" wx:for="{{$lectureManageList$list}}" wx:for-index="$lectureManageList$index" wx:for-item="$lectureManageList$item" wx:key="$lectureManageList$index">
+      <view bindtap="$lectureManageList$viewJobDetail" data-wpyviewjobdetail-a="{{$lectureManageList$item}}">
+				
+  <view class="list-row weui-flex between">
+    <view class="list-col-1 weui-flex__item">
+      <view class="number"  wx:if="{{$lectureManageList$item.status == 0}}">提示：请联系客服021-19865100 避免申请失败</view>
+      <view class="weui-flex between">
+        <view class="page__title lecture-title">{{$lectureManageList$item.title}}</view>
+        <view class="page__desc weui-flex__item"  wx:if="{{!$lectureManageList$item.status}}">申请中</view>
+        <view class="page__desc weui-flex__item {{$lectureManageList$item.status==1?'status2':$lectureManageList$item.status==2?'status4':'status3'}}" wx:if="{{$lectureManageList$item.status&&$lectureManageList$item.status<4}}">{{$lectureManageList$item.status==1?'已通过':$lectureManageList$item.status==2?'未通过':'已取消'}}</view>
+        <view class="page__desc weui-flex__item" wx:if="{{$lectureManageList$item.status == 4}}">已结束</view>
+        <view class="page__desc status2 weui-flex__item" wx:if="{{$lectureManageList$item.status == 5}}">进行中</view>
+      </view>
+      <view class="weui-flex between">
+        <view class="weui-flex__item">
+          <view class="page__desc">
+            {{$lectureManageList$item.addtime}}
+          </view>
+          <view class="number" wx:if="{{$lectureManageList$item.status == 2}}">拒绝理由：{{$lectureManageList$item.reason}}</view>
+          <view class="number" wx:if="{{$lectureManageList$item.status == 1||$lectureManageList$item.status == 5}}">在招职位：{{$lectureManageList$item.jobNum}}个 投递简历：{{$lectureManageList$item.resumeNum}}份</view>
+        </view>
+        <button class="weui-btn_cell weui-btn_primary" catchtap="$lectureManageList$lectureManageItem$viewLecture" wx:if="{{$lectureManageList$item.status == 4}}" data-com-index="{{$lectureManageList$index}}" data-wpyviewlecture-a="{{$lectureManageList$item}}">查看回放</button>
+        <button class="weui-btn_cell weui-btn_primary" catchtap="$lectureManageList$lectureManageItem$viewLecture" wx:if="{{$lectureManageList$item.status == 1}}" data-com-index="{{$lectureManageList$index}}" data-wpyviewlecture-a="{{$lectureManageList$item}}">开启宣讲</button>
+        <button class="weui-btn_cell weui-btn_primary" catchtap="$lectureManageList$lectureManageItem$viewLecture" wx:if="{{$lectureManageList$item.status == 5}}" data-com-index="{{$lectureManageList$index}}" data-wpyviewlecture-a="{{$lectureManageList$item}}">宣讲中</button>
+      </view>
+    </view>
+    <view class="weui-flex between">
+      <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png"/>
+    </view>
+  </view>
+
+			</view>
+    </block>
+		<view wx:if="{{!$lectureManageList$list.length}}" class="page_list">
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+    </scroll-view>
+    <!-- <view class="weui-cell_btn weui-flex center">
+      <button class="weui-btn_cell weui-btn_primary" bindtap="releaseJob">发布宣讲会</button>
+    </view> -->
+  </view>

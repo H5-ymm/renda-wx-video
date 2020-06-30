@@ -40,7 +40,7 @@
 					<view class="weui-flex wrap dialogBox-col weui-flex__item end" wx:if="{{(uid==item.from&&item.type!='TIMCustomElem')||(uid==item.from&&item.type=='TIMCustomElem'&&item.action&&item.action!=5)}}">
 						<view class="page__desc date">{{item.time}}</view>
 					  <view class="weui-flex end">
-							<view class="dialogBox-content weui-flex start dialogBox-content-right">
+							<view class="dialogBox-content weui-flex__auto weui-flex start dialogBox-content-right">
 								<rich-text wx:if="{{item.type=='TIMTextElem'}}" class="msg_content" nodes="{{item.text}}"/>
 								<image wx:if="{{item.type=='TIMImageElem'}}" mode="scaleToFill" src="{{item.img}}" bindtap="viewImage" class="dialogBox_icon" data-wpyviewimage-a="{{item}}"/>
 								<view wx:if="{{item.type=='TIMCustomElem'}}">{{wxs.checkText(item.action)}}</view>

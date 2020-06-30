@@ -1,0 +1,18 @@
+var checkText = function (index) {
+  var text = ''
+  if(index == 1) {
+    text = '取消视频'
+  } else if (index == 2) {
+    text = '挂断视频'
+  }else if (index == 3) {
+    text = '对方取消视频'
+  } else if (index == 4) {
+    text = '视频通话已挂断'
+  } else {
+    text = '挂断通话'
+  }
+  return text
+}
+module.exports = {
+  checkText: checkText
+}

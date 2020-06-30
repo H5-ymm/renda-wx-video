@@ -76,6 +76,9 @@
   }
   .modal-subTitle {
     font-size: 26rpx;
+    height: 88%;
+    display: block;
+    overflow: auto;
   }
   .companyList {
     overflow: auto;

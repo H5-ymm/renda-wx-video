@@ -1,0 +1,52 @@
+
+  <scroll-view scroll-y="true" style="height:100%" bindscrolltolower="searchScrollLower">
+    <view class="page_bottom">
+      <view class="weui-flex between weui-flex__item search-section">
+        
+  <view class="weui-flex between search-box">
+		<view class="weui-cell weui-flex start weui-flex__item">
+			<image src="https://d.rsd123.com/uploads/images/search.png" class="searchIcon"/>
+			<input class="weui-input weui-flex__item search-input" bindinput="$searchJob$inputBind" confirm-type="search" bindfocus="$searchJob$inputFocus" value="{{$searchJob$name}}" bindblur="$searchJob$inputBlur" placeholder="{{$searchJob$placeholder}}"/>
+    </view>
+	</view>
+
+        <view class="weui-flex__item" bindtap="searchName">搜索</view>
+      </view>
+      <view class="weui-flex start weui-flex__item search-query">
+        <view class="card-item weui-flex center" bindtap="searchQuery" data-wpysearchquery-a="cityView">{{address}}</view>
+        <view class="card-item weui-flex center" bindtap="searchQuery" data-wpysearchquery-a="jobCategory">{{jobName}}</view>
+        <view class="card-item weui-flex end" bindtap="searchQuery" data-wpysearchquery-a="selectView">
+           筛选
+           <image src="../../images/query.png" class="samll-icon" mode="scaleToFill"/>
+           <view  wx:if="{{total}}" class="num">{{total}}</view>
+        </view>
+        <view class="page__title" bindtap="clearQuery">清空条件</view>
+      </view>
+    </view>
+    
+	<view class="scroll-view">
+	  <block  wx:if="{{$jobLSearchList$list.length}}" wx:for="{{$jobLSearchList$list}}" wx:for-index="$jobLSearchList$index" wx:for-item="$jobLSearchList$item" wx:key="$jobLSearchList$index">
+      <view bindtap="$jobLSearchList$viewJob" data-wpyviewjob-a="{{$jobLSearchList$item}}">
+				
+  <view class="list-row">
+    <view class="weui-flex between list-col-1">
+      <text class="page__title text-line">{{$jobLSearchList$item.job_name}}</text>
+      <view class="number">{{$jobLSearchList$item.salary_min}}~{{$jobLSearchList$item.salary_max}}</view>
+    </view>
+    <view class="page__desc">{{$jobLSearchList$item.nature}} | {{$jobLSearchList$item.edu}} | {{$jobLSearchList$item.provinceName}}{{$jobLSearchList$item.cityName}}{{$jobLSearchList$item.areaName}}</view>
+    <view class="weui-flex start">
+      <view class="page__title text-line weui-flex__item">{{$jobLSearchList$item.com_name}}</view>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$jobLSearchList$item.is_apply!=1}}" catchtap="$jobLSearchList$jobLSearchItem$deliverResume" data-com-index="{{$jobLSearchList$index}}" data-wpydeliverresume-a="{{$jobLSearchList$item}}">投递简历</button>
+      <view class="number"  wx:if="{{$jobLSearchList$item.is_apply==1}}">已投递</view>
+    </view>
+  </view>
+
+			</view>
+    </block>
+		<view wx:if="{{!$jobLSearchList$list.length}}" class="page_list">
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+  </scroll-view>

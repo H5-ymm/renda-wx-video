@@ -1,0 +1,86 @@
+
+  <view class="add-view page jobForm">
+    <view class="page_form">
+      <view class="list-row">
+        <view class="weui-flex start">
+          <view class="my-text">宣讲会名称</view>
+          <input class="weui-input" placeholder-class="placeholder" disabled="{{isEdit}}" data-name="title" value="{{form.title}}" bindinput="changeInput" placeholder="请输入宣讲会名称"/>
+        </view>
+      </view>
+      <view class="list-row">
+        <view class="weui-flex start">
+          <view class="my-text">开始时间</view>
+          
+	<view class="weui-cell weui-flex start weui-flex__item">
+		<picker mode="date" value="{{$datePicker$dateValue}}" start="{{$datePicker$startValue}}" bindchange="$datePicker$bindDateChange" class="modal-col picker-col">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!$datePicker$params.date?'placeholder':'weui-input'}}">{{$datePicker$dateValue}}</view>
+				</view>
+			</view>
+		</picker>
+		<picker mode="time" value="{{$datePicker$timeValue}}" start="09:00" end="21:00" bindchange="$datePicker$timeChange" class="modal-col picker-col1">
+			<view class="picker weui-flex between">
+				<view class="weui-flex between weui-flex__item">
+					<view class="{{!$datePicker$params.time?'placeholder':'weui-input'}}">{{$datePicker$timeValue}}</view>
+				</view>
+			</view>
+		</picker>
+	</view>
+
+        </view>
+      </view>
+      <view class="list-row">
+        <view class="weui-flex start">
+          <view class="my-text">联系人</view>
+          <input class="weui-input" data-name="link_man" placeholder-class="placeholder" value="{{form.link_man}}" bindinput="changeInput" disabled="{{isEdit}}" placeholder="请输入联系人"/>
+        </view>
+      </view>
+      <view class="list-row">
+        <view class="weui-flex start">
+          <view class="my-text">联系人电话</view>
+          <input class="weui-input" data-name="link_tel" placeholder-class="placeholder" value="{{form.link_tel}}" bindinput="changeInput" disabled="{{isEdit}}" placeholder="请输入联系人电话"/>
+        </view>
+      </view>
+      <view class="list-row"  wx:if="{{id}}" bindtap="viewJob"> 
+        <view class="weui-flex between">
+          <view class="weui-flex start">
+            <view class="my-text">招聘职位</view>
+            <view class="weui-input">{{form.jobNum}}个</view>
+          </view>
+          <image mode="scaleToFill" class="page_card_icon" src="https://d.rsd123.com/uploads/images/right.png"/>
+        </view>
+      </view>
+      <view class="list-row"> 
+        <view class="weui-flex between">
+          <view class="my-text">展示图片/视频</view>
+          <image src="{{fileImg}}" alt="" class="img-icon"  wx:if="{{fileImg&&form.type==2}}" bindtap="uploadImg"/>
+          <video name="media" id="video" class="img-icon" bindtap="uploadImg" src="{{fileImg}}" enable-danmu danmu-btn controls preload="auto" wx:if="{{fileImg&&form.type==1}}">
+          </video>
+          <image bindtap="uploadImg" src="https://d.rsd123.com/uploads/images/upload.png" mode="scaleToFill" class="my-head" wx:if="{{!fileImg}}"/>  
+        </view>
+        </view>
+        <view class="list-row">
+        <view class="page_margin page_bottom">
+          <view class="my-text">招聘简章</view>
+        </view>
+        <view class="toolbar" catchtouchend="format">
+          <i class="iconfont icon-charutupian" catchtouchend="insertImage"/>
+          <i class="iconfont icon-format-header-2 {{formats.header === 2 ? 'ql-active' : ''}}" data-name="header" data-value="{{2}}"/>
+          <i class="iconfont icon-format-header-3 {{formats.header === 3 ? 'ql-active' : ''}}" data-name="header" data-value="{{3}}"/>
+          <i class="iconfont icon-zitijiacu {{formats.bold ? 'ql-active' : ''}}" data-name="bold"/>
+          <i class="iconfont icon-zitixieti {{formats.italic ? 'ql-active' : ''}}" data-name="italic"/>
+          <i class="iconfont icon-zitixiahuaxian {{formats.underline ? 'ql-active' : ''}}" data-name="underline"/>
+          <!-- <i class="iconfont icon--checklist" data-name="list" data-value="check"></i> -->
+          <i class="iconfont icon-youxupailie {{formats.list === 'ordered' ? 'ql-active' : ''}}" data-name="list" data-value="ordered"/>
+          <i class="iconfont icon-wuxupailie {{formats.list === 'bullet' ? 'ql-active' : ''}}" data-name="list" data-value="bullet"/>
+        </view>
+        <editor class="weui-input weui-textarea weui-flex__item" id="editor" read-only="{{isEdit}}" bindready="onEditorReady" bindstatuschange="onStatusChange" data-name="invitation_letter" placeholder-class="placeholder" placeholder="请输入招聘简章" bindinput="onChange" show-img-size="true" show-img-toolbar="true"/>
+      </view>
+    </view>
+    <view class="apply_btn weui-flex center" bindtap="submit" wx:if="{{!id}}">提交申请</view>
+    <view class="apply_btn weui-flex center" bindtap="submit" wx:if="{{form.status==2}}">修改</view>
+    <view class="apply_btn weui-flex center" bindtap="deleteLecture" wx:if="{{form.status==3 || form.status== 4}}">删除</view>
+    <view class="apply_btn weui-flex center" bindtap="cancleSubmit" wx:if="{{!form.status&&id!=''}}">取消申请</view>
+    <canvas canvas-id="canvas" style="width:{{cWidth}}px;height:{{cHeight}}px;position: absolute;left:-1000px;top:-1000px;"/>
+  </view>

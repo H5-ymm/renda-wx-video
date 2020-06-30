@@ -47,7 +47,7 @@
               <view class="weui-flex between">
                 <view class="weui-flex__item page__label"> {{item.com_name}}</view>
                 <button class="weui-btn_cell weui-btn_primary" @tap.stop="viewVideo({{item}})">
-                 {{item.status==0?'查看':item.status==1?'观看直播':item.status==2?'立即报名':'观看回放'}}
+                 {{item.status==0?'查看':item.status==1?'观看宣讲':item.status==2?'立即报名':'观看回放'}}
                 </button>
               </view>
             </view>

@@ -1,0 +1,217 @@
+
+  <view class="page-home">
+    <scroll-view scroll-y="true" refresher-enabled="true" bindscrolltolower="searchScrollLower" class="{{(rendaUserType==1&&uid!=com_uid) || lectureInfo.status==4 ? 'page': 'view-content'}}" bindrefresherrefresh="bindrefresherrefresh">
+      <swiper class="swipe-container {{rendaUserType==2?'swipe-container1':''}}"  wx:if="{{(com_uid!= uid && rendaUserType==1) || !overBtnShow}}"> 
+        <swiper-item class="swipe-box {{rendaUserType==1?'swipe-box-com':''}}">
+          <view class="bg2" wx:if="{{lectureInfo.type==2&&lectureInfo.status!=4}}"/>
+          <view class="image-row">
+            <view class="weui-flex between image--col">
+              <image src="https://d.rsd123.com/uploads/images/image/back.png" class="icon" bindtap="back" mode="aspectFit"/>
+                <button open-type="share" class="share-btn">
+                <image src="https://d.rsd123.com/uploads/images/image/share_top.png" class="icon" mode="aspectFit"/>
+              </button> 
+            </view>
+          </view>
+          <view class="video_file">
+            <view class="loading_btn" id="video_img" wx:if="{{networkType=='none'}}" bindtap="againLoading">重新加载</view>
+            <video name="media" id="video" custom-cache="false" src="{{lectureInfo.enclosure}}" controls wx:if="{{lectureInfo.type==1&&lectureInfo.status!=4}}">
+            </video>
+            <image src="{{lectureInfo.enclosure}}" mode="scaleToFill" alt="" wx:if="{{lectureInfo.type==2&&lectureInfo.status!=4}}" class="swiper-image shadow"/>
+            <video name="media" id="myvideo" custom-cache="false" loop="true" bindplay="bindplay" src="{{lectureInfo.back_url}}" controls wx:if="{{lectureInfo.back_url&&lectureInfo.status==4}}">
+            </video>
+          </view>
+          <view class="box" wx:if="{{lectureInfo.type==2}}">
+            <view class="weui-flex between">
+              <view>
+                <image src="https://d.rsd123.com/uploads/images/image/people.png" class="people_icon" mode="aspectFill"/>
+                <text class="num">{{lectureInfo.addNum}}人</text>
+              </view>
+            </view>
+          </view>
+          <view class="line weui-flex between" wx:if="{{rendaUserType==2}}">
+            <view class="page__title">{{lectureInfo.title}}</view>
+            <view bindtap="collect">
+              <image src="https://d.rsd123.com/uploads/images/collect.png" class="big_icon" wx:if="{{!lectureInfo.collectNum&&rendaUserType==2}}" mode="aspectFill"/>
+                <image src="http://ttxsg.com.cn:39009/uploads/img/collect.png" class="big_icon" wx:if="{{lectureInfo.collectNum&&rendaUserType==2}}" mode="aspectFill"/>
+            </view>
+          </view>
+          <view class="cell weui-flex between" wx:if="{{rendaUserType==2}}">
+            <view class="weui-flex start">
+              <image src="{{lectureInfo.logo_url}}" class="avatar_icon" mode="aspectFill"/>
+              <view class="page__desc">{{lectureInfo.title}}</view>
+            </view>
+            <view class="page__desc">{{lectureInfo.starttime}}</view>
+          </view>
+        </swiper-item>
+      </swiper>
+      <view class="container-box {{isFull ? 'container-box1': ''}}"  wx:if="{{(com_uid == uid&&rendaUserType==1&&overBtnShow) || rendaUserType==2&&overBtnShow}}">
+        <mlvb-live-room id="id_liveroom" wx:if="{{showLiveRoom}}" destroyRoom="{{destroyRoom}}" roomid="{{roomID}}" role="{{role}}" roomname="{{roomName}}" pureaudio="{{pureAudio}}" debug="{{debug}}" muted="{{muted}}" beauty="{{beauty}}" template="float" bindRoomEvent="onRoomEvent">
+          <!-- 主播推流界面上叠加的操作按钮 -->
+          <cover-view slot="caster" style="position:absolute;bottom:0;height:70px;width:50%;right:30px">
+            <cover-view class="operate">
+              <cover-view class="img-box">
+                <cover-image class="img-view" src="/images/camera{{frontCamera?'':'-gray'}}.png" bindtap="changeCamera"/>
+              </cover-view>
+              <cover-view class="img-box">
+                <cover-image class="img-view" src="/images/{{beauty > 0? 'beauty' : 'beauty-dis'}}.png" bindtap="setBeauty"/>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+
+          <!-- 观众播放界面上叠加的操作按钮 -->
+          <cover-view slot="audience" style="position:absolute;bottom:0;height:70px;width:50%;right:30px">
+            <cover-view class="{{!linked? 'operate-nolink' : 'operate'}}">
+              <cover-view wx:if="{{linked}}" class="img-box">
+                <cover-image class="img-view" src="/images/camera.png" bindtap="changeCamera"/>
+              </cover-view>
+              <cover-view wx:if="{{linked}}" class="img-box">
+                <cover-image class="img-view" src="/images/{{beauty > 0? 'beauty' : 'beauty-dis'}}.png" bindtap="setBeauty"/>
+              </cover-view>
+            </cover-view>
+          </cover-view>
+        </mlvb-live-room>
+        <view class="img-box input-box" wx:if="{{overBtnShow}}">
+          <input class="weui-input" placeholder-class="placeholder" value="{{message}}" bindchange="changeInput" placeholder="请输入"/>
+        </view>
+        <image src="../../images/full.png" alt="" class="play-icon" wx:if="{{!isFull}}" mode="aspectFill" bindtap="setFull"/>
+        <image src="../../images/play.png" alt="" class="play-icon" wx:else mode="aspectFill" bindtap="setFull"/>
+        <!-- 弹幕 -->
+        <view class="message-box" wx:if="{{overBtnShow}}"> 
+          <scroll-view class="message-swiper" scroll-y="true" scroll-with-animation="true" scroll-into-view="text-{{num}}">
+            <block wx:key="key" wx:for="{{messageList}}" wx:for-index="index" wx:for-item="item">
+              <view class="item" id="text-{{index+1}}">
+                <view class="text weui-flex start">
+                  <view class="weui-flex start weui-flex__item">
+                    <image src="{{item.avatar}}" alt="" class="avatar" mode="aspectFill"/>
+                    <view class="nick">{{item.nick}}</view> 
+                  </view>
+                  <view class="message weui-flex__item">{{item.text}}</view>
+                </view>
+              </view>
+            </block>
+          </scroll-view>
+        </view>
+        <!-- 弹幕 -->
+      </view>
+      
+  <view class="bottom-content {{($pdfView$lectureInfo.status==5&&$pdfView$lectureInfo.com_uid == $pdfView$uid&&$pdfView$rendaUserType==1&&$pdfView$overBtnShow) || ($pdfView$lectureInfo.status==5&&$pdfView$rendaUserType==2&&$pdfView$overBtnShow) ? 'bottom-content1': 'bottom-content2'}}" wx:if="{{!isFull}}">
+     <view class="tab-box {{$pdfView$rendaUserType==2?'section':''}}">
+        
+  <view class="weui-flex around tabBar header-tab">
+    <block  wx:for="{{$pdfView$tabBar$tabBarList}}" wx:key="index">
+      <view class="{{$pdfView$tabBar$activeIndex==index?'tabBar_item-active':''}} tabBar_item " bindtap="$pdfView$tabBar$switchTab" data-wpyswitchtab-a="{{index}}">
+        <view class="weui-flex center">{{item.name}}</view>
+      </view>
+    </block>
+    <view class="tab-line {{'line'+$pdfView$tabBar$activeIndex}}"/>
+  </view>
+
+      </view>
+      <view class="section section1 {{$pdfView$activeIndex==2?'section2':''}}">
+        
+	<view class="scroll-view" wx:if="{{$pdfView$activeIndex==2}}">
+	  <block  wx:if="{{$pdfView$jobLectureList$list.length}}" wx:for="{{$pdfView$jobLectureList$list}}" wx:for-index="$pdfView$jobLectureList$index" wx:for-item="$pdfView$jobLectureList$item" wx:key="$pdfView$jobLectureList$index">
+      <view bindtap="$pdfView$jobLectureList$viewResume" data-wpyviewresume-a="{{$pdfView$jobLectureList$item}}">
+				
+  <view class="list-row" wx:if="{{$pdfView$jobLectureList$jobType==1}}">
+    <view class="weui-flex between list-col-1">
+      <text class="page__title text-line">{{$pdfView$jobLectureList$item.job_name}}</text>
+      <view class="number">{{$pdfView$jobLectureList$item.salary}}</view>
+    </view>
+    <view class="page__desc">招{{$pdfView$jobLectureList$item.number}}人 | {{$pdfView$jobLectureList$item.edu}} | {{$pdfView$jobLectureList$item.province}}{{$pdfView$jobLectureList$item.city}}{{$pdfView$jobLectureList$item.area}}</view>
+    <view class="weui-flex start text-line">
+      <view class="weui-flex start weui-flex__item">
+        <view class="card-item weui-flex center">{{$pdfView$jobLectureList$item.social_security}}</view>
+      </view>
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$pdfView$jobLectureList$jobItem$isShowBtn&&$pdfView$jobLectureList$item.is_apply!=1}}" catchtap="$pdfView$jobLectureList$jobItem$deliverResume" data-com-index="{{$pdfView$jobLectureList$index}}" data-wpydeliverresume-a="{{$pdfView$jobLectureList$item}}">投递简历</button>
+      <view class="number"  wx:if="{{$pdfView$jobLectureList$jobItem$isShowBtn&&$pdfView$jobLectureList$item.is_apply==1}}">已投递</view>
+    </view>
+  </view>
+
+				
+  <view class="list-row" wx:if="{{$pdfView$jobLectureList$jobType==2}}">
+    <view class="weui-flex between list-col-1">
+      <text class="page__title text-line">{{$pdfView$jobLectureList$item.job_name}}</text>
+      <view class="number">{{$pdfView$jobLectureList$item.salary_min}}~{{$pdfView$jobLectureList$item.salary_max}}</view>
+    </view>
+    <view class="page__desc">招{{$pdfView$jobLectureList$item.number}}人 | {{$pdfView$jobLectureList$item.eduName}} | {{$pdfView$jobLectureList$item.provinceName}}</view>
+    <view class="weui-flex start">
+      <view class="weui-flex start weui-flex__item">  
+        <view class="card-item">{{$pdfView$jobLectureList$item.natureName}}</view>
+        <view class="card-item">{{$pdfView$jobLectureList$item.social_securityName}}</view>
+      </view>
+      <view class="page__desc"  wx:if="{{$pdfView$jobLectureList$jobLectureItem$rendaUserType==1}}">共有{{$pdfView$jobLectureList$item.reasumeNum}}人投递</view> 
+      <button class="weui-btn_cell weui-btn_primary"  wx:if="{{$pdfView$jobLectureList$jobLectureItem$rendaUserType==2&&$pdfView$jobLectureList$item.isApply!=1}}" catchtap="$pdfView$jobLectureList$jobLectureItem$deliverResume" data-com-index="{{$pdfView$jobLectureList$index}}" data-wpydeliverresume-a="{{$pdfView$jobLectureList$item}}">投递简历</button>
+      <view class="number" wx:if="{{$pdfView$jobLectureList$jobLectureItem$rendaUserType==2&&$pdfView$jobLectureList$item.isApply==1}}">已投递</view>
+    </view>
+  </view>
+
+			</view>
+    </block>
+		<view wx:if="{{!$pdfView$jobLectureList$list.length}}" class="page_list">
+			<image src="https://d.rsd123.com/uploads/images/noData.png" class="page_noData" mode="scaleToFill"/>
+			<view class="page_noData_text">暂无数据！</view>
+		</view>
+	</view>
+
+        <view class="container view_padding" wx:if="{{$pdfView$activeIndex==1}}">
+          <rich-text nodes="{{$pdfView$lectureInfo.invitation_letter}}" class="my-text-right weui-textarea"/>
+        </view>
+        <view class="canvas-box" wx:if="{{$pdfView$activeIndex==0}}">
+          <view class="cell weui-flex between page_bottom">
+            <view class=" weui-flex start">
+              <image src="http://ttxsg.com.cn:39009/uploads/img/pdf.png" class="pdf_icon" mode="aspectFill"/>
+              <view class="page__title weui-flex start" wx:if="{{!$pdfView$enclosure}}" bindtap="$pdfView$uploadFile">
+                <text class="text-line pdfName page__text__active" wx:if="{{$pdfView$rendaUserType==1&&$pdfView$uid == $pdfView$lectureInfo.com_uid&&$pdfView$lectureInfo.status!=4}}">点击上传演示文稿</text>
+                <text class="text-line pdfName page__desc" wx:else>暂无附件</text>
+              </view>
+              <view class="page__title weui-flex start" wx:else bindtap="$pdfView$viewPdf">
+                <text class="text-line pdfName">{{$pdfView$pdfName}}</text>
+              </view>
+            </view>
+            <image bindtap="$pdfView$deleteFile" src=" http://ttxsg.com.cn:39009/uploads/img/delete.png" class="avatar_icon" wx:if="{{$pdfView$enclosure&&$pdfView$lectureInfo.status!=5&&$pdfView$rendaUserType==1}}" mode="aspectFill"/>
+          </view>
+          <image src="http://ttxsg.com.cn:39009/uploads/images/image/left_icon.png" alt="" class="swiper-icon" mode="widthFix" bindtap="$pdfView$preImg" wx:if="{{$pdfView$pdfList.length}}"/>
+          <image src="http://ttxsg.com.cn:39009/uploads/images/image/right_icon.png" alt="" class="swiper-icon swiper-icon1" mode="widthFix" bindtap="$pdfView$nextImg" wx:if="{{$pdfView$pdfList.length}}"/>
+          <swiper class="swiper" current="{{$pdfView$page}}" bindchange="$pdfView$bindchange" bindanimationfinish="$pdfView$changeFinish">
+            <block wx:for="{{$pdfView$pdfList}}" wx:key="index">
+              <swiper-item class="swiper-item" bindtap="$pdfView$viewImg" data-wpyviewimg-a="{{item}}">
+                <image src="{{item.image}}" alt="" class="swiper-image shadow" mode="widthFix"/>
+              </swiper-item>
+            </block>
+          </swiper>
+          <view class="page__title page-box" wx:if="{{$pdfView$pdfList.length}}">{{$pdfView$page+1}}/{{$pdfView$total}}</view>
+        </view>
+      </view>
+  </view>
+
+    </scroll-view>
+    <view class="apply_btn weui-flex center" bindtap="submit" wx:if="{{!lectureInfo.alectureApplyNum&&rendaUserType==2}}">立即免费报名</view>
+    <view class="apply_btn weui-flex center" bindtap="handleOver" wx:if="{{lectureInfo.alectureApplyNum&&rendaUserType==2}}">{{roomID&&lectureInfo.status==5?'观看宣讲':'宣讲未开始'}}</view>
+    <view class="apply_btn weui-flex center" bindtap="handleOver" wx:if="{{rendaUserType==1&&uid==com_uid}}">{{overBtnShow?'结束宣讲':'开始宣讲'}}</view>
+    
+  <view hidden="{{$actionSheet$isScaleModal}}">
+    <view bindtap="$actionSheet$handleClose"  wx:if="{{$actionSheet$isShow}}" class="modal_mask"/>
+    <view class="modal_transform g_transition3s {{ $actionSheet$isShow ? 'g_scale1': ''}}" id="modal-box" style="height:{{$actionSheet$height}}rpx">
+      <view class="modal-page_card">
+        <image mode="scaleToFill" src="https://d.rsd123.com/uploads/images/close.png"  wx:if="{{$actionSheet$isShow}}" class="close-icon" bindtap="$actionSheet$handleClose"/>
+        <view wx:if="{{!$actionSheet$title}}" class="modal-content">
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex around modal-btn">
+            <text class="weui-flex__item weui-flex center" bindtap="$actionSheet$handleClose">取消</text>
+            <text class="active weui-flex__item weui-flex center" bindtap="$actionSheet$handleOk">{{$actionSheet$okText}}</text>
+          </view>
+        </view>
+        <view wx:else class="select-user">
+          <view class="modal_title weui-flex center">{{$actionSheet$title}}</view>
+          <view class="modal_text weui-flex center">{{$actionSheet$text}}</view>
+          <view class="weui-flex center modal-btn wrap">
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="1">我是企业招聘者</view>
+            <view class="col weui-flex center" bindtap="$actionSheet$selectUser" data-wpyselectuser-a="2">我是个人求职者</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+ </view>
